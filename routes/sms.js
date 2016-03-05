@@ -73,11 +73,40 @@ module.exports = function (app, db, utils, passport) {
           } else if (req.session.state = "method_dob") {
             // clean up name
             var dob = text.split(/[^0-9]/).filter(function (ea) { return ea !== ""; });
+            var mo = dob[0];
+            var da = dob[1];
+            var yr = dob[2];
 
-            twiml.sms("Thanks, " + first + ". Please enter your date of birth in the format MONTH/DAY/YEAR using numbers only.");
-            req.sesssion.name = query_name;
-            req.session.state = "method_name";
-            res.send(twiml.toString());
+            var ok = true;
+            if (mo == undefined) ok = false;
+            if (da == undefined) ok = false;
+            if (yr == undefined) ok = false;
+            if (!(mo.length == 1 || mo.length == 2)) ok == false;
+            if (!(da.length == 1 || da.length == 2)) ok == false;
+            if (!(yr.length == 2 || yr.length == 4)) ok = false;
+            if (!(Number(mo) > 0 && Number(mo) < 13)) ok = false;
+            if (!(Number(da) > 0 && Number(da) < 32)) ok = false;
+            if (!(Number(yr) > 1900 && Number(yr) < 2020)) ok = false;
+
+            if (ok) {
+              // create year
+              if (yr.length == 2) yr = "19" + yr;
+              mo = String(Number(mo) - 1);
+
+              var d = yr + "-" + mo + "-" + da;
+
+              twiml.sms("Thanks, " + first + ". Please enter your date of birth in the format MONTH/DAY/YEAR using numbers only.");
+              req.sesssion.name = query_name;
+              req.session.state = "method_name";
+              res.send(twiml.toString());
+
+            } else {
+              twiml.sms("Sorry, " + first + ", I don't understand. Enter your date of birth in format MONTH/DAY/YEAR, numbers only.");
+              req.sesssion.name = query_name;
+              req.session.state = "method_dob";
+              res.send(twiml.toString());
+            }
+
           } else {
             twiml.sms("To get started send your name in the format FIRST MIDDLE LAST.");
             req.session.state = "method_name";
