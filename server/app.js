@@ -15,6 +15,17 @@ var bodyParser = require('body-parser');
 var session = require("express-session");
 var cookieParser = require("cookie-parser");
 
+app.set('view engine', 'ejs');
+
+app.use(cookieParser());
+app.use(session({
+	secret:SESS_SECRET,
+	resave: true,
+	saveUninitialized: true
+}));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
 app.get("/", function (req, res) {
 	res.send("hello world");
 });
