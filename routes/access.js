@@ -1,5 +1,9 @@
 module.exports = function (app, db, utils, passport) {
 
+	app.get("/", function (req, res) {
+		res.render("index");
+	});
+
 	app.get("/signup", function (req, res) {
 		res.render("signup");
 	});

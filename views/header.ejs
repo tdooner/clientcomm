@@ -10,6 +10,13 @@
 	<style>
 		body {
 			font-family: arial, sans-serif;
+			margin: 0px;
+		}
+		#body {
+			padding-top: 20px;
+			padding-bottom: 20px;
+			padding-right: 60px;
+			padding-left: 60px;
 		}
 		textarea {
 			width: 100%;
@@ -33,12 +40,45 @@
 			margin-left: 45%;
 			background-color: #72bcd4;
 		}
+		header {
+			height: 50px;
+			background-color: #cdedd0;
+			padding: 10px;
+			box-shadow: 0px 5px 5px rgba(0,0,0,0.25);
+		}
+		header img {
+			height: 50px;
+		}
+		footer a, header div a {
+			line-height: 50px;
+			background-color: rgba(54, 153, 62, 0.5);
+			text-decoration: none;
+			color: #FFF;
+			padding: 8px;
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+		footer {
+			min-height: 50px;
+			background-color: #cdedd0;
+			padding: 10px;
+			padding-bottom: 0px;
+			color: #FFF;
+		}
 	</style>
 
 	<body>
 
-		<div>
-			<b>ClientCOMM</b>
-		</div>
+		<header>
+			<a href="/">
+				<img class="logo" src="/static/logo.svg" />
+			</a>
 
-		<hr>
+			<div style="float:right;">
+				<a href="/login">Login</a>
+				<a href="/signup">Signup</a>
+			</div>
+		</header>
+
+		<div id="body">
+

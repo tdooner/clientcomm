@@ -1,6 +1,7 @@
 
-	<footer>
-		<hr>
+	</div>
+
+	<footer id="footer">
 		<small style="float: right">
 			© 2016 Code for America
 			<a href="mailto:kuan@codeforamerica.org?subject=CJS-INTAKE-FORM-SITE-CONTACT">Contact</a> 
@@ -14,6 +15,12 @@
 		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		ga('create', 'UA-74523546-1', 'auto');
 		ga('send', 'pageview');
+
+		var bh = document.getElementById("body").style.height;
+		var nh = window.innerHeight - 160;
+		if (Number(bh) < nh) {
+			document.getElementById("body").style.height = String(nh) + "px";
+		}
 	</script>
 
 </body>

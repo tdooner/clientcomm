@@ -79,7 +79,7 @@ Last updated: <%= client.updated %>
 <div id="newmsg" style="margin-top: 120px;">
 	Submit a new message to client
 	<form method="post" action="/cmview/<%= client.clid %>/send" style="text-align: right;">
-		<textarea name="content" placeholder="Write your message here..." required></textarea>
+		<textarea name="content" maxlength="255" placeholder="Write your message here..." required></textarea>
 
 		<% if (comms.length > 0) { %>
 			<select name="device" required>

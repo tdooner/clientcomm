@@ -29,6 +29,15 @@ module.exports = function (app, db, utils, passport) {
 	  	res.send("Last name is missing or too short. " + ahref);
 	  }
 
+	  cl.dob = req.body.dob;
+	  if (!cl.dob || cl.dob !== "" && cl.dob.length < 1) {
+	  	res.send("Date of birth is missing. " + ahref);
+	  } else {
+	  	var d = cl.dob;
+	  	d = d.split("-");
+	  	cl.dob = d[2] + d[1] + d[0]; 
+	  }
+
 	  if (req.body.otn) cl.otn = req.body.otn;
 	  if (req.body.so) cl.so = req.body.so;
 
@@ -51,7 +60,9 @@ module.exports = function (app, db, utils, passport) {
 	  					var m = msgs[i];
 
 	  					// update statuses
-	  					if (m.tw_status !== "delivered" || m.tw_status !== "failed" || m.tw_status !== "received") {
+	  					var status_still_of_interest = !(m.tw_status == "delivered" || m.tw_status == "failed" || m.tw_status == "received");
+	  					var has_status = !(m.tw_status == null || m.tw_status == "");
+	  					if (status_still_of_interest && has_status) {
 								tw_client.sms.messages(m.tw_sid).get(function (err, sms) {
 									if (!err) {
 										if (sms.status !== m.tw_status) {
@@ -126,8 +137,9 @@ module.exports = function (app, db, utils, passport) {
   	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
 
   	if (req.body.hasOwnProperty("device")) {
-  		console.log(req.body.device);
   		req.body.device = JSON.parse(req.body.device);
+  	} else {
+  		req.body.device = {};
   	}
 
   	var comm = {}
@@ -170,6 +182,6 @@ module.exports = function (app, db, utils, passport) {
 
 
 
-  app.get("/fail", function (req, res) { res.send("FAIL") });
+  app.get("/fail", function (req, res) { res.send("Bad entry.") });
 
 };

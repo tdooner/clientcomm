@@ -39,58 +39,82 @@ module.exports = function (app, db, utils, passport) {
         }
       }
 
+      function logRes (msg) {
+        console.log("Sending: " + msg);
+
+        db("comms").where("value", from).then(function (comms) {
+          if (msg.length > 255) {
+            msg = msg.substr(0, 252) + "...";
+          }
+          for (var i = 0; i < comms.length; i++) {
+            var new_resp = {
+              comm: comms[i].commid,
+              content: msg.substr(0, 255)
+            };
+            if (comms[i].client) { new_resp.client = comms[i].client; }
+            db("msgs").insert(new_resp).then(function () { });
+          }
+        });
+      }
+
       function responder (isNew) {
         text = text.toUpperCase();
-console.log(req.session.state);
+
         // intro logic to sms toll if new
         if (text == "RESET") {
           twiml.sms("Acct state was reset.");
+          logRes(msg);
           req.session.state = null;
+          req.session.lost = false;
           res.send(twiml.toString());
+
         } else if (isNew) {
-          twiml.sms("Welcome to ClientCOMM. Use this tool to manage your progress through the judicial system." + 
-                    "Reply \"SEARCH\" to find your case, \"CJS\" contact your case manager, or \"HELP\" for assistance.");
+          var msg = "Welcome to ClientCOMM. Use this tool to manage your progress through the judicial system." + 
+                    "Reply \"SEARCH\" to find your case, \"CJS\" contact your case manager, or \"MORE\" for assistance.";
+          logRes(msg);
+          twiml.sms(msg);
           req.session.state = "orientation";
           res.send(twiml.toString());
-        } else {
-          if (req.session.state == "orientation" || ["SEARCH", "CJS", "HELP"].indexOf(text) > -1) {
-            if (text == "SEARCH") {
-              twiml.sms("To get started send your name in the format FIRST MIDDLE LAST.");
-              req.session.state = "method_name";
-              res.send(twiml.toString());
-            } else {
 
-            }
+        } else if (req.session.hasOwnProperty("lost") && !req.session.lost) {
+          if (req.session.state == "orientation" && ["SEARCH"].indexOf(text) > -1) {
+            twiml.sms("To get started send your name in the format FIRST MIDDLE LAST.");
+            req.session.state = "method_name";
+            res.send(twiml.toString());
 
           } else if (req.session.state == "method_name") {
             // clean up name
             var name = text.split(" ");
-            var last = text[text.length - 1];
-            var first = text[0];
+            var last = name[name.length - 1];
+            var first = name[0];
             var query_name = last + "," + first;
 
-            twiml.sms("Thanks, " + first + ". Please enter your date of birth in the format MONTH/DAY/YEAR using numbers only.");
+            var msg = "Thanks, " + first + ". Please enter your date of birth in the format YEAR/MONTH/DAY using numbers only.";
+            logRes(msg);
+            twiml.sms(msg);
             req.session.name = query_name;
             req.session.state = "method_dob";
             res.send(twiml.toString());
 
-          } else if (req.session.state = "method_dob") {
+          } else if (req.session.state == "method_dob") {
 
-            if (!req.sesssion.name) {
-              twiml.sms("I didn't get your name. Send me your name in the format FIRST MIDDLE LAST.");
+            if (!req.session.hasOwnProperty("name")) {
+              var msg = "I didn't get your name. Send me your name in the format FIRST MIDDLE LAST.";
+              logRes(msg);
+              twiml.sms(msg);
               req.session.state = "method_name";
               res.send(twiml.toString());
             } else {
               // clean up name
               var name = req.session.name.split(",");
-              var first = name[0];
-              var last = name[1];
+              var first = name[1];
+              var last = name[0];
 
               // clean up date
               var dob = text.split(/[^0-9]/).filter(function (ea) { return ea !== ""; });
-              var mo = dob[0];
-              var da = dob[1];
-              var yr = dob[2];
+              var yr = dob[0];
+              var mo = dob[1];
+              var da = dob[2];
 
               var ok = true;
               if (mo == undefined) ok = false;
@@ -109,9 +133,10 @@ console.log(req.session.state);
                 mo = String(Number(mo) - 1);
 
                 var d = yr + "-" + mo + "-" + da;
+                console.log("d2", d);
 
                 // stop gap measure for loading data - this should be get req
-                var content = fs.readFile("dummy.json", function (err, obj) {
+                var content = utils.fs.readFile("dummy.json", function (err, obj) {
                   obj = JSON.parse(obj);
                   obj.filter(function (ea) {
                     if (ea.defendant_birth_date == d) {
@@ -125,65 +150,116 @@ console.log(req.session.state);
                   });
 
                   if (obj.length > 0) {
-                    var r = "We found the following court dates: ";
+
+                    // make this a likely match if only 1 result
+                    if (obj.length == 1) {
+                      db("comms").where("value", from).limit(1).then(function (comm) {
+                        comm = comm[0];
+                        db("clients").where("first", first).andWhere("last", last).andWhere("dob", d).then(function (cls) {
+                          if (cls.length > 0) {
+                            for (var i = 0; i < cls.length; i++) {
+                              console.log("got one");
+                              db("leads").insert({
+                                cm: cl.cm,
+                                comm: comm
+                              });
+                            };
+                          }
+                        });
+                      });
+                    }
+
+                    var msg = "We found the following court dates: ";
+                    var clean = [];
                     obj.forEach(function (ea) {
-                      r += "Case " + ea.case_number + " on " + ea.appear_date + " at " + ea.appear_time + ". ";
+                      var ok = true;
+                      clean.forEach(function (cl) {
+                        if (cl.case_number == ea.case_number) ok = false;
+                      });
+                      if (ok) clean.push(ea);
                     });
-                    r += "If you need assistance, reply \"HELP\"."
-                    twiml.sms(r);
+                    clean.slice(0, 5).forEach(function (ea) {
+                      msg += "Case " + ea.case_number + " on " + ea.appear_date + " at " + ea.appear_time + ". ";
+                    });
+                    msg += "If you need assistance, reply \"MORE\"."
+                    twiml.sms(msg);
+                    logRes(msg);
                     req.session.state = "method_help";
                     res.send(twiml.toString());
                   } else {
-                    twiml.sms("I was unable to find any cases. Contact court or CJS for more information." + 
-                              "Reply \"SEARCH\" to find your case, \"CJS\" contact your case manager, or \"MORE\" for other options.");
+                    var msg = "I was unable to find any cases. Contact court or CJS for more information. " + 
+                              "Reply \"SEARCH\" to find your case, \"CJS\" contact your case manager, or \"MORE\" for other options.";
+                    logRes(msg);
+                    twiml.sms(msg);
                     req.session.state = null;
                     res.send(twiml.toString());
                   }
                 });
               } else {
-                twiml.sms("Sorry, " + first + ", I don't understand. Enter your date of birth in format MONTH/DAY/YEAR, numbers only.");
-                req.sesssion.name = query_name;
+                var msg = "Sorry, " + first + ", I don't understand. Enter your date of birth in format YEAR/MONTH/DAY, numbers only.";
+                logRes(msg);
+                twiml.sms(msg);
+                req.session.name = query_name;
                 req.session.state = "method_dob";
                 res.send(twiml.toString());
               }
             }
 
-          } else if (req.session.state == "method_help" || ["HELP", "ADDRESS"].indexOf(text) > -1) {
+          } else if (req.session.state == "method_help" || ["MORE", "ADDRESS", "CHARGES"].indexOf(text) > -1) {
 
-              if (text == "HELP") {
-
-                twiml.sms("Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".");
+              if (text == "MORE") {
+                var msg = "Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
+                logRes(msg);
+                twiml.sms(msg);
                 req.session.state = "method_help";
                 res.send(twiml.toString());
 
-              } else if ("ADDRESS") {
-                twiml.sms("Salt Lake County District Court is located at, Matheson Courthouse, 450 South State St, Salt Lake City. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".");
+              } else if (text == "ADDRESS") {
+                var msg = "Salt Lake County District Court is located at, Matheson Courthouse, 450 South State St, Salt Lake City. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
+                logRes(msg);
+                twiml.sms(msg);
                 req.session.state = "method_help";
                 res.send(twiml.toString());
-              } else if ("CHARGES") {
-                twiml.sms("USE OR POSSESSION OF DRUG PARAPHERNALIA, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, DRIVING UNDER THE INFLUENCE OF ALCOHOL/DRUGS,  INTERFERENCE WITH ARRESTING OFFICER. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".");
+
+              } else if (text == "CHARGES") {
+                var msg = "USE OR POSSESSION OF DRUG PARAPHERNALIA, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, DRIVING UNDER THE INFLUENCE OF ALCOHOL/DRUGS,  INTERFERENCE WITH ARRESTING OFFICER. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
+                logRes(msg);
+                twiml.sms(msg);
                 req.session.state = "method_help";
                 res.send(twiml.toString());
+
               } else {
-                twiml.sms("Criminal Justice Services has been alerted. A case manager will respond soon.");
+                var msg = "Criminal Justice Services has been alerted. A case manager will respond soon.";
+                logRes(msg);
+                twiml.sms(msg);
                 req.session.lost = true;
                 req.session.state = "method_name";
                 res.send(twiml.toString());
               }
 
           } else {
-            if (req.session.lost) {
-              twiml.sms("Criminal Justice Services has been alerted. A case manager will respond soon.");
+            if (req.session.lost || ["MORE", "HUMAN", "CJS", "CASE MANAGER"].indexOf(text) > -1) {
+              var msg = "Criminal Justice Services has been alerted. A case manager will respond soon.";
+              logRes(msg);
+              twiml.sms(msg);
               req.session.lost = true;
               req.session.state = null;
               res.send(twiml.toString());
+
             } else {
-              twiml.sms("To get started send your name in the format FIRST MIDDLE LAST.");
+              var msg = "To get started send your name in the format FIRST MIDDLE LAST.";
+              logRes(msg);
+              twiml.sms(msg);
               req.session.lost = true;
               req.session.state = "method_name";
               res.send(twiml.toString());
             }
           }
+        } else {
+          var msg = "You're message is in queue to be addressed.";
+          logRes(msg);
+          twiml.sms(msg);
+          res.send(twiml.toString());
         }
       }
     });

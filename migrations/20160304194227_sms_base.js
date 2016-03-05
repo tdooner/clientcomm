@@ -33,6 +33,7 @@ exports.up = function(knex, Promise) {
 			table.string("middle").defaultTo("");
 			table.string("last");
 
+			table.string("dob"); // YYYY-MM-DD format
 			table.string("otn");
 			table.string("so");
 
@@ -42,6 +43,19 @@ exports.up = function(knex, Promise) {
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
+		knex.schema.createTable("leads", function(table) {
+			table.increments("lid").primary();
+
+			table.integer("cm")
+					 .references("cmid")
+					 .inTable("cms");
+
+			table.integer("comm")
+					 .references("commid")
+					 .inTable("comms");
+
+			table.timestamp("created").defaultTo(knex.fn.now());
+		}),
 
 		knex.schema.createTable("msgs", function(table) {
 			table.integer("client")
@@ -90,7 +104,8 @@ exports.down = function(knex, Promise) {
 		knex.schema.dropTable("cms"),
 		knex.schema.dropTable("clients"),
 		knex.schema.dropTable("msgs"),
-		knex.schema.dropTable("comms")
+		knex.schema.dropTable("comms"),
+		knex.schema.dropTable("leads")
 
 	])
 };

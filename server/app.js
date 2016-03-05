@@ -18,7 +18,7 @@ var fs = require("fs");
 
 // configurations
 app.set("view engine", "ejs");
-app.use(express.static(__dirname + '/public'));
+app.use("/static", express.static("public"));
 app.use(cookieParser());
 
 // passport sessions and user management
