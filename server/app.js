@@ -39,7 +39,7 @@ app.use(passport.session());
 var db = require("./db");
 
 // routes
-require("../routes/access")(app, db, passport);
+require("../routes/access")(app, db, bcrypt, passport);
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });

@@ -1,4 +1,4 @@
-module.exports = function (app, db, passport) {
+module.exports = function (app, db, bcrypt, passport) {
 
 	app.get("/signup", function (req, res) {
 		res.render("signup");
@@ -36,7 +36,7 @@ module.exports = function (app, db, passport) {
 	  } else if (req.body.pass.length < 5) {
 	  	res.send("Password is too short. " + ahref);
 	  } else {
-	  	cm.pass = req.body.pass;
+	  	cm.pass = hashPw(req.body.pass);
 	  }
 
 	  cm.position = req.body.position;
@@ -52,12 +52,25 @@ module.exports = function (app, db, passport) {
 		db("cms").where("email", cm.email).limit(1).then(function (emails) {
 			if (emails.length == 0) {
 				db("cms").insert(cm).then(function () {
-					res.send("It's been entered. ");
+					res.send("It's been entered. Go to <a href='/login'>login</a>.");
 				});
 			} else {
 				res.send("This email is already being used, try a different one. " + ahref);
 			}
 		});
 	});
+
+	app.get("/login", function (req, res) {
+		res.render("login")
+	});
+
+  app.post("/login", passport.authenticate("local-login", {
+      successRedirect: "/success",
+      failureRedirect: "/fail"
+    })
+  );
+
+  app.get("/success", function (req, res) { res.send("OK") });
+  app.get("/fail", function (req, res) { res.send("FAIL") });
 
 };
