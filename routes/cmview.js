@@ -80,6 +80,45 @@ module.exports = function (app, db, utils, passport) {
   	});
   });
 
+  app.post("/cmview/:clid/send", utils.isLoggedIn, function (req, res) { 
+  	var clid = req.params.clid;
+  	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
+
+  	var comm = {}
+  	if (!req.body.hasOwnProperty("value")) {
+  		res.send("Missing communicated value. " + ahref);
+  	} else {
+  		comm.val = req.body.value;
+  	}
+
+  	if (!req.body.hasOwnProperty("content")) {
+  		res.send("Missing message body. " + ahref);
+  	} else {
+  		comm.content = req.body.content;
+  	}
+
+  	comm.client = clid;
+  	comm.read = true;
+
+		var client = require("twilio")(utils.accountSid, utils.authToken);
+		client.messages.create({
+	    body: comm.content,
+	    to: comm.val,
+	    from: utils.twilioNum
+		}, function(err, message) {
+			if (err) {
+				console.log("err", err)
+			} else {
+				console.log(message);
+			}
+		});
+
+  	res.send("OK")
+  	// db("comms").insert(comm).then(function (client) {
+  	// 	res.redirect("/cmview/" + clid);
+  	// });
+  });
+
 
 
   app.get("/fail", function (req, res) { res.send("FAIL") });

@@ -57,6 +57,10 @@ exports.up = function(knex, Promise) {
 			table.boolean("inbound").defaultTo(false);
 			table.boolean("read").defaultTo(false);
 
+			// twilio specific data
+			table.string("tw_smid");
+			table.string("tw_status");
+
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 

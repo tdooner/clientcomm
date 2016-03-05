@@ -48,12 +48,16 @@ var utils = {
 	},
 	validPw: function (pw1, pw2) { 
 		return bcrypt.compareSync(pw1, pw2); 
-	}
+	},
+	accountSid: credentials.accountSid,
+	authToken: credentials.authToken,
+	twilioNum: credentials.twilioNum
 }
 
 // routes
 require("../routes/access")(app, db, utils, passport);
 require("../routes/cmview")(app, db, utils, passport);
+require("../routes/sms")(app, db, utils, passport);
 
 
 var port = 4000;
