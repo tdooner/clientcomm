@@ -1,58 +1,67 @@
 <% include header %>
 
-<%= client.first + " " + client.middle + " " + client.last %>
-<% if (client.otn) { %>
-	[OTN: <%= client.otn %>]
-<% } %>
-<% if (client.so) { %>
-	[SO: <%= client.so %>]
-<% } %>
-<% if (client.active) { %>
-	[Client Active]
-<% } else { %>
-	[Client Archived]
-<% } %>
-
-<br>
-
-Last updated: <%= client.updated %>
-
-<br><br>
-
-<% if (comms.length > 0) { %>
-	Registered Communcation Methods
-	<ul>
-		<% for (var i = 0; i < comms.length; i++) { %>
-			<li><%= "[" + comms[i].type + "] " + comms[i].description + ": " + comms[i].value %></li>
-		<% } %>
-	</ul>
-<% } else { %>
-	No communication methods registered, add one to communicate with this client.
-<% } %>
-
-<div>
-	Create a new contact for this client
-	<form method="post" action="/cmview/<%= client.clid %>/comm">
-
+<div class="entryform" style="float:right;width:auto">
+	Create a new contact
+	<form style="font-size:small;" method="post" action="/cmview/<%= client.clid %>/comm">
+		Method
 		<select name="type" required>
 			<option value="" selected disabled>Comm Method</option>
 			<option value="email">Email</option>
 			<option value="cell">Cell</option>
 			<option value="landline">Landline</option>
 		</select>
+		<br>
+		Contact Val
 		<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
+	<br>
+		Description
 		<input type="text" name="description" placeholder="e.g. Aunt's Cell" required>
+	<br>
 		<input type="submit" value="Add Communication">
 	</form>
 </div>
 
-<br><br>
+<h3>
+	<%= client.first + " " + client.middle + " " + client.last %>
+	<% if (client.otn) { %>
+		<span class="badge">OTN: <%= client.otn %></span>
+	<% } %>
+	<% if (client.so) { %>
+		<span class="badge">SO: <%= client.so %></span>
+	<% } %>
+	<% if (client.active) { %>
+		<span class="badge" style="background-color:green">(ʘ‿ʘ) Active</span>
+	<% } else { %>
+		[Client Archived]
+	<% } %>
+</h3>
+
+<div style="min-height: 100px; padding: 10px; margin-bottom: 10px;  
+		background: rgb(76,175,80); /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(right, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(left, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* Standard syntax (must be last) */">
+
+	<% if (comms.length > 0) { %>
+		Registered Communcation Methods
+		<ol>
+			<% for (var i = 0; i < comms.length; i++) { %>
+				<span class="badge"><%= comms[i].type %></span>
+
+				<%= comms[i].description + ": " + comms[i].value %>
+			<% } %>
+		</ol>
+	<% } else { %>
+		No communication methods registered, add one to communicate with this client.
+	<% } %>
+</div>
 
 <div>
 	<b>Client Comm Thread</b>
 </div>
 <% for (var i = 0; i < msgs.length; i++) { %>
-	<div class="msg-bubble <% if (!msgs[i].inbound) { %>cm-resp<% } %>" style="<% if (!msgs[i].read) { %> border: 2px solid red; <% } %>">
+	<div class="msg-bubble <% if (!msgs[i].inbound) { %>cm-resp<% } %>" style="<% if (!msgs[i].read) { %> box-shadow: 0px 0px 3px 1px rgba(255,0,0,0.5); <% } %>">
 		<small>
 			<% if (msgs[i].inbound) { %>
 				<%= client.first + " " + client.middle + " " + client.last %>:

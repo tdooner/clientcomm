@@ -1,11 +1,13 @@
 module.exports = function (app, db, utils, passport) {
 
   app.post("/sms", function (req, res) {
+    console.log("Hit SMS endpoint");
+
     var twiml = new utils.twilio.TwimlResponse();
     var from = req.body.From.replace(/\D+/g, "");
     var text = req.body.Body.trim();
 
-    db("comms").where("value", from).then(function (comms) {
+    db("comms").where("value", from).limit(1).then(function (comms) {
 
       // create a "hanging" account if a user is unknown
       if (comms.length == 0) {
@@ -59,10 +61,13 @@ module.exports = function (app, db, utils, passport) {
 
       function responder (isNew) {
         text = text.toUpperCase();
+        console.log("Received: " + text);
+        console.log("Sess: " + JSON.stringify(req.session));
 
         // intro logic to sms toll if new
         if (text == "RESET") {
-          twiml.sms("Acct state was reset.");
+          var msg = "Acct state was reset.";
+          twiml.sms(msg);
           logRes(msg);
           req.session.state = null;
           req.session.lost = false;
@@ -76,9 +81,12 @@ module.exports = function (app, db, utils, passport) {
           req.session.state = "orientation";
           res.send(twiml.toString());
 
-        } else if (req.session.hasOwnProperty("lost") && !req.session.lost) {
+        } else if (!req.session.lost) {
           if (req.session.state == "orientation" && ["SEARCH"].indexOf(text) > -1) {
-            twiml.sms("To get started send your name in the format FIRST MIDDLE LAST.");
+            var msg = "To get started send your name in the format FIRST MIDDLE LAST.";
+            logRes(msg);
+            twiml.sms(msg);
+            req.session.lost = false;
             req.session.state = "method_name";
             res.send(twiml.toString());
 
@@ -207,35 +215,35 @@ module.exports = function (app, db, utils, passport) {
 
           } else if (req.session.state == "method_help" || ["MORE", "ADDRESS", "CHARGES"].indexOf(text) > -1) {
 
-              if (text == "MORE") {
-                var msg = "Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
-                logRes(msg);
-                twiml.sms(msg);
-                req.session.state = "method_help";
-                res.send(twiml.toString());
+            if (text == "MORE") {
+              var msg = "Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
+              logRes(msg);
+              twiml.sms(msg);
+              req.session.state = "method_help";
+              res.send(twiml.toString());
 
-              } else if (text == "ADDRESS") {
-                var msg = "Salt Lake County District Court is located at, Matheson Courthouse, 450 South State St, Salt Lake City. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
-                logRes(msg);
-                twiml.sms(msg);
-                req.session.state = "method_help";
-                res.send(twiml.toString());
+            } else if (text == "ADDRESS") {
+              var msg = "Salt Lake County District Court is located at, Matheson Courthouse, 450 South State St, Salt Lake City. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
+              logRes(msg);
+              twiml.sms(msg);
+              req.session.state = "method_help";
+              res.send(twiml.toString());
 
-              } else if (text == "CHARGES") {
-                var msg = "USE OR POSSESSION OF DRUG PARAPHERNALIA, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, DRIVING UNDER THE INFLUENCE OF ALCOHOL/DRUGS,  INTERFERENCE WITH ARRESTING OFFICER. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
-                logRes(msg);
-                twiml.sms(msg);
-                req.session.state = "method_help";
-                res.send(twiml.toString());
+            } else if (text == "CHARGES") {
+              var msg = "USE OR POSSESSION OF DRUG PARAPHERNALIA, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, POSSESSION OR USE OF A CONTROLLED SUBSTANCE, DRIVING UNDER THE INFLUENCE OF ALCOHOL/DRUGS,  INTERFERENCE WITH ARRESTING OFFICER. Reply \"ADDRESS\", \"CHARGES\", \"CASE MANAGER\".";
+              logRes(msg);
+              twiml.sms(msg);
+              req.session.state = "method_help";
+              res.send(twiml.toString());
 
-              } else {
-                var msg = "Criminal Justice Services has been alerted. A case manager will respond soon.";
-                logRes(msg);
-                twiml.sms(msg);
-                req.session.lost = true;
-                req.session.state = "method_name";
-                res.send(twiml.toString());
-              }
+            } else {
+              var msg = "Criminal Justice Services has been alerted. A case manager will respond soon.";
+              logRes(msg);
+              twiml.sms(msg);
+              req.session.lost = true;
+              req.session.state = "method_name";
+              res.send(twiml.toString());
+            }
 
           } else {
             if (req.session.lost || ["MORE", "HUMAN", "CJS", "CASE MANAGER"].indexOf(text) > -1) {
@@ -250,12 +258,12 @@ module.exports = function (app, db, utils, passport) {
               var msg = "To get started send your name in the format FIRST MIDDLE LAST.";
               logRes(msg);
               twiml.sms(msg);
-              req.session.lost = true;
+              req.session.lost = false;
               req.session.state = "method_name";
               res.send(twiml.toString());
             }
           }
-        } else {
+        } else if (req.session.lost) {
           var msg = "You're message is in queue to be addressed.";
           logRes(msg);
           twiml.sms(msg);

@@ -1,9 +1,9 @@
 <% include header %>
 
-<span style="float:right"><a href="/floaters">Identify unknown contacts<a></span>
+<h3>Welcome</h3>
 
 <% if (clients.length > 0) { %>
-	Here are your clients:
+	Your clients:
 	<ul>
 		<% for (var i = 0; i < clients.length; i++ ) { %>
 			<li>
@@ -11,10 +11,10 @@
 					<%= clients[i].first + " " + clients[i].middle + " " + clients[i].last %>
 				</a>
 				<% if (clients[i].otn) { %>
-					[OTN: <%= clients[i].otn %>]
+					<span class="badge">OTN: <%= clients[i].otn %></span>
 				<% } %>
 				<% if (clients[i].so) { %>
-					[SO: <%= clients[i].so %>]
+					<span class="badge">SO: <%= clients[i].so %></span>
 				<% } %>
 			</li>
 		<% } %>
@@ -23,8 +23,12 @@
 	You have no clients. Add some below.
 <% } %>
 
-<br><br>
-<div>
+Other options:
+<ul>
+	<li><a href="/floaters">Identify unknown contacts</a></li>
+</ul>
+
+<div class="entryform">
 	Add a new client:
 	<form method="post">
 

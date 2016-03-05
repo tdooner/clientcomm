@@ -1,27 +1,29 @@
 <% include header %>
 
-<form method="post">
+<div class="entryform">
+	<form method="post">
 
-	<div>
-		<div class="form-desc">
-			Email
-		</div>
 		<div>
-			<input type="text" name="email" placeholder="Email" required>
+			<div class="form-desc">
+				Email
+			</div>
+			<div>
+				<input type="text" name="email" placeholder="Email" required>
+			</div>
 		</div>
-	</div>
 
-	<div>
-		<div class="form-desc">
-			Password
-		</div>
 		<div>
-			<input type="password" name="pass" placeholder="Password">
+			<div class="form-desc">
+				Password
+			</div>
+			<div>
+				<input type="password" name="pass" placeholder="Password">
+			</div>
 		</div>
-	</div>
 
-	<input type="submit" value="Submit">
+		<input type="submit" value="Submit">
 
-</form>
+	</form>
+</div>
 
 <% include footer %>
