@@ -1,8 +1,6 @@
 // credentials loading
 var credentials = require("../credentials");
-var ACCOUNT_SID = credentials.accountSid,
-		AUTH_TOKEN = credentials.authToken,
-		SESS_SECRET = credentials.sessionSecret;
+var SESS_SECRET = credentials.sessionSecret;
 
 // app initialization
 var express = require("express");
@@ -15,24 +13,47 @@ var bodyParser = require('body-parser');
 var session = require("express-session");
 var cookieParser = require("cookie-parser");
 
-app.set('view engine', 'ejs');
-
+// configurations
+app.set("view engine", "ejs");
+app.use(express.static(__dirname + '/public'));
 app.use(cookieParser());
-app.use(session({
-	secret:SESS_SECRET,
-	resave: true,
-	saveUninitialized: true
-}));
+
+// passport sessions and user management
+var bcrypt = require("bcrypt-nodejs");
+var passport = require("passport");
+require("./passport")(passport);
+
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
+app.use(session({
+	secret: SESS_SECRET,
+	resave: true,
+	saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// establish database connection
+var db = require("./db");
+
+// routes
 app.get("/", function (req, res) {
-	res.send("hello world");
+	// res.send("hello world");
+
+	db("cms").where("email", "kuanbustts@yahoo.com").limit(1).then(function (row) {
+
+		res.send(row.length)
+	});
+
 });
 
-app.get("/", function (req, res) {
-	res.send("hello world");
-});
+require("../routes/access")(app, db, passport);
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });
+
+
+
+
