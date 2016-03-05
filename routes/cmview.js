@@ -41,12 +41,17 @@ module.exports = function (app, db, utils, passport) {
   app.get("/cmview/:clid", utils.isLoggedIn, function (req, res) { 
   	var clid = req.params.clid;
   	db("clients").where("cm", req.user.cmid).andWhere("clid", clid).then(function (client) {
-  		res.render("client", {client: client[0]});
+  		if (client.length < 1) {
+  			res.send("You are unauthorized to access this client's data.")
+  		} else {
+	  		db("comms").where("client", clid).then(function (comms) {
+	  			res.render("client", {client: client[0], comms: comms});
+	  		});
+  		}
   	});
   });
 
   app.post("/cmview/:clid/comm", utils.isLoggedIn, function (req, res) { 
-  	console.log("WE are HERE");
   	var clid = req.params.clid;
   	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
 
@@ -70,10 +75,8 @@ module.exports = function (app, db, utils, passport) {
   	}
 
   	comm.client = clid;
-  	console.log(comm);
-
   	db("comms").insert(comm).then(function (client) {
-  		res.send("OK")
+  		res.redirect("/cmview/" + clid);
   	});
   });
 

@@ -19,6 +19,17 @@ Last updated: <%= client.updated %>
 
 <br><br>
 
+<% if (comms.length > 0) { %>
+	Registered Communcation Methods
+	<ul>
+		<% for (var i = 0; i < comms.length; i++) { %>
+			<li><%= "[" + comms[i].type + "] " + comms[i].description + ": " + comms[i].value %></li>
+		<% } %>
+	</ul>
+<% } else { %>
+	No communication methods registered, add one to communicate with this client.
+<% } %>
+
 <div>
 	Create a new contact for this client
 	<form method="post" action="/cmview/<%= client.clid %>/comm">
