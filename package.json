@@ -1,0 +1,21 @@
+{
+  "name": "ch-courtsms",
+  "main": "server/app.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.1",
+    "ejs": "^2.4.1",
+    "express": "4.13.4",
+    "express-session": "^1.13.0",
+    "knex": "^0.10.0",
+    "nodemon": "^1.8.1",
+    "pg": "^4.4.6",
+    "twilio": "^3.3.0-edge"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/"
+  }
+}
