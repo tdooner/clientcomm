@@ -53,11 +53,25 @@ Last updated: <%= client.updated %>
 </div>
 <% for (var i = 0; i < msgs.length; i++) { %>
 	<div class="msg-bubble <% if (!msgs[i].inbound) { %>cm-resp<% } %>" style="<% if (!msgs[i].read) { %> border: 2px solid red; <% } %>">
-		You: <%= msgs[i].content %>
+		<small>
+			<% if (msgs[i].inbound) { %>
+				<%= client.first + " " + client.middle + " " + client.last %>:
+			<% } else { %>
+				You: 
+			<% } %>
+		</small>
+
+		<%= msgs[i].content %>
 		<br>
-		(At: <%= msgs[i].created %>)
-		<br>
-		(Status: <%= msgs[i].tw_status %>) <% if (msgs[i].read) { %> √ <% } %>
+		<small style="width: 50%; margin-left: 50%; font-style: italic;">
+			<% var d = new Date(msgs[i].created) %>
+			Status: <%= msgs[i].tw_status %> 
+			at 
+			<%= d.getHours() + ":" + d.getMinutes() + " on " + (d.getMonth()+1) + "/" + d.getDate() %>
+			<% if (msgs[i].read) { %>
+				<span style="color:green;"> √ Seen </span>
+			<% } %>
+		</small>
 	</div>
 <% } %>
 

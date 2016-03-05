@@ -7,7 +7,7 @@ module.exports = function (app, db, utils, passport) {
 
     console.log(from)
     console.log(text)
-    
+
     db("comms").where("value", from).then(function (comms) {
       // create a "hanging" account if a user is unknown
       if (comms.length == 0) {
@@ -43,6 +43,12 @@ module.exports = function (app, db, utils, passport) {
       }
     });
 
+  });
+
+  app.get("/floaters/",  function (req, res) {
+    db("comms").where("client", null).then(function (comms) {
+      res.render("floaters", {comms: comms})
+    });
   });
 
 };
