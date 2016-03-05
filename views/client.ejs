@@ -1,7 +1,45 @@
 <% include header %>
-<%= JSON.stringify(client) %>
 
+<%= client.first + " " + client.middle + " " + client.last %>
+<% if (client.otn) { %>
+	[OTN: <%= client.otn %>]
+<% } %>
+<% if (client.so) { %>
+	[SO: <%= client.so %>]
+<% } %>
+<% if (client.active) { %>
+	[Client Active]
+<% } else { %>
+	[Client Archived]
+<% } %>
 
+<br>
+
+Last updated: <%= client.updated %>
+
+<br><br>
+
+<div>
+	Create a new contact for this client
+	<form method="post" action="/cmview/<%= client.clid %>/comm">
+
+		<select name="type" required>
+			<option value="" selected disabled>Comm Method</option>
+			<option type="text" value="Email">Email</option>
+			<option type="text" value="Cell">Cell</option>
+			<option type="text" value="Landline">Landline</option>
+		</select>
+		<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
+		<input type="text" name="description" placeholder="e.g. Aunt's Cell" required>
+		<input type="submit" value="Add Communication">
+	</form>
+</div>
+
+<br><br>
+
+<div>
+	<b>Client Comm Thread</b>
+</div>
 
 
 <% include footer %>

@@ -33,16 +33,47 @@ module.exports = function (app, db, utils, passport) {
 	  if (req.body.so) cl.so = req.body.so;
 
   	db("clients").insert(cl).then(function (clients) {
-  		res.send(clients);
-  		// res.render("clients", {clients: clients});
+  		res.redirect("cmview");
   	});
   	
   });
 
-  app.get("/cmview/:clid", function (req, res) { 
+  app.get("/cmview/:clid", utils.isLoggedIn, function (req, res) { 
   	var clid = req.params.clid;
   	db("clients").where("cm", req.user.cmid).andWhere("clid", clid).then(function (client) {
-  		res.render("client", {client: client});
+  		res.render("client", {client: client[0]});
+  	});
+  });
+
+  app.post("/cmview/:clid/comm", utils.isLoggedIn, function (req, res) { 
+  	console.log("WE are HERE");
+  	var clid = req.params.clid;
+  	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
+
+  	var comm = {}
+  	if (!req.body.hasOwnProperty("type")) {
+  		res.send("Missing Type. " + ahref);
+  	} else {
+  		comm.type = req.body.type;
+  	}
+
+  	if (!req.body.hasOwnProperty("value")) {
+  		res.send("Missing Value. " + ahref);
+  	} else {
+  		comm.value = req.body.value;
+  	}
+
+  	if (!req.body.hasOwnProperty("description")) {
+  		res.send("Missing Description. " + ahref);
+  	} else {
+  		comm.description = req.body.description;
+  	}
+
+  	comm.client = clid;
+  	console.log(comm);
+
+  	db("comms").insert(comm).then(function (client) {
+  		res.send("OK")
   	});
   });
 
