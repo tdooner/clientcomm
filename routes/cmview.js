@@ -45,12 +45,33 @@ module.exports = function (app, db, utils, passport) {
   			res.send("You are unauthorized to access this client's data.")
   		} else {
 	  		db("comms").where("client", clid).then(function (comms) {
-	  			res.render("client", {client: client[0], comms: comms});
-	  		});
+	  			db("msgs").where("client", clid).then(function (msgs) {
+	  				var tw_client = require("twilio")(utils.accountSid, utils.authToken);
+	  				for (var i = 0; i < msgs.length; i++) { 
+	  					var m = msgs[i];
+	  					if (m.tw_status !== "delivered" || m.tw_status !== "failed") {
+								tw_client.sms.messages(m.tw_sid).get(function (err, sms) {
+									if (!err) {
+										if (sms.status !== m.tw_status) {
+											console.log("Checking up on a pending status.");
+											db("msgs").where("tw_sid", m.tw_sid)
+											.returning("tw_status")
+											.update({tw_status: sms.status}).then(function (r) {
+												console.log("Status updated to " + r[0] + ".");
+											});
+										}
+									}
+								});
+	  					}
+	  				}
+	  				res.render("client", {client: client[0], comms: comms, msgs: msgs});
+	  			});
+  			});
   		}
   	});
   });
 
+  // add new device to user
   app.post("/cmview/:clid/comm", utils.isLoggedIn, function (req, res) { 
   	var clid = req.params.clid;
   	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
@@ -65,7 +86,20 @@ module.exports = function (app, db, utils, passport) {
   	if (!req.body.hasOwnProperty("value")) {
   		res.send("Missing Value. " + ahref);
   	} else {
-  		comm.value = req.body.value;
+  		var v = req.body.value;
+  		if (comm.type == "email" || comm.type == "cell") { 
+  			v = v.replace(/[^0-9.]/g, "");
+  			if (v.length == 10) {
+  				v = "1" + v;
+  			}
+  			if (v.length == 11) {
+  				comm.value = v;	
+  			} else {
+  				res.send("Bad phone entry. Make sure it includes the country code (e.g. 1-848-123-4567). " + ahref);
+  			}
+  		} else {
+  			comm.value = v;
+  		}
   	}
 
   	if (!req.body.hasOwnProperty("description")) {
@@ -84,11 +118,20 @@ module.exports = function (app, db, utils, passport) {
   	var clid = req.params.clid;
   	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
 
+  	if (req.body.hasOwnProperty("device")) {
+  		console.log(req.body.device);
+  		req.body.device = JSON.parse(req.body.device);
+  	}
+
   	var comm = {}
-  	if (!req.body.hasOwnProperty("value")) {
-  		res.send("Missing communicated value. " + ahref);
+  	if (!req.body.device.hasOwnProperty("commid")) {
+  		res.send("Missing communication id. " + ahref);
   	} else {
-  		comm.val = req.body.value;
+  		comm.comm = req.body.device.commid;
+  	}
+
+  	if (!req.body.device.hasOwnProperty("value")) {
+  		res.send("Missing communication value. " + ahref);
   	}
 
   	if (!req.body.hasOwnProperty("content")) {
@@ -103,20 +146,19 @@ module.exports = function (app, db, utils, passport) {
 		var client = require("twilio")(utils.accountSid, utils.authToken);
 		client.messages.create({
 	    body: comm.content,
-	    to: comm.val,
+	    to: req.body.device.value,
 	    from: utils.twilioNum
 		}, function(err, message) {
 			if (err) {
-				console.log("err", err)
+				res.send("There was an error. " + ahref + "<br>" + err);
 			} else {
-				console.log(message);
+				comm.tw_sid = message.sid;
+				comm.tw_status = message.status;
+		  	db("msgs").insert(comm).then(function (client) {
+		  		res.redirect("/cmview/" + clid);
+		  	});
 			}
 		});
-
-  	res.send("OK")
-  	// db("comms").insert(comm).then(function (client) {
-  	// 	res.redirect("/cmview/" + clid);
-  	// });
   });
 
 

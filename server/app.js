@@ -49,6 +49,7 @@ var utils = {
 	validPw: function (pw1, pw2) { 
 		return bcrypt.compareSync(pw1, pw2); 
 	},
+	twilio: twilio,
 	accountSid: credentials.accountSid,
 	authToken: credentials.authToken,
 	twilioNum: credentials.twilioNum
