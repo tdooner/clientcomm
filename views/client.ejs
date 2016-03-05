@@ -52,17 +52,17 @@ Last updated: <%= client.updated %>
 	<b>Client Comm Thread</b>
 </div>
 <% for (var i = 0; i < msgs.length; i++) { %>
-	<div class="msg-bubble" style="<% if (!msgs[i].inbound) { %>float: right;<% } %>">
+	<div class="msg-bubble <% if (!msgs[i].inbound) { %>cm-resp<% } %>" style="<% if (!msgs[i].read) { %> border: 2px solid red; <% } %>">
 		You: <%= msgs[i].content %>
 		<br>
 		(At: <%= msgs[i].created %>)
 		<br>
-		(Status: <%= msgs[i].tw_status %>)
+		(Status: <%= msgs[i].tw_status %>) <% if (msgs[i].read) { %> √ <% } %>
 	</div>
 <% } %>
 
 
-<div style="margin-top: 120px;">
+<div id="newmsg" style="margin-top: 120px;">
 	Submit a new message to client
 	<form method="post" action="/cmview/<%= client.clid %>/send" style="text-align: right;">
 		<textarea name="content" placeholder="Write your message here..." required></textarea>
@@ -79,5 +79,11 @@ Last updated: <%= client.updated %>
 		<% } %>
 	</form>
 </div>
+
+<script type="text/javascript">
+window.onload = function () {
+	window.scrollTo(0,document.body.scrollHeight);
+}
+</script>
 
 <% include footer %>

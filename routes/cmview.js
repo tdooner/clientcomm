@@ -45,25 +45,32 @@ module.exports = function (app, db, utils, passport) {
   			res.send("You are unauthorized to access this client's data.")
   		} else {
 	  		db("comms").where("client", clid).then(function (comms) {
-	  			db("msgs").where("client", clid).then(function (msgs) {
+	  			db("msgs").where("client", clid).orderBy("created", "asc").then(function (msgs) {
 	  				var tw_client = require("twilio")(utils.accountSid, utils.authToken);
 	  				for (var i = 0; i < msgs.length; i++) { 
 	  					var m = msgs[i];
-	  					if (m.tw_status !== "delivered" || m.tw_status !== "failed") {
+
+	  					// update statuses
+	  					if (m.tw_status !== "delivered" || m.tw_status !== "failed" || m.tw_status !== "received") {
 								tw_client.sms.messages(m.tw_sid).get(function (err, sms) {
 									if (!err) {
 										if (sms.status !== m.tw_status) {
-											console.log("Checking up on a pending status.");
 											db("msgs").where("tw_sid", m.tw_sid)
 											.returning("tw_status")
-											.update({tw_status: sms.status}).then(function (r) {
-												console.log("Status updated to " + r[0] + ".");
-											});
+											.update({tw_status: sms.status}).then(function () {});
 										}
 									}
 								});
 	  					}
+
+	  					// update read status
+	  					if (!m.read) {
+								db("msgs").where("tw_sid", m.tw_sid)
+								.update({read: true}).then(function () {});
+	  					}
 	  				}
+
+	  				// render regardless of above ops
 	  				res.render("client", {client: client[0], comms: comms, msgs: msgs});
 	  			});
   			});

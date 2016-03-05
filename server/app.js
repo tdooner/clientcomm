@@ -12,6 +12,7 @@ var twilio = require("twilio");
 var bodyParser = require('body-parser');
 var session = require("express-session");
 var cookieParser = require("cookie-parser");
+var Promise = require("bluebird");
 
 // configurations
 app.set("view engine", "ejs");
@@ -50,6 +51,7 @@ var utils = {
 		return bcrypt.compareSync(pw1, pw2); 
 	},
 	twilio: twilio,
+	Promise: Promise,
 	accountSid: credentials.accountSid,
 	authToken: credentials.authToken,
 	twilioNum: credentials.twilioNum

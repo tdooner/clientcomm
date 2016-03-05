@@ -64,7 +64,7 @@ exports.up = function(knex, Promise) {
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
-		knex.schema.createTable("comms", function(table) {
+		knex.schema.createTable("comms", function (table) {
 			table.increments("commid").primary();
 
 			table.integer("client")
