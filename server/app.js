@@ -13,6 +13,8 @@ var bodyParser = require('body-parser');
 var session = require("express-session");
 var cookieParser = require("cookie-parser");
 var Promise = require("bluebird");
+var http = require("http");
+var fs = require("fs");
 
 // configurations
 app.set("view engine", "ejs");
@@ -52,6 +54,8 @@ var utils = {
 	},
 	twilio: twilio,
 	Promise: Promise,
+	http: http,
+	fs: fs,
 	accountSid: credentials.accountSid,
 	authToken: credentials.authToken,
 	twilioNum: credentials.twilioNum
@@ -61,7 +65,6 @@ var utils = {
 require("../routes/access")(app, db, utils, passport);
 require("../routes/cmview")(app, db, utils, passport);
 require("../routes/sms")(app, db, utils, passport);
-
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });
