@@ -1,0 +1,80 @@
+<% include header %>
+
+<% if (clients.length > 0) { %>
+	Here are your clients:
+	<ul>
+		<% for (var i = 0; i < clients.length; i++ ) { %>
+			<li>
+				<a href="cmview/<%= clients[i].clid %>">
+					<%= clients[i].first + " " + clients[i].middle + " " + clients[i].last %>
+				</a>
+				<% if (clients[i].otn) { %>
+					[OTN: <%= clients[i].otn %>]
+				<% } %>
+				<% if (clients[i].so) { %>
+					[SO: <%= clients[i].so %>]
+				<% } %>
+			</li>
+		<% } %>
+	</ul>
+<% } else { %>
+	You have no clients. Add some below.
+<% } %>
+
+<br><br>
+<div>
+	Add a new client:
+	<form method="post">
+
+		<div>
+			<div class="form-desc">
+				First Name
+			</div>
+			<div>
+				<input type="text" name="first" placeholder="First Name" required>
+			</div>
+		</div>
+
+		<div>
+			<div class="form-desc">
+				Middle Name
+			</div>
+			<div>
+				<input type="text" name="middle" placeholder="Middle Name">
+			</div>
+		</div>
+
+		<div>
+			<div class="form-desc">
+				Last Name
+			</div>
+			<div>
+				<input type="text" name="last" placeholder="Last Name" required>
+			</div>
+		</div>
+
+		<div>
+			<div class="form-desc">
+				OTN
+			</div>
+			<div>
+				<input type="text" name="otn" placeholder="OTN">
+			</div>
+		</div>
+
+		<div>
+			<div class="form-desc">
+				SO
+			</div>
+			<div>
+				<input type="text" name="so" placeholder="SO">
+			</div>
+		</div>
+
+		<input type="submit" value="Submit">
+
+	</form>
+</div>
+
+
+<% include footer %>
