@@ -34,12 +34,27 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 // establish database connection
 var db = require("./db");
 
+// utilities
+var utils = {
+	isLoggedIn: function (req, res, next) {
+		if (req.isAuthenticated()) { return next(); }
+		else { res.redirect("/login"); }
+	},
+	hashPw: function (pw) { 
+		return bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null); 
+	},
+	validPw: function (pw1, pw2) { 
+		return bcrypt.compareSync(pw1, pw2); 
+	}
+}
+
 // routes
-require("../routes/access")(app, db, bcrypt, passport);
+require("../routes/access")(app, db, utils, passport);
+require("../routes/cmview")(app, db, utils, passport);
+
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });

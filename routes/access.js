@@ -1,4 +1,4 @@
-module.exports = function (app, db, bcrypt, passport) {
+module.exports = function (app, db, utils, passport) {
 
 	app.get("/signup", function (req, res) {
 		res.render("signup");
@@ -36,7 +36,7 @@ module.exports = function (app, db, bcrypt, passport) {
 	  } else if (req.body.pass.length < 5) {
 	  	res.send("Password is too short. " + ahref);
 	  } else {
-	  	cm.pass = hashPw(req.body.pass);
+	  	cm.pass = utils.hashPw(req.body.pass);
 	  }
 
 	  cm.position = req.body.position;
@@ -65,12 +65,9 @@ module.exports = function (app, db, bcrypt, passport) {
 	});
 
   app.post("/login", passport.authenticate("local-login", {
-      successRedirect: "/success",
+      successRedirect: "/cmview",
       failureRedirect: "/fail"
     })
   );
-
-  app.get("/success", function (req, res) { res.send("OK") });
-  app.get("/fail", function (req, res) { res.send("FAIL") });
 
 };
