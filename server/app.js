@@ -39,16 +39,6 @@ app.use(passport.session());
 var db = require("./db");
 
 // routes
-app.get("/", function (req, res) {
-	// res.send("hello world");
-
-	db("cms").where("email", "kuanbustts@yahoo.com").limit(1).then(function (row) {
-
-		res.send(row.length)
-	});
-
-});
-
 require("../routes/access")(app, db, passport);
 
 var port = 4000;
