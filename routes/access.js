@@ -13,16 +13,16 @@ module.exports = function (app, db, utils, passport) {
 		
 		var cm = {};
 
-	  cm.first = req.body.first;
+	  cm.first = req.body.first.toUpperCase();
 	  if (!cm.first || cm.first == "" || cm.first.length < 1) {
 	  	res.send("First name is missing or too short. " + ahref);
 	  }
 
 	  if (req.body.middle !== "" && req.body.middle.length < 1) {
-	  	cm.middle = req.body.middle;
+	  	cm.middle = req.body.middle.toUpperCase();
 	  }
 
-	  cm.last = req.body.last;
+	  cm.last = req.body.last.toUpperCase();
 	  if (!cm.last || cm.last !== "" && cm.last.length < 1) {
 	  	res.send("Last name is missing or too short. " + ahref);
 	  }

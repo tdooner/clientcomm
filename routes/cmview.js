@@ -35,7 +35,7 @@ module.exports = function (app, db, utils, passport) {
 	  } else {
 	  	var d = cl.dob;
 	  	d = d.split("-");
-	  	cl.dob = d[2] + d[1] + d[0]; 
+	  	cl.dob = d[2] + d[1] + d[0];
 	  }
 
 	  if (req.body.otn) cl.otn = req.body.otn;

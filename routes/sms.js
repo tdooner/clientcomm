@@ -138,70 +138,61 @@ module.exports = function (app, db, utils, passport) {
               if (ok) {
                 // create year
                 if (yr.length == 2) yr = "19" + yr;
-                mo = String(Number(mo) - 1);
+                if (Number(mo) < 10) mo = "0" + mo;
+                if (Number(da) < 10) da = "0" + da;
 
                 var d = yr + "-" + mo + "-" + da;
-                console.log("d2", d);
+                console.log("Seeking date", d);
 
-                // stop gap measure for loading data - this should be get req
-                var content = utils.fs.readFile("dummy.json", function (err, obj) {
-                  obj = JSON.parse(obj);
-                  obj.filter(function (ea) {
-                    if (ea.defendant_birth_date == d) {
-                      if (ea.defendant_last_name == last) {
-                        if (ea.defendant_first_name.indexOf(first) > -1) {
-                          return true;
-                        }
+                utils.http.get({
+                  host: "slco-court-calendar-service.herokuapp.com",
+                  path: "/api/v0/event-search.json?first_name=" + first + "&last_name=" + last + "&birth_date=" + d
+                }, function (response) {
+                  var body = "";
+                  response.on("data", function(d) { body += d; });
+                  response.on('end', function() {
+                    var parsed = JSON.parse(body);
+                    var r = parsed.results;
+                    console.log(r);
+                    if (r && r.length > 0) {
+
+                      // catch a lead
+                      if (r.length == 1) {
+                        db("comms").where("value", from).limit(1).then(function (comm) {
+                          comm = comm[0];
+                          db("clients").where("first", first).andWhere("last", last).andWhere("dob", d).then(function (cls) {
+                            if (cls.length > 0) {
+                              for (var i = 0; i < cls.length; i++) {
+                                console.log("Found a lead.");
+                                db("leads").insert({
+                                  cm: cls[i].cm,
+                                  comm: comm
+                                });
+                              };
+                            }
+                          });
+                        });                        
                       }
+
+                      var msg = "We found the following court dates: ";
+                      var clean = [];
+                      r.forEach(function (ea) {
+                        msg += "Case " + ea.case_number + " on " + ea.appear_date + " at " + ea.appear_time + ". ";
+                      });
+                      msg += "If you need assistance, reply \"MORE\"."
+                      twiml.sms(msg);
+                      logRes(msg);
+                      req.session.state = "method_help";
+                      res.send(twiml.toString());
+                    } else {
+                      var msg = "I was unable to find any cases. Contact court or CJS for more information. " + 
+                                "Reply \"SEARCH\" to find your case, \"CJS\" contact your case manager, or \"MORE\" for other options.";
+                      logRes(msg);
+                      twiml.sms(msg);
+                      req.session.state = null;
+                      res.send(twiml.toString());
                     }
-                    return false;
                   });
-
-                  if (obj.length > 0) {
-
-                    // make this a likely match if only 1 result
-                    if (obj.length == 1) {
-                      db("comms").where("value", from).limit(1).then(function (comm) {
-                        comm = comm[0];
-                        db("clients").where("first", first).andWhere("last", last).andWhere("dob", d).then(function (cls) {
-                          if (cls.length > 0) {
-                            for (var i = 0; i < cls.length; i++) {
-                              console.log("got one");
-                              db("leads").insert({
-                                cm: cl.cm,
-                                comm: comm
-                              });
-                            };
-                          }
-                        });
-                      });
-                    }
-
-                    var msg = "We found the following court dates: ";
-                    var clean = [];
-                    obj.forEach(function (ea) {
-                      var ok = true;
-                      clean.forEach(function (cl) {
-                        if (cl.case_number == ea.case_number) ok = false;
-                      });
-                      if (ok) clean.push(ea);
-                    });
-                    clean.slice(0, 5).forEach(function (ea) {
-                      msg += "Case " + ea.case_number + " on " + ea.appear_date + " at " + ea.appear_time + ". ";
-                    });
-                    msg += "If you need assistance, reply \"MORE\"."
-                    twiml.sms(msg);
-                    logRes(msg);
-                    req.session.state = "method_help";
-                    res.send(twiml.toString());
-                  } else {
-                    var msg = "I was unable to find any cases. Contact court or CJS for more information. " + 
-                              "Reply \"SEARCH\" to find your case, \"CJS\" contact your case manager, or \"MORE\" for other options.";
-                    logRes(msg);
-                    twiml.sms(msg);
-                    req.session.state = null;
-                    res.send(twiml.toString());
-                  }
                 });
               } else {
                 var msg = "Sorry, " + first + ", I don't understand. Enter your date of birth in format YEAR/MONTH/DAY, numbers only.";
