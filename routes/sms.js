@@ -138,8 +138,8 @@ module.exports = function (app, db, utils, passport) {
               if (ok) {
                 // create year
                 if (yr.length == 2) yr = "19" + yr;
-                if (Number(mo) < 10) mo = "0" + mo;
-                if (Number(da) < 10) da = "0" + da;
+                if (Number(mo) < 10 && mo.length == 1) mo = "0" + mo;
+                if (Number(da) < 10 && da.length == 1) da = "0" + da;
 
                 var d = yr + "-" + mo + "-" + da;
                 console.log("Seeking date", d);
@@ -237,7 +237,7 @@ module.exports = function (app, db, utils, passport) {
             }
 
           } else {
-            if (req.session.lost || ["MORE", "HUMAN", "CJS", "CASE MANAGER"].indexOf(text) > -1) {
+            if (req.session.lost || ["MORE", "HUMAN", "CJS", "CASE MANAGER", "CASE WORKER"].indexOf(text) > -1) {
               var msg = "Criminal Justice Services has been alerted. A case manager will respond soon.";
               logRes(msg);
               twiml.sms(msg);
