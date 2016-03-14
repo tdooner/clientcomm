@@ -43,24 +43,28 @@ exports.up = function(knex, Promise) {
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
-		knex.schema.createTable("leads", function(table) {
-			table.increments("lid").primary();
+		knex.schema.createTable("convos", function(table) {
+			table.increments("convid").primary();
 
 			table.integer("cm")
 					 .references("cmid")
 					 .inTable("cms");
 
-			table.integer("comm")
-					 .references("commid")
-					 .inTable("comms");
+			table.integer("client")
+					 .references("clid")
+					 .inTable("clients");
 
+			table.boolean("current").defaultTo(true);
+			table.timestamp("updated").defaultTo(knex.fn.now());
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
 		knex.schema.createTable("msgs", function(table) {
-			table.integer("client")
-					 .references("clid")
-					 .inTable("clients");
+			table.increments("msgid").primary();
+
+			table.integer("convo")
+					 .references("convid")
+					 .inTable("convos");
 
 			table.integer("comm")
 					 .references("commid")
@@ -78,19 +82,29 @@ exports.up = function(knex, Promise) {
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
-		knex.schema.createTable("comms", function (table) {
-			table.increments("commid").primary();
+		knex.schema.createTable("commconns", function (table) {
+			table.increments("commconnid").primary();
 
 			table.integer("client")
 					 .references("clid")
 					 .inTable("clients");
 
+			table.integer("comm")
+					 .references("commid")
+					 .inTable("comms");
+
+			
+			table.dateTime("retired");
+			table.timestamp("created").defaultTo(knex.fn.now());
+		}),
+
+		knex.schema.createTable("comms", function (table) {
+			table.increments("commid").primary();
+
 			table.string("type");        // e.g. email, cell, landline
 			table.string("value");       // e.g. jim@email.com, 14542348723
 			table.string("description"); // e.g. Joe's Obamaphone
 
-			table.boolean("current").defaultTo(true);
-			table.dateTime("terminated");
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
@@ -103,6 +117,7 @@ exports.down = function(knex, Promise) {
 
 		knex.schema.dropTable("cms"),
 		knex.schema.dropTable("clients"),
+		knex.schema.dropTable("convos"),
 		knex.schema.dropTable("msgs"),
 		knex.schema.dropTable("comms"),
 		knex.schema.dropTable("leads")
