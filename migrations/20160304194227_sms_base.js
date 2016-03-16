@@ -54,7 +54,9 @@ exports.up = function(knex, Promise) {
 					 .references("clid")
 					 .inTable("clients");
 
-			table.boolean("current").defaultTo(true);
+			table.boolean("open").defaultTo(true);
+			table.boolean("accepted").defaultTo(false);
+
 			table.timestamp("updated").defaultTo(knex.fn.now());
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
