@@ -3,13 +3,19 @@ var sms = require("../utils/utils.js")["sms"];
 
 module.exports = function (app, db, passport) {
 
+  app.post("/test", function (req, res) {
+    console.log(req.body)
+  });
+
   app.post("/sms", function (req, res) {
 
     var twiml = new twilio.TwimlResponse();
     var from = sms.clean_from_val(req.body.From);
     var text = req.body.Body.trim();
+    var tw_sid = req.body.SmsSid;
+    var tw_status = req.body.SmsStatus;
 
-    sms.check_if_comm_device_exists(from)
+    sms.get_or_create_comm_device(from)
     .then(function (device) {
 
       // if this communication device exists in the system already
@@ -18,9 +24,37 @@ module.exports = function (app, db, passport) {
         var commid = device.commid;
 
         // get clients
-        sms.get_related_clients(commid)
+        sms.get_clients(commid)
         .then(function (clients) {
-          sms.retrieve_convos(clients);
+
+          // at least one client should be returned
+          if (clients.length > 0) {
+            sms.get_or_create_convos(clients)
+            .then(function (convos) {
+
+              // need to make sure that there are existing convos
+              if (convos.length > 0) {
+                sms.register_message(text, commid, convos)
+                .then(function (msgs) {
+
+
+                }).catch(function (err) {
+                  handleError(err);
+                });
+
+              // convos list should have been returned
+              } else {
+                handleError("Failed to produce convos list.");
+              }
+
+            }).catch(function (err) {
+              handleError(err);
+            });
+
+          // a client or null val should have been returned
+          } else {
+            handleError("Failed to produce client or null list value.");
+          }
 
         }).catch(function (err) {
           handleError(err);
@@ -28,25 +62,17 @@ module.exports = function (app, db, passport) {
 
       // that number does not currently exist
       } else {
-        sms.create_new_device(from)
-        .then(function (commid) {
-          register_message(commid, [null]);
-
-        }).catch(function (err) {
-          handleError(err);
-        });
+        handleError("Failed to create a comm device.")
       } 
     }).catch(function (err) {
       handleError(err);
     });
 
-    function retrieve_convos (commid, clients) {
-
-    };
-
     function handleError (err) {
-      console.log(err);
-      res.status(404).send(err)
+      var now = new Date(Date.now()).toISOString()
+      console.log("Error occurred at " + now + ": " + err);
+      res.status(404).send(err);
+      return false;
     };
 
   });
