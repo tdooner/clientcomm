@@ -37,9 +37,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// establish database connection
-var db = require("./db");
-
 // utilities
 var utils = {
 	isLoggedIn: function (req, res, next) {
@@ -64,7 +61,8 @@ var utils = {
 // routes
 require("../routes/access")(app, db, utils, passport);
 require("../routes/cmview")(app, db, utils, passport);
-require("../routes/sms")(app, db, utils, passport);
+// require("../routes/sms")(app, db, utils, passport);
+require("../routes/sms2")(app, db, passport);
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });
