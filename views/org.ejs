@@ -1,0 +1,132 @@
+<% include header %>
+	
+	<%= org.name %>:
+	<ul style="font-size:small;">
+		<li>Email: <%= org.email %></li>
+		<li>Expires: <%= org.expiration %></li>
+		<li>Allotment: <%= org.allotment %></li>
+		<li>Created: <%= org.created %></li>
+	</ul>
+
+Admins:
+<ul>
+	<% for (var i = 0; i < cms.length; i++) { %>
+		<% if (cms[i].admin && cms[i].active) { %>
+			<li>
+				<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+			</li>
+
+			<ul style="font-size:small;">
+				<li>Email: <%= cms[i].email %></li>
+				<li>Position: <%= cms[i].position %></li>
+				<li>Department: <%= cms[i].department %></li>
+				<li>Created: <%= cms[i].created %></li>
+			</ul>
+		<% } %>
+	<% } %>
+</ul>
+
+Staff:
+<ul>
+	<% for (var i = 0; i < cms.length; i++) { %>
+		<% if (!cms[i].admin && cms[i].active) { %>
+			<li>
+				<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+			</li>
+
+			<ul style="font-size:small;">
+				<li>Email: <%= cms[i].email %></li>
+				<li>Position: <%= cms[i].position %></li>
+				<li>Department: <%= cms[i].department %></li>
+				<li>Created: <%= cms[i].created %></li>
+			</ul>
+		<% } %>
+	<% } %>
+</ul>
+
+	<form method="post">
+
+		<b>New Member</b>
+
+		<input type="hidden" name="orgid" value="<%= org.orgid %>">
+
+		<div class="form-row">
+			<div class="form-desc">
+				First
+			</div>
+			<div class="form-entry">
+				<input type="text" name="first" placeholder="Jane" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Middle
+			</div>
+			<div class="form-entry">
+				<input type="text" name="middle" placeholder="M" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Last
+			</div>
+			<div class="form-entry">
+				<input type="text" name="last" placeholder="Doe" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Email
+			</div>
+			<div class="form-entry">
+				<input type="email" name="email" placeholder="john@example.com" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Password
+			</div>
+			<div class="form-entry">
+				<input type="password" name="password" placeholder="password" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Position
+			</div>
+			<div class="form-entry">
+				<input type="text" name="position" placeholder="Case Manager" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Department
+			</div>
+			<div class="form-entry">
+				<input type="text" name="department" placeholder="Pretrial Services" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Admin
+			</div>
+			<div class="form-entry">
+				<input type="checkbox" name="admin" value="true"> Check to make admin
+			</div>
+		</div>
+
+
+
+		<input type="submit" value="Submit">
+
+	</form>
+
+
+<% include footer %>

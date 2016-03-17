@@ -33,7 +33,10 @@
 		}
 
 		#contents {
-			min-height: 575px
+			min-height: 575px;
+			padding-top: 25px;
+			padding-left: 50px;
+			padding-right: 50px;
 		}
 
 	</style>
@@ -53,4 +56,17 @@
 		</header>
 
 		<div id="contents">
+
+			<% if (typeof success !== "undefined" && success) { %>
+				<% for (var i = 0; i < success.length; i++) { %>
+					<span style="color:green">Success: <%= success[i] %></span>
+				<% } %>
+			<% } %>
+
+			<% if (typeof warning !== "undefined" && warning) { %>
+				<% for (var i = 0; i < warning.length; i++) { %>
+					<span style="color:red">Alert: <%= warning[i] %></span>
+				<% } %>
+			<% } %>
+
 
