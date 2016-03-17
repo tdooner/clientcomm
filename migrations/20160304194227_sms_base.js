@@ -6,14 +6,20 @@ exports.up = function(knex, Promise) {
 			table.increments("orgid").primary();
 
 			table.string("name");
+			table.string("email");
+
+			table.dateTime("expiration").defaultTo("2017-01-01");
 			table.integer("allotment").defaultTo(10);
 			
-			table.timestamp("updated").defaultTo(knex.fn.now());
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
 		knex.schema.createTable("cms", function(table) {
 			table.increments("cmid").primary();
+
+			table.integer("org")
+					 .references("orgid")
+					 .inTable("orgs");
 
 			table.string("first");
 			table.string("middle").defaultTo("");
@@ -24,10 +30,11 @@ exports.up = function(knex, Promise) {
 
 			table.string("position");
 			table.string("department");
-			table.string("organization");
 
 			table.boolean("admin").defaultTo(false);
 			table.boolean("active").defaultTo(true);
+
+			table.boolean("superuser").defaultTo(false);
 			
 			table.timestamp("updated").defaultTo(knex.fn.now());
 			table.timestamp("created").defaultTo(knex.fn.now());
