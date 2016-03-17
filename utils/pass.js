@@ -1,20 +1,20 @@
 var bcrypt = require("bcrypt-nodejs");
 
-module.exports = function () {
+module.exports = {
 
-	function isLoggedIn (req, res, next) {
+	isLoggedIn: function (req, res, next) {
 		if (req.isAuthenticated()) { 
 			return next(); 
 		} else { 
 			res.redirect("/login"); 
 		}
-	};
+	},
 
-	function hashPw (pw) { 
+	hashPw: function (pw) { 
 		return bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null); 
-	};
+	},
 
-	function validPw (pw1, pw2) { 
+	validPw: function (pw1, pw2) { 
 		return bcrypt.compareSync(pw1, pw2); 
-	};
+	}
 }
