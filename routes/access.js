@@ -1,7 +1,69 @@
+var db  = require("../server/db");
+
 module.exports = function (app, db, utils, passport) {
 
 	app.get("/", function (req, res) {
 		res.render("index", {notLoggedIn: true});
+	});
+
+	app.get("/super", function (req, res) {
+		db("orgs").orderBy("name")
+		.then(function (orgs) {
+			var warning = req.flash("warning");
+			var success = req.flash("success");
+
+			res.render("super-login", {
+				orgs: orgs,
+				warning: warning,
+				success: success
+			});
+		}).catch(function (err) {
+			res.redirect("/500");
+		});
+	});
+
+	app.post("/super/org", function (req, res) {
+		var name = req.body.name;
+		var email = req.body.email;
+		var expiration = req.body.expiration;
+		var allotment = Number(req.body.allotment);
+
+		if (!name) {
+			req.flash("warning", "Missing name.");
+			res.redirect("/super");
+		} else if (!email) {
+			res.render("super-login", {warning: "Missing email."});
+		} else if (isNaN(Date.parse(expiration))) {
+			res.render("super-login", {warning: "Missing expiration date."});
+		} else if (isNaN(allotment)) {
+			res.render("super-login", {warning: "Missing allotment."});
+		} else {
+			db("orgs")
+			.where("name", name)
+			.orWhere("email", email)
+			.then(function (response) {
+
+				if (response.length == 0) {
+					db("orgs").insert({
+						name: name,
+						email: email,
+						expiration: expiration,
+						allotment: allotment
+					}).then(function (response) {
+						res.render("super-login", {success: "Successful entry."});
+					}).catch(function (err) {
+						res.render("super-login", {warning: "Failed to create new entry."});
+					});
+
+				} else {
+					req.flash("warning", "That name or email already exists.");
+					res.redirect("/super");
+				}
+
+			}).catch(function (err) {
+				res.render("super-login", {warning: "Error on searching for pre-existing organizations."});
+			});
+		}
 	});
 
 	app.get("/signup", function (req, res) {
@@ -73,5 +135,9 @@ module.exports = function (app, db, utils, passport) {
       failureRedirect: "/fail"
     })
   );
+
+  app.get("/500", function (req, res) {
+  	res.status(500).send("Something happened.")
+  })
 
 };

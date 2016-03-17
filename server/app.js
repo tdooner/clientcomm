@@ -8,13 +8,11 @@ var app = express();
 var db  = require("./db");
 
 // dependencies
-var twilio = require("twilio");
 var bodyParser = require('body-parser');
 var session = require("express-session");
 var cookieParser = require("cookie-parser");
-var Promise = require("bluebird");
-var http = require("http");
-var fs = require("fs");
+var flash = require("connect-flash");
+var twilio = require("twilio");
 
 // configurations
 app.set("view engine", "ejs");
@@ -29,30 +27,18 @@ require("./passport")(passport);
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
+app.use(flash());
 app.use(session({
 	secret: SESS_SECRET,
 	resave: true,
 	saveUninitialized: true
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 // utilities
 var utils = {
-	isLoggedIn: function (req, res, next) {
-		if (req.isAuthenticated()) { return next(); }
-		else { res.redirect("/login"); }
-	},
-	hashPw: function (pw) { 
-		return bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null); 
-	},
-	validPw: function (pw1, pw2) { 
-		return bcrypt.compareSync(pw1, pw2); 
-	},
-	twilio: twilio,
-	Promise: Promise,
-	http: http,
-	fs: fs,
 	accountSid: credentials.accountSid,
 	authToken: credentials.authToken,
 	twilioNum: credentials.twilioNum
