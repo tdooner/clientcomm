@@ -1,7 +1,18 @@
-module.exports = function (app, db, utils, passport) {
+var db = require("../server/db");
+
+var credentials = require("../credentials");
+var ACCOUNT_SID = credentials.accountSid;
+var AUTH_TOKEN = credentials.authToken;
+var TWILIO_NUM = credentials.twilioNum;
+
+var pass = require("../utils/utils.js")["pass"];
+var isLoggedIn = pass.isLoggedIn;
+
+
+module.exports = function (app, passport) {
 
 	// view current clients for a case manager
-  app.get("/cmview", utils.isLoggedIn, function (req, res) { 
+  app.get("/cm", isLoggedIn, function (req, res) { 
   	
   	db("clients").where("cm", req.user.cmid).then(function (clients) {
   		res.render("clients", {clients: clients});
@@ -10,7 +21,7 @@ module.exports = function (app, db, utils, passport) {
   });
 
   // create new client
-  app.post("/cmview", utils.isLoggedIn, function (req, res) { 
+  app.post("/cm", isLoggedIn, function (req, res) { 
   	var cl = {
   		cm: req.user.cmid,
   	};
@@ -47,7 +58,7 @@ module.exports = function (app, db, utils, passport) {
   	
   });
 
-  app.get("/cmview/:clid", utils.isLoggedIn, function (req, res) { 
+  app.get("/cm/:clid", isLoggedIn, function (req, res) { 
   	var clid = req.params.clid;
   	db("clients").where("cm", req.user.cmid).andWhere("clid", clid).then(function (client) {
   		if (client.length < 1) {
@@ -55,7 +66,7 @@ module.exports = function (app, db, utils, passport) {
   		} else {
 	  		db("comms").where("client", clid).then(function (comms) {
 	  			db("msgs").where("client", clid).orderBy("created", "asc").then(function (msgs) {
-	  				var tw_client = require("twilio")(utils.accountSid, utils.authToken);
+	  				var tw_client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 	  				for (var i = 0; i < msgs.length; i++) { 
 	  					var m = msgs[i];
 
@@ -89,10 +100,9 @@ module.exports = function (app, db, utils, passport) {
   	});
   });
 
-  // add new device to user
-  app.post("/cmview/:clid/comm", utils.isLoggedIn, function (req, res) { 
+  app.post("/cm/:clid/comm", isLoggedIn, function (req, res) { 
   	var clid = req.params.clid;
-  	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
+  	var ahref = "<a href='/cm/" + clid + "'>Return to user.</a>";
 
   	var comm = {}
   	if (!req.body.hasOwnProperty("type")) {
@@ -128,13 +138,13 @@ module.exports = function (app, db, utils, passport) {
 
   	comm.client = clid;
   	db("comms").insert(comm).then(function (client) {
-  		res.redirect("/cmview/" + clid);
+  		res.redirect("/cm/" + clid);
   	});
   });
 
-  app.post("/cmview/:clid/send", utils.isLoggedIn, function (req, res) { 
+  app.post("/cm/:clid/send", isLoggedIn, function (req, res) { 
   	var clid = req.params.clid;
-  	var ahref = "<a href='/cmview/" + clid + "'>Return to user.</a>";
+  	var ahref = "<a href='/cm/" + clid + "'>Return to user.</a>";
 
   	if (req.body.hasOwnProperty("device")) {
   		req.body.device = JSON.parse(req.body.device);
@@ -162,11 +172,11 @@ module.exports = function (app, db, utils, passport) {
   	comm.client = clid;
   	comm.read = true;
 
-		var client = require("twilio")(utils.accountSid, utils.authToken);
+		var client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 		client.messages.create({
 	    body: comm.content,
 	    to: req.body.device.value,
-	    from: utils.twilioNum
+	    from: TWILIO_NUM
 		}, function(err, message) {
 			if (err) {
 				res.send("There was an error. " + ahref + "<br>" + err);
@@ -174,7 +184,7 @@ module.exports = function (app, db, utils, passport) {
 				comm.tw_sid = message.sid;
 				comm.tw_status = message.status;
 		  	db("msgs").insert(comm).then(function (client) {
-		  		res.redirect("/cmview/" + clid);
+		  		res.redirect("/cm/" + clid);
 		  	});
 			}
 		});

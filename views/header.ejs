@@ -4,140 +4,36 @@
 	<head>
 	  <meta charset="utf-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	  <title>ClientCOMM</title>
+	  <title>ClientComm</title>
 	</head>
 
 	<style>
 		body {
 			font-family: arial, sans-serif;
 			margin: 0px;
-			background-color: #f6fdf6;
-			color: #6d8f6d;
+			background-color: #FFF;
+			color: #0084ff;
 		}
-		a {
-			color: #242f24;
-			text-decoration: none;
-		}
-		#body {
-			padding-top: 20px;
-			padding-bottom: 20px;
-			padding-right: 60px;
-			padding-left: 60px;
-			min-height: 500px;
-		}
-		textarea {
-			width: 100%;
-			min-height: 50px;
-		}
-		.form-desc {
-			float: left;
-			width: 150px;
-			font-size: 0.75em;
-		}
-		.msg-bubble {
-			margin-bottom: 10px;
-			background-color: grey; 
-			color: #FFF;
-			width: 48%;
-			padding: 5px;
-			word-wrap: break-word;
-			border-radius: 5px;
-		}
-		.cm-resp {
-			margin-left: 52%;
-			background-color: #72bcd4;
-		}
-		.badge {
-			background-color: #72bcd4;
-			color: #FFF;
-			font-size: 0.75em;
-			font-weight: 100;
-			padding: 3px;
-			border-radius: 3px;
-		}
-		header {
-			height: 50px;
-			background-color: #cdedd0;
-			padding: 10px;
-			box-shadow: 0px 5px 5px rgba(0,0,0,0.25);
-		}
-		header img {
-			height: 50px;
-		}
-		li {
-			margin-top: 8px;
-			margin-bottom: 8px;
-		}
-		footer a, header div a {
-			line-height: 50px;
-			background-color: rgba(54, 153, 62, 0.5);
-			text-decoration: none;
-			color: #FFF;
-			padding: 8px;
-			margin-left: 10px;
-			margin-right: 10px;
-		}
-		footer {
-			min-height: 50px;
-			background-color: #cdedd0;
-			padding: 10px;
-			padding-bottom: 0px;
-			color: #FFF;
-		}
-		.entryform {
-			margin: auto;
-			background-color: #cFe0dF;
-			padding: 20px;
-			border-radius: 10px;
-			width: 350px;
-			line-height: 30px;
-			text-align: center;
-			font-weight: 700;
-			color: rgba(0,0,0,0.75);
-		}
-		.entryform div {
-			text-align: left;
-		}
-		.entryform input {
-			height: 20px;
-			width: 160px;
-		}
-		.icon {
-			width: 15%;
-			padding: 2%;
-			margin: auto;
-  
-			-webkit-transition: all 2s ease;
-			-moz-transition: all 2s ease;
-			-o-transition: all 2s ease;
-			transition: all 2s ease;
 
-			animation: spin 1s;
-			-webkit-animation: spin 1s;
-			animation-iteration-count: infinite;
-			-webkit-animation-iteration-count: infinite;
-			-webkit-animation-direction: alternate;
-			-moz-animation-direction: alternate;
-			-o-animation-direction: alternate;
-			animation-direction: alternate;
+		header {
+			min-height: 25px;
+			background-color: #FFF;
+			padding: 10px 10px 5px 10px;
+			border-bottom: 1px solid;
 		}
-		.icon:nth-child(1):hover, .icon:nth-child(3):hover {
-			-moz-transform: scale(1.1) rotate(-10deg) translate(-20px);
-			-webkit-transform: scale(1.2) rotate(-10deg) translate(-20px);
-			-o-transform: scale(1.1) rotate(-10deg) translate(-20px);
-			transform: scale(1.1) rotate(-10deg) translate(-20px);
-			z-index: 1000;
+
+		footer {
+			min-height: 25px;
+			padding: 5px 10px 10px 10px;
 		}
-		.icon:nth-child(2):hover, .icon:nth-child(4):hover {
-			-moz-transform: scale(1.1) rotate(10deg) translate(20px);
-			-webkit-transform: scale(1.2) rotate(10deg) translate(20px);
-			-o-transform: scale(1.1) rotate(10deg) translate(20px);
-			transform: scale(1.1) rotate(10deg) translate(20px);
-			z-index: 1000;
+
+		a, a:visited, a:hover, a:active {
+			text-decoration: none;
+			color: inherit;
 		}
-		.mini {
-			height: 5px;
-			background-color: white;
+
+		#contents {
+			min-height: 575px
 		}
 
 	</style>
@@ -146,14 +42,15 @@
 
 		<header>
 			<a href="/">
-				<img class="logo" src="/static/logo.svg" />
+				ClientComm
 			</a>
 
-			<div style="float:right;">
-				<a href="/login">Login</a>
-				<a href="/signup">Signup</a>
-			</div>
+			<% if (typeof notLoggedIn !== "undefined" && notLoggedIn) { %>
+				<div style="float:right;">
+					<a href="/login">Login</a>
+				</div>
+			<% } %>
 		</header>
 
-		<div id="body">
+		<div id="contents">
 

@@ -1,11 +1,11 @@
 module.exports = function (app, db, utils, passport) {
 
 	app.get("/", function (req, res) {
-		res.render("index");
+		res.render("index", {notLoggedIn: true});
 	});
 
 	app.get("/signup", function (req, res) {
-		res.render("signup");
+		res.render("signup", {notLoggedIn: true});
 	});
 
 	app.post("/signup", function (req, res) {

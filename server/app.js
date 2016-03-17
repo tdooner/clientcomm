@@ -60,9 +60,8 @@ var utils = {
 
 // routes
 require("../routes/access")(app, db, utils, passport);
-require("../routes/cmview")(app, db, utils, passport);
-// require("../routes/sms")(app, db, utils, passport);
-require("../routes/sms2")(app, db, passport);
+require("../routes/cmview")(app, passport);
+require("../routes/sms")(app);
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });

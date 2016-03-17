@@ -2,6 +2,16 @@
 exports.up = function(knex, Promise) {
 	return Promise.all([
 
+		knex.schema.createTable("orgs", function(table) {
+			table.increments("orgid").primary();
+
+			table.string("name");
+			table.integer("allotment").defaultTo(10);
+			
+			table.timestamp("updated").defaultTo(knex.fn.now());
+			table.timestamp("created").defaultTo(knex.fn.now());
+		}),
+
 		knex.schema.createTable("cms", function(table) {
 			table.increments("cmid").primary();
 
@@ -14,6 +24,7 @@ exports.up = function(knex, Promise) {
 
 			table.string("position");
 			table.string("department");
+			table.string("organization");
 
 			table.boolean("admin").defaultTo(false);
 			table.boolean("active").defaultTo(true);
