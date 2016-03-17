@@ -6,13 +6,13 @@ module.exports = function (app, db, utils, passport) {
 		res.render("index", {notLoggedIn: true});
 	});
 
-	app.get("/super", function (req, res) {
+	app.get("/orgs", function (req, res) {
 		db("orgs").orderBy("name")
 		.then(function (orgs) {
 			var warning = req.flash("warning");
 			var success = req.flash("success");
 
-			res.render("super-login", {
+			res.render("orgs", {
 				orgs: orgs,
 				warning: warning,
 				success: success
@@ -22,7 +22,7 @@ module.exports = function (app, db, utils, passport) {
 		});
 	});
 
-	app.post("/super/org", function (req, res) {
+	app.post("/orgs", function (req, res) {
 		var name = req.body.name;
 		var email = req.body.email;
 		var expiration = req.body.expiration;
@@ -30,13 +30,16 @@ module.exports = function (app, db, utils, passport) {
 
 		if (!name) {
 			req.flash("warning", "Missing name.");
-			res.redirect("/super");
+			res.redirect("/orgs");
 		} else if (!email) {
-			res.render("super-login", {warning: "Missing email."});
+			req.flash("warning", "Missing email.");
+			res.redirect("/orgs");
 		} else if (isNaN(Date.parse(expiration))) {
-			res.render("super-login", {warning: "Missing expiration date."});
+			req.flash("warning", "Missing expiration date.");
+			res.redirect("/orgs");
 		} else if (isNaN(allotment)) {
-			res.render("super-login", {warning: "Missing allotment."});
+			req.flash("warning", "Missing allotment.");
+			res.redirect("/orgs");
 		} else {
 			db("orgs")
 			.where("name", name)
@@ -50,20 +53,71 @@ module.exports = function (app, db, utils, passport) {
 						expiration: expiration,
 						allotment: allotment
 					}).then(function (response) {
-						res.render("super-login", {success: "Successful entry."});
+						req.flash("success", "Successful entry.");
+						res.redirect("/orgs");
 					}).catch(function (err) {
-						res.render("super-login", {warning: "Failed to create new entry."});
+						req.flash("warning", "Failed to create new entry.");
+						res.redirect("/orgs");
 					});
 
 				} else {
 					req.flash("warning", "That name or email already exists.");
-					res.redirect("/super");
+					res.redirect("/orgs");
 				}
 
 			}).catch(function (err) {
-				res.render("super-login", {warning: "Error on searching for pre-existing organizations."});
+				req.flash("warning", "Error on searching for pre-existing organizations.");
+				res.redirect("/orgs");
 			});
 		}
+	});
+
+	app.get("/orgs/:orgid", function (req, res) {
+		var orgid = req.params.orgid;
+		db("orgs").where("orgid", orgid).limit(1)
+		.then(function (orgs) {
+			var warning = req.flash("warning");
+			var success = req.flash("success");
+
+			if (orgs.length > 0) {
+				var org = orgs[0];
+
+				db("cms").where("org", orgid).orderBy("last")
+				.then(function (cms) {
+
+					res.render("org", {
+						org: org,
+						cms: cms,
+						warning: warning,
+						success: success
+					});
+					
+				}).catch(function (err) {
+					res.redirect("/500");
+				});
+
+			} else {
+				res.redirect("/404");
+			}
+
+		}).catch(function (err) {
+			res.redirect("/500");
+		});
+	});
+
+	app.post("/orgs/:orgid", function (req, res) {
+		var orgid = req.body.orgid;
+		var first = req.body.first;
+		var middle = req.body.middle;
+		var last = req.bodylaste;
+		var email = req.body.email;
+		var pass = req.body.pass;
+		var position = req.body.position;
+		var department = req.body.department;
+		var admin = req.body.admin;
+
+console.log(orgid, first, middle, last, email, pass, position, department, admin);
+
 	});
 
 	app.get("/signup", function (req, res) {
@@ -138,6 +192,10 @@ module.exports = function (app, db, utils, passport) {
 
   app.get("/500", function (req, res) {
   	res.status(500).send("Something happened.")
+  })
+
+  app.get("/404", function (req, res) {
+  	res.status(404).send("404 Something happened.")
   })
 
 };
