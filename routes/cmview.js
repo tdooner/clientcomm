@@ -113,62 +113,116 @@ module.exports = function (app, passport) {
     res.redirect("/cms");
   });
 
-  app.get("/cms/:cmid/cls/:clid", function (req, res) { 
+  app.get("/cms/:cmid/cls/:clid", isLoggedIn, function (req, res) { 
     var clid = req.params.clid;
+    var cmid = req.user.cmid;
     db("clients").where("clid", clid).limit(1)
     .then(function (cls) {
       var cl = cls[0];
-      if (cl.cm == req.user.cmid) {
-        res.send(cl);
+      if (cl.cm == cmid && cmid == req.params.cmid) {
+
+        db("msgs").innerJoin("convos", "msgs.convo", "convos.convid")
+        .where("convos.open", true)
+        .andWhere("convos.cm", cmid)
+        .andWhere("convos.client", cl.clid)
+        .orderBy("msgs.created")
+        .then(function (msgs) {
+
+          db("comms").innerJoin("commconns", "comms.commid", "commconns.comm")
+          .where("commconns.client", cl.clid)
+          .then(function (comms) {
+
+            var warning = req.flash("warning");
+            var success = req.flash("success");
+
+            res.render("client", {
+              cm: req.user,
+              cl: cl,
+              comms: comms,
+              msgs: msgs,
+              warning: warning,
+              success: success
+            });
+            
+          }).catch(function (err) {
+            res.redirect("/500");
+          })
+
+        }).catch(function (err) {
+          res.redirect("/500");
+        })
+
       } else {
         res.redirect("/404");
       }
     }).catch(function (err) {
-      res.redirect("/500")
+      res.redirect("/500");
     })
   });
 
-  app.get("/cm/:clid", isLoggedIn, function (req, res) { 
-  	var clid = req.params.clid;
-  	db("clients").where("cm", req.user.cmid).andWhere("clid", clid).then(function (client) {
-  		if (client.length < 1) {
-  			res.send("You are unauthorized to access this client's data.")
-  		} else {
-	  		db("comms").where("client", clid).then(function (comms) {
-	  			db("msgs").where("client", clid).orderBy("created", "asc").then(function (msgs) {
-	  				var tw_client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
-	  				for (var i = 0; i < msgs.length; i++) { 
-	  					var m = msgs[i];
 
-	  					// update statuses
-	  					var status_still_of_interest = !(m.tw_status == "delivered" || m.tw_status == "failed" || m.tw_status == "received");
-	  					var has_status = !(m.tw_status == null || m.tw_status == "");
-	  					if (status_still_of_interest && has_status) {
-								tw_client.sms.messages(m.tw_sid).get(function (err, sms) {
-									if (!err) {
-										if (sms.status !== m.tw_status) {
-											db("msgs").where("tw_sid", m.tw_sid)
-											.returning("tw_status")
-											.update({tw_status: sms.status}).then(function () {});
-										}
-									}
-								});
-	  					}
+  app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
-	  					// update read status
-	  					if (!m.read) {
-								db("msgs").where("tw_sid", m.tw_sid)
-								.update({read: true}).then(function () {});
-	  					}
-	  				}
+    var clid = req.params.clid;
+    var cmid = req.user.cmid;
+    var type = req.body.type;
+    var value = req.body.value;
+    var description = req.body.description;
 
-	  				// render regardless of above ops
-	  				res.render("client", {client: client[0], comms: comms, msgs: msgs});
-	  			});
-  			});
-  		}
-  	});
+    if (type == "cell" || type == "landline") {
+      value = value.replace(/[^0-9.]/g, "");
+      if (value.length == 10) {
+        value = "1" + value;
+      }
+    }
+
+    if (Number(clid) !== Number(req.body.clid)) {
+      req.flash("warning", "Client ID does not match.");
+      res.redirect(redirect_loc);
+    } else if (Number(cmid) !== Number(req.body.cmid)) {
+      req.flash("warning", "Case Manager ID does not match user logged-in.");
+      res.redirect(redirect_loc);
+    } else if (!type) {
+      req.flash("warning", "Missing the communication type.");
+      res.redirect(redirect_loc);
+    } else if (!value) {
+      req.flash("warning", "Missing the communication value (e.g. the phone number).");
+      res.redirect(redirect_loc);
+    } else if (type == "cell" && value.length !== 11) {
+      req.flash("warning", "Incorrect phone value.");
+      res.redirect(redirect_loc);
+    } else if (!description) {
+      req.flash("warning", "Missing description value.");
+      res.redirect(redirect_loc);
+    } else {
+      db("comms").insert({
+        type: type,
+        value: value,
+        description: description
+      }).returning("commid")
+      .then(function (commids) {
+        var commid = commids[0];
+
+        db("commconns").insert({
+          client: clid,
+          comm: commid,
+          name: description
+        })
+        .then(function (success) {
+          req.flash("success", "Added a new communication method.");
+          res.redirect(redirect_loc);
+
+        }).catch(function (err) {
+          res.redirect("/500");
+        })
+
+      }).catch(function (err) {
+        res.redirect("/500");
+      })
+    }
   });
+
 
   app.post("/cm/:clid/comm", isLoggedIn, function (req, res) { 
   	var clid = req.params.clid;
