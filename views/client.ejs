@@ -1,114 +1,90 @@
 <% include header %>
 
-<div class="entryform" style="float:right;width:auto">
-	Create a new contact
-	<form style="font-size:small;" method="post" action="/cmview/<%= client.clid %>/comm">
-		Method
-		<select name="type" required>
-			<option value="" selected disabled>Comm Method</option>
-			<option value="email">Email</option>
-			<option value="cell">Cell</option>
-			<option value="landline">Landline</option>
-		</select>
-		<br>
-		Contact Val
-		<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
-	<br>
-		Description
-		<input type="text" name="description" placeholder="e.g. Aunt's Cell" required>
-	<br>
-		<input type="submit" value="Add Communication">
-	</form>
-</div>
-
-<small><a href="/cmview">< Back</a><small>
 
 <h3>
-	<%= client.first + " " + client.middle + " " + client.last %>
-	<% if (client.otn) { %>
-		<span class="badge">OTN: <%= client.otn %></span>
-	<% } %>
-	<% if (client.so) { %>
-		<span class="badge">SO: <%= client.so %></span>
-	<% } %>
-	<% if (client.active) { %>
-		<span class="badge" style="background-color:green">(ʘ‿ʘ) Active</span>
-	<% } else { %>
-		[Client Archived]
-	<% } %>
+	<%= cl.first + " " + cl.middle + " " + cl.last %>
 </h3>
-
-<div style="min-height: 100px; padding: 10px; margin-bottom: 10px;  
-		background: rgb(76,175,80); /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(right, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(left, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(left, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(left, rgba(76,175,80,0), rgba(76,175,80,0), rgba(76,175,80,0.2)); /* Standard syntax (must be last) */">
-
-	<% if (comms.length > 0) { %>
-		Registered Communcation Methods
-		<ol>
-			<% for (var i = 0; i < comms.length; i++) { %>
-				<span class="badge"><%= comms[i].type %></span>
-
-				<%= comms[i].description + ": " + comms[i].value %>
-			<% } %>
-		</ol>
-	<% } else { %>
-		No communication methods registered, add one to communicate with this client.
-	<% } %>
-</div>
-
 <div>
-	<b>Client Comm Thread</b>
+	<ul>
+		<% if (cl.otn) { %>
+			<li>OTN: <%= cl.otn %></li>
+		<% } %>
+		<% if (cl.so) { %>
+			<li>SO: <%= cl.so %></li>
+		<% } %>
+	</ul>
 </div>
-<% for (var i = 0; i < msgs.length; i++) { %>
-	<div class="msg-bubble <% if (!msgs[i].inbound) { %>cm-resp<% } %>" style="<% if (!msgs[i].read) { %> box-shadow: 0px 0px 3px 1px rgba(255,0,0,0.5); <% } %>">
-		<small>
-			<% if (msgs[i].inbound) { %>
-				<%= client.first + " " + client.middle + " " + client.last %>:
-			<% } else { %>
-				You: 
-			<% } %>
-		</small>
 
-		<%= msgs[i].content %>
-		<br>
-		<small style="width: 50%; margin-left: 50%; font-style: italic;">
-			<% var d = new Date(msgs[i].created) %>
-			Status: <%= msgs[i].tw_status %> 
-			at 
-			<%= d.getHours() + ":" + d.getMinutes() + " on " + (d.getMonth()+1) + "/" + d.getDate() %>
-			<% if (msgs[i].read) { %>
-				<span style="color:green;"> √ Seen </span>
-			<% } %>
-		</small>
-	</div>
+<% if (msgs.length > 0) { %>
+	<b>Communication Devices associated with client:</b>
+	<ul>
+		<% for (var i = 0; i < msgs.length; i++) { %>
+			<li>
+				<%= JSON.stringify(msgs[i]) %>
+			</li>
+		<% } %>
+	</ul>
+<% } %>
+
+<% if (comms.length > 0) { %>
+	<b>Communication Devices associated with client:</b>
+	<ul>
+		<% for (var i = 0; i < comms.length; i++) { %>
+			<li>
+				<%= comms[i].description %>
+				<ul style="font-size:small;">
+					<li><%= comms[i].type %></li>
+					<li><%= comms[i].value %></li>
+					<li><%= comms[i].updated %></li>
+				</ul>
+			</li>
+		<% } %>
+	</ul>
 <% } %>
 
 
-<div id="newmsg" style="margin-top: 120px;">
-	Submit a new message to client
-	<form method="post" action="/cmview/<%= client.clid %>/send" style="text-align: right;">
-		<textarea name="content" maxlength="255" placeholder="Write your message here..." required></textarea>
+<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/comm">
 
-		<% if (comms.length > 0) { %>
-			<select name="device" required>
-				<% for (var i = 0; i < comms.length; i++) { %>
-					<option value='{"value": "<%= comms[i].value %>", "commid": "<%= comms[i].commid %>"}'><%= comms[i].description %></option>
-				<% } %>
+	<b>Add a new communciation device</b>
+
+	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
+	<input type="hidden" name="clid" value="<%= cl.clid %>">
+
+	<div class="form-row">
+		<div class="form-desc">
+			Communication Type
+		</div>
+		<div class="form-entry">
+			<select name="type" required>
+				<option value="" selected disabled>Comm Method</option>
+				<option value="email" disabled>Email</option>
+				<option value="cell">Cell</option>
+				<option value="landline" disabled>Landline</option>
 			</select>
-			<input type="submit" value="Send">
-		<% } else { %>
-			You need to add some communication methods before you can send a message to this client.
-		<% } %>
-	</form>
-</div>
+		</div>
+	</div>
 
-<script type="text/javascript">
-window.onload = function () {
-	window.scrollTo(0,document.body.scrollHeight);
-}
-</script>
+	<div class="form-row">
+		<div class="form-desc">
+			Number
+		</div>
+		<div class="form-entry">
+			<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-desc">
+			Description
+		</div>
+		<div class="form-entry">
+			<input type="text" name="description" placeholder="e.g. Aunt's Cell" required>
+		</div>
+	</div>
+
+	<input type="submit" value="Submit">
+
+</form>
+
 
 <% include footer %>
