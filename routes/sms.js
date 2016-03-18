@@ -16,7 +16,7 @@ module.exports = function (app) {
     .then(function (msgs) {
       // do nothing for now
       var now = new Date(Date.now()).toISOString().split("T");
-      console.log("Message received on " + now[0] + " at " + now[1]);
+      console.log("Message received from " + from + " on " + now[0] + " at " + now[1]);
 
     }).catch(function (err) {
       handleError(err);

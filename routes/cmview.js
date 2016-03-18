@@ -121,12 +121,11 @@ module.exports = function (app, passport) {
       var cl = cls[0];
       if (cl.cm == cmid && cmid == req.params.cmid) {
 
-        db("msgs").innerJoin("convos", "msgs.convo", "convos.convid")
-        .where("convos.open", true)
-        .andWhere("convos.cm", cmid)
-        .andWhere("convos.client", cl.clid)
-        .orderBy("msgs.created")
-        .then(function (msgs) {
+        db("convos")
+        .where("convos.cm", cmid)
+        .andWhere("convos.client", clid)
+        .orderBy("convos.updated")
+        .then(function (convos) {
 
           db("comms").innerJoin("commconns", "comms.commid", "commconns.comm")
           .where("commconns.client", cl.clid)
@@ -139,7 +138,7 @@ module.exports = function (app, passport) {
               cm: req.user,
               cl: cl,
               comms: comms,
-              msgs: msgs,
+              convos: convos,
               warning: warning,
               success: success
             });
@@ -170,12 +169,15 @@ module.exports = function (app, passport) {
     var value = req.body.value;
     var description = req.body.description;
 
+    console.log("type is: ", type);
     if (type == "cell" || type == "landline") {
       value = value.replace(/[^0-9.]/g, "");
       if (value.length == 10) {
         value = "1" + value;
       }
+      console.log("value is: ", value);
     }
+    console.log("value 2 is: ", value);
 
     if (Number(clid) !== Number(req.body.clid)) {
       req.flash("warning", "Client ID does not match.");

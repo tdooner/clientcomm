@@ -15,12 +15,19 @@
 	</ul>
 </div>
 
-<% if (msgs.length > 0) { %>
-	<b>Communication Devices associated with client:</b>
+<% if (convos.length > 0) { %>
+	<b>Conversations with client:</b>
 	<ul>
-		<% for (var i = 0; i < msgs.length; i++) { %>
+		<% for (var i = 0; i < convos.length; i++) { %>
 			<li>
-				<%= JSON.stringify(msgs[i]) %>
+				<%= convos[i].subject %>
+				<ul>
+					<% if (convos[i].open) { %>
+						<li>CURRENT</li>
+					<% } %>
+					<li>Last updated: <%= convos[i].updated %></li>
+					<li>Created: <%= convos[i].created %></li>
+				</ul>
 			</li>
 		<% } %>
 	</ul>

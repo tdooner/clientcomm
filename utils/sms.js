@@ -4,9 +4,9 @@ var Promise = require("bluebird");
 module.exports = {
 
 	process_incoming_msg: function (from, text, tw_status, tw_sid) {
-		var that = this;
+		var sms = this;
 		return new Promise (function (fulfill, reject) {
-	    that.get_or_create_comm_device(from)
+	    sms.get_or_create_comm_device(from)
 	    .then(function (device) {
 
 	      // if this communication device exists in the system already
@@ -14,16 +14,17 @@ module.exports = {
 	        var commid = device[0];
 
 	        // get clients
-	        that.get_clients(commid)
+	        sms.get_clients(commid)
 	        .then(function (clients) {
 
 	          // at least one client should be returned
 	          if (clients.length > 0) {
-	            that.get_or_create_convos(clients, from)
+	            sms.get_or_create_convos(clients, from)
 	            .then(function (convos) {
+
 	              // need to make sure that there are existing convos
 	              if (convos.length > 0) {
-	                that.register_message(text, commid, convos, tw_status, tw_sid)
+	                sms.register_message(text, commid, convos, tw_status, tw_sid)
 	                .then(function (msgs) {
 	                	fulfill(msgs);
 
@@ -82,7 +83,7 @@ module.exports = {
 		  // acquire commid
 		  db.select("commid").from("comms").where("value", from).limit(1)
 		  .then(function (comms) {
-		  	
+
 		  	// return list of comms
 		  	if (comms.length > 0) {
 		    	comms = comms.map(function (ea) { return ea.commid; });
@@ -117,12 +118,16 @@ module.exports = {
 	    db("clients")
 	    .innerJoin("commconns", "commconns.client", "clients.clid")
 	    .innerJoin("comms", "commconns.comm", "comms.commid")
+	    .innerJoin("cms", "clients.cm", "cms.cmid")
 	    .whereNull("commconns.retired")
 	    .andWhere("commconns.comm", commid)
-	    .pluck("clients.clid")
 	    .then(function (clients) {
+	    	clients = clients.map(function (ea) {
+	    		return {clid: ea.clid, cmid: ea.cm};
+	    	});
+
 	    	if (clients.length == 0) {
-	    		clients = [null];
+	    		clients = [{clid: null, cmid: null}];
 	    	}
 	    	fulfill(clients);
 	    }).catch(function (err) {
@@ -133,8 +138,10 @@ module.exports = {
 	
 	get_or_create_convos: function (clients) {
     return new Promise (function (fulfill, reject) {
+    	var cls = clients.map(function (ea) { return ea.clid; });
+    	var cms = clients.map(function (ea) { return ea.cmid; });
 	    db("convos")
-	    .whereIn("client", clients)
+	    .whereIn("client", cls)
 	    .andWhere("convos.open", true)
 	    .then(function (convos) {
 
@@ -162,14 +169,17 @@ module.exports = {
 			    	} else {
 
 			    		// just in case [null] value was not submitted for clients in lieu of none
-			    		if (clients.length == 0) { clients = [null]; }
+			    		if (clients.length == 0) { clients = [{clid: null, cmid: null}]; }
 
 				    	var insertList = [];
+				    	var now = new Date(Date.now()).toISOString().split("T");
+				    	var subject = "Automatically created on " + now[0] + " at " + now[1].replace("Z", "");
 				    	for (var i = 0; i < clients.length; i++) {
 				    		var client = clients[i];
 				    		var insertObj = {
-				    			"cm": null,
-				    			"client": client,
+				    			"cm": client.cmid,
+				    			"client": client.clid,
+				    			"subject": subject,
 				    			"open": true,
 				    			"accepted": false
 				    		}
