@@ -54,7 +54,7 @@ module.exports = function (app, passport) {
   });
 
   
-  app.post("/cms", isLoggedIn, function (req, res) { 
+  app.post("/cms/:cmid", isLoggedIn, function (req, res) { 
     var redirect_loc = "/cms";
 
     var cmid = req.body.cmid;
@@ -71,7 +71,6 @@ module.exports = function (app, passport) {
       req.flash("warning", "Missing cmid.");
       res.redirect(redirect_loc);
     } else if (Number(req.user.cmid) !== Number(cmid)) {
-      console.log("No match: ", req.user.cmid, cmid)
       req.flash("warning", "This ID does not match with the logged-in user");
       res.redirect(redirect_loc);
     } else if (!first) {
@@ -110,42 +109,23 @@ module.exports = function (app, passport) {
     
   });
 
-  // create new client
-  app.post("/cm", isLoggedIn, function (req, res) { 
-  	var cl = {
-  		cm: req.user.cmid,
-  	};
+  app.get("/cms/:cmid/cls", isLoggedIn, function (req, res) { 
+    res.redirect("/cms");
+  });
 
-	  cl.first = req.body.first;
-	  if (!cl.first || cl.first == "" || cl.first.length < 1) {
-	  	res.send("First name is missing or too short. " + ahref);
-	  }
-
-	  if (req.body.middle !== "" && req.body.middle.length < 1) {
-	  	cl.middle = req.body.middle;
-	  }
-
-	  cl.last = req.body.last;
-	  if (!cl.last || cl.last !== "" && cl.last.length < 1) {
-	  	res.send("Last name is missing or too short. " + ahref);
-	  }
-
-	  cl.dob = req.body.dob;
-	  if (!cl.dob || cl.dob !== "" && cl.dob.length < 1) {
-	  	res.send("Date of birth is missing. " + ahref);
-	  } else {
-	  	var d = cl.dob;
-	  	d = d.split("-");
-	  	cl.dob = d[2] + d[1] + d[0];
-	  }
-
-	  if (req.body.otn) cl.otn = req.body.otn;
-	  if (req.body.so) cl.so = req.body.so;
-
-  	db("clients").insert(cl).then(function (clients) {
-  		res.redirect("cmview");
-  	});
-  	
+  app.get("/cms/:cmid/cls/:clid", function (req, res) { 
+    var clid = req.params.clid;
+    db("clients").where("clid", clid).limit(1)
+    .then(function (cls) {
+      var cl = cls[0];
+      if (cl.cm == req.user.cmid) {
+        res.send(cl);
+      } else {
+        res.redirect("/404");
+      }
+    }).catch(function (err) {
+      res.redirect("/500")
+    })
   });
 
   app.get("/cm/:clid", isLoggedIn, function (req, res) { 

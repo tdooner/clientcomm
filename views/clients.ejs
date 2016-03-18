@@ -9,7 +9,7 @@
 	<ul>
 		<% for (var i = 0; i < clients.length; i++ ) { %>
 			<li>
-				<a href="/cmview/<%= clients[i].clid %>">
+				<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
 					<%= clients[i].first + " " + clients[i].middle + " " + clients[i].last %>
 				</a>
 				<% if (clients[i].otn) { %>
