@@ -12,12 +12,78 @@ var isLoggedIn = pass.isLoggedIn;
 module.exports = function (app, passport) {
 
 	// view current clients for a case manager
-  app.get("/cm", isLoggedIn, function (req, res) { 
-  	
-  	db("clients").where("cm", req.user.cmid).then(function (clients) {
-  		res.render("clients", {clients: clients});
-  	});
-  	
+  app.get("/cms/:cmid", function (req, res) { 
+    var cmid = req.params.cmid;
+
+    db("cms").where("cmid", cmid).limit(1)
+    .then(function (cms) {
+      if (cms.length == 0) {
+        res.redirect("/404");
+      } else {
+        if (cms[0].active) {
+          db("clients").where("cm", cmid)
+          .then(function (clients) {
+
+            var warning = req.flash("warning");
+            var success = req.flash("success");
+
+            res.render("clients", {
+              cm: cms[0],
+              clients: clients,
+              warning: warning,
+              success: success
+            });
+
+          }).catch(function (err) {
+            res.redirect("/500");
+          });
+        } else {
+          res.redirect("/404");
+        }
+      }
+    }).catch(function (err) {
+      res.redirect("/500");
+    })
+    
+  });
+
+  
+  app.post("/cms/:cmid", function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid;
+
+    var cmid = req.body.cmid;
+    var first = req.body.first;
+    var middle = req.body.middle;
+    var last = req.body.last;
+    var dob = req.body.dob;
+    var otn = req.body.otn;
+    var so = req.body.so;
+
+    if (!middle) admin = null;
+
+    if (!cmid) {
+      req.flash("warning", "Missing cmid.");
+      res.redirect(redirect_loc);
+    } else if (!first) {
+      req.flash("warning", "Missing first name.");
+      res.redirect(redirect_loc);
+    } else if (!last) {
+      req.flash("warning", "Missing last name.");
+      res.redirect(redirect_loc);
+    } else if (!email) {
+      req.flash("warning", "Missing email.");
+      res.redirect(redirect_loc);
+    } else if (!password) {
+      req.flash("warning", "Missing password.");
+      res.redirect(redirect_loc);
+    } else if (!position) {
+      req.flash("warning", "Missing position.");
+      res.redirect(redirect_loc);
+    } else if (!department) {
+      req.flash("warning", "Missing department.");
+      res.redirect(redirect_loc);
+    } else {}
+    
   });
 
   // create new client

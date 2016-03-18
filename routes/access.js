@@ -106,19 +106,95 @@ module.exports = function (app, db, utils, passport) {
 	});
 
 	app.post("/orgs/:orgid", function (req, res) {
+		var redirect_loc = "/orgs/" + req.params.orgid;
+
 		var orgid = req.body.orgid;
 		var first = req.body.first;
 		var middle = req.body.middle;
-		var last = req.bodylaste;
+		var last = req.body.last;
 		var email = req.body.email;
-		var pass = req.body.pass;
+		var password = req.body.password;
 		var position = req.body.position;
 		var department = req.body.department;
 		var admin = req.body.admin;
 
-console.log(orgid, first, middle, last, email, pass, position, department, admin);
+		if (admin == "true") admin = true;
+		if (admin !== true) admin = false;
+		if (!middle) middle = null;
 
+		if (!orgid) {
+			req.flash("warning", "Missing orgid.");
+			res.redirect(redirect_loc);
+		} else if (!first) {
+			req.flash("warning", "Missing first name.");
+			res.redirect(redirect_loc);
+		} else if (!last) {
+			req.flash("warning", "Missing last name.");
+			res.redirect(redirect_loc);
+		} else if (!email) {
+			req.flash("warning", "Missing email.");
+			res.redirect(redirect_loc);
+		} else if (!password) {
+			req.flash("warning", "Missing password.");
+			res.redirect(redirect_loc);
+		} else if (!position) {
+			req.flash("warning", "Missing position.");
+			res.redirect(redirect_loc);
+		} else if (!department) {
+			req.flash("warning", "Missing department.");
+			res.redirect(redirect_loc);
+		} else {
+
+			db("cms").where("email", email)
+			.then(function (cms) {
+
+				if (cms.length > 0) {
+					req.flash("warning", "Email already in use.");
+					res.redirect(redirect_loc);
+				} else {
+					db("cms").insert({
+						org: orgid,
+						first: first,
+						middle: middle,
+						last: last,
+						email: email,
+						pass: password,
+						position: position,
+						department: department,
+						admin: admin,
+						active: true,
+						superuser: false,
+					}).then(function (success) {
+						req.flash("success", "Added new member.");
+						res.redirect(redirect_loc);
+					}).catch(function () {
+						res.redirect("/500");
+					});
+				}
+
+			}).catch(function () {
+				res.redirect("/500");
+			})
+
+		}
 	});
+
+	// delete method workaround
+	app.post("/orgs/:orgid/cms/:cmid/delete", function (req, res) {
+		var redirect_loc = "/orgs/" + req.params.orgid;
+		var cmid = req.body.cmid;
+
+		db("cms").where("cmid", cmid).update({active: false})
+		.then(function (success) {
+			req.flash("success", "Deactivated member.");
+			res.redirect(redirect_loc);
+		}).catch(function () {
+			res.redirect("/500");
+		});
+	});
+
+
+	// old
 
 	app.get("/signup", function (req, res) {
 		res.render("signup", {notLoggedIn: true});
@@ -189,13 +265,5 @@ console.log(orgid, first, middle, last, email, pass, position, department, admin
       failureRedirect: "/fail"
     })
   );
-
-  app.get("/500", function (req, res) {
-  	res.status(500).send("Something happened.")
-  })
-
-  app.get("/404", function (req, res) {
-  	res.status(404).send("404 Something happened.")
-  })
 
 };
