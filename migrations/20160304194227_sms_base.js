@@ -72,6 +72,8 @@ exports.up = function(knex, Promise) {
 					 .references("clid")
 					 .inTable("clients");
 
+			table.string("subject");
+
 			table.boolean("open").defaultTo(true);
 			table.boolean("accepted").defaultTo(false);
 
@@ -113,7 +115,8 @@ exports.up = function(knex, Promise) {
 					 .references("commid")
 					 .inTable("comms");
 
-			
+			table.string("name");
+
 			table.dateTime("retired");
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
@@ -125,6 +128,7 @@ exports.up = function(knex, Promise) {
 			table.string("value");       // e.g. jim@email.com, 14542348723
 			table.string("description"); // e.g. Joe's Obamaphone
 
+			table.timestamp("updated").defaultTo(knex.fn.now());
 			table.timestamp("created").defaultTo(knex.fn.now());
 		}),
 
