@@ -48,6 +48,7 @@ var utils = {
 require("../routes/access")(app, db, utils, passport);
 require("../routes/cmview")(app, passport);
 require("../routes/sms")(app);
+require("../routes/catchall")(app);
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });
