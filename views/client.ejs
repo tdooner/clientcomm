@@ -20,7 +20,9 @@
 	<ul>
 		<% for (var i = 0; i < convos.length; i++) { %>
 			<li>
-				<%= convos[i].subject %>
+				<a href="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convos[i].convid %>">
+					<%= convos[i].subject %>
+				</a>
 				<ul>
 					<% if (convos[i].open) { %>
 						<li>CURRENT</li>

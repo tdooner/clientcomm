@@ -161,7 +161,7 @@ module.exports = function (app, passport) {
 
 
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
+    var redirect_loc = "/cms/" + req.user.cmid;
 
     var clid = req.params.clid;
     var cmid = req.user.cmid;
@@ -225,99 +225,66 @@ module.exports = function (app, passport) {
     }
   });
 
+  app.get("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid;
 
-  app.post("/cm/:clid/comm", isLoggedIn, function (req, res) { 
-  	var clid = req.params.clid;
-  	var ahref = "<a href='/cm/" + clid + "'>Return to user.</a>";
+    var cmid = req.params.cmid;
+    var clid = req.params.clid;
+    var convid = req.params.convid;
 
-  	var comm = {}
-  	if (!req.body.hasOwnProperty("type")) {
-  		res.send("Missing Type. " + ahref);
-  	} else {
-  		comm.type = req.body.type;
-  	}
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
 
-  	if (!req.body.hasOwnProperty("value")) {
-  		res.send("Missing Value. " + ahref);
-  	} else {
-  		var v = req.body.value;
-  		if (comm.type == "email" || comm.type == "cell") { 
-  			v = v.replace(/[^0-9.]/g, "");
-  			if (v.length == 10) {
-  				v = "1" + v;
-  			}
-  			if (v.length == 11) {
-  				comm.value = v;	
-  			} else {
-  				res.send("Bad phone entry. Make sure it includes the country code (e.g. 1-848-123-4567). " + ahref);
-  			}
-  		} else {
-  			comm.value = v;
-  		}
-  	}
+      db("clients").where("clid", clid).limit(1)
+      .then(function (clients) {
 
-  	if (!req.body.hasOwnProperty("description")) {
-  		res.send("Missing Description. " + ahref);
-  	} else {
-  		comm.description = req.body.description;
-  	}
+        if (clients.length > 0) {
+          var client = clients[0];  
 
-  	comm.client = clid;
-  	db("comms").insert(comm).then(function (client) {
-  		res.redirect("/cm/" + clid);
-  	});
+          if (client.cm == cmid) {
+
+            db("convos").where("convid", convid).limit(1)
+            .then(function (convos) {
+
+              if (convos.length > 0) {
+                var convo = convos[0];  
+
+                if (convo.cm == cmid) {
+
+                  db("msgs").where("convo", convid)
+                  .then(function (msgs) {
+                    res.send(msgs);
+                  }).catch(function (err) {
+                    res.redirect("/500")
+                  })
+
+                } else {
+                  // actually not allowed to view
+                  res.redirect("/404");
+                }
+
+              } else {
+                // actually not allowed to view
+                res.redirect("/404");
+              }
+            });
+
+          } else {
+            res.redirect("/404");
+          }
+
+        } else {
+          res.redirect("/404");
+        }
+
+      }).catch(function (err) {
+        res.redirect("/500");
+      })
+
+    }
   });
 
-  app.post("/cm/:clid/send", isLoggedIn, function (req, res) { 
-  	var clid = req.params.clid;
-  	var ahref = "<a href='/cm/" + clid + "'>Return to user.</a>";
-
-  	if (req.body.hasOwnProperty("device")) {
-  		req.body.device = JSON.parse(req.body.device);
-  	} else {
-  		req.body.device = {};
-  	}
-
-  	var comm = {}
-  	if (!req.body.device.hasOwnProperty("commid")) {
-  		res.send("Missing communication id. " + ahref);
-  	} else {
-  		comm.comm = req.body.device.commid;
-  	}
-
-  	if (!req.body.device.hasOwnProperty("value")) {
-  		res.send("Missing communication value. " + ahref);
-  	}
-
-  	if (!req.body.hasOwnProperty("content")) {
-  		res.send("Missing message body. " + ahref);
-  	} else {
-  		comm.content = req.body.content;
-  	}
-
-  	comm.client = clid;
-  	comm.read = true;
-
-		var client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
-		client.messages.create({
-	    body: comm.content,
-	    to: req.body.device.value,
-	    from: TWILIO_NUM
-		}, function(err, message) {
-			if (err) {
-				res.send("There was an error. " + ahref + "<br>" + err);
-			} else {
-				comm.tw_sid = message.sid;
-				comm.tw_status = message.status;
-		  	db("msgs").insert(comm).then(function (client) {
-		  		res.redirect("/cm/" + clid);
-		  	});
-			}
-		});
-  });
-
-
-
-  app.get("/fail", function (req, res) { res.send("Bad entry.") });
 
 };
