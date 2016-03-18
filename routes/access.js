@@ -1,4 +1,5 @@
 var db  = require("../server/db");
+var pass = require("../utils/utils.js")["pass"];
 
 module.exports = function (app, db, utils, passport) {
 
@@ -158,7 +159,7 @@ module.exports = function (app, db, utils, passport) {
 						middle: middle,
 						last: last,
 						email: email,
-						pass: password,
+						pass: pass.hashPw(password),
 						position: position,
 						department: department,
 						admin: admin,
@@ -261,7 +262,7 @@ module.exports = function (app, db, utils, passport) {
 	});
 
   app.post("/login", passport.authenticate("local-login", {
-      successRedirect: "/cmview",
+      successRedirect: "/cms",
       failureRedirect: "/fail"
     })
   );

@@ -12,8 +12,14 @@ var isLoggedIn = pass.isLoggedIn;
 module.exports = function (app, passport) {
 
 	// view current clients for a case manager
-  app.get("/cms/:cmid", function (req, res) { 
-    var cmid = req.params.cmid;
+  app.get("/cms", isLoggedIn, function (req, res) { 
+    var cmid = req.user.cmid;
+    var redirect_loc = "/cms/" + cmid;
+    res.redirect(redirect_loc);
+  });
+
+  app.get("/cms/:cmid", isLoggedIn, function (req, res) { 
+    var cmid = req.user.cmid;
 
     db("cms").where("cmid", cmid).limit(1)
     .then(function (cms) {
@@ -48,8 +54,8 @@ module.exports = function (app, passport) {
   });
 
   
-  app.post("/cms/:cmid", function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid;
+  app.post("/cms", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms";
 
     var cmid = req.body.cmid;
     var first = req.body.first;
@@ -59,10 +65,14 @@ module.exports = function (app, passport) {
     var otn = req.body.otn;
     var so = req.body.so;
 
-    if (!middle) admin = null;
+    if (!middle) middle = "";
 
     if (!cmid) {
       req.flash("warning", "Missing cmid.");
+      res.redirect(redirect_loc);
+    } else if (Number(req.user.cmid) !== Number(cmid)) {
+      console.log("No match: ", req.user.cmid, cmid)
+      req.flash("warning", "This ID does not match with the logged-in user");
       res.redirect(redirect_loc);
     } else if (!first) {
       req.flash("warning", "Missing first name.");
@@ -70,19 +80,33 @@ module.exports = function (app, passport) {
     } else if (!last) {
       req.flash("warning", "Missing last name.");
       res.redirect(redirect_loc);
-    } else if (!email) {
-      req.flash("warning", "Missing email.");
+    } else if (isNaN(Date.parse(dob))) {
+      req.flash("warning", "Missing date of birth.");
       res.redirect(redirect_loc);
-    } else if (!password) {
-      req.flash("warning", "Missing password.");
+    } else if (!otn) {
+      req.flash("warning", "Missing OTN.");
       res.redirect(redirect_loc);
-    } else if (!position) {
-      req.flash("warning", "Missing position.");
+    } else if (!so) {
+      req.flash("warning", "Missing SO number.");
       res.redirect(redirect_loc);
-    } else if (!department) {
-      req.flash("warning", "Missing department.");
-      res.redirect(redirect_loc);
-    } else {}
+    } else {
+      db("clients")
+      .insert({
+        cm: cmid,
+        first: first,
+        middle: middle,
+        last: last,
+        dob: dob,
+        otn: otn,
+        so: so,
+        active: true
+      }).then(function (success) {
+        req.flash("success", "Added a new client.");
+        res.redirect(redirect_loc);
+      }).catch(function (err) {
+        res.redirect("/500")
+      })
+    }
     
   });
 

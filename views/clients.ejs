@@ -1,6 +1,8 @@
 <% include header %>
 
-<h3>Welcome</h3>
+<h3>
+	Welcome <%= cm.first %> <%= cm.middle %> <%= cm.last %>
+</h3>
 
 <% if (clients.length > 0) { %>
 	Your clients:
@@ -23,16 +25,10 @@
 	You have no clients. Add some below.
 <% } %>
 
-Other options:
-<ul>
-	<li><a href="/floaters">Identify unknown contacts</a></li>
-</ul>
 
-
-Add a new client:
 <form method="post">
 
-	<b>New Organization</b>
+	<b>Add a new client</b>
 
 	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
 
@@ -77,7 +73,7 @@ Add a new client:
 			OTN
 		</div>
 		<div class="form-entry">
-			<input type="text" name="otn" placeholder="00000000" required>
+			<input type="text" name="otn" placeholder="135792468" required>
 		</div>
 	</div>
 
@@ -86,7 +82,7 @@ Add a new client:
 			SO
 		</div>
 		<div class="form-entry">
-			<input type="text" name="so" placeholder="00000000" required>
+			<input type="text" name="so" placeholder="246813579" required>
 		</div>
 	</div>
 
