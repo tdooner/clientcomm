@@ -28,68 +28,71 @@ Other options:
 	<li><a href="/floaters">Identify unknown contacts</a></li>
 </ul>
 
-<div class="entryform">
-	Add a new client:
-	<form method="post">
 
-		<div>
-			<div class="form-desc">
-				First Name
-			</div>
-			<div>
-				<input type="text" name="first" placeholder="First Name" required>
-			</div>
+Add a new client:
+<form method="post">
+
+	<b>New Organization</b>
+
+	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
+
+	<div class="form-row">
+		<div class="form-desc">
+			First
 		</div>
-
-		<div>
-			<div class="form-desc">
-				Middle Name
-			</div>
-			<div>
-				<input type="text" name="middle" placeholder="Middle Name">
-			</div>
+		<div class="form-entry">
+			<input type="text" name="first" placeholder="Jane" required>
 		</div>
+	</div>
 
-		<div>
-			<div class="form-desc">
-				Last Name
-			</div>
-			<div>
-				<input type="text" name="last" placeholder="Last Name" required>
-			</div>
+	<div class="form-row">
+		<div class="form-desc">
+			Middle
 		</div>
-
-		<div>
-			<div class="form-desc">
-				Date of Birth
-			</div>
-			<div>
-				<input type="date" name="dob" placeholder="Date of Birth">
-			</div>
+		<div class="form-entry">
+			<input type="text" name="middle" placeholder="M">
 		</div>
+	</div>
 
-		<div>
-			<div class="form-desc">
-				OTN
-			</div>
-			<div>
-				<input type="text" name="otn" placeholder="OTN">
-			</div>
+	<div class="form-row">
+		<div class="form-desc">
+			Last
 		</div>
-
-		<div>
-			<div class="form-desc">
-				SO
-			</div>
-			<div>
-				<input type="text" name="so" placeholder="SO">
-			</div>
+		<div class="form-entry">
+			<input type="text" name="last" placeholder="Doe" required>
 		</div>
+	</div>
 
-		<input type="submit" value="Submit">
+	<div class="form-row">
+		<div class="form-desc">
+			Date of Birth
+		</div>
+		<div class="form-entry">
+			<input type="date" name="dob" value="1955-01-01" required>
+		</div>
+	</div>
 
-	</form>
-</div>
+	<div class="form-row">
+		<div class="form-desc">
+			OTN
+		</div>
+		<div class="form-entry">
+			<input type="text" name="otn" placeholder="00000000" required>
+		</div>
+	</div>
+
+	<div class="form-row">
+		<div class="form-desc">
+			SO
+		</div>
+		<div class="form-entry">
+			<input type="text" name="so" placeholder="00000000" required>
+		</div>
+	</div>
+
+	<input type="submit" value="Submit">
+
+</form>
 
 
 <% include footer %>

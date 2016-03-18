@@ -59,13 +59,13 @@
 
 			<% if (typeof success !== "undefined" && success) { %>
 				<% for (var i = 0; i < success.length; i++) { %>
-					<span style="color:green">Success: <%= success[i] %></span>
+					<div style="color:green">Success: <%= success[i] %></div>
 				<% } %>
 			<% } %>
 
 			<% if (typeof warning !== "undefined" && warning) { %>
 				<% for (var i = 0; i < warning.length; i++) { %>
-					<span style="color:red">Alert: <%= warning[i] %></span>
+					<div style="color:red">Alert: <%= warning[i] %></div>
 				<% } %>
 			<% } %>
 
