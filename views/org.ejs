@@ -13,7 +13,9 @@ Admins:
 	<% for (var i = 0; i < cms.length; i++) { %>
 		<% if (cms[i].admin && cms[i].active) { %>
 			<li>
-				<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %> 
+				<a href="/cms/<%= cms[i].cmid %>">
+					<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+				</a>
 				<form method="post" action="/orgs/<%= org.orgid %>/cms/<%= cms[i].cmid %>/delete">
 					<input type="hidden" name="cmid" value="<%= cms[i].cmid %>">
 					<input type="submit" value="[Delete]">
@@ -35,7 +37,9 @@ Staff:
 	<% for (var i = 0; i < cms.length; i++) { %>
 		<% if (!cms[i].admin && cms[i].active) { %>
 			<li>
-				<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+				<a href="/cms/<%= cms[i].cmid %>">
+					<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+				</a>
 				<form method="post" action="/orgs/<%= org.orgid %>/cms/<%= cms[i].cmid %>/delete">
 					<input type="hidden" name="cmid" value="<%= cms[i].cmid %>">
 					<input type="submit" value="[Delete]">
