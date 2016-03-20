@@ -6,57 +6,40 @@ module.exports = {
 	process_incoming_msg: function (from, text, tw_status, tw_sid) {
 		var sms = this;
 		return new Promise (function (fulfill, reject) {
-	    sms.get_or_create_comm_device(from)
-	    .then(function (device) {
 
-	      // if this communication device exists in the system already
-	      if (device.length > 0) {
-	        var commid = device[0];
+			var commid;
+			sms.get_or_create_comm_device(from).then(get_clients).catch(errReject);
+			
+			function get_clients (device) {
+				if (device.length > 0) {
+					commid = device[0];
+					sms.get_clients(commid).then(get_or_create_convos).catch(errReject)
+				} else {
+					errReject("Failed to create a comm device.");
+				}
+			};
 
-	        // get clients
-	        sms.get_clients(commid)
-	        .then(function (clients) {
+			function get_or_create_convos (clients) {
+				if (clients.length > 0) {
+					sms.get_or_create_convos(clients, from).then(register_message).catch(errReject)
+				} else {
+					errReject("Failed to produce client or null list value.");
+				}
+			};
 
-	          // at least one client should be returned
-	          if (clients.length > 0) {
-	            sms.get_or_create_convos(clients, from)
-	            .then(function (convos) {
+			function register_message (convos) {
+				if (convos.length > 0) {
+					sms.register_message(text, commid, convos, tw_status, tw_sid).then(fulfill).catch(errReject)
+				} else {
+					errReject("Failed to produce convos list.");
+				}
+			};
 
-	              // need to make sure that there are existing convos
-	              if (convos.length > 0) {
-	                sms.register_message(text, commid, convos, tw_status, tw_sid)
-	                .then(function (msgs) {
-	                	fulfill(msgs);
+			function errReject (err) {
+				reject(String(err));
+			};
 
-	                }).catch(function (err) {
-	                  reject(err);
-	                });
 
-	              // convos list should have been returned
-	              } else {
-	                reject("Failed to produce convos list.");
-	              }
-
-	            }).catch(function (err) {
-	              reject(err);
-	            });
-
-	          // a client or null val should have been returned
-	          } else {
-	            reject("Failed to produce client or null list value.");
-	          }
-
-	        }).catch(function (err) {
-	          reject(err);
-	        });
-
-	      // that number does not currently exist
-	      } else {
-	        reject("Failed to create a comm device.")
-	      } 
-	    }).catch(function (err) {
-	      reject(err);
-	    });
 		});
 	},
 
@@ -211,7 +194,7 @@ module.exports = {
     return new Promise (function (fulfill, reject) {
     	var insertList = [];
     	for (var i = 0; i < convos.length; i++) {
-    		var convo = convos[i];
+    		var convo = convos[i].convid;
     		var insertObj = {
     			"convo": convo,
     			"comm": commid,
