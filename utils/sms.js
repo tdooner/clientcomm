@@ -194,6 +194,7 @@ module.exports = {
     return new Promise (function (fulfill, reject) {
     	var insertList = [];
     	for (var i = 0; i < convos.length; i++) {
+    		
     		var convo = convos[i].convid;
     		var insertObj = {
     			"convo": convo,

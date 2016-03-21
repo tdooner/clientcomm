@@ -124,7 +124,7 @@ module.exports = function (app, passport) {
         db("convos")
         .where("convos.cm", cmid)
         .andWhere("convos.client", clid)
-        .orderBy("convos.updated")
+        .orderBy("convos.updated", "desc")
         .then(function (convos) {
 
           db("comms").innerJoin("commconns", "comms.commid", "commconns.comm")
@@ -253,9 +253,18 @@ module.exports = function (app, passport) {
 
                 if (convo.cm == cmid) {
 
-                  db("msgs").where("convo", convid)
+                  db.select("msgs.content", "msgs.inbound", "msgs.read", "msgs.tw_status", "msgs.created", "comms.type", "comms.value", "comms.description")
+                  .from("msgs")
+                  .innerJoin("comms", "comms.commid", "msgs.comm")
+                  .where("msgs.convo", convid)
                   .then(function (msgs) {
-                    res.send(msgs);
+                    res.render("msgs", {
+                      cm: req.user,
+                      cl: client,
+                      convo: convo,
+                      msgs: msgs,
+                    });
+
                   }).catch(function (err) {
                     res.redirect("/500")
                   })
