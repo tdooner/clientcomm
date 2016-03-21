@@ -212,11 +212,21 @@ module.exports = {
     		insertList.push(insertObj);
     	}
 
+    	console.log(convos);
+
 	    db("msgs")
 	    .insert(insertList)
 	    .returning("msgid")
 	    .then(function (msgs) {
-	    	fulfill(msgs);
+
+	    	db("convos").whereIn("convid", convos)
+	    	.update({updated: db.fn.now()})
+	    	.then(function (success) {
+	    		fulfill(msgs);
+	    	}).catch(function (err) {
+	    		reject(err);
+	    	})
+
 	    }).catch(function (err) {
 			  reject(err);
 			});

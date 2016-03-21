@@ -4,6 +4,33 @@
 	<%= JSON.stringify(cm) %>
 <hr>
 
+
+
+<div>
+	<b>
+		<%= convo.subject %>
+	</b>
+</div>
+
+<div>
+	<small>
+		<% if (convo.open) { %>
+			Last updated:
+		<% } else { %>
+			Closed on:
+		<% } %>
+		<% try { %>
+			on <%= new Date(convo.updated) %>
+		<% } catch (err) { %>
+			Unknown
+		<% } %>
+	</small>
+</div>
+
+<br>
+
+
+
 <% for (var i = 0; i < msgs.length; i++) { %>
 	<div>
 

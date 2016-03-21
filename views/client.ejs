@@ -27,8 +27,25 @@
 					<% if (convos[i].open) { %>
 						<li>CURRENT</li>
 					<% } %>
-					<li>Last updated: <%= convos[i].updated %></li>
-					<li>Created: <%= convos[i].created %></li>
+
+					<li>
+						Last updated on
+						<% try { %>
+							<%= new Date(convos[i].updated) %>
+						<% } catch (err) { %>
+							Unknown
+						<% } %>
+					</li>
+
+					<li>
+						Created on
+						<% try { %>
+							<%= new Date(convos[i].created) %>
+						<% } catch (err) { %>
+							Unknown
+						<% } %>
+					</li>
+
 				</ul>
 			</li>
 		<% } %>
