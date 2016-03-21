@@ -11,6 +11,7 @@
 					</a>
 				</li>
 				<ul style="font-size:small;">
+					<li>Phone Number: <%= orgs[i].phone %></li>
 					<li>Email: <%= orgs[i].email %></li>
 					<li>Expires: <%= orgs[i].expiration %></li>
 					<li>Allotment: <%= orgs[i].allotment %></li>
@@ -31,6 +32,15 @@
 			</div>
 			<div class="form-entry">
 				<input type="text" name="name" placeholder="example_org_name" required>
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="form-desc">
+				Name
+			</div>
+			<div class="form-entry">
+				<input type="text" name="phone" placeholder="(858) 400-4040" required>
 			</div>
 		</div>
 

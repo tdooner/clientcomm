@@ -39,11 +39,10 @@ module.exports = {
 				reject(String(err));
 			};
 
-
 		});
 	},
 
-	clean_from_val: function (from) {
+	clean_phonenum: function (from) {
 		if (from) {
 			from = from.replace(/\D+/g, "");
 			if (from.length == 10) {

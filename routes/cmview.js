@@ -6,6 +6,8 @@ var AUTH_TOKEN = credentials.authToken;
 var TWILIO_NUM = credentials.twilioNum;
 
 var pass = require("../utils/utils.js")["pass"];
+var sms = require("../utils/utils.js")["sms"];
+var cmview = require("../utils/utils.js")["cmview"];
 var isLoggedIn = pass.isLoggedIn;
 
 
@@ -236,6 +238,34 @@ module.exports = function (app, passport) {
       req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
       res.redirect(redirect_loc);
     } else {
+console.log(cmview)
+      cmview.get_convo(cmid, clid, convid)
+      .then(function (obj) {
+        obj.cm = req.user;
+        res.render("msgs", obj);
+
+      }).catch(function (err) {
+        if (err == "404") {
+          res.redirect("/404");
+        } else {
+          res.redirect("/500");
+        }
+      })
+
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid;
+
+    var cmid = req.params.cmid;
+    var clid = req.params.clid;
+    var convid = req.params.convid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
 
       db("clients").where("clid", clid).limit(1)
       .then(function (clients) {
@@ -253,21 +283,8 @@ module.exports = function (app, passport) {
 
                 if (convo.cm == cmid) {
 
-                  db.select("msgs.content", "msgs.inbound", "msgs.read", "msgs.tw_status", "msgs.created", "comms.type", "comms.value", "comms.description")
-                  .from("msgs")
-                  .innerJoin("comms", "comms.commid", "msgs.comm")
-                  .where("msgs.convo", convid)
-                  .then(function (msgs) {
-                    res.render("msgs", {
-                      cm: req.user,
-                      cl: client,
-                      convo: convo,
-                      msgs: msgs,
-                    });
-
-                  }).catch(function (err) {
-                    res.redirect("/500")
-                  })
+                  //////
+                  sms.register_message(text, commid, convos, tw_status, tw_sid)
 
                 } else {
                   // actually not allowed to view

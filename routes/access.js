@@ -1,4 +1,5 @@
 var db  = require("../server/db");
+var sms = require("../utils/utils.js")["sms"];
 var pass = require("../utils/utils.js")["pass"];
 
 module.exports = function (app, db, utils, passport) {
@@ -25,12 +26,16 @@ module.exports = function (app, db, utils, passport) {
 
 	app.post("/orgs", function (req, res) {
 		var name = req.body.name;
+		var from = sms.clean_phonenum(req.body.phone);
 		var email = req.body.email;
 		var expiration = req.body.expiration;
 		var allotment = Number(req.body.allotment);
 
 		if (!name) {
 			req.flash("warning", "Missing name.");
+			res.redirect("/orgs");
+		} else if (!from) {
+			req.flash("warning", "Missing phone number.");
 			res.redirect("/orgs");
 		} else if (!email) {
 			req.flash("warning", "Missing email.");

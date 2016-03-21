@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
 			table.increments("orgid").primary();
 
 			table.string("name");
+			table.integer("phone");
 			table.string("email");
 
 			table.dateTime("expiration").defaultTo("2017-01-01");

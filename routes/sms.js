@@ -6,7 +6,7 @@ module.exports = function (app) {
   app.post("/sms", function (req, res) {
 
     var twiml = new twilio.TwimlResponse();
-    var from = sms.clean_from_val(req.body.From);
+    var from = sms.clean_phonenum(req.body.From);
     var text = req.body.Body.replace("-Sent free from TextNow.com", "").trim();
 
     var tw_status = req.body.SmsStatus;

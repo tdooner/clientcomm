@@ -51,7 +51,12 @@
 	</div>
 <% } %>
 
-<textarea name="Text1" cols="40" rows="5" ... ></textarea>
+<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
+	<div>
+		<textarea name="Text1" rows="5" style="width:100%;"></textarea>
+	</div>
+	<input type="submit" value="Submit">
+</form>
 
 <hr>
 	<%= JSON.stringify(convo) %>
