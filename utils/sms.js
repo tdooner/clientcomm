@@ -123,10 +123,13 @@ module.exports = {
     return new Promise (function (fulfill, reject) {
     	var cls = clients.map(function (ea) { return ea.clid; });
     	var cms = clients.map(function (ea) { return ea.cmid; });
+
 	    db("convos")
 	    .whereIn("client", cls)
 	    .andWhere("convos.open", true)
 	    .then(function (convos) {
+	    	// clean up response
+	    	convos = convos.map(function (ea) { return ea.convid; });
 
 	    	// there are existing open conversations
 	    	if (convos.length > 0) {
@@ -142,9 +145,6 @@ module.exports = {
 	    		.groupBy("convos.convid")
 			    .then(function (convos) {
 
-			    	// clean up response
-			    	convos = convos.map(function (ea) { return ea.convid; });
-
 			    	// there are existing open conversations
 			    	if (convos.length > 0) {
 			    		fulfill(convos);
@@ -157,6 +157,7 @@ module.exports = {
 				    	var insertList = [];
 				    	var now = new Date(Date.now()).toISOString().split("T");
 				    	var subject = "Automatically created on " + now[0] + " at " + now[1].replace("Z", "");
+
 				    	for (var i = 0; i < clients.length; i++) {
 				    		var client = clients[i];
 				    		var insertObj = {
@@ -194,8 +195,11 @@ module.exports = {
     return new Promise (function (fulfill, reject) {
     	var insertList = [];
     	for (var i = 0; i < convos.length; i++) {
-    		
-    		var convo = convos[i].convid;
+
+    		if (text.length > 250) {
+
+    		}
+    		var convo = convos[i];
     		var insertObj = {
     			"convo": convo,
     			"comm": commid,

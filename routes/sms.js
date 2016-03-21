@@ -7,10 +7,8 @@ module.exports = function (app) {
 
     var twiml = new twilio.TwimlResponse();
     var from = sms.clean_from_val(req.body.From);
-    var text = req.body.Body.trim();
-console.log(req.body);
-console.log("==========================================");
-console.log(req.body.Body);
+    var text = req.body.Body.replace("-Sent free from TextNow.com", "").trim();
+
     var tw_status = req.body.SmsStatus;
     var tw_sid = req.body.MessageSid;
 
