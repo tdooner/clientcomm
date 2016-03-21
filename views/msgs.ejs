@@ -1,10 +1,4 @@
 <% include header %>
-	
-<hr>
-	<%= JSON.stringify(cm) %>
-<hr>
-
-
 
 <div>
 	<b>
@@ -35,6 +29,9 @@
 	<div>
 
 		<div style="font-size:small;">
+			<% if (!msgs[i].inbound) { %>
+				You wrote to 
+			<% } %>
 			<%= cl.first %> via <%= msgs[i].description %>:
 		</div>
 
@@ -53,6 +50,8 @@
 		<br>
 	</div>
 <% } %>
+
+<textarea name="Text1" cols="40" rows="5" ... ></textarea>
 
 <hr>
 	<%= JSON.stringify(convo) %>
