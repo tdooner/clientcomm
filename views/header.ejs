@@ -48,11 +48,13 @@
 				ClientComm
 			</a>
 
-			<% if (typeof notLoggedIn !== "undefined" && notLoggedIn) { %>
-				<div style="float:right;">
+			<div style="float:right;">
+				<% if (typeof notLoggedIn !== "undefined" && notLoggedIn) { %>
 					<a href="/login">Login</a>
-				</div>
-			<% } %>
+				<% } else { %>
+					<a href="/logout">Logout</a>
+				<% } %>
+			</div>
 		</header>
 
 		<div id="contents">

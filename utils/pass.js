@@ -6,6 +6,16 @@ module.exports = {
 		if (req.isAuthenticated()) { 
 			return next(); 
 		} else { 
+			req.flash("warning", "No access allowed, not logged in.");
+			res.redirect("/login"); 
+		}
+	},
+
+	isSuper: function (req, res, next) {
+		if (req.isAuthenticated() && req.user.hasOwnProperty("superuser") && req.user.superuser) { 
+			return next(); 
+		} else { 
+			req.flash("warning", "No access allowed, you do not have superuser access.");
 			res.redirect("/login"); 
 		}
 	},

@@ -1,14 +1,26 @@
 var db  = require("../server/db");
 var sms = require("../utils/utils.js")["sms"];
 var pass = require("../utils/utils.js")["pass"];
+var isSuper = pass.isSuper;
+var isLoggedIn = pass.isLoggedIn;
 
 module.exports = function (app, db, utils, passport) {
 
 	app.get("/", function (req, res) {
-		res.render("index", {notLoggedIn: true});
+		var warning = req.flash("warning");
+		var success = req.flash("success");
+		var notLoggedIn = true;
+		if (req.hasOwnProperty("user")) {
+			notLoggedIn = false;
+		}
+		res.render("index", {
+			notLoggedIn: notLoggedIn,
+			warning: warning,
+			success: success
+		});
 	});
 
-	app.get("/orgs", function (req, res) {
+	app.get("/orgs", isSuper, function (req, res) {
 		db("orgs").orderBy("name")
 		.then(function (orgs) {
 			var warning = req.flash("warning");
@@ -24,7 +36,7 @@ module.exports = function (app, db, utils, passport) {
 		});
 	});
 
-	app.post("/orgs", function (req, res) {
+	app.post("/orgs", isSuper, function (req, res) {
 		var name = req.body.name;
 		var from = sms.clean_phonenum(req.body.phone);
 		var email = req.body.email;
@@ -78,7 +90,7 @@ module.exports = function (app, db, utils, passport) {
 		}
 	});
 
-	app.get("/orgs/:orgid", function (req, res) {
+	app.get("/orgs/:orgid", isSuper, function (req, res) {
 		var orgid = req.params.orgid;
 		db("orgs").where("orgid", orgid).limit(1)
 		.then(function (orgs) {
@@ -111,7 +123,7 @@ module.exports = function (app, db, utils, passport) {
 		});
 	});
 
-	app.post("/orgs/:orgid", function (req, res) {
+	app.post("/orgs/:orgid", isSuper, function (req, res) {
 		var redirect_loc = "/orgs/" + req.params.orgid;
 
 		var orgid = req.body.orgid;
@@ -263,7 +275,17 @@ module.exports = function (app, db, utils, passport) {
 	});
 
 	app.get("/login", function (req, res) {
-		res.render("login")
+		var warning = req.flash("warning");
+		var success = req.flash("success");
+		var notLoggedIn = true;
+		if (req.hasOwnProperty("user")) {
+			notLoggedIn = false;
+		}
+		res.render("login", {
+			notLoggedIn: notLoggedIn,
+			warning: warning,
+			success: success
+		});
 	});
 
   app.post("/login", passport.authenticate("local-login", {
@@ -271,5 +293,11 @@ module.exports = function (app, db, utils, passport) {
       failureRedirect: "/login"
     })
   );
+
+	app.get("/logout", isLoggedIn, function (req, res) {
+		req.logout();
+		req.flash("success", "Successfully logged out.");
+		res.redirect("/")
+	});
 
 };
