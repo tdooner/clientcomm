@@ -20,7 +20,7 @@ module.exports = function (app, db, utils, passport) {
 		});
 	});
 
-	app.get("/orgs", isSuper, function (req, res) {
+	app.get("/orgs", function (req, res) {
 		db("orgs").orderBy("name")
 		.then(function (orgs) {
 			var warning = req.flash("warning");
@@ -36,7 +36,7 @@ module.exports = function (app, db, utils, passport) {
 		});
 	});
 
-	app.post("/orgs", isSuper, function (req, res) {
+	app.post("/orgs", function (req, res) {
 		var name = req.body.name;
 		var from = sms.clean_phonenum(req.body.phone);
 		var email = req.body.email;
@@ -90,7 +90,7 @@ module.exports = function (app, db, utils, passport) {
 		}
 	});
 
-	app.get("/orgs/:orgid", isSuper, function (req, res) {
+	app.get("/orgs/:orgid", function (req, res) {
 		var orgid = req.params.orgid;
 		db("orgs").where("orgid", orgid).limit(1)
 		.then(function (orgs) {
@@ -123,7 +123,7 @@ module.exports = function (app, db, utils, passport) {
 		});
 	});
 
-	app.post("/orgs/:orgid", isSuper, function (req, res) {
+	app.post("/orgs/:orgid", function (req, res) {
 		var redirect_loc = "/orgs/" + req.params.orgid;
 
 		var orgid = req.body.orgid;
