@@ -68,6 +68,8 @@ module.exports = function (app, passport) {
     var so = req.body.so;
 
     if (!middle) middle = "";
+    if (!otn) otn = null;
+    if (!so) so = null;
 
     if (!cmid) {
       req.flash("warning", "Missing cmid.");
@@ -83,12 +85,6 @@ module.exports = function (app, passport) {
       res.redirect(redirect_loc);
     } else if (isNaN(Date.parse(dob))) {
       req.flash("warning", "Missing date of birth.");
-      res.redirect(redirect_loc);
-    } else if (!otn) {
-      req.flash("warning", "Missing OTN.");
-      res.redirect(redirect_loc);
-    } else if (!so) {
-      req.flash("warning", "Missing SO number.");
       res.redirect(redirect_loc);
     } else {
       db("clients")

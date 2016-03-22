@@ -12,12 +12,14 @@
 				<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
 					<%= clients[i].first + " " + clients[i].middle + " " + clients[i].last %>
 				</a>
-				<% if (clients[i].otn) { %>
-					<span class="badge">OTN: <%= clients[i].otn %></span>
-				<% } %>
-				<% if (clients[i].so) { %>
-					<span class="badge">SO: <%= clients[i].so %></span>
-				<% } %>
+				<span style="font-size:small;">
+					<% if (clients[i].otn) { %>
+						OTN: <%= clients[i].otn %>
+					<% } %>
+					<% if (clients[i].so) { %>
+						SO: <%= clients[i].so %>
+					<% } %>
+				</span>
 			</li>
 		<% } %>
 	</ul>
@@ -72,7 +74,7 @@
 			OTN
 		</div>
 		<div class="form-entry">
-			<input type="text" name="otn" placeholder="135792468" required>
+			<input type="text" name="otn" placeholder="135792468">
 		</div>
 	</div>
 
@@ -81,7 +83,7 @@
 			SO
 		</div>
 		<div class="form-entry">
-			<input type="text" name="so" placeholder="246813579" required>
+			<input type="text" name="so" placeholder="246813579">
 		</div>
 	</div>
 

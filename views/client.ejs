@@ -5,7 +5,7 @@
 	<%= cl.first + " " + cl.middle + " " + cl.last %>
 </h3>
 <div>
-	<ul>
+	<ul style="font-size:small;">
 		<% if (cl.otn) { %>
 			<li>OTN: <%= cl.otn %></li>
 		<% } %>
@@ -23,7 +23,7 @@
 				<a href="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convos[i].convid %>">
 					<%= convos[i].subject %>
 				</a>
-				<ul>
+				<ul style="font-size:small;">
 					<% if (convos[i].open) { %>
 						<li>CURRENT</li>
 					<% } %>
