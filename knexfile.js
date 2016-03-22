@@ -5,7 +5,7 @@ var PASS = credentials.password;
 
 module.exports = {
 
-  development: {
+  "development": {
     client: "postgresql",
     connection: {
       user: "kuanbutts",
@@ -13,7 +13,7 @@ module.exports = {
     }
   },
 
-  production: {
+  "production": {
     client: "postgresql",
     connection: {
       database: "clientcomm",
