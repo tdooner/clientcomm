@@ -5,7 +5,7 @@ var PASS = credentials.password;
 
 module.exports = {
 
-  "development": {
+  development: {
     client: "postgresql",
     connection: {
       user: "kuanbutts",
@@ -13,20 +13,25 @@ module.exports = {
     }
   },
 
-  "production": {
+
+  production: {
     client: "postgresql",
     connection: {
+      host: "clientcomm.cxzwd26pqge8.us-west-1.rds.amazonaws.com",
+      port: "5432",
       database: "clientcomm",
       user:     USER,
       password: PASS
     },
+
     pool: {
       min: 2,
       max: 10
     },
+
     migrations: {
       tableName: "knex_migrations"
-    }
+    },
   }
 
 };
