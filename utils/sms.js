@@ -200,7 +200,7 @@ module.exports = {
     		}
     		var convo = convos[i];
     		var insertObj = {
-    			"convo": convo,
+    			"convo": convo.convid,
     			"comm": commid,
     			"content": text,
     			"inbound": true,
