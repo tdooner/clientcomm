@@ -192,31 +192,57 @@ module.exports = function (app, passport) {
       req.flash("warning", "Missing description value.");
       res.redirect(redirect_loc);
     } else {
-      db("comms").("value", value)
-      db("comms").insert({
-        type: type,
-        value: value,
-        description: description
-      }).returning("commid")
-      .then(function (commids) {
-        var commid = commids[0];
+      
+      db("comms").where("value", value).limit(1)
+      .then(function (comms) {
 
-        db("commconns").insert({
-          client: clid,
-          comm: commid,
-          name: description
-        })
-        .then(function (success) {
-          req.flash("success", "Added a new communication method.");
-          res.redirect(redirect_loc);
+        if (comms.length > 0) {
+          var commid = comms[0].commid;
 
-        }).catch(function (err) {
-          res.redirect("/500");
-        })
+          db("commconns").insert({
+            client: clid,
+            comm: commid,
+            name: description
+          })
+          .then(function (success) {
+            req.flash("success", "Added a new communication method.");
+            res.redirect(redirect_loc);
+
+          }).catch(function (err) {
+            res.redirect("/500");
+          })
+
+        } else {
+          db("comms").insert({
+            type: type,
+            value: value,
+            description: description
+          }).returning("commid")
+          .then(function (commids) {
+            var commid = commids[0];
+
+            db("commconns").insert({
+              client: clid,
+              comm: commid,
+              name: description
+            })
+            .then(function (success) {
+              req.flash("success", "Added a new communication method.");
+              res.redirect(redirect_loc);
+
+            }).catch(function (err) {
+              res.redirect("/500");
+            })
+
+          }).catch(function (err) {
+            res.redirect("/500");
+          })
+        }
 
       }).catch(function (err) {
         res.redirect("/500");
       })
+
     }
   });
 
