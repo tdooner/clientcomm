@@ -1,5 +1,8 @@
 <% include header %>
 
+<a href="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>" style="font-size:small;">< Back</a>
+<br><br>
+
 <% if (convo.open && convo.accepted) { %>
 	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close" style="float:right">
 		<input type="submit" value="Close Conversation">
