@@ -1,8 +1,17 @@
 <% include header %>
 
-<% if (convo.open) { %>
+<% if (convo.open && convo.accepted) { %>
 	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close" style="float:right">
 		<input type="submit" value="Close Conversation">
+	</form>
+<% } %>
+
+<% if (convo.open && !convo.accepted) { %>
+	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept" style="float:right">
+		<input type="submit" value="Accept Conversation" style="color:green">
+	</form>
+	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject" style="float:right">
+		<input type="submit" value="Reject" style="color:red">
 	</form>
 <% } %>
 

@@ -438,6 +438,75 @@ module.exports = function (app, passport) {
     }
   });
 
+  app.post("/cms/:cmid/cls/:clid/convos/:convid/accept", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+    var cmid = req.params.cmid;
+    var clid = req.params.clid;
+    var convid = req.params.convid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
+
+      cmview.get_convo(cmid, clid, convid)
+      .then(function (obj) {
+        
+        db("convos").where("convid", convid).update({accepted: true, updated: db.fn.now()})
+        .then(function (success) {
+          req.flash("success", "Closed conversation.");
+          res.redirect(redirect_loc);
+
+        }).catch(function (err) {
+          res.redirect("/500");
+        })
+
+      }).catch(function (err) {
+        if (err == "404") {
+          res.redirect("/404");
+        } else {
+          res.redirect("/500");
+        }
+      })
+
+    }
+  });
+
+
+  app.post("/cms/:cmid/cls/:clid/convos/:convid/reject", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
+
+    var cmid = req.params.cmid;
+    var clid = req.params.clid;
+    var convid = req.params.convid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
+      
+      db("msgs").where("convo", convid).delete()
+      .then(function (success) {
+
+        db("convos").where("convid", convid).delete()
+        .then(function (success) {
+          req.flash("success", "Closed conversation.");
+          res.redirect(redirect_loc);
+
+        }).catch(function (err) {
+          console.log("2", err);
+          res.redirect("/500");
+        })
+
+      }).catch(function (err) {
+        console.log("1", err);
+        res.redirect("/500");
+      })
+
+    }
+  });
+
 
 
 };
