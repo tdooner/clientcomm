@@ -20,7 +20,8 @@
 			Closed on:
 		<% } %>
 		<% try { %>
-			on <%= new Date(convo.updated) %>
+			<% var upd = new Date(convo.updated) %>
+			<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
 		<% } catch (err) { %>
 			Unknown
 		<% } %>
@@ -51,8 +52,10 @@
 		</div>
 
 		<div style="font-size:x-small;">
+			on 
 			<% try { %>
-				on <%= new Date(msgs[i].created) %>
+				<% var upd = new Date(msgs[i].created) %>
+				<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
 			<% } catch (err) { %>
 				Unknown
 			<% } %>

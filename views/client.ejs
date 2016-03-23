@@ -32,7 +32,8 @@
 					<li>
 						Last updated on
 						<% try { %>
-							<%= new Date(convos[i].updated) %>
+							<% var upd = new Date(convos[i].updated) %>
+							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
 						<% } catch (err) { %>
 							Unknown
 						<% } %>
@@ -41,7 +42,8 @@
 					<li>
 						Created on
 						<% try { %>
-							<%= new Date(convos[i].created) %>
+							<% var cre = new Date(convos[i].updated) %>
+							<%= [cre.getMonth()+1, cre.getDate(), cre.getFullYear()].join("/") + " at " + [cre.getHours(), cre.getMinutes(), cre.getSeconds()].join(':') %>
 						<% } catch (err) { %>
 							Unknown
 						<% } %>
@@ -69,7 +71,7 @@
 		</div>
 	</div>
 
-	<input type="submit" value="Create New Conversation"> (Note: this will close your other conversations if you do this)
+	<input type="submit" value="Create New Conversation"> <i style="font-size:x-small">(Note: this will close your other conversations if you do this)</i>
 
 </form>
 <br>
@@ -82,9 +84,10 @@
 				<li>
 					<%= comms[i].name %>
 					<ul style="font-size:small;">
-						<li><%= comms[i].type %></li>
-						<li><%= comms[i].value %></li>
-						<li><%= comms[i].updated %></li>
+						<li>
+							<%= comms[i].type %>: 
+							<%= comms[i].value %>
+						</li>
 					</ul>
 				</li>
 			<% } %>
