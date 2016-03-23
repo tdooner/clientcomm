@@ -25,14 +25,25 @@ module.exports = {
                   .innerJoin("comms", "comms.commid", "msgs.comm")
                   .where("msgs.convo", convid)
                   .then(function (msgs) {
-                    fulfill({
-                      cl: client,
-                      convo: convo,
-                      msgs: msgs,
-                    });
+
+                    db("comms")
+                    .innerJoin("commconns", "comms.commid", "commconns.comm")
+                    .where("commconns.client", clid)
+                    .then(function (comms) {
+
+                      fulfill({
+                        cl: client,
+                        convo: convo,
+                        msgs: msgs,
+                        comms: comms
+                      });
+                      
+                    }).catch(function (err) {
+                      reject("500");
+                    })
 
                   }).catch(function (err) {
-                    reject("/500")
+                    reject("500")
                   })
 
                 } else {
@@ -57,6 +68,8 @@ module.exports = {
 			  reject(err);
 			});
 		});
-	}
+	},
+
+
 
 }
