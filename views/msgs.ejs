@@ -28,8 +28,7 @@
 	</small>
 </div>
 
-<br>
-
+<hr>
 
 
 <% for (var i = 0; i < msgs.length; i++) { %>
@@ -64,6 +63,8 @@
 		<br>
 	</div>
 <% } %>
+
+<hr>
 
 <% if (convo.open) { %>
 	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
