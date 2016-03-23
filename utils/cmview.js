@@ -20,10 +20,12 @@ module.exports = {
 
                 if (convo.cm == cmid) {
 
-                  db.select("msgs.content", "msgs.inbound", "msgs.read", "msgs.tw_status", "msgs.created", "comms.type", "comms.value", "comms.description")
+                  db.select("msgs.content", "msgs.inbound", "msgs.read", "msgs.tw_status", "msgs.created", "comms.type", "comms.value", "commconns.name")
                   .from("msgs")
                   .innerJoin("comms", "comms.commid", "msgs.comm")
+                  .innerJoin("commconns", "commconns.comm", "msgs.comm")
                   .where("msgs.convo", convid)
+                  .orderBy("msgs.created", "asc")
                   .then(function (msgs) {
 
                     db("comms")

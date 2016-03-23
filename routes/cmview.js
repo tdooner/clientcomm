@@ -5,6 +5,9 @@ var ACCOUNT_SID = credentials.accountSid;
 var AUTH_TOKEN = credentials.authToken;
 var TWILIO_NUM = credentials.twilioNum;
 
+var twilio = require("twilio");
+var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
+
 var pass = require("../utils/utils.js")["pass"];
 var sms = require("../utils/utils.js")["sms"];
 var cmview = require("../utils/utils.js")["cmview"];
@@ -298,7 +301,7 @@ module.exports = function (app, passport) {
   });
 
   app.get("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid;
+    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
 
     var cmid = req.params.cmid;
     var clid = req.params.clid;
@@ -311,8 +314,118 @@ module.exports = function (app, passport) {
 
       cmview.get_convo(cmid, clid, convid)
       .then(function (obj) {
+        obj.warning = req.flash("warning");
+        obj.success = req.flash("success");
         obj.cm = req.user;
+
         res.render("msgs", obj);
+
+      }).catch(function (err) {
+        if (err == "404") {
+          res.redirect("/404");
+        } else {
+          res.redirect("/500");
+        }
+      })
+
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+    var cmid = req.params.cmid;
+    var clid = req.params.clid;
+    var convid = req.params.convid;
+
+    var commid = req.body.commid;
+    var content = req.body.content;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
+
+      db("comms")
+      .where("commid", commid)
+      .limit(1)
+      .then(function (comms) {
+        
+        if (comms.length > 0) {
+          var comm = comms[0];
+
+          twClient.sendSms({
+            to: comm.value,
+            from: TWILIO_NUM,
+            body: content
+          }, function (err, msg) {
+            if (err) {
+              console.log('Oops! There was an error.', err);
+            } else {
+
+              db("msgs")
+              .insert({
+                convo: convid,
+                comm: commid,
+                content: content,
+                inbound: false,
+                read: true,
+                tw_sid: msg.sid,
+                tw_status: msg.status
+              })
+              .returning("msgid")
+              .then(function (msgs) {
+
+                db("convos").where("convid", convid)
+                .update({updated: db.fn.now()})
+                .then(function (success) {
+                  req.flash("success", "Sent message.");
+                  res.redirect(redirect_loc)
+
+                }).catch(function (err) {
+                  res.redirect("/500");
+                })
+
+              }).catch(function (err) {
+                res.redirect("/500");
+              });
+
+            }
+          });          
+        } else {
+          res.redirect("/404");
+        }
+
+      }).catch(function (err) {
+        res.redirect("/500");
+      })
+
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/convos/:convid/close", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+    var cmid = req.params.cmid;
+    var clid = req.params.clid;
+    var convid = req.params.convid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
+
+      cmview.get_convo(cmid, clid, convid)
+      .then(function (obj) {
+        
+        db("convos").where("convid", convid).update({open: false, updated: db.fn.now()})
+        .then(function (success) {
+          req.flash("success", "Closed conversation.");
+          res.redirect(redirect_loc);
+
+        }).catch(function (err) {
+          res.redirect("/500");
+        })
 
       }).catch(function (err) {
         if (err == "404") {
