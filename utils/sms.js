@@ -19,7 +19,7 @@ module.exports = {
 				}
 			};
 
-			function get_or_create_convos (clients) {
+			function get_or_create_convos (clients, from) {
 				if (clients.length > 0) {
 					sms.get_or_create_convos(clients, from).then(register_message).catch(errReject)
 				} else {
@@ -118,7 +118,7 @@ module.exports = {
 		});
 	},
 	
-	get_or_create_convos: function (clients) {
+	get_or_create_convos: function (clients, from) {
     return new Promise (function (fulfill, reject) {
     	var cls = clients.map(function (ea) { return ea.clid; });
     	var cms = clients.map(function (ea) { return ea.cmid; });
@@ -141,11 +141,15 @@ module.exports = {
 	    		.innerJoin("msgs", "comms.commid", "msgs.comm")
 	    		.innerJoin("convos", "msgs.convo", "convos.convid")
 	    		.where("convos.open", true)
+	    		.andWhere("comms.value", from)
+	    		.andWhere("convos.cm", null)
+	    		.andWhere("convos.client", null)
 	    		.groupBy("convos.convid")
 			    .then(function (convos) {
 
 			    	// there are existing open conversations
 			    	if (convos.length > 0) {
+			    		convos = convos.map(function (ea) { return ea.convid; });
 			    		fulfill(convos);
 
 			    	} else {
@@ -173,7 +177,6 @@ module.exports = {
 					    .insert(insertList)
 					    .returning("convid")
 					    .then(function (convos) {
-
 					    	fulfill(convos);
 					    }).catch(function (err) {
 							  reject(err);
