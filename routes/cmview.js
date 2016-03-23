@@ -166,15 +166,12 @@ module.exports = function (app, passport) {
     var value = req.body.value;
     var description = req.body.description;
 
-    console.log("type is: ", type);
     if (type == "cell" || type == "landline") {
       value = value.replace(/[^0-9.]/g, "");
       if (value.length == 10) {
         value = "1" + value;
       }
-      console.log("value is: ", value);
     }
-    console.log("value 2 is: ", value);
 
     if (Number(clid) !== Number(req.body.clid)) {
       req.flash("warning", "Client ID does not match.");
@@ -195,6 +192,7 @@ module.exports = function (app, passport) {
       req.flash("warning", "Missing description value.");
       res.redirect(redirect_loc);
     } else {
+      db("comms").("value", value)
       db("comms").insert({
         type: type,
         value: value,
