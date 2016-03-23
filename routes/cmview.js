@@ -157,7 +157,6 @@ module.exports = function (app, passport) {
     })
   });
 
-
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
     var redirect_loc = "/cms/" + req.user.cmid;
 
@@ -223,6 +222,57 @@ module.exports = function (app, passport) {
     }
   });
 
+  app.post("/cms/:cmid/cls/:clid/convos", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
+
+    var cmid = req.body.cmid;
+    var clid = req.body.clid;
+    var subject = req.body.subject;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
+
+      db("convos")
+      .where("client", clid)
+      .andWhere("cm", cmid)
+      .andWhere("convos.open", true)
+      .pluck("convid")
+      .then(function (convos) {
+        
+        db("convos").whereIn("convid", convos)
+        .update({
+          open: false,
+          updated: db.fn.now()
+        }).then(function (success) {
+          
+          db("convos")
+          .insert({
+            cm: cmid,
+            client: clid,
+            subject: subject,
+            open: true,
+            accepted: true
+          }).then(function (success) {
+            req.flash("success", "New conversation created.");
+            res.redirect(redirect_loc);
+          }).catch(function (err) {
+            console.log(err);
+            res.redirect("/500");
+          });
+
+        }).catch(function (err) {
+          res.redirect("/500");
+        })
+
+      }).catch(function (err) {
+        res.redirect("/500");
+      })
+
+    }
+  });
+
   app.get("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
     var redirect_loc = "/cms/" + req.user.cmid;
 
@@ -234,7 +284,7 @@ module.exports = function (app, passport) {
       req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
       res.redirect(redirect_loc);
     } else {
-console.log(cmview)
+
       cmview.get_convo(cmid, clid, convid)
       .then(function (obj) {
         obj.cm = req.user;
@@ -251,62 +301,6 @@ console.log(cmview)
     }
   });
 
-  app.post("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid;
-
-    var cmid = req.params.cmid;
-    var clid = req.params.clid;
-    var convid = req.params.convid;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
-    } else {
-
-      db("clients").where("clid", clid).limit(1)
-      .then(function (clients) {
-
-        if (clients.length > 0) {
-          var client = clients[0];  
-
-          if (client.cm == cmid) {
-
-            db("convos").where("convid", convid).limit(1)
-            .then(function (convos) {
-
-              if (convos.length > 0) {
-                var convo = convos[0];  
-
-                if (convo.cm == cmid) {
-
-                  //////
-                  sms.register_message(text, commid, convos, tw_status, tw_sid)
-
-                } else {
-                  // actually not allowed to view
-                  res.redirect("/404");
-                }
-
-              } else {
-                // actually not allowed to view
-                res.redirect("/404");
-              }
-            });
-
-          } else {
-            res.redirect("/404");
-          }
-
-        } else {
-          res.redirect("/404");
-        }
-
-      }).catch(function (err) {
-        res.redirect("/500");
-      })
-
-    }
-  });
 
 
 };

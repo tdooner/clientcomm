@@ -24,8 +24,9 @@
 					<%= convos[i].subject %>
 				</a>
 				<ul style="font-size:small;">
+
 					<% if (convos[i].open) { %>
-						<li>CURRENT</li>
+						<li>CURRENT CONVERSATION</li>
 					<% } %>
 
 					<li>
@@ -52,20 +53,43 @@
 	</ul>
 <% } %>
 
+<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos">
+
+	<b>Create a new conversation</b>
+
+	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
+	<input type="hidden" name="clid" value="<%= cl.clid %>">
+
+	<div class="form-row">
+		<div class="form-desc">
+			Subject
+		</div>
+		<div class="form-entry">
+			<input type="text" name="subject" placeholder="e.g., Missed Appointment" required>
+		</div>
+	</div>
+
+	<input type="submit" value="Create New Conversation"> (Note: this will close your other conversations if you do this)
+
+</form>
+<br>
+
 <% if (comms.length > 0) { %>
-	<b>Communication Devices associated with client:</b>
-	<ul>
-		<% for (var i = 0; i < comms.length; i++) { %>
-			<li>
-				<%= comms[i].description %>
-				<ul style="font-size:small;">
-					<li><%= comms[i].type %></li>
-					<li><%= comms[i].value %></li>
-					<li><%= comms[i].updated %></li>
-				</ul>
-			</li>
-		<% } %>
-	</ul>
+	<div>
+		<b>Communication Devices associated with client:</b>
+		<ul>
+			<% for (var i = 0; i < comms.length; i++) { %>
+				<li>
+					<%= comms[i].description %>
+					<ul style="font-size:small;">
+						<li><%= comms[i].type %></li>
+						<li><%= comms[i].value %></li>
+						<li><%= comms[i].updated %></li>
+					</ul>
+				</li>
+			<% } %>
+		</ul>
+	</div>
 <% } %>
 
 
