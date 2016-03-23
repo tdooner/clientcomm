@@ -1,5 +1,11 @@
 <% include header %>
 
+<% if (convo.open) { %>
+	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close" style="float:right">
+		<input type="submit" value="Close Conversation">
+	</form>
+<% } %>
+
 <div>
 	<b>
 		<%= convo.subject %>
@@ -26,13 +32,18 @@
 
 
 <% for (var i = 0; i < msgs.length; i++) { %>
-	<div>
+	<% if (!msgs[i].inbound) { %>
+		<div style="text-align:right">
+			You wrote to 
+	<% } else { %>
+		<div>
+	<% } %>
 
 		<div style="font-size:small;">
-			<% if (!msgs[i].inbound) { %>
-				You wrote to 
-			<% } %>
-			<%= cl.first %> via <%= msgs[i].description %>:
+		<% if (!msgs[i].inbound) { %>
+			You wrote to 
+		<% } %>
+			<%= cl.first %> via <%= msgs[i].name %>:
 		</div>
 
 		<div>
@@ -51,15 +62,30 @@
 	</div>
 <% } %>
 
-<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
-	<div>
-		<textarea name="Text1" rows="5" style="width:100%;"></textarea>
-	</div>
-	<input type="submit" value="Submit">
-</form>
+<% if (convo.open) { %>
+	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
+		<div>
+			<textarea name="content" rows="5" style="width:100%;" required></textarea>
+		</div>
 
-<hr>
-	<%= JSON.stringify(convo) %>
+		<div class="form-row">
+			<div class="form-desc">
+				Communication Type
+			</div>
+			<div class="form-entry">
+				<select name="commid" required>
+					<option value="" selected disabled>Comm Method</option>
+					<% for (var i = 0; i < comms.length; i++) { %>
+						<option value="<%= comms[i].commid %>"><%= comms[i].name %></option>
+					<% } %>
+				</select>
+			</div>
+		</div>
 
+		<input type="submit" value="Submit">
+	</form>
+<% } else { %>
+	Can't write new messages. This conversation is closed.
+<% } %>
 
 <% include footer %>
