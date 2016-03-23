@@ -173,6 +173,7 @@ module.exports = {
 					    .insert(insertList)
 					    .returning("convid")
 					    .then(function (convos) {
+
 					    	fulfill(convos);
 					    }).catch(function (err) {
 							  reject(err);
@@ -210,8 +211,6 @@ module.exports = {
     		}
     		insertList.push(insertObj);
     	}
-
-    	console.log(convos);
 
 	    db("msgs")
 	    .insert(insertList)
