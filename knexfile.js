@@ -2,6 +2,7 @@
 var credentials = require("./credentials")["db"];
 var USER = credentials.user;
 var PASS = credentials.password;
+var HOST = credentials.host;
 
 module.exports = {
 
@@ -17,7 +18,7 @@ module.exports = {
   production: {
     client: "postgresql",
     connection: {
-      host: "clientcomm.cxzwd26pqge8.us-west-1.rds.amazonaws.com",
+      host: HOST,
       port: "5432",
       database: "clientcomm",
       user:     USER,
