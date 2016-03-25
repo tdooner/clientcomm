@@ -81,7 +81,8 @@
 <% if (convo.open) { %>
 	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
 		<div>
-			<textarea name="content" rows="5" style="width:100%;" required></textarea>
+			<textarea name="content" rows="5" maxlength="160" style="width:100%;" required></textarea>
+			(Max length 160 characters)
 		</div>
 
 		<div class="form-row">
