@@ -7,20 +7,29 @@ module.exports = function (app) {
 
     var twiml = new twilio.TwimlResponse();
     var from = sms.clean_phonenum(req.body.From);
-    var text = req.body.Body.replace("-Sent free from TextNow.com", "").trim();
+    var text = req.body.Body;
 
     var tw_status = req.body.SmsStatus;
     var tw_sid = req.body.MessageSid;
 
-    sms.process_incoming_msg(from, text, tw_status, tw_sid)
-    .then(function (msgs) {
-      // do nothing for now
-      var now = new Date(Date.now()).toISOString().split("T");
-      console.log("Message received from " + from + " on " + now[0] + " at " + now[1]);
+    if (typeof text == "string") {
+      if (from.length > 159) {
+        text = text.replace("-Sent free from TextNow.com", "").trim();
+        text = text.substr(0, 160);
+      }
+      sms.process_incoming_msg(from, text, tw_status, tw_sid)
+      .then(function (msgs) {
+        // do nothing for now
+        var now = new Date(Date.now()).toISOString().split("T");
+        console.log("Message received from " + from + " on " + now[0] + " at " + now[1]);
 
-    }).catch(function (err) {
-      handleError(err);
-    })
+      }).catch(function (err) {
+        handleError(err);
+      })
+      
+    } else {
+      handleError("No text submitted.");
+    }
 
     function handleError (err) {
       var now = new Date(Date.now()).toISOString().split("T");
