@@ -198,21 +198,21 @@ module.exports = {
     return new Promise (function (fulfill, reject) {
     	var insertList = [];
     	for (var i = 0; i < convos.length; i++) {
-
-    		if (text.length > 250) {
-
-    		}
     		var convo = convos[i];
-    		var insertObj = {
-    			"convo": convo,
-    			"comm": commid,
-    			"content": text,
-    			"inbound": true,
-    			"read": false,
-    			"tw_sid": tw_sid,
-    			"tw_status": tw_status
+    		for (var ii = 0; ii < text.length; ii++) {
+	    		var textPart = text[i];
+
+	    		var insertObj = {
+	    			"convo": convo,
+	    			"comm": commid,
+	    			"content": textPart,
+	    			"inbound": true,
+	    			"read": false,
+	    			"tw_sid": tw_sid,
+	    			"tw_status": tw_status
+	    		}
+	    		insertList.push(insertObj);    			
     		}
-    		insertList.push(insertObj);
     	}
 
 	    db("msgs")

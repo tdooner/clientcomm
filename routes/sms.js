@@ -17,6 +17,10 @@ module.exports = function (app) {
         text = text.replace("-Sent free from TextNow.com", "").trim();
         text = text.substr(0, 160);
       }
+
+      // break the string up into 160 or less char length segments
+      text = text.match(/.{1,159}/g);
+      
       sms.process_incoming_msg(from, text, tw_status, tw_sid)
       .then(function (msgs) {
         // do nothing for now
@@ -26,9 +30,9 @@ module.exports = function (app) {
       }).catch(function (err) {
         handleError(err);
       })
-      
+
     } else {
-      handleError("No text submitted.");
+      handleError("Text value submitted is not a string.");
     }
 
     function handleError (err) {
