@@ -13,10 +13,7 @@ module.exports = function (app) {
     var tw_sid = req.body.MessageSid;
 
     if (typeof text == "string") {
-      if (from.length > 159) {
-        text = text.replace("-Sent free from TextNow.com", "").trim();
-        text = text.substr(0, 160);
-      }
+      text = text.replace("-Sent free from TextNow.com", "").trim();
 
       // break the string up into 160 or less char length segments
       text = text.match(/.{1,159}/g);
