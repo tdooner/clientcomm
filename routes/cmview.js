@@ -347,7 +347,11 @@ module.exports = function (app, passport) {
     } else if (typeof content !== "string" || content == "") {
       req.flash("warning", "Text entry either too short or not of type string.");
       res.redirect(redirect_loc)
+    } else if (typeof content == "string" && content.length > 160) {
+      req.flash("warning", "Text entry is too long; limit is 160 characters.");
+      res.redirect(redirect_loc)
     } else {
+      content = content.trim().substr(0,159);
 
       db("comms")
       .where("commid", commid)
@@ -365,7 +369,6 @@ module.exports = function (app, passport) {
             if (err) {
               console.log('Oops! There was an error.', err);
             } else {
-
               db("msgs")
               .insert({
                 convo: convid,
