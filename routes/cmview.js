@@ -343,7 +343,10 @@ module.exports = function (app, passport) {
 
     if (Number(cmid) !== Number(req.user.cmid)) {
       req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
+      res.redirect("/cms/" + req.user.cmid);
+    } else if (typeof content !== "string" || content == "") {
+      req.flash("warning", "Text entry either too short or not of type string.");
+      res.redirect(redirect_loc)
     } else {
 
       db("comms")
