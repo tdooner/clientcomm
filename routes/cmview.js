@@ -33,6 +33,7 @@ module.exports = function (app, passport) {
       } else {
         if (cms[0].active) {
           db("clients").where("cm", cmid)
+          .andWhere("active", true)
           .then(function (clients) {
 
             var warning = req.flash("warning");
@@ -240,6 +241,53 @@ module.exports = function (app, passport) {
           }).catch(function (err) {
             res.redirect("/500");
           })
+        }
+
+      }).catch(function (err) {
+        res.redirect("/500");
+      })
+
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/close", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.user.cmid;
+
+    var clid = req.params.clid;
+    var cmid = req.params.cmid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Case Manager ID does not match user logged-in.");
+      res.redirect(redirect_loc);
+    } else {
+      
+      db("clients").where("clid", clid).limit(1)
+      .then(function (clients) {
+
+        if (clients.length > 0) {
+          var client = clients[0];
+
+          if (client.cm == cmid) {
+
+            db("clients").where("clid", clid)
+            .update({active: false})
+            .then(function (success) {
+              req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
+              res.redirect(redirect_loc);
+
+            }).catch(function (err) {
+              console.log(err);
+              res.redirect("/500");
+            });
+
+          } else {
+            req.flash("warning", "You do not have authority to close that client.");
+            res.redirect(redirect_loc);
+          }
+
+        } else {
+          req.flash("warning", "That user id does not exist.");
+          res.redirect(redirect_loc);
         }
 
       }).catch(function (err) {

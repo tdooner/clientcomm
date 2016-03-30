@@ -3,9 +3,15 @@
 <a href="/cms/<%= cm.cmid %>" style="font-size:small;">< Back to Clients List</a>
 <br><br>
 
+
 <h3>
 	<%= cl.first + " " + cl.middle + " " + cl.last %>
+
+	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/close" style="float:right;font-size:small;">
+		<input type="submit" value="Closeout Client">
+	</form>
 </h3>
+
 <div>
 	<ul style="font-size:small;">
 		<% if (cl.otn) { %>
