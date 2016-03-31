@@ -7,7 +7,8 @@ module.exports = function (app, db, utils, passport) {
 
 
   app.get("/401", function (req, res) {
-  	res.status(500).send("401 Unauthorized access.")
+  	req.flash("warning", "401 Unauthorized access.");
+  	res.redirect("/login");
   });
 
   app.get("/500", function (req, res) {

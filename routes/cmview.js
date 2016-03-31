@@ -18,9 +18,12 @@ module.exports = function (app, passport) {
 
 	// view current clients for a case manager
   app.get("/cms", isLoggedIn, function (req, res) { 
-    var cmid = req.user.cmid;
-    var redirect_loc = "/cms/" + cmid;
-    res.redirect(redirect_loc);
+    if (req.user.superuser) {
+      res.redirect("/orgs");
+    } else {
+      var cmid = req.user.cmid;
+      res.redirect("/cms/" + cmid);
+    }
   });
 
   app.get("/cms/:cmid", isLoggedIn, function (req, res) { 

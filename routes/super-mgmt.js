@@ -4,6 +4,7 @@ var router = express.Router();
 var db  = require("../server/db");
 var sms = require("../utils/utils.js")["sms"];
 var pass = require("../utils/utils.js")["pass"];
+var orgtools = require("../utils/utils.js")["orgs"];
 
 router.get("/", function (req, res) {
 	db("orgs").orderBy("name")
@@ -28,52 +29,27 @@ router.post("/", function (req, res) {
 	var expiration = req.body.expiration;
 	var allotment = Number(req.body.allotment);
 
-	if (typeof email == "string") { email = email.toLowerCase(); }
+	var clearcheck = orgtools.new_org_param_check(name, from, email, expiration, allotment);
 
-	if (!name) {
-		req.flash("warning", "Missing name.");
-		res.redirect("/orgs");
-	} else if (!from) {
-		req.flash("warning", "Missing phone number.");
-		res.redirect("/orgs");
-	} else if (!email) {
-		req.flash("warning", "Missing email.");
-		res.redirect("/orgs");
-	} else if (isNaN(Date.parse(expiration))) {
-		req.flash("warning", "Missing expiration date.");
-		res.redirect("/orgs");
-	} else if (isNaN(allotment)) {
-		req.flash("warning", "Missing allotment.");
+	if (clearcheck.err) {
+		req.flash("warning", clearcheck.reason);
 		res.redirect("/orgs");
 	} else {
-		db("orgs")
-		.where("name", name)
-		.orWhere("email", email)
-		.then(function (response) {
 
-			if (response.length == 0) {
-				db("orgs").insert({
-					name: name,
-					email: email,
-					expiration: expiration,
-					allotment: allotment
-				}).then(function (response) {
-					req.flash("success", "Successful entry.");
-					res.redirect("/orgs");
-				}).catch(function (err) {
-					req.flash("warning", "Failed to create new entry.");
-					res.redirect("/orgs");
-				});
+		// clean the inputs
+		name = name.trim();
+		email = email.toLowerCase();
+		expiration = new Date(Date.parse(expiration)).toISOString();
+		allotment = Number(allotment);
 
-			} else {
-				req.flash("warning", "That name or email already exists.");
-				res.redirect("/orgs");
-			}
-
+		orgtools.new_org_insert(name, from, email, expiration, allotment)
+		.then(function (success) {
+			req.flash("success", success.reason);
+			res.redirect("/orgs/" + success.orgid);
 		}).catch(function (err) {
-			req.flash("warning", "Error on searching for pre-existing organizations.");
+			req.flash("warning", err.reason);
 			res.redirect("/orgs");
-		});
+		})
 	}
 });
 
