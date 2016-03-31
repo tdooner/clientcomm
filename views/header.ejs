@@ -12,7 +12,7 @@
 			font-family: arial, sans-serif;
 			margin: 0px;
 			background-color: #FFF;
-			color: #0084ff;
+			color: #0084FF;
 		}
 
 		header {
@@ -32,12 +32,13 @@
 			text-align: center;
 			color: #FFF;
 			font-weight: 900;
-			background-color: #0084ff;
+			background-color: #0084FF;
 		}
 
 		header .logo-left:hover {
 			box-shadow: inset 0px 0px 25px rgba(0,0,0,0.2);
 			text-shadow: 0px 0px 5px rgba(0,0,0,0.7);
+			transition: 0.5s;
 		}
 
 		header .identification {
@@ -62,16 +63,47 @@
 		}
 
 		a:hover {
-			background-color: #0084ff;
+			background-color: #0084FF;
 			color: #FFF;
 		}
 
 		#contents {
 			min-height: 575px;
+			padding-top: 5px;
 		}
 
 		#contents .entryform {
 			margin-left: 140px;
+		}
+
+		#contents .infoblock {
+			display: block; 
+			clear: both;
+		}
+
+		#contents .infoblock .infoblock-label {
+			float: left;
+			width: 200px;
+			background-color: rgba(10,0,0,0.05);
+			color: rgba(10,0,0,0.5);
+			padding: 5px 10px 5px 10px;
+			word-wrap: break-word;
+			text-align: right;
+		}
+
+		#contents .infoblock .infoblock-body {
+			float: left;
+		}
+
+		#contents .infoblock .infoblock-body ul {
+			list-style-type: none;
+			padding: 0px;
+			margin: 0px;
+		}
+
+		#contents .infoblock .infoblock-body li {
+			color: rgba(10,0,0,0.35);
+			padding: 5px 10px 5px 10px;
 		}
 
 	</style>

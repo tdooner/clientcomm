@@ -1,144 +1,169 @@
 <% include header %>
-	
-	<%= org.name %>:
-	<ul style="font-size:small;">
-		<li>Email: <%= org.email %></li>
-		<li>Expires: <%= org.expiration %></li>
-		<li>Allotment: <%= org.allotment %></li>
-		<li>Created: <%= org.created %></li>
-	</ul>
 
-Admins:
-<ul>
-	<% for (var i = 0; i < cms.length; i++) { %>
-		<% if (cms[i].admin && cms[i].active) { %>
-			<li>
-				<a href="/cms/<%= cms[i].cmid %>">
-					<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
-				</a>
-				<form method="post" action="/orgs/<%= org.orgid %>/cms/<%= cms[i].cmid %>/delete">
-					<input type="hidden" name="cmid" value="<%= cms[i].cmid %>">
-					<input type="submit" value="[Delete]">
-				</form>
-			</li>
+<div class="infoblock">
+	<div class="infoblock-label">
+		Organization
+	</div>
+	<div class="infoblock-body">
+		<ul>
+			<li><%= org.name %></li>
 
-			<ul style="font-size:small;">
-				<li>Email: <%= cms[i].email %></li>
-				<li>Position: <%= cms[i].position %></li>
-				<li>Department: <%= cms[i].department %></li>
-				<li>Created: <%= cms[i].created %></li>
-			</ul>
-		<% } %>
-	<% } %>
-</ul>
+			<small>
+				<li>Email: <%= org.email %></li>
 
-Staff:
-<ul>
-	<% for (var i = 0; i < cms.length; i++) { %>
-		<% if (!cms[i].admin && cms[i].active) { %>
-			<li>
-				<a href="/cms/<%= cms[i].cmid %>">
-					<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
-				</a>
-				<form method="post" action="/orgs/<%= org.orgid %>/cms/<%= cms[i].cmid %>/delete">
-					<input type="hidden" name="cmid" value="<%= cms[i].cmid %>">
-					<input type="submit" value="[Delete]">
-				</form>
-			</li>
+				<li>
+					Expires:
+					<% try { %>
+						<% var upd = new Date(org.expiration) %>
+						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+					<% } catch (err) { %>
+						Unknown
+					<% } %>
+				</li>
 
-			<ul style="font-size:small;">
-				<li>Email: <%= cms[i].email %></li>
-				<li>Position: <%= cms[i].position %></li>
-				<li>Department: <%= cms[i].department %></li>
-				<li>Created: <%= cms[i].created %></li>
-			</ul>
-		<% } %>
-	<% } %>
-</ul>
+				<li>Allotment: <%= org.allotment %> users</li>
 
-	<form method="post">
+				<li>
+					Created:
+					<% try { %>
+						<% var upd = new Date(org.created) %>
+						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+					<% } catch (err) { %>
+						Unknown
+					<% } %>
+				</li>
+			</small>
 
-		<b>New Member</b>
+		</ul>
+	</div>
+</div>
 
-		<input type="hidden" name="orgid" value="<%= org.orgid %>">
+<div class="infoblock">
+	<div class="infoblock-label">
+		Admin Accounts
+	</div>
+	<div class="infoblock-body">
+		<ul>
+			<% for (var i = 0; i < cms.length; i++) { %>
+				<% if (cms[i].admin && cms[i].active) { %>
 
-		<div class="form-row">
-			<div class="form-desc">
-				First
-			</div>
-			<div class="form-entry">
-				<input type="text" name="first" placeholder="Jane" required>
-			</div>
-		</div>
+					<li>
+						<a href="/cms/<%= cms[i].cmid %>">
+							<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+						</a>
+					</li>
 
-		<div class="form-row">
-			<div class="form-desc">
-				Middle
-			</div>
-			<div class="form-entry">
-				<input type="text" name="middle" placeholder="M">
-			</div>
-		</div>
+					<small>
+						<li>Email: <%= cms[i].email %></li>
+						<li>Position: <%= cms[i].position %></li>
+						<li>Department: <%= cms[i].department %></li>
+						<li>
+							Created:
+							<% try { %>
+								<% var upd = new Date(cms[i].created) %>
+								<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+							<% } catch (err) { %>
+								Unknown
+							<% } %>
+						</li>
+					</small>
 
-		<div class="form-row">
-			<div class="form-desc">
-				Last
-			</div>
-			<div class="form-entry">
-				<input type="text" name="last" placeholder="Doe" required>
-			</div>
-		</div>
+				<% } %>
+			<% } %>
+		</ul>
+	</div>
+</div>
 
-		<div class="form-row">
-			<div class="form-desc">
-				Email
-			</div>
-			<div class="form-entry">
-				<input type="email" name="email" placeholder="john@example.com" required>
-			</div>
-		</div>
+<div class="infoblock">
+	<div class="infoblock-label">
+		Staff Accounts
+	</div>
+	<div class="infoblock-body">
+		<ul>
+			<% for (var i = 0; i < cms.length; i++) { %>
+				<% if (!cms[i].admin && cms[i].active) { %>
 
-		<div class="form-row">
-			<div class="form-desc">
-				Password
-			</div>
-			<div class="form-entry">
-				<input type="password" name="password" placeholder="password" required>
-			</div>
-		</div>
+					<li>
+						<a href="/cms/<%= cms[i].cmid %>">
+							<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+						</a>
+					</li>
 
-		<div class="form-row">
-			<div class="form-desc">
-				Position
-			</div>
-			<div class="form-entry">
-				<input type="text" name="position" placeholder="Case Manager" required>
-			</div>
-		</div>
+					<small>
+						<li>Email: <%= cms[i].email %></li>
+						<li>Position: <%= cms[i].position %></li>
+						<li>Department: <%= cms[i].department %></li>
+						<li>
+							Created:
+							<% try { %>
+								<% var upd = new Date(cms[i].created) %>
+								<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+							<% } catch (err) { %>
+								Unknown
+							<% } %>
+						</li>
+					</small>
 
-		<div class="form-row">
-			<div class="form-desc">
-				Department
-			</div>
-			<div class="form-entry">
-				<input type="text" name="department" placeholder="Pretrial Services" required>
-			</div>
-		</div>
+				<% } %>
+			<% } %>
+		</ul>
+	</div>
+</div>
 
-		<div class="form-row">
-			<div class="form-desc">
-				Admin
-			</div>
-			<div class="form-entry">
-				<input type="checkbox" name="admin" value="true"> Check to make admin
-			</div>
-		</div>
+<div class="infoblock">
+	<div class="infoblock-label">
+		Create New Account
+	</div>
+	<div class="infoblock-body">
 
+		<small>
+			<form method="post">
+				<input type="hidden" name="orgid" value="<%= org.orgid %>">
 
+				<li>
+					First
+					<input type="text" name="first" placeholder="Jane" required>
+				</li>
 
-		<input type="submit" value="Submit">
+				<li>
+					Middle
+					<input type="text" name="middle" placeholder="M">
+				</li>
 
-	</form>
+				<li>
+					Last
+					<input type="text" name="last" placeholder="Doe" required>
+				</li>
 
+				<li>
+					Email
+					<input type="email" name="email" placeholder="john@example.com" required>
+				</li>
+
+				<li>
+					Password
+					<input type="password" name="password" placeholder="password" required>
+				</li>
+
+				<li>
+					Position
+					<input type="text" name="position" placeholder="Case Manager" required>
+				</li>
+
+				<li>
+					Department
+					<input type="text" name="department" placeholder="Pretrial Services" required>
+				</li>
+
+				<li>
+					Admin
+					<input type="checkbox" name="admin" value="true"> Check to make admin
+				</li>
+				
+				<input type="submit" value="Submit">
+			</form>
+		</small>
+	</div>
+</div>
 
 <% include footer %>
