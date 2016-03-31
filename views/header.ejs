@@ -16,10 +16,24 @@
 		}
 
 		header {
-			min-height: 25px;
+			min-height: 40px;
 			background-color: #FFF;
-			padding: 10px 10px 5px 10px;
 			border-bottom: 1px solid;
+		}
+
+		header .logo-left {
+			float: left;
+			height: 25px;
+			min-width: 120px;
+			padding: 10px 10px 5px 10px;
+			color: #FFF;
+			font-weight: 900;
+			background-color: #0084ff;
+		}
+
+		header .buttons {
+			padding: 10px 10px 5px 10px;
+			float: right;
 		}
 
 		footer {
@@ -47,12 +61,14 @@
 	<body>
 
 		<header>
-			<a href="/">
-				<i class="fa fa-comments"></i>
-				ClientComm
-			</a>
+			<div class="logo-left">
+				<a href="/">
+					<i class="fa fa-comments"></i>
+					ClientComm
+				</a>
+			</div>
 
-			<div style="float:right;">
+			<div class="buttons">
 				<% if (typeof notLoggedIn !== "undefined" && notLoggedIn) { %>
 					<a href="/login">Login</a>
 				<% } else { %>
