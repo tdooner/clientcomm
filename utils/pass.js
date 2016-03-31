@@ -12,6 +12,17 @@ module.exports = {
 		}
 	},
 
+	isAdmin: function (req, res, next) {
+		var realadmin = req.isAuthenticated() && req.user.active && req.user.admin;
+		var realsuper = req.isAuthenticated() && req.user.hasOwnProperty("superuser") && req.user.superuser;
+		if (realadmin || realsuper) { 
+			return next(); 
+		} else { 
+			req.flash("warning", "No access allowed, you do not have ADMIN access.");
+			res.redirect("/401"); 
+		}
+	},
+
 	isSuper: function (req, res, next) {
 		var realsuper = req.isAuthenticated() && req.user.hasOwnProperty("superuser") && req.user.superuser;
 		if (realsuper) { 

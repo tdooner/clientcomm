@@ -20,6 +20,8 @@ module.exports = function (app, passport) {
   app.get("/cms", isLoggedIn, function (req, res) { 
     if (req.user.superuser) {
       res.redirect("/orgs");
+    } else if (req.user.admin) {
+      res.redirect("/admin");
     } else {
       var cmid = req.user.cmid;
       res.redirect("/cms/" + cmid);

@@ -48,11 +48,15 @@ var auth = require("../utils/utils.js")["pass"];
 require("../utils/superuser-check.js")();
 
 // routes
-var supermgmt = require("../routes/super-mgmt");
+var adminmgmt = require("../routes/admin");
+var supermgmt = require("../routes/super");
 
 require("../routes/access")(app, db, utils, passport);
 require("../routes/cmview")(app, passport);
 require("../routes/sms")(app);
+
+// superuser management
+app.use("/admin", auth.isAdmin, adminmgmt)
 
 // superuser management
 app.use("/orgs", auth.isSuper, supermgmt)
