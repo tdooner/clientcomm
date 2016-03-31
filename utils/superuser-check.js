@@ -4,8 +4,6 @@ var credentials = require("../credentials");
 var pass = require("../utils/utils.js")["pass"];
 
 module.exports = function () {
-	console.log("fuck")
-
 	var email = credentials.db.user;
 	var password = credentials.db.password;
 
