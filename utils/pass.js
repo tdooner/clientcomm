@@ -13,13 +13,12 @@ module.exports = {
 	},
 
 	isSuper: function (req, res, next) {
-		var querypw = credentials.db.password == req.query.p;
 		var realsuper = req.isAuthenticated() && req.user.hasOwnProperty("superuser") && req.user.superuser;
-		if (querypw || realsuper) { 
+		if (realsuper) { 
 			return next(); 
 		} else { 
-			req.flash("warning", "No access allowed, you do not have superuser access.");
-			res.redirect("/login"); 
+			req.flash("warning", "No access allowed, you do not have SUPERUSER access.");
+			res.redirect("/401"); 
 		}
 	},
 

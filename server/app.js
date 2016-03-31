@@ -43,12 +43,24 @@ var utils = {
 	authToken: credentials.authToken,
 	twilioNum: credentials.twilioNum
 }
+var auth = require("../utils/utils.js")["pass"];
+
+require("../utils/superuser-check.js")();
 
 // routes
+var supermgmt = require("../routes/super-mgmt");
+
 require("../routes/access")(app, db, utils, passport);
 require("../routes/cmview")(app, passport);
 require("../routes/sms")(app);
+
+// superuser management
+app.use("/orgs", auth.isSuper, supermgmt)
+
+// catch alls
 require("../routes/catchall")(app);
+
+
 
 var port = 4000;
 app.listen(port, function () { console.log("Listening on port", port); });
