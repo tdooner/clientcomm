@@ -21,18 +21,30 @@
 			border-bottom: 1px solid;
 		}
 
+		header div {
+			padding: 10px 10px 5px 10px;
+		}
+
 		header .logo-left {
 			float: left;
 			height: 25px;
-			min-width: 120px;
-			padding: 10px 10px 5px 10px;
+			width: 200px;
+			text-align: center;
 			color: #FFF;
 			font-weight: 900;
 			background-color: #0084ff;
 		}
 
+		header .logo-left:hover {
+			box-shadow: inset 0px 0px 25px rgba(0,0,0,0.2);
+			text-shadow: 0px 0px 5px rgba(0,0,0,0.7);
+		}
+
+		header .identification {
+			float: left;
+		}
+
 		header .buttons {
-			padding: 10px 10px 5px 10px;
 			float: right;
 		}
 
@@ -49,11 +61,17 @@
 			color: inherit;
 		}
 
+		a:hover {
+			background-color: #0084ff;
+			color: #FFF;
+		}
+
 		#contents {
 			min-height: 575px;
-			padding-top: 25px;
-			padding-left: 50px;
-			padding-right: 50px;
+		}
+
+		#contents .entryform {
+			margin-left: 140px;
 		}
 
 	</style>
@@ -62,11 +80,17 @@
 
 		<header>
 			<div class="logo-left">
-				<a href="/">
+				<a class="logo" href="/">
 					<i class="fa fa-comments"></i>
 					ClientComm
 				</a>
 			</div>
+
+			<% if (typeof user !== "undefined") { %>
+				<div class="identification">
+					<%= user.first %> <%= user.middle %> <%= user.last %> 
+				</div>
+			<% } %>
 
 			<div class="buttons">
 				<% if (typeof notLoggedIn !== "undefined" && notLoggedIn) { %>
