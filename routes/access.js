@@ -7,12 +7,7 @@ var isLoggedIn = pass.isLoggedIn;
 module.exports = function (app, db, utils, passport) {
 
 	app.get("/", function (req, res) {
-		var warning = req.flash("warning");
-		var success = req.flash("success");
-		res.render("index", {
-			warning: warning,
-			success: success
-		});
+		res.render("index");
 	});
 
 	app.get("/login", function (req, res) {
@@ -20,12 +15,7 @@ module.exports = function (app, db, utils, passport) {
 		if (req.hasOwnProperty("user")) {
 			res.redirect("/cms");
 		} else {
-			var warning = req.flash("warning");
-			var success = req.flash("success");
-			res.render("login", {
-				warning: warning,
-				success: success
-			});
+			res.render("login");
 		}
 	});
 

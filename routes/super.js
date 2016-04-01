@@ -9,13 +9,9 @@ var orgtools = require("../utils/utils.js")["orgs"];
 router.get("/", function (req, res) {
 	db("orgs").orderBy("name")
 	.then(function (orgs) {
-		var warning = req.flash("warning");
-		var success = req.flash("success");
 
 		res.render("orgs", {
-			orgs: orgs,
-			warning: warning,
-			success: success
+			orgs: orgs
 		});
 	}).catch(function (err) {
 		res.redirect("/500");
@@ -57,8 +53,6 @@ router.get("/:orgid", function (req, res) {
 	var orgid = req.params.orgid;
 	db("orgs").where("orgid", orgid).limit(1)
 	.then(function (orgs) {
-		var warning = req.flash("warning");
-		var success = req.flash("success");
 
 		if (orgs.length > 0) {
 			var org = orgs[0];
@@ -68,9 +62,7 @@ router.get("/:orgid", function (req, res) {
 
 				res.render("org", {
 					org: org,
-					cms: cms,
-					warning: warning,
-					success: success
+					cms: cms
 				});
 				
 			}).catch(function (err) {

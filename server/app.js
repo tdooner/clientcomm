@@ -47,6 +47,13 @@ var auth = require("../utils/utils.js")["pass"];
 
 require("../utils/superuser-check.js")();
 
+// log flash messages each time
+app.use(function(req, res, next){	
+	res.locals.warning = req.flash("warning");
+	res.locals.success = req.flash("success");
+	next();
+});
+
 // routes
 var adminmgmt = require("../routes/admin");
 var supermgmt = require("../routes/super");

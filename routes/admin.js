@@ -11,8 +11,6 @@ router.get("/", function (req, res) {
 
 	db("orgs").where("orgid", orgid).limit(1)
 	.then(function (orgs) {
-		var warning = req.flash("warning");
-		var success = req.flash("success");
 
 		if (orgs.length > 0) {
 			var org = orgs[0];
@@ -23,9 +21,7 @@ router.get("/", function (req, res) {
 				res.render("org", {
 					user: req.user,
 					org: org,
-					cms: cms,
-					warning: warning,
-					success: success
+					cms: cms
 				});
 				
 			}).catch(function (err) { res.redirect("/500"); });
@@ -66,18 +62,11 @@ router.get("/cms/:cmid", function (req, res) {
 	      .whereIn("convos.convid", convos)
 	      .groupBy("convo")
 	      .then(function (msgs) {
-	      	res.send(msgs)
 
-	        // var warning = req.flash("warning");
-	        // var success = req.flash("success");
-
-	        // res.render("clientstats", {
-	        //   user: req.user,
-	        //   cm: cm,
-	        //   clients: clients,
-	        //   warning: warning,
-	        //   success: success
-	        // });
+	        res.render("clientstats", {
+	          user: req.user,
+	          msgs: msgs,
+	        });
 
 	      }).catch(function (err) { console.log(err); res.redirect("/500"); });
 

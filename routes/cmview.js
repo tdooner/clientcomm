@@ -48,15 +48,10 @@ module.exports = function (app, passport) {
           db("clients").where("cm", cmid).limit(1)
           .then(function (clients) {
 
-            var warning = req.flash("warning");
-            var success = req.flash("success");
-
             res.render("clients", {
               user: req.user,
               cm: cm,
               clients: clients,
-              warning: warning,
-              success: success
             });
 
           }).catch(function (err) { res.redirect("/500"); });
@@ -150,16 +145,11 @@ module.exports = function (app, passport) {
           .where("commconns.client", cl.clid)
           .then(function (comms) {
 
-            var warning = req.flash("warning");
-            var success = req.flash("success");
-
             res.render("client", {
               cm: req.user,
               cl: cl,
               comms: comms,
               convos: convos,
-              warning: warning,
-              success: success
             });
             
           }).catch(function (err) {
