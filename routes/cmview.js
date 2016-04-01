@@ -45,6 +45,7 @@ module.exports = function (app, passport) {
             var success = req.flash("success");
 
             res.render("clients", {
+              user: req.user,
               cm: cms[0],
               clients: clients,
               warning: warning,

@@ -9,12 +9,7 @@ module.exports = function (app, db, utils, passport) {
 	app.get("/", function (req, res) {
 		var warning = req.flash("warning");
 		var success = req.flash("success");
-		var notLoggedIn = true;
-		if (req.hasOwnProperty("user")) {
-			notLoggedIn = false;
-		}
 		res.render("index", {
-			notLoggedIn: notLoggedIn,
 			warning: warning,
 			success: success
 		});
@@ -23,15 +18,14 @@ module.exports = function (app, db, utils, passport) {
 	app.get("/login", function (req, res) {
 		var warning = req.flash("warning");
 		var success = req.flash("success");
-		var notLoggedIn = true;
 		if (req.hasOwnProperty("user")) {
-			notLoggedIn = false;
+			res.redirect("/cms");
+		} else {
+			res.render("login", {
+				warning: warning,
+				success: success
+			});
 		}
-		res.render("login", {
-			notLoggedIn: notLoggedIn,
-			warning: warning,
-			success: success
-		});
 	});
 
   app.post("/login", passport.authenticate("local-login", {

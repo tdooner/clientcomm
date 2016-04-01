@@ -7,19 +7,33 @@ var pass = require("../utils/utils.js")["pass"];
 var orgtools = require("../utils/utils.js")["orgs"];
 
 router.get("/", function (req, res) {
-	console.log("here");
-	db("orgs").where("orgid", req.user.org).limit(1)
+	var orgid = req.user.org;
+
+	db("orgs").where("orgid", orgid).limit(1)
 	.then(function (orgs) {
 		var warning = req.flash("warning");
 		var success = req.flash("success");
 
-		res.render("orgs", {
-			orgs: orgs,
-			warning: warning,
-			success: success
-		});
+		if (orgs.length > 0) {
+			var org = orgs[0];
+
+			db("cms").where("org", orgid).orderBy("last")
+			.then(function (cms) {
+
+				res.render("org", {
+					user: req.user,
+					org: org,
+					cms: cms,
+					warning: warning,
+					success: success
+				});
+				
+			}).catch(function (err) { res.redirect("/500"); });
+
+		} else { res.redirect("/404"); }
 
 	}).catch(function (err) { res.redirect("/500"); });
+
 });
 
 module.exports = router;
