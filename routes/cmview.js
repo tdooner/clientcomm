@@ -63,7 +63,7 @@ module.exports = function (app, passport) {
 
         // admin trying to view one of his staff's profiles
         } else if (adminView) {
-          res.redirect("/admin");
+          res.redirect("/admin/cms/" + cmid);
 
         // no view permissions
         } else {
