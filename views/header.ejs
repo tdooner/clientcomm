@@ -50,8 +50,15 @@
 		}
 
 		footer {
-			min-height: 25px;
-			padding: 5px 10px 10px 10px;
+			padding: 5px 10px 5px 10px;
+			position: fixed;
+			bottom: 0px;
+			right: 0px;
+			color: #FFF;
+			text-align: right;
+			font-size: 10px;
+			line-height: 10px;
+			background-color: #0084FF;
 		}
 
 		a, a:visited, a:hover, a:active {
@@ -69,7 +76,8 @@
 
 		#contents {
 			min-height: 575px;
-			padding-top: 5px;
+			display: block; 
+			clear: both;
 		}
 
 		#contents .entryform {
@@ -79,6 +87,9 @@
 		#contents .infoblock {
 			display: block; 
 			clear: both;
+			font-size: 0.8em;
+			padding-top: 3px;
+			padding-bottom: 3px;
 		}
 
 		#contents .infoblock .infoblock-label {
@@ -89,6 +100,17 @@
 			padding: 5px 10px 5px 10px;
 			word-wrap: break-word;
 			text-align: right;
+			font-size: 1em;
+			cursor: pointer;
+		}
+
+
+		#contents .infoblock .infoblock-id {
+			float: left;
+			text-align: right;
+			margin-left: -100px;
+			width: 90px;
+			opacity: 0.5;
 		}
 
 		#contents .infoblock .infoblock-body {
@@ -102,7 +124,7 @@
 		}
 
 		#contents .infoblock .infoblock-body li {
-			color: rgba(10,0,0,0.35);
+			color: rgba(10,0,0,0.5);
 			padding: 5px 10px 5px 10px;
 		}
 
