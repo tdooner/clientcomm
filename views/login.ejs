@@ -1,29 +1,41 @@
 <% include header %>
 
-<div class="entryform">
+<div class="infoblock">
 	<form method="post">
 
-		<div>
-			<div class="form-desc">
-				Email
-			</div>
-			<div>
-				<input type="text" name="email" placeholder="Email" required>
-			</div>
+		<div class="infoblock-label">
+			Account Login
 		</div>
 
-		<div>
-			<div class="form-desc">
-				Password
-			</div>
-			<div>
-				<input type="password" name="pass" placeholder="Password">
-			</div>
-		</div>
+		<div class="infoblock-body">
+			<ul>
+				<li>
+					<br>
+				</li>
 
-		<input type="submit" value="Submit">
+				<li>
+					<div class="infoblock-id">
+						email
+					</div>
+					<input type="text" name="email" placeholder="Email" required>
+				</li>
+
+				<li>
+					<div class="infoblock-id">
+						password
+					</div>
+					<input type="password" name="pass" placeholder="Password">
+				</li>
+
+				<li>
+					<input type="submit" class="button" value="Submit">
+				</li>
+
+			</ul>
+		</div>
 
 	</form>
 </div>
+
 
 <% include footer %>
