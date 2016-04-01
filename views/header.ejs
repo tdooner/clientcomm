@@ -86,6 +86,15 @@
 			cursor: pointer;
 		}
 
+		.alerts {
+			width: 200px;
+			color: #FFF;
+			padding: 5px 10px 5px 10px;
+			text-align: center;
+			width: inherit;
+			font-size: 10px;
+		}
+
 		#contents {
 			min-height: 575px;
 			display: block; 
@@ -176,13 +185,13 @@
 
 			<% if (typeof success !== "undefined" && success) { %>
 				<% for (var i = 0; i < success.length; i++) { %>
-					<div style="color:green">Success: <%= success[i] %></div>
+					<div class="alerts" style="background-color:green">Success: <%= success[i] %></div>
 				<% } %>
 			<% } %>
 
 			<% if (typeof warning !== "undefined" && warning) { %>
 				<% for (var i = 0; i < warning.length; i++) { %>
-					<div style="color:red">Alert: <%= warning[i] %></div>
+					<div class="alerts" style="background-color:red">Alert: <%= warning[i] %></div>
 				<% } %>
 			<% } %>
 

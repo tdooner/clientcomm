@@ -16,11 +16,12 @@ module.exports = function (app, db, utils, passport) {
 	});
 
 	app.get("/login", function (req, res) {
-		var warning = req.flash("warning");
-		var success = req.flash("success");
+		// check if the user is already logged in
 		if (req.hasOwnProperty("user")) {
 			res.redirect("/cms");
 		} else {
+			var warning = req.flash("warning");
+			var success = req.flash("success");
 			res.render("login", {
 				warning: warning,
 				success: success

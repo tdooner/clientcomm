@@ -183,7 +183,7 @@
 	<div class="infoblock-label" onclick="toggle('newaccount')">
 		Create New Account
 	</div>
-	<div class="infoblock-body" id="newaccount">
+	<div class="infoblock-body" style="display:none" id="newaccount">
 
 		<ul>
 		<form method="post">
@@ -258,11 +258,5 @@
 
 	</div>
 </div>
-
-<script type="text/javascript">
-	function toggle (div) {
-		$("#" + div).toggle();
-	}
-</script>	
 
 <% include footer %>

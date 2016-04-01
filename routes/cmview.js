@@ -29,16 +29,23 @@ module.exports = function (app, passport) {
   });
 
   app.get("/cms/:cmid", isLoggedIn, function (req, res) { 
-    var cmid = req.user.cmid;
+    var cmid = req.params.cmid;
 
     db("cms").where("cmid", cmid).limit(1)
     .then(function (cms) {
+
+      // if no results, this client does not exist
       if (cms.length == 0) {
         res.redirect("/404");
+
       } else {
-        if (cms[0].active) {
-          db("clients").where("cm", cmid)
-          .andWhere("active", true)
+        var cm = cms[0];
+        var thisIsUser = req.user.cmid == cmid;
+        var adminView = (req.user.cmid !== cmid) && (req.user.org == cm.org);
+
+        // user trying to view their own profile
+        if (thisIsUser) {
+          db("clients").where("cm", cmid).limit(1)
           .then(function (clients) {
 
             var warning = req.flash("warning");
@@ -46,22 +53,26 @@ module.exports = function (app, passport) {
 
             res.render("clients", {
               user: req.user,
-              cm: cms[0],
+              cm: cm,
               clients: clients,
               warning: warning,
               success: success
             });
 
-          }).catch(function (err) {
-            res.redirect("/500");
-          });
+          }).catch(function (err) { res.redirect("/500"); });
+
+        // admin trying to view one of his staff's profiles
+        } else if (adminView) {
+          res.redirect("/admin");
+
+        // no view permissions
         } else {
-          res.redirect("/404");
+          res.redirect("/401");
         }
+
+
       }
-    }).catch(function (err) {
-      res.redirect("/500");
-    })
+    }).catch(function (err) { res.redirect("/500"); })
     
   });
 
