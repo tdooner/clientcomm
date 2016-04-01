@@ -33,7 +33,12 @@
 				<div class="infoblock-id">
 					allotment
 				</div>
-				<%= org.allotment %> users
+				<%= org.allotment %> users 
+				<% try { %>
+					(<%= Number(org.allotment) - Number(cms.length) %> remaining)
+				<% } catch (err) { %>
+					(error calculating remaining)
+				<% } %>
 			</li>
 
 			<li>
@@ -169,7 +174,7 @@
 				<% } %>
 			<% } %>
 			</span>
-			
+
 		</ul>
 	</div>
 </div>
@@ -178,54 +183,78 @@
 	<div class="infoblock-label" onclick="toggle('newaccount')">
 		Create New Account
 	</div>
-	<div class="infoblock-body" style="display:none" id="newaccount">
+	<div class="infoblock-body" id="newaccount">
 
-		<small>
-			<form method="post">
-				<input type="hidden" name="orgid" value="<%= org.orgid %>">
+		<ul>
+		<form method="post">
+			
+			<li>
+				<input type="hidden" name="orgid" value="<%= org.orgid %>">	
+				<i>Add user to organization</i>
+			</li>
 
-				<li>
-					First
-					<input type="text" name="first" placeholder="Jane" required>
-				</li>
+			<li>
+				<div class="infoblock-id">
+					first
+				</div>
+				<input type="text" name="first" placeholder="Jane" required>
+			</li>
 
-				<li>
-					Middle
-					<input type="text" name="middle" placeholder="M">
-				</li>
+			<li>
+				<div class="infoblock-id">
+					middle
+				</div>
+				<input type="text" name="middle" placeholder="M">
+			</li>
 
-				<li>
-					Last
-					<input type="text" name="last" placeholder="Doe" required>
-				</li>
+			<li>
+				<div class="infoblock-id">
+					last
+				</div>
+				<input type="text" name="last" placeholder="Doe" required>
+			</li>
 
-				<li>
-					Email
-					<input type="email" name="email" placeholder="john@example.com" required>
-				</li>
+			<li>
+				<div class="infoblock-id">
+					email
+				</div>
+				<input type="email" name="email" placeholder="john@example.com" required>
+			</li>
 
-				<li>
-					Password
-					<input type="password" name="password" placeholder="password" required>
-				</li>
+			<li>
+				<div class="infoblock-id">
+					password
+				</div>
+				<input type="password" name="password" placeholder="password" required>
+			</li>
 
-				<li>
-					Position
-					<input type="text" name="position" placeholder="Case Manager" required>
-				</li>
+			<li>
+				<div class="infoblock-id">
+					position
+				</div>
+				<input type="text" name="position" placeholder="Case Manager" required>
+			</li>
 
-				<li>
-					Department
-					<input type="text" name="department" placeholder="Pretrial Services" required>
-				</li>
+			<li>
+				<div class="infoblock-id">
+					department
+				</div>
+				<input type="text" name="department" placeholder="Pretrial Services" required>
+			</li>
 
-				<li>
-					Admin
-					<input type="checkbox" name="admin" value="true"> Check to make admin
-				</li>
-				
-				<input type="submit" value="Submit">
-			</form>
+			<li>
+				<div class="infoblock-id">
+					admin
+				</div>
+				<input type="checkbox" name="admin" value="true"> check for admin privileges
+			</li>
+
+			<li>
+				<input type="submit" class="button" value="Submit">
+			</li>
+			
+		</form>
+		</ul>
 
 	</div>
 </div>
