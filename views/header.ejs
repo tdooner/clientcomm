@@ -45,8 +45,12 @@
 			float: left;
 		}
 
-		header .buttons {
-			float: right;
+		header .navigation {
+			text-align: right;
+		}
+
+		header .navigation a {
+			margin-left: 10px;
 		}
 
 		footer {
@@ -155,8 +159,12 @@
 				</div>
 			<% } %>
 
-			<div class="buttons">
-				<% if (typeof notLoggedIn !== "undefined" && notLoggedIn) { %>
+			<div class="navigation">
+				<% if (typeof user !== "undefined" && user.admin) { %>
+					<a href="/admin">Admin</a>
+				<% } %>
+
+				<% if (typeof user == "undefined") { %>
 					<a href="/login">Login</a>
 				<% } else { %>
 					<a href="/logout">Logout</a>
