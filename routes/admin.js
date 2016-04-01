@@ -48,23 +48,42 @@ router.get("/cms/:cmid", function (req, res) {
     } else if ((req.user.cmid !== cmid) && (req.user.org == cms[0].org)) {
       var cm = cms[0];
 
-      // raw query: SELECT COUNT(*) FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) WHERE convos.convid IN (1, 3) GROUP BY convo;
-
       db("convos").where("cm", cmid).pluck("convid")
       .then(function (convos) {
 
-      	console.log("Got convos", convos)
 
-	      db("msgs")
-	      .count("msgid")
-	      .select("convo")
-	      .innerJoin("convos", "convos.convid", "msgs.convo")
-	      .whereIn("convos.convid", convos)
-	      .groupBy("convo")
+      	// raw: SELECT COUNT(*), convo, date(msgs.created) FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) WHERE convos.convid IN (1, 3) GROUP BY convo, date(msgs.created);
+
+	      // db("msgs")
+	      // .count("msgid")
+	      // .select("convo")
+	      // .select("msgs.created")
+	      // .innerJoin("convos", "convos.convid", "msgs.convo")
+	      // .whereIn("convos.convid", convos)
+	      // .groupBy("convo")
+	      // .groupBy("msgs.created")
+	      // .orderBy("msgs.created", "desc")
+	      db.raw("SELECT COUNT(*), convo, date(msgs.created) FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) WHERE convos.convid IN (1, 3) GROUP BY convo, date(msgs.created)")
 	      .then(function (msgs) {
+
+	      	console.log(msgs);
+	      	// msgs = msgs.map(function (ea) {
+	      	// 	ea.created = new Date(ea.created).toISOString().split("T")[0]
+	      	// 	return ea;
+	      	// });
+
+	      	// var clean = {}
+	      	// msgs.forEach(function (ea) {
+	      	// 	if (!clean[ea.convo]) { 
+	      	// 		clean[ea.convo] = {};
+	      	// 		clean[ea.convo][ea.created] = 0;
+	      	// 	}
+	      	// 	clean[ea.convo][ea.created] += Number(ea.count);
+	      	// });
 
 	        res.render("clientstats", {
 	          user: req.user,
+	          cm: cm,
 	          msgs: msgs,
 	        });
 

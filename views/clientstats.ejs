@@ -1,6 +1,67 @@
 <% include header %>
 
-<%= warning %>
-<%= success %>
+
+<%= JSON.stringify(msgs.length) %>
+<br><br><br><br>
+
+<%= JSON.stringify(msgs) %>
+
+
+<div class="infoblock">
+	<div class="infoblock-label">
+		Organization
+	</div>
+	<div class="infoblock-body">
+		<ul>
+			<li>
+				<b><%= org.name %></b>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					email
+				</div>
+				<%= org.email %>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					expires
+				</div>
+				<% try { %>
+					<% var upd = new Date(org.expiration) %>
+					<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+				<% } catch (err) { %>
+					Unknown
+				<% } %>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					allotment
+				</div>
+				<%= org.allotment %> users 
+				<% try { %>
+					(<%= Number(org.allotment) - Number(cms.length) %> remaining)
+				<% } catch (err) { %>
+					(error calculating remaining)
+				<% } %>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					created
+				</div>
+				<% try { %>
+					<% var upd = new Date(org.created) %>
+					<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+				<% } catch (err) { %>
+					Unknown
+				<% } %>
+			</li>
+
+		</ul>
+	</div>
+</div>
 
 <% include footer %>
