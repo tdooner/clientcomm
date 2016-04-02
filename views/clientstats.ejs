@@ -1,50 +1,47 @@
 <% include header %>
 
 
-<%= JSON.stringify(msgs.length) %>
-<br><br><br><br>
-
-<%= JSON.stringify(msgs) %>
-
-
 <div class="infoblock">
 	<div class="infoblock-label">
-		Organization
+		Staff Overview
 	</div>
 	<div class="infoblock-body">
 		<ul>
+
 			<li>
-				<b><%= org.name %></b>
+				<b><%= cm.first %> <%= cm.middle %> <%= cm.last %></b>
 			</li>
 
 			<li>
 				<div class="infoblock-id">
 					email
 				</div>
-				<%= org.email %>
+				<%= cm.email %>
 			</li>
 
 			<li>
 				<div class="infoblock-id">
-					expires
+					position
+				</div>
+				<%= cm.position %>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					department
+				</div>
+				<%= cm.department %>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					last login
 				</div>
 				<% try { %>
-					<% var upd = new Date(org.expiration) %>
-					<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+					<% var upd = new Date(cm.updated) %>
+					<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
 				<% } catch (err) { %>
 					Unknown
-				<% } %>
-			</li>
-
-			<li>
-				<div class="infoblock-id">
-					allotment
-				</div>
-				<%= org.allotment %> users 
-				<% try { %>
-					(<%= Number(org.allotment) - Number(cms.length) %> remaining)
-				<% } catch (err) { %>
-					(error calculating remaining)
 				<% } %>
 			</li>
 
@@ -53,8 +50,8 @@
 					created
 				</div>
 				<% try { %>
-					<% var upd = new Date(org.created) %>
-					<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+					<% var upd = new Date(cm.created) %>
+					<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
 				<% } catch (err) { %>
 					Unknown
 				<% } %>
@@ -63,5 +60,52 @@
 		</ul>
 	</div>
 </div>
+
+<div class="infoblock">
+	<div class="infoblock-label" onclick="toggle('conversationlogs')">
+		Conversation Logs
+	</div>
+	<div class="infoblock-body">
+		<ul>
+
+			<li>
+				<% var totCt = 0 %>
+				<%= msgs.forEach(function (ea) { totCt += Number(ea.count); }) %>
+				<%= totCt %> total messages sent
+			</li>
+
+			<span style="display:none" id="conversationlogs">
+			<% for (var i = 0; i < msgs.length; i++) { %>
+
+				<li>
+					<div class="infoblock-id">
+						id
+					</div>
+					<%= msgs[i].convo %>
+						<i>
+							(on
+							<% try { %>
+								<% var upd = new Date(msgs[i].date) %>
+								<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+							<% } catch (err) { %>
+								Unknown
+							<% } %>
+							)
+						</i>
+				</li>
+
+				<li>
+					<div class="infoblock-id">
+						count
+					</div>
+					<%= msgs[i].count %> messages sent
+				</li>
+			<% } %>
+			</span>
+
+		</ul>
+	</div>
+</div>
+
 
 <% include footer %>

@@ -52,19 +52,14 @@ router.get("/cms/:cmid", function (req, res) {
       .then(function (convos) {
       	var rawQuery = "SELECT COUNT(*), convo, date(msgs.created) FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) WHERE convos.convid IN (";
       	rawQuery += convos.join(", ");
-      	rawQuery += ") GROUP BY convo, date(msgs.created)"
+      	rawQuery += ") GROUP BY convo, date(msgs.created) ORDER BY DATE DESC"
 	      db.raw(rawQuery)
 	      .then(function (msgs) {
-
-	      	msgs = msgs.rows.map(function (ea) {
-	      		ea.date = new Date(ea.date).toISOString().split("T")[0];
-	      		return ea;
-	      	});
 
 	        res.render("clientstats", {
 	          user: req.user,
 	          cm: cm,
-	          msgs: msgs,
+	          msgs: msgs.rows,
 	        });
 
 	      }).catch(function (err) { console.log(err); res.redirect("/500"); });

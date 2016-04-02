@@ -141,24 +141,40 @@
 						</a>
 						</b>
 					</li>
+
 					<li>
 						<div class="infoblock-id">
 							email
 						</div>
 						<%= cms[i].email %>
 					</li>
+
 					<li>
 						<div class="infoblock-id">
-							probation
+							position
 						</div>
 						<%= cms[i].position %>
 					</li>
+
 					<li>
 						<div class="infoblock-id">
 							department
 						</div>
 						<%= cms[i].department %>
 					</li>
+
+					<li>
+						<div class="infoblock-id">
+							last login
+						</div>
+						<% try { %>
+							<% var upd = new Date(cms[i].updated) %>
+							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
+						<% } catch (err) { %>
+							Unknown
+						<% } %>
+					</li>
+
 					<li>
 						<div class="infoblock-id">
 							created
