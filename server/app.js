@@ -17,6 +17,7 @@ var twilio = require("twilio");
 // configurations
 app.set("view engine", "ejs");
 app.use("/static", express.static("public"));
+app.use("/modules", express.static("node_modules"));
 app.use(cookieParser());
 
 // passport sessions and user management

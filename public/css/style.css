@@ -117,7 +117,6 @@ input[type=button], .button {
 	cursor: pointer;
 }
 
-
 #contents .infoblock .infoblock-id {
 	float: left;
 	text-align: right;
@@ -139,4 +138,9 @@ input[type=button], .button {
 #contents .infoblock .infoblock-body li {
 	color: rgba(10,0,0,0.5);
 	padding: 5px 10px 5px 10px;
+}
+
+#contents .chart {
+	margin-right: 8px;
+	float: right;
 }
