@@ -80,26 +80,15 @@
 
 				<li>
 					<div class="infoblock-id">
-						id
+						convo-<%= msgs[i].convo %>
 					</div>
-					<%= msgs[i].convo %>
+					<%= msgs[i].count %> messages
 						<i>
-							(on
 							<% try { %>
 								<% var upd = new Date(msgs[i].date) %>
-								<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
-							<% } catch (err) { %>
-								Unknown
-							<% } %>
-							)
+								<%= ([upd.getMonth()+1, upd.getDate(), upd.getFullYear().toString().substr(2, 2)].join("/")) %>
+							<% } catch (err) { } %>
 						</i>
-				</li>
-
-				<li>
-					<div class="infoblock-id">
-						count
-					</div>
-					<%= msgs[i].count %> messages sent
 				</li>
 			<% } %>
 			</span>
