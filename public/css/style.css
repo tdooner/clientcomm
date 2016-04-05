@@ -103,6 +103,7 @@ input[type=button], .button {
 	font-size: 0.8em;
 	padding-top: 3px;
 	padding-bottom: 3px;
+	line-height: 16px;
 }
 
 #contents .infoblock .infoblock-label {
@@ -142,5 +143,30 @@ input[type=button], .button {
 
 #contents .chart {
 	margin-right: 8px;
-	float: right;
+	position: absolute;
+	right: 0px;
+	top: 50px;
 }
+
+#contents .chart .c3 .c3-grid line {
+  stroke: #e6e6e6;
+}
+
+#contents .chart .c3 .c3-axis path, #contents .chart .c3 .c3-axis line {
+  stroke: #d3d3d3;
+}
+
+#contents .chart .c3 .c3-axis text {
+  fill: #b3b3b3;
+}
+
+#contents .chart .c3 .c3-lines {
+  stroke: red;
+}
+
+
+
+
+
+
+
