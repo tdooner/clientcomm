@@ -76,6 +76,9 @@
 				<% if (cms[i].admin && cms[i].active) { %>
 
 					<li>
+						<div class="infoblock-id">
+							<div id="chart-<%= cms[i].cmid %>"></div>
+						</div>
 						<b>
 						<a href="/cms/<%= cms[i].cmid %>">
 							<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
