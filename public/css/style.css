@@ -121,8 +121,8 @@ input[type=button], .button {
 #contents .infoblock .infoblock-id {
 	float: left;
 	text-align: right;
-	margin-left: -100px;
-	width: 90px;
+	margin-left: -200px;
+	width: 190px;
 	opacity: 0.5;
 }
 

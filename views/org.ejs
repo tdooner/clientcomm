@@ -139,7 +139,7 @@
 
 					<li>
 						<div class="infoblock-id">
-							<div id="chart-<%= cms[i].cmid %>" style="width:80;height:120px;"></div>
+							<div id="chart-<%= cms[i].cmid %>"></div>
 						</div>
 						<b>
 						<a href="/cms/<%= cms[i].cmid %>">
@@ -298,11 +298,12 @@ try {
 function makeChart (id) {
 	chart = c3.generate({
 	  data: { x: "x", columns: [["x"].concat(msgs[id].dates), ["Messages"].concat(msgs[id].vals)], color: function (color, d) { return "#0084FF"; } },
-	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" }, show: false }, y: { show: false } },
+	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" }, show: false }, y: { show: true } },
 	  tooltip: { show: false },
 	  point: { show: false },
 	  legend: { hide: true },
-	  size: { height: 80 },
+	  padding: { top: 0, right: 10, bottom: 0, left: 0, },
+	  size: { height: 40, width: 200 },
 	  bindto: "#chart-" + id,
 	});	
 }

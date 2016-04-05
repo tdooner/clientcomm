@@ -10,7 +10,7 @@ module.exports = {
     client: "postgresql",
     connection: {
       user: "kuanbutts",
-      database: "clientcomm"
+      database: "cc2"
     }
   },
 
