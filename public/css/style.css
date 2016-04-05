@@ -146,6 +146,13 @@ input[type=button], .button {
 	position: absolute;
 	right: 0px;
 	top: 50px;
+	text-align: center;
+	color: rgba(10,0,0,0.5);
+}
+
+#contents .chart svg {
+	height: 205px;
+	width: 100%;
 }
 
 #contents .chart .c3 .c3-grid line {

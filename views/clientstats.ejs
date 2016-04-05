@@ -109,7 +109,7 @@
 function resizeChart () { 
 	var size = window.innerWidth - 400;
 	$("#chart").css("width", size); 
-	if (chart) { 
+	if (typeof chart !== "undefined") { 
 		if (size > 250) { $(".chart").show(); chart.resize(size); }
 		else { $(".chart").hide(); }
 	}
@@ -160,7 +160,6 @@ function makeChart () {
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },
 	  padding: { right: 20 },
-	  size: { height: 205 },
 	  grid: { y: { show: true }, x: { show: true } },
 	  bindto: "#chart"
 	});
