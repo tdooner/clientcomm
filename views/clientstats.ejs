@@ -155,7 +155,7 @@ function makeChart () {
 		vals.push("0");
 	}
 
-	chart = c3.generate({
+	c3.generate({
 	  data: { x: "x", columns: [["x"].concat(dates), ["Messages"].concat(vals)], color: function (color, d) { return "#0084FF"; } },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },
@@ -163,7 +163,7 @@ function makeChart () {
 	  size: { height: 205 },
 	  grid: { y: { show: true }, x: { show: true } },
 	  bindto: "#chart"
-	});	
+	});
 }
 
 </script>

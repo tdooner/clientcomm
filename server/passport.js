@@ -36,23 +36,23 @@ module.exports = function (passport) {
 			process.nextTick(function () {
 
 				db("cms").where("email", email).limit(1)
-				.then(function (admin) {
-					if (admin.constructor === Array && admin.length == 1) {
-						admin = admin[0];
-						if (validPw(password, admin.pass)) {
-							return done(null, admin);
+				.then(function (acct) {
+					if (acct.constructor === Array && acct.length == 1) {
+						acct = acct[0];
+						if (validPw(password, acct.pass)) {
+
+							db("cms").where("cmid", acct.cmid).limit(1)
+							.update({updated: db.fn.now()})
+							.then(function (success) {
+								return done(null, acct);
+							}).catch(function (err) { return done(err); });
 
 						// fails because bad password
-						} else {
-							return done(null, false);
-						}
-					} else {
-						return done(null, false);
-					}
-				})
-				.catch(function (err) {
-					return done(err);
-				})
+						} else { return done(null, false); }
+
+					} else { return done(null, false); }
+
+				}).catch(function (err) { return done(err); });
 			});
 		})
 	);
