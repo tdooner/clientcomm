@@ -108,9 +108,7 @@
 	</div>
 </div>
 
-<div class="chart">
-	<div id="chart" style="overflow:scroll;"></div>
-</div>
+<div class="chart"><div id="chart"></div></div>
 
 <script src="https://code.jquery.com/jquery-1.12.2.min.js" integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
@@ -159,11 +157,13 @@ try {
 
 function makeChart () {
 	chart = c3.generate({
-	  data: { x: "x", columns: [ ["x"].concat(compiled.x), ["Messages"].concat(compiled.y) ] },
+	  data: { x: "x", columns: [["x"].concat(compiled.x), ["Messages"].concat(compiled.y)], color: function (color, d) { return "#0084FF"; } },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },
 	  padding: { right: 20 },
-	  size: { height: 200 }
+	  size: { height: 205 },
+	  grid: { y: { show: true }, x: { show: true } },
+	  bindto: "#chart"
 	});	
 }
 
