@@ -140,7 +140,7 @@ try {
 		} else { return false; }
 	}).map(function (ea) { 
 		var d = new Date(ea.date); 
-		ea.date = [d.getFullYear()+1, d.getMonth(), d.getDate()].join("-");
+		ea.date = [d.getFullYear(), d.getMonth()+1, d.getDate()].join("-");
 		return ea;
 	}).forEach(function (ea) {
 		if (!compiled[ea.date]) { compiled[ea.date] = 0; };
@@ -156,8 +156,18 @@ try {
 } catch (e) { console.log(e) }
 
 function makeChart () {
+	var dates = compiled.x;
+	var vals = compiled.y;
+	var d = new Date();
+	var today = [d.getFullYear(), d.getMonth()+1, d.getDate()].join("-");
+
+	if (dates[dates.length] !== today) {
+		dates.push(today);
+		vals.push("0");
+	}
+
 	chart = c3.generate({
-	  data: { x: "x", columns: [["x"].concat(compiled.x), ["Messages"].concat(compiled.y)], color: function (color, d) { return "#0084FF"; } },
+	  data: { x: "x", columns: [["x"].concat(dates), ["Messages"].concat(vals)], color: function (color, d) { return "#0084FF"; } },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },
 	  padding: { right: 20 },

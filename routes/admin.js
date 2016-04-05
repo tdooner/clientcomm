@@ -30,7 +30,7 @@ router.get("/", function (req, res) {
 	      	msgs.rows.forEach(function (ea) {
 	      		if (!m[ea.cm]) { m[ea.cm] = {} }
 	      		var d = new Date(ea.date);
-	      		ea.date = [d.getFullYear()+1, d.getMonth(), d.getDate()].join("-");
+	      		ea.date = [d.getFullYear(), d.getMonth()+1, d.getDate()].join("-");
 	      		m[ea.cm][ea.date] = Number(ea.count);
 	      	});
 	      	for (var ea in m) {

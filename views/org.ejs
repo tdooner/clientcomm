@@ -296,8 +296,18 @@ try {
 } catch (e) { console.log(e) }
 
 function makeChart (id) {
+	var dates = msgs[id].dates;
+	var vals = msgs[id].vals;
+	var d = new Date();
+	var today = [d.getFullYear(), d.getMonth()+1, d.getDate()].join("-");
+
+	if (dates[dates.length] !== today) {
+		dates.push(today);
+		vals.push("0");
+	}
+
 	chart = c3.generate({
-	  data: { x: "x", columns: [["x"].concat(msgs[id].dates), ["Messages"].concat(msgs[id].vals)], color: function (color, d) { return "#0084FF"; } },
+	  data: { x: "x", columns: [["x"].concat(dates), ["Messages"].concat(vals)], color: function (color, d) { return "#0084FF"; } },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" }, show: false }, y: { show: true } },
 	  tooltip: { show: false },
 	  point: { show: false },
