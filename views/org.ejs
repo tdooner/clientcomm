@@ -85,24 +85,40 @@
 						</a>
 						</b>
 					</li>
+
 					<li>
 						<div class="infoblock-id">
 							email
 						</div>
 						<%= cms[i].email %>
 					</li>
+
 					<li>
 						<div class="infoblock-id">
 							probation
 						</div>
 						<%= cms[i].position %>
 					</li>
+
 					<li>
 						<div class="infoblock-id">
 							department
 						</div>
 						<%= cms[i].department %>
 					</li>
+
+					<li>
+						<div class="infoblock-id">
+							last login
+						</div>
+						<% try { %>
+							<% var upd = new Date(cms[i].updated) %>
+							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+						<% } catch (err) { %>
+							Unknown
+						<% } %>
+					</li>
+
 					<li>
 						<div class="infoblock-id">
 							created
@@ -178,7 +194,7 @@
 						</div>
 						<% try { %>
 							<% var upd = new Date(cms[i].updated) %>
-							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
+							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
 						<% } catch (err) { %>
 							Unknown
 						<% } %>
@@ -298,7 +314,6 @@ var msgs = "<%= JSON.stringify(msgs) %>";
 try {
 	msgs = JSON.parse(msgs.replace(/&#34;/g, '"'));
 	Object.keys(msgs).forEach(function (ea) { makeChart(ea); });
-	makeBigChart();
 } catch (e) { console.log(e) }
 
 function makeChart (id) {
@@ -335,34 +350,6 @@ function resizeChart () {
 window.onresize = function () { resizeChart(); };
 resizeChart();
 
-function makeBigChart () {
-
-	var dates = {};
-
-	Object.keys(msgs).forEach(function (cm) { 
-		var (var i = 0; i < msgs[cm].dates.length; i++) {
-			
-		}
-	});
-	var vals = msgs[id].vals;
-	var d = new Date();
-	var today = [d.getFullYear(), d.getMonth()+1, d.getDate()].join("-");
-
-	if (dates[dates.length] !== today) {
-		dates.push(today);
-		vals.push("0");
-	}
-
-	c3.generate({
-	  data: { x: "x", columns: [["x"].concat(dates), ["Messages"].concat(vals)], color: function (color, d) { return "#0084FF"; } },
-	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
-	  legend: { hide: true },
-	  padding: { right: 20 },
-	  size: { height: 205 },
-	  grid: { y: { show: true }, x: { show: true } },
-	  bindto: "#chart"
-	});
-}
 
 </script>
 
