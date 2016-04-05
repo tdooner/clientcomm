@@ -18,11 +18,38 @@ router.get("/", function (req, res) {
 			db("cms").where("org", orgid).orderBy("last")
 			.then(function (cms) {
 
-				res.render("org", {
-					user: req.user,
-					org: org,
-					cms: cms
-				});
+      	var rawQuery = "SELECT COUNT(*), cm, date(msgs.created) FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) WHERE convos.cm IN (";
+      	rawQuery += cms.map(function (ea) { return ea.cmid; }).join(", ");
+      	rawQuery += ") GROUP BY cm, date(msgs.created) ORDER BY DATE DESC";
+
+	      db.raw(rawQuery)
+	      .then(function (msgs) {
+
+	      	var m = {};
+	      	var m2 = {};
+	      	msgs.rows.forEach(function (ea) {
+	      		if (!m[ea.cm]) { m[ea.cm] = {} }
+	      		var d = new Date(ea.date);
+	      		ea.date = [d.getFullYear()+1, d.getMonth(), d.getDate()].join("-");
+	      		m[ea.cm][ea.date] = Number(ea.count);
+	      	});
+	      	for (var ea in m) {
+	      		var keys = Object.keys(m[ea]).sort(function (a,b) { return new Date(a) - new Date(b); });
+	      		m2[ea] = {
+	      			dates: keys,
+	      			vals: keys.map(function (k) { return m[ea][k]; })
+	      		}
+	      	};
+
+					res.render("org", {
+						user: req.user,
+						org: org,
+						cms: cms,
+						msgs: m2
+					});
+
+	      }).catch(function (err) { console.log(err); res.redirect("/500"); });
+
 				
 			}).catch(function (err) { res.redirect("/500"); });
 
@@ -62,7 +89,7 @@ router.get("/cms/:cmid", function (req, res) {
 	          msgs: msgs.rows,
 	        });
 
-	      }).catch(function (err) { console.log(err); res.redirect("/500"); });
+	      }).catch(function (err) { res.redirect("/500"); });
 
       }).catch(function (err) { res.redirect("/500"); });
 

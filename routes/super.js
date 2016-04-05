@@ -11,6 +11,7 @@ router.get("/", function (req, res) {
 	.then(function (orgs) {
 
 		res.render("orgs", {
+			user: req.user,
 			orgs: orgs
 		});
 	}).catch(function (err) {
@@ -61,8 +62,10 @@ router.get("/:orgid", function (req, res) {
 			.then(function (cms) {
 
 				res.render("org", {
+					user: req.user,
 					org: org,
-					cms: cms
+					cms: cms,
+					msgs: {}
 				});
 				
 			}).catch(function (err) {
