@@ -156,7 +156,12 @@ function makeChart () {
 	}
 
 	c3.generate({
-	  data: { x: "x", columns: [["x"].concat(dates), ["Messages"].concat(vals)], color: function (color, d) { return "#0084FF"; } },
+	  data: { 
+	  	x: "x", 
+	  	columns: [["x"].concat(dates), ["Messages"].concat(vals)], 
+	  	color: function (color, d) { return "#0084FF"; },
+	  	types: { Messages: "spline" }
+	  },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },
 	  padding: { right: 20 },

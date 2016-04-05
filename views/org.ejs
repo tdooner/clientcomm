@@ -340,7 +340,12 @@ function makeChart (id) {
 	}
 
 	chart = c3.generate({
-	  data: { x: "x", columns: [["x"].concat(dates), ["Messages"].concat(vals)], color: function (color, d) { return "#0084FF"; } },
+	  data: { 
+	  	x: "x", 
+	  	columns: [["x"].concat(dates), ["Messages"].concat(vals)], 
+	  	color: function (color, d) { return "#0084FF"; },
+	  	types: { Messages: "spline" }
+	  },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" }, show: false }, y: { show: true } },
 	  tooltip: { show: false },
 	  point: { show: false },
@@ -373,7 +378,12 @@ function makeBigChart () {
 
 var w = $(".chart").width();
 	c3.generate({
-	  data: { x: "x", columns: [["x"].concat(keys), ["Messages"].concat(vals)], color: function (color, d) { return "#0084FF"; } },
+	  data: { 
+	  	x: "x", 
+	  	columns: [["x"].concat(keys), ["Messages"].concat(vals)], 
+	  	color: function (color, d) { return "#0084FF"; },
+	  	types: { Messages: "spline" }
+	  },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },
 	  padding: { right: 20 },
