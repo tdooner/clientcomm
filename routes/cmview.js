@@ -45,11 +45,11 @@ module.exports = function (app, passport) {
 
         // user trying to view their own profile
         if (thisIsUser || req.user.superuser) {
-          var rawQuery = "SELECT count(CASE WHEN msgs.read THEN NULL ELSE 1 END) AS msg_ct, clients.* FROM clients ";
+          var rawQuery = "SELECT count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, clients.* FROM clients ";
           rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
           rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
           rawQuery += "WHERE clients.cm=" + cmid + " ";
-          rawQuery += "GROUP BY clients.clid;";
+          rawQuery += "GROUP BY clients.clid";
           
           db.raw(rawQuery).then(function (clients) {
 
