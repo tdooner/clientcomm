@@ -45,7 +45,7 @@ module.exports = function (app, passport) {
 
         // user trying to view their own profile
         if (thisIsUser) {
-          db("clients").where("cm", cmid).limit(1)
+          db("clients").where("cm", cmid)
           .then(function (clients) {
 
             res.render("clients", {
@@ -73,7 +73,7 @@ module.exports = function (app, passport) {
 
   
   app.post("/cms/:cmid", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms";
+    var redirect_loc = "/cms/" + req.params.cmid;
 
     var cmid = req.body.cmid;
     var first = req.body.first;
