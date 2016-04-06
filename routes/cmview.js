@@ -45,7 +45,7 @@ module.exports = function (app, passport) {
 
         // user trying to view their own profile
         if (thisIsUser || req.user.superuser) {
-          var rawQuery = "SELECT count(CASE WHEN msgs.read THEN 1 ELSE NULL END) AS msg_ct, clients.* FROM clients ";
+          var rawQuery = "SELECT count(CASE WHEN msgs.read THEN NULL ELSE 1 END) AS msg_ct, clients.* FROM clients ";
           rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
           rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
           rawQuery += "WHERE clients.cm=" + cmid + " ";
@@ -224,9 +224,7 @@ module.exports = function (app, passport) {
             req.flash("success", "Added a new communication method.");
             res.redirect(redirect_loc);
 
-          }).catch(function (err) {
-            res.redirect("/500");
-          })
+          }).catch(function (err) { res.redirect("/500"); })
 
         } else {
           db("comms").insert({
@@ -246,18 +244,12 @@ module.exports = function (app, passport) {
               req.flash("success", "Added a new communication method.");
               res.redirect(redirect_loc);
 
-            }).catch(function (err) {
-              res.redirect("/500");
-            })
+            }).catch(function (err) { res.redirect("/500"); })
 
-          }).catch(function (err) {
-            res.redirect("/500");
-          })
+          }).catch(function (err) { res.redirect("/500"); })
         }
 
-      }).catch(function (err) {
-        res.redirect("/500");
-      })
+      }).catch(function (err) { res.redirect("/500"); })
 
     }
   });
@@ -302,9 +294,7 @@ module.exports = function (app, passport) {
           res.redirect(redirect_loc);
         }
 
-      }).catch(function (err) {
-        res.redirect("/500");
-      })
+      }).catch(function (err) { res.redirect("/500"); })
 
     }
   });
@@ -349,13 +339,9 @@ module.exports = function (app, passport) {
             res.redirect("/500");
           });
 
-        }).catch(function (err) {
-          res.redirect("/500");
-        })
+        }).catch(function (err) { res.redirect("/500"); })
 
-      }).catch(function (err) {
-        res.redirect("/500");
-      })
+      }).catch(function (err) { res.redirect("/500"); })
 
     }
   });
@@ -374,8 +360,17 @@ module.exports = function (app, passport) {
     } else {
       cmview.get_convo(cmid, clid, convid)
       .then(function (obj) {
-        obj.cm = req.user;
-        res.render("msgs", obj);
+
+        var rawQuery = "UPDATE msgs SET read = TRUE WHERE msgid IN ( ";
+        rawQuery += "SELECT msgs.msgid FROM clients ";
+        rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
+        rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
+        rawQuery += "WHERE clients.cm=" + cmid  + " AND clients.clid=" + clid + " AND msgs.read=FALSE) ";
+
+        db.raw(rawQuery).then(function (success) {
+          obj.cm = req.user;
+          res.render("msgs", obj);
+        }).catch(function (err) { res.redirect("/500"); })
 
       }).catch(function (err) {
         if (err == "404") {

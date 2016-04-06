@@ -114,6 +114,91 @@ input[type=button], .button {
 	font-size: 0.8em;
 }
 
+#contents .msg-stream {
+	display: block;
+	clear: both;
+	position: relative;
+	font-size: 0.9em;
+	margin-bottom: 80px;
+	margin-top: 40px;
+}
+
+#contents .msg-stream .msg {
+	display: block;
+	clear: both;
+	position: relative;
+	overflow:auto; 
+	padding-bottom: 10px;
+}
+
+#contents .msg-stream .msg .content {
+	display: block;
+	max-width: 25%;
+	position: relative;
+	border-radius: 15px;
+}
+
+#contents .msg-stream .msg.inbound {
+	color: #000;
+}
+
+#contents .msg-stream .msg.outbound {
+	color: #FFF;
+	text-align: right;
+}
+
+#contents .msg-stream .msg.inbound .date { 
+	float: left;
+	width: 220px;
+	font-size: 0.75em;
+	text-align: right;
+}
+
+#contents .msg-stream .msg.inbound .content { 
+	float: left;	
+	margin-left: 10px;
+	padding: 5px 8px 3px 8px;
+	background-color: #f1f0f0;
+}
+
+#contents .msg-stream .msg.inbound .content .description { 
+	display: block;
+	clear: both;
+	position: relative;
+	text-align: right;
+	opacity: 0.5;
+	font-size: 0.5em;
+}
+
+#contents .msg-stream .msg.outbound .date { 
+	float: right;
+	width: 220px;
+	color: rgb(68, 190, 199) ;
+	font-size: 0.75em;
+	text-align: left;
+	vertical-align: bottom;
+}
+
+#contents .msg-stream .msg.outbound .content { 
+	float: right;	
+	margin-right: 10px;
+	padding: 5px 8px 3px 8px;
+	background-color: rgb(68, 190, 199);
+}
+
+#contents .msg-stream .msg.outbound .content .description { 
+	opacity: 0.75;
+	font-size: 0.5em;
+}
+
+#contents .msg-stream .response {
+	margin-left: 220px;
+	margin-right: 220px;
+	margin-top: 15px;
+	text-align: right;
+
+}
+
 #contents .entryform {
 	margin-left: 140px;
 }

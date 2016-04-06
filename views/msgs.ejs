@@ -35,87 +35,103 @@
 	</div>
 </div>
 
-<br><br>
+<div class="infoblock">
+	<div class="infoblock-label">
+		Conversation Action
+	</div>
+	<div class="infoblock-body">
+		<ul>
+			<li>
+				<% if (convo.open && convo.accepted) { %>
+					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close" style="float:right">
+						<input type="submit" class="button" value="Close" style="background-color:orange">
+					</form>
+				<% } %>
 
-<% if (convo.open && convo.accepted) { %>
-	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close" style="float:right">
-		<input type="submit" value="Close Conversation">
-	</form>
-<% } %>
-
-<% if (convo.open && !convo.accepted) { %>
-	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept" style="float:right">
-		<input type="submit" value="Accept Conversation" style="color:green">
-	</form>
-	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject" style="float:right">
-		<input type="submit" value="Reject" style="color:red">
-	</form>
-<% } %>
+				<% if (convo.open && !convo.accepted) { %>
+					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept" style="float:right">
+						<input type="submit" class="button" value="Accept" style="background-color:green">
+					</form>
+					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject" style="float:right">
+						<input type="submit" class="button" value="Reject" style="background-color:red">
+					</form>
+				<% } %>
+			</li>
+		</ul>
+	</div>
+</div>
 
 
-<hr>
 
 
-<% for (var i = 0; i < msgs.length; i++) { %>
-	<% if (!msgs[i].inbound) { %>
-		<div style="text-align:right">
-			You wrote to 
-	<% } else { %>
-		<div>
+<div class="msg-stream">
+	<% for (var i = 0; i < msgs.length; i++) { %>
+
+		<% if (msgs[i].inbound) { %>
+			<div class="msg inbound">
+				<div class="date">
+					<% try { %>
+						<% var upd = new Date(msgs[i].created) %>
+						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
+					<% } catch (err) { %>
+						Unknown
+					<% } %>
+				</div>
+
+				<div class="content">
+					<%= msgs[i].content %>
+					<div class="description">
+						<%= cl.first %> via <%= msgs[i].name %>
+					</div>
+				</div>
+			</div>
+
+		<% } else { %>
+			<div class="msg outbound">
+				<div class="date">
+					<% try { %>
+						<% var upd = new Date(msgs[i].created) %>
+						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
+					<% } catch (err) { %>
+						Unknown
+					<% } %>
+				</div>
+
+				<div class="content">
+					<%= msgs[i].content %>
+					<div class="description">
+						via <%= msgs[i].name %>
+					</div>
+				</div>
+			</div>
+		<% } %>
+
 	<% } %>
 
-		<div style="font-size:small;">
-		<% if (!msgs[i].inbound) { %>
-			You wrote to 
+	<div class="response">
+		<% if (convo.open) { %>
+			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
+				
+					<textarea name="content" rows="5" maxlength="160" style="width:100%;" placeholder="(Max length 160 characters)" required></textarea>
+
+					<select name="commid" required>
+						<option value="" selected disabled>Comm Method</option>
+						<% for (var i = 0; i < comms.length; i++) { %>
+							<option value="<%= comms[i].commid %>"><%= comms[i].name %></option>
+						<% } %>
+					</select>
+
+				<input type="submit" class="button" value="Submit">
+
+			</form>
+		<% } else { %>
+			<center>
+				Can't write new messages. This conversation is closed.
+			</center>
 		<% } %>
-			<%= cl.first %> via <%= msgs[i].name %>:
-		</div>
-
-		<div>
-			<%= msgs[i].content %>
-		</div>
-
-		<div style="font-size:x-small;">
-			on 
-			<% try { %>
-				<% var upd = new Date(msgs[i].created) %>
-				<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
-			<% } catch (err) { %>
-				Unknown
-			<% } %>
-		</div>
-		
-		<br>
 	</div>
-<% } %>
 
-<hr>
+</div>
 
-<% if (convo.open) { %>
-	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
-		<div>
-			<textarea name="content" rows="5" maxlength="160" style="width:100%;" required></textarea>
-			(Max length 160 characters)
-		</div>
-
-		<div class="form-row">
-			<div class="form-desc">
-				Communication Type
-			</div>
-			<div class="form-entry">
-				<select name="commid" required>
-					<option value="" selected disabled>Comm Method</option>
-					<% for (var i = 0; i < comms.length; i++) { %>
-						<option value="<%= comms[i].commid %>"><%= comms[i].name %></option>
-					<% } %>
-				</select>
-			</div>
-		</div>
-
-		<input type="submit" value="Submit">
-	</form>
-<% } else { %>
-	Can't write new messages. This conversation is closed.
-<% } %>
 
 <% include footer %>
