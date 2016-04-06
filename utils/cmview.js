@@ -48,12 +48,12 @@ module.exports = {
                     reject("500")
                   })
 
-                } else {
+                } else { 
                   // actually not allowed to view
                   reject("404");
                 }
 
-              } else {
+              } else { 
                 // actually not allowed to view
                 reject("404");
               }

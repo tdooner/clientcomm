@@ -44,11 +44,11 @@ module.exports = function (app, passport) {
         var adminView = (req.user.cmid !== cmid) && (req.user.org == cm.org);
 
         // user trying to view their own profile
-        if (thisIsUser) {
+        if (thisIsUser || req.user.superuser) {
           var rawQuery = "SELECT count(CASE WHEN msgs.read THEN 1 ELSE NULL END) AS msg_ct, clients.* FROM clients ";
           rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
           rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
-          rawQuery += "WHERE clients.cm=" + req.user.cmid + " ";
+          rawQuery += "WHERE clients.cm=" + cmid + " ";
           rawQuery += "GROUP BY clients.clid;";
           
           db.raw(rawQuery).then(function (clients) {
@@ -133,11 +133,11 @@ module.exports = function (app, passport) {
 
   app.get("/cms/:cmid/cls/:clid", isLoggedIn, function (req, res) { 
     var clid = Number(req.params.clid);
-    var cmid = Number(req.user.cmid);
+    var cmid = Number(req.params.cmid);
     db("clients").where("clid", clid).limit(1)
     .then(function (cls) {
       var cl = cls[0];
-      if (cmid == Number(cl.cm) && cmid == Number(req.params.cmid)) {
+      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
 
         db("convos")
         .where("convos.cm", cmid)
@@ -361,23 +361,20 @@ module.exports = function (app, passport) {
   });
 
   app.get("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
 
     var cmid = req.params.cmid;
     var clid = req.params.clid;
     var convid = req.params.convid;
 
-    if (Number(cmid) !== Number(req.user.cmid)) {
+    if ((Number(cmid) !== Number(req.user.cmid)) && !req.user.superuser) {
       req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
       res.redirect(redirect_loc);
-    } else {
 
+    } else {
       cmview.get_convo(cmid, clid, convid)
       .then(function (obj) {
-        obj.warning = req.flash("warning");
-        obj.success = req.flash("success");
         obj.cm = req.user;
-
         res.render("msgs", obj);
 
       }).catch(function (err) {

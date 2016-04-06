@@ -4,7 +4,8 @@ var credentials = require("../credentials");
 module.exports = {
 
 	isLoggedIn: function (req, res, next) {
-		if (req.isAuthenticated()) { 
+		var realsuper = req.isAuthenticated() && req.user.hasOwnProperty("superuser") && req.user.superuser;
+		if (req.isAuthenticated() || realsuper) { 
 			return next(); 
 		} else { 
 			req.flash("warning", "No access allowed, not logged in.");

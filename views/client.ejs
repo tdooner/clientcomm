@@ -7,7 +7,7 @@
 			Return To All Clients
 		</a>
 	</div>
-	
+
 	<div class="nav-btn">
 		<a href="/cms/<%= cm.cmid %>">
 			<i class="fa fa-pencil"></i>
@@ -65,7 +65,7 @@
 			<% for (var i = 0; i < convos.length; i++) { %>
 
 				<li>
-					<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
+					<a href="/cms/<%= client.cm %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
 						<%= convos[i].subject %>
 					</a>
 
