@@ -20,7 +20,7 @@
 								<%=  clients[i].last + ", " + clients[i].first + " " + clients[i].middle %>
 							</a>
 
-							<% if (clients[i].msg_ct == 0) { %>
+							<% if (clients[i].msg_ct > 0) { %>
 								<span class="badge">
 									<%= clients[i].msg_ct %> new messages
 								</span>
