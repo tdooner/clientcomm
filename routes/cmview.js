@@ -174,7 +174,7 @@ module.exports = function (app, passport) {
   });
 
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.user.cmid;
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
     var clid = req.params.clid;
     var cmid = req.user.cmid;
