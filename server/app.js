@@ -52,6 +52,7 @@ require("../utils/superuser-check.js")();
 app.use(function(req, res, next){	
 	res.locals.warning = req.flash("warning");
 	res.locals.success = req.flash("success");
+	res.locals.user = req.user;
 	next();
 });
 
