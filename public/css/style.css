@@ -94,7 +94,7 @@ input[type=button], .button {
 }
 
 #contents .right-nav {
-	position: fixed;
+	position: absolute;
 	top: 41px;
 	right: 0px;
 }
