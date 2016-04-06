@@ -552,15 +552,9 @@ module.exports = function (app, passport) {
           req.flash("success", "Closed conversation.");
           res.redirect(redirect_loc);
 
-        }).catch(function (err) {
-          console.log("2", err);
-          res.redirect("/500");
-        })
+        }).catch(function (err) { res.redirect("/500"); })
 
-      }).catch(function (err) {
-        console.log("1", err);
-        res.redirect("/500");
-      })
+      }).catch(function (err) { res.redirect("/500"); })
 
     }
   });
