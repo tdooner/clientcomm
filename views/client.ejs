@@ -7,6 +7,7 @@
 			Return To All Clients
 		</a>
 	</div>
+	
 	<div class="nav-btn">
 		<a href="/cms/<%= cm.cmid %>">
 			<i class="fa fa-pencil"></i>
@@ -61,39 +62,36 @@
 				<i><%= convos.length %> Conversations</i>
 			</li>
 
-			<% if (convos.length > 0) { %>
-					<% for (var i = 0; i < convos.length; i++) { %>
+			<% for (var i = 0; i < convos.length; i++) { %>
 
-						<li>
-							<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
-								<%= convos[i].subject %>
-							</a>
+				<li>
+					<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
+						<%= convos[i].subject %>
+					</a>
 
-							<i>
-								<% try { %>
-									<% var upd = new Date(convos[i].updated) %>
-									<%= [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %> 
-									on
-									<%= [upd.getMonth()+1, upd.getDate()].join("/") %>
-								<% } catch (err) { %>
-									Unknown
-								<% } %>
-							</i>
+					<i>
+						<% try { %>
+							<% var upd = new Date(convos[i].updated) %>
+							<%= [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %> 
+							on
+							<%= [upd.getMonth()+1, upd.getDate()].join("/") %>
+						<% } catch (err) { %>
+							Unknown
+						<% } %>
+					</i>
 
-							<% if (convos[i].open) { %>
-								<span class="badge">
-									open
-								</span>
-							<% } %>
-						</li>
-
+					<% if (convos[i].open) { %>
+						<span class="badge">
+							open
+						</span>
 					<% } %>
+				</li>
+
 			<% } %>
 
 		</ul>
 	</div>
 </div>
-
 
 <div class="infoblock">
 	<div class="infoblock-label" onclick="toggle('newconvo')">
@@ -117,7 +115,7 @@
 					</div>
 					<input type="hidden" name="cmid" value="<%= cm.cmid %>">
 					<input type="hidden" name="clid" value="<%= client.clid %>">
-					<input type="text" name="subject" placeholder="e.g., Missed Appointment" required>
+					<input type="text" name="subject" maxlength="30" placeholder="e.g., Missed Appointment" required>
 				</li>
 
 				<li>
@@ -131,75 +129,88 @@
 	</div>
 </div>
 
-
-<br><br><br><br><br><br><br><br><br><br><br><br>
-
-
-
-
-<% if (comms.length > 0) { %>
-	<div>
-		<b>Communication Devices associated with client:</b>
+<div class="infoblock">
+	<div class="infoblock-label">
+		Contacts
+	</div>
+	<div class="infoblock-body">
 		<ul>
+
+			<li>
+				<i class="fa fa-comments-o"></i>
+				<i><%= comms.length %> Communication Methods</i>
+			</li>
+
 			<% for (var i = 0; i < comms.length; i++) { %>
+
 				<li>
+					<div class="infoblock-id">
+						<%= comms[i].type %>
+					</div>
 					<%= comms[i].name %>
-					<ul style="font-size:small;">
-						<li>
-							<%= comms[i].type %>: 
-							<%= comms[i].value %>
-						</li>
-					</ul>
+					(<%= comms[i].value %>)
 				</li>
+
 			<% } %>
+
 		</ul>
 	</div>
-<% } %>
+</div>
 
-<hr>
-
-<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/comm">
-
-	<b>Add a new communication device</b>
-
-	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
-	<input type="hidden" name="clid" value="<%= client.clid %>">
-
-	<div class="form-row">
-		<div class="form-desc">
-			Communication Type
-		</div>
-		<div class="form-entry">
-			<select name="type" required>
-				<option value="" selected disabled>Comm Method</option>
-				<option value="email" disabled>Email</option>
-				<option value="cell">Cell</option>
-				<option value="landline" disabled>Landline</option>
-			</select>
-		</div>
+<div class="infoblock">
+	<div class="infoblock-label" onclick="toggle('newcomm')">
+		New Communication
 	</div>
+	<div class="infoblock-body">
+		<ul>
+		<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/comm">
 
-	<div class="form-row">
-		<div class="form-desc">
-			Number
-		</div>
-		<div class="form-entry">
-			<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
-		</div>
+			<li>
+				<i class="fa fa-plus-square-o"></i>
+				<i>
+					Create a contact method
+				</i>
+			</li>
+
+			<span style="display:none" id="newcomm">
+				<li>
+					<div class="infoblock-id">
+						type
+					</div>
+					<input type="hidden" name="cmid" value="<%= cm.cmid %>">
+					<input type="hidden" name="clid" value="<%= client.clid %>">
+					<select name="type" required>
+						<option value="" selected disabled>Comm Method</option>
+						<option value="email" disabled>Email</option>
+						<option value="cell">Cell</option>
+						<option value="landline" disabled>Landline</option>
+					</select>
+				</li>
+
+				<li>
+					<div class="infoblock-id">
+						number
+					</div>
+					<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
+				</li>
+
+				<li>
+					<div class="infoblock-id">
+						description
+					</div>
+					<input type="text" name="description" maxlength="30" placeholder="e.g. Aunt's Cell" required>
+				</li>
+
+				<li>
+					<input type="submit" class="button" value="Submit">
+				</li>
+			</span>
+
+		</form>
+		</ul>
 	</div>
+</div>
 
-	<div class="form-row">
-		<div class="form-desc">
-			Description
-		</div>
-		<div class="form-entry">
-			<input type="text" name="description" placeholder="e.g. Aunt's Cell" required>
-		</div>
-	</div>
-
-	<input type="submit" value="Submit">
-
-</form>
 
 
 <% include footer %>

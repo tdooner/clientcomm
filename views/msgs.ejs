@@ -1,6 +1,40 @@
 <% include header %>
 
-<a href="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>" style="font-size:small;">< Back</a>
+
+<div class="right-nav">
+	<div class="nav-btn">
+		<a href="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>">
+			<i class="fa fa-reply"></i>
+			Client Overview
+		</a>
+	</div>
+</div>
+
+
+<div class="infoblock">
+	<div class="infoblock-label">
+		<%= convo.subject %>
+	</div>
+	<div class="infoblock-body">
+		<ul>
+			<li>
+				<i class="fa fa-clock-o"></i>
+				<% if (convo.open) { %>
+					Last updated
+				<% } else { %>
+					Closed on
+				<% } %>
+				<% try { %>
+					<% var upd = new Date(convo.updated) %>
+					<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
+				<% } catch (err) { %>
+					Unknown
+				<% } %>
+			</li>
+		</ul>
+	</div>
+</div>
+
 <br><br>
 
 <% if (convo.open && convo.accepted) { %>
@@ -18,27 +52,6 @@
 	</form>
 <% } %>
 
-<div>
-	<b>
-		<%= convo.subject %>
-	</b>
-</div>
-
-<div>
-	<small>
-		<% if (convo.open) { %>
-			Last updated:
-		<% } else { %>
-			Closed on:
-		<% } %>
-		<% try { %>
-			<% var upd = new Date(convo.updated) %>
-			<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
-		<% } catch (err) { %>
-			Unknown
-		<% } %>
-	</small>
-</div>
 
 <hr>
 
