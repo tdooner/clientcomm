@@ -93,6 +93,15 @@ input[type=button], .button {
 	padding-bottom: 25px;
 }
 
+#contents .nav-btn {
+	background-color: #0084FF;
+	color: #FFF;
+	margin-top: 3px;
+	padding: 3px 10px 3px 10px;
+	float: right;
+	font-size: 0.8em;
+}
+
 #contents .entryform {
 	margin-left: 140px;
 }
