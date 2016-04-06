@@ -107,7 +107,8 @@
 
 // dynamically adjust chart div width so it lies next to other content
 function resizeChart () { 
-	var size = window.innerWidth - 400;
+	var off = $(".infoblock-body").width() + $(".infoblock-label").width() + 20;
+	var size = window.innerWidth - off;
 	$("#chart").css("width", size); 
 	if (typeof chart !== "undefined") { 
 		if (size > 250) { $(".chart").show(); chart.resize(size); }

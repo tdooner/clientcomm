@@ -1,7 +1,5 @@
 <% include header %>
 
-
-
 	<div class="infoblock">
 		<div class="infoblock-label">
 			Clients
@@ -10,6 +8,7 @@
 			<ul>
 
 				<li>
+					<i class="fa fa-users"></i>
 					<i><%= clients.length %> accounts</i>
 				</li>
 
@@ -18,13 +17,13 @@
 
 						<li>
 							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
-								<%= clients[i].first + " " + clients[i].middle + " " + clients[i].last %>
+								<%=  clients[i].last + ", " + clients[i].first + " " + clients[i].middle %>
 							</a>
-							<% if (clients[i].otn) { %>
-								OTN: <%= clients[i].otn %>
-							<% } %>
-							<% if (clients[i].so) { %>
-								SO: <%= clients[i].so %>
+
+							<% if (clients[i].msg_ct == 0) { %>
+								<span class="badge">
+									<%= clients[i].msg_ct %> new messages
+								</span>
 							<% } %>
 						</li>
 
@@ -51,6 +50,7 @@
 		<form method="post">
 			
 			<li>
+				<i class="fa fa-user-plus"></i>
 				<input type="hidden" name="cmid" value="<%= cm.cmid %>">
 				<i>Add new client</i>
 			</li>

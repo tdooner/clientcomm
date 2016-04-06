@@ -160,6 +160,17 @@ input[type=button], .button {
 	color: rgba(10,0,0,0.5);
 }
 
+#contents .badge {
+	background-color: red;
+	color: #FFF;
+	border-radius: 10px;
+	font-size: 0.8em;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
 #contents .chart svg {
 	height: 205px;
 	width: 100%;

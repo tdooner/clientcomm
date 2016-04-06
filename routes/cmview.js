@@ -45,12 +45,17 @@ module.exports = function (app, passport) {
 
         // user trying to view their own profile
         if (thisIsUser) {
-          db("clients").where("cm", cmid)
-          .then(function (clients) {
+          var rawQuery = "SELECT count(CASE WHEN msgs.read THEN 1 ELSE NULL END) AS msg_ct, clients.* FROM clients ";
+          rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
+          rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
+          rawQuery += "WHERE clients.cm=" + req.user.cmid + " ";
+          rawQuery += "GROUP BY clients.clid;";
+          
+          db.raw(rawQuery).then(function (clients) {
 
             res.render("clients", {
               cm: cm,
-              clients: clients,
+              clients: clients.rows,
             });
 
           }).catch(function (err) { res.redirect("/500"); });
@@ -127,12 +132,12 @@ module.exports = function (app, passport) {
   });
 
   app.get("/cms/:cmid/cls/:clid", isLoggedIn, function (req, res) { 
-    var clid = req.params.clid;
-    var cmid = req.user.cmid;
+    var clid = Number(req.params.clid);
+    var cmid = Number(req.user.cmid);
     db("clients").where("clid", clid).limit(1)
     .then(function (cls) {
       var cl = cls[0];
-      if (cl.cm == cmid && cmid == req.params.cmid) {
+      if (cmid == Number(cl.cm) && cmid == Number(req.params.cmid)) {
 
         db("convos")
         .where("convos.cm", cmid)
@@ -160,6 +165,7 @@ module.exports = function (app, passport) {
         })
 
       } else {
+        console.log(cl.cm , cmid , cmid , req.params.cmid)
         res.redirect("/404");
       }
     }).catch(function (err) {

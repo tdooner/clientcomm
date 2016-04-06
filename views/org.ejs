@@ -66,6 +66,7 @@
 	<div class="infoblock-body">
 		<ul>
 			<li>
+				<i class="fa fa-users"></i>
 				<% var adminCt = 0; %>
 				<% for (var i = 0; i < cms.length; i++) { if (cms[i].admin && cms[i].active) { adminCt += 1; }; } %>
 				<i><%= adminCt %> active admins</i>
@@ -146,6 +147,7 @@
 	<div class="infoblock-body">
 		<ul>
 			<li>
+				<i class="fa fa-users"></i>
 				<% var staffCt = 0; %>
 				<% for (var i = 0; i < cms.length; i++) { if (!cms[i].admin && cms[i].active) { staffCt += 1; }; } %>
 				<i><%= staffCt %> active staff</i>
@@ -225,16 +227,18 @@
 	<div class="infoblock-label" onclick="toggle('newaccount')">
 		Create New Account
 	</div>
-	<div class="infoblock-body" style="display:none" id="newaccount">
+	<div class="infoblock-body">
 
 		<ul>
 		<form method="post">
 			
 			<li>
+				<i class="fa fa-user-plus"></i>
 				<input type="hidden" name="orgid" value="<%= org.orgid %>">	
 				<i>Add user to organization</i>
 			</li>
 
+			<span style="display:none" id="newaccount">
 			<li>
 				<div class="infoblock-id">
 					first
@@ -294,6 +298,7 @@
 			<li>
 				<input type="submit" class="button" value="Submit">
 			</li>
+			</span>
 			
 		</form>
 		</ul>
@@ -310,7 +315,8 @@
 <script type="text/javascript">
 
 function resizeChart () { 
-	var size = window.innerWidth - 400;
+	var off = $(".infoblock-body").width() + $(".infoblock-label").width() + 20;
+	var size = window.innerWidth - off;
 	$("#chart-overall").css("width", size); 
 	if (typeof chart !== "undefined") { 
 		if (size > 250) { $(".chart").show(); chart.resize(size); }
