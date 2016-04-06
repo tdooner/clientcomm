@@ -151,7 +151,7 @@ module.exports = function (app, passport) {
 
             res.render("client", {
               cm: req.user,
-              cl: cl,
+              client: cl,
               comms: comms,
               convos: convos,
             });
