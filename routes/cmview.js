@@ -49,7 +49,6 @@ module.exports = function (app, passport) {
           .then(function (clients) {
 
             res.render("clients", {
-              user: req.user,
               cm: cm,
               clients: clients,
             });

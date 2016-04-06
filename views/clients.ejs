@@ -1,93 +1,43 @@
 <% include header %>
 
-<% if (clients.length > 0) { %>
-	Your clients:
-	<ul>
-		<% for (var i = 0; i < clients.length; i++ ) { %>
-			<li>
-				<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
-					<%= clients[i].first + " " + clients[i].middle + " " + clients[i].last %>
-				</a>
-				<span style="font-size:small;">
-					<% if (clients[i].otn) { %>
-						OTN: <%= clients[i].otn %>
+
+
+	<div class="infoblock">
+		<div class="infoblock-label">
+			Clients
+		</div>
+		<div class="infoblock-body">
+			<ul>
+
+				<li>
+					<i><%= clients.length %> accounts</i>
+				</li>
+
+				<% if (clients.length > 0) { %>
+					<% for (var i = 0; i < clients.length; i++ ) { %>
+
+						<li>
+							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
+								<%= clients[i].first + " " + clients[i].middle + " " + clients[i].last %>
+							</a>
+							<% if (clients[i].otn) { %>
+								OTN: <%= clients[i].otn %>
+							<% } %>
+							<% if (clients[i].so) { %>
+								SO: <%= clients[i].so %>
+							<% } %>
+						</li>
+
 					<% } %>
-					<% if (clients[i].so) { %>
-						SO: <%= clients[i].so %>
-					<% } %>
-				</span>
-			</li>
-		<% } %>
-	</ul>
-<% } else { %>
-	You have no clients. Add some below.
-<% } %>
+				<% } else { %>
+					<li>You have no clients.</li>
+				<% } %>
 
-<hr>
-
-<form method="post">
-
-	<b>Add a new client</b>
-
-	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
-
-	<div class="form-row">
-		<div class="form-desc">
-			First
-		</div>
-		<div class="form-entry">
-			<input type="text" name="first" placeholder="Jane" required>
+			</ul>
 		</div>
 	</div>
 
-	<div class="form-row">
-		<div class="form-desc">
-			Middle
-		</div>
-		<div class="form-entry">
-			<input type="text" name="middle" placeholder="M">
-		</div>
-	</div>
 
-	<div class="form-row">
-		<div class="form-desc">
-			Last
-		</div>
-		<div class="form-entry">
-			<input type="text" name="last" placeholder="Doe" required>
-		</div>
-	</div>
-
-	<div class="form-row">
-		<div class="form-desc">
-			Date of Birth
-		</div>
-		<div class="form-entry">
-			<input type="date" name="dob" value="1955-01-01" required>
-		</div>
-	</div>
-
-	<div class="form-row">
-		<div class="form-desc">
-			OTN
-		</div>
-		<div class="form-entry">
-			<input type="text" name="otn" placeholder="135792468">
-		</div>
-	</div>
-
-	<div class="form-row">
-		<div class="form-desc">
-			SO
-		</div>
-		<div class="form-entry">
-			<input type="text" name="so" placeholder="246813579">
-		</div>
-	</div>
-
-	<input type="submit" value="Submit">
-
-</form>
 
 
 
@@ -95,16 +45,17 @@
 	<div class="infoblock-label" onclick="toggle('newaccount')">
 		Create New Account
 	</div>
-	<div class="infoblock-body" style="display:none" id="newaccount">
+	<div class="infoblock-body">
 
 		<ul>
 		<form method="post">
 			
 			<li>
 				<input type="hidden" name="cmid" value="<%= cm.cmid %>">
-				<i>Add user to organization</i>
+				<i>Add new client</i>
 			</li>
 
+			<span style="display:none" id="newaccount">
 			<li>
 				<div class="infoblock-id">
 					first
@@ -128,42 +79,29 @@
 
 			<li>
 				<div class="infoblock-id">
-					email
+					dob
 				</div>
-				<input type="email" name="email" placeholder="e.g. jane@example.com" required>
+				<input type="date" name="dob" value="1955-01-01" required>
 			</li>
 
 			<li>
 				<div class="infoblock-id">
-					password
+					otn
 				</div>
-				<input type="password" name="password" placeholder="•••••••" required>
+				<input type="text" name="otn" placeholder="135792468">
 			</li>
 
 			<li>
 				<div class="infoblock-id">
-					position
+					so
 				</div>
-				<input type="text" name="position" placeholder="e.g. Therapist" required>
-			</li>
-
-			<li>
-				<div class="infoblock-id">
-					department
-				</div>
-				<input type="text" name="department" placeholder="e.g. Pretrial Services" required>
-			</li>
-
-			<li>
-				<div class="infoblock-id">
-					admin
-				</div>
-				<input type="checkbox" name="admin" value="true"> check for admin privileges
+				<input type="text" name="so" placeholder="246813579">
 			</li>
 
 			<li>
 				<input type="submit" class="button" value="Submit">
 			</li>
+			</span>
 			
 		</form>
 		</ul>

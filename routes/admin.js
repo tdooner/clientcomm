@@ -42,7 +42,6 @@ router.get("/", function (req, res) {
 	      	};
 
 					res.render("org", {
-						user: req.user,
 						org: org,
 						cms: cms,
 						msgs: m2
@@ -84,7 +83,6 @@ router.get("/cms/:cmid", function (req, res) {
 	      .then(function (msgs) {
 
 	        res.render("clientstats", {
-	          user: req.user,
 	          cm: cm,
 	          msgs: msgs.rows,
 	        });
