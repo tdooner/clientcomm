@@ -1,42 +1,49 @@
 <% include header %>
 
-	<div class="infoblock">
-		<div class="infoblock-label">
-			Clients
-		</div>
-		<div class="infoblock-body">
-			<ul>
-
-				<li>
-					<i class="fa fa-users"></i>
-					<i><%= clients.length %> accounts</i>
-				</li>
-
-				<% if (clients.length > 0) { %>
-					<% for (var i = 0; i < clients.length; i++ ) { %>
-
-						<li>
-							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
-								<%=  clients[i].last + ", " + clients[i].first + " " + clients[i].middle %>
-							</a>
-
-							<% if (clients[i].msg_ct > 0) { %>
-								<span class="badge">
-									<%= clients[i].msg_ct %> new messages
-								</span>
-							<% } %>
-						</li>
-
-					<% } %>
-				<% } else { %>
-					<li>You have no clients.</li>
-				<% } %>
-
-			</ul>
-		</div>
+<div class="right-nav">
+	<div class="nav-btn">
+		<a href="/cms/<%= cm.cmid %>">
+			<i class="fa fa-refresh"></i>
+			Check for alerts
+		</a>
 	</div>
+</div>
 
+<div class="infoblock">
+	<div class="infoblock-label">
+		Clients
+	</div>
+	<div class="infoblock-body">
+		<ul>
 
+			<li>
+				<i class="fa fa-users"></i>
+				<i><%= clients.length %> accounts</i>
+			</li>
+
+			<% if (clients.length > 0) { %>
+				<% for (var i = 0; i < clients.length; i++ ) { %>
+
+					<li>
+						<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
+							<%=  clients[i].last + ", " + clients[i].first + " " + clients[i].middle %>
+						</a>
+
+						<% if (clients[i].msg_ct > 0) { %>
+							<span class="badge">
+								<%= clients[i].msg_ct %> new messages
+							</span>
+						<% } %>
+					</li>
+
+				<% } %>
+			<% } else { %>
+				<li>You have no clients.</li>
+			<% } %>
+
+		</ul>
+	</div>
+</div>
 
 
 
