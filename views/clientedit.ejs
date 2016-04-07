@@ -11,7 +11,28 @@
 
 <div class="infoblock">
 	<div class="infoblock-label">
-		Edit Client Attributes
+		Deactive
+	</div>
+	<div class="infoblock-body">
+		<ul>
+			<li>
+				<% if (client.active) { %>
+					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/close" style="float:right">
+						<input type="submit" class="button" value="Close Out Client" style="background-color:red">
+					</form>
+				<% } else { %>
+					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/open" style="float:right">
+						<input type="submit" class="button" value="Re-activate Client" style="background-color:red">
+					</form>
+				<% } %>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div class="infoblock">
+	<div class="infoblock-label">
+		Client
 	</div>
 	<div class="infoblock-body">
 		<ul>
@@ -19,7 +40,7 @@
 
 			<li>
 				<i>
-					Create a new thread
+					Edit <%= client.first %>'s Attributes
 				</i>
 				<input type="hidden" name="clid" value="<%= client.clid %>">
 				<input type="hidden" name="cmid" value="<%= user.cmid %>">

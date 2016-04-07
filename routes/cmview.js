@@ -48,7 +48,7 @@ module.exports = function (app, passport) {
           var rawQuery = "SELECT count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, clients.* FROM clients ";
           rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
           rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
-          rawQuery += "WHERE clients.cm=" + cmid + " ";
+          rawQuery += "WHERE clients.cm=" + cmid + " AND clients.active=TRUE ";
           rawQuery += "GROUP BY clients.clid";
           
           db.raw(rawQuery).then(function (clients) {
@@ -334,6 +334,51 @@ module.exports = function (app, passport) {
 
           } else {
             req.flash("warning", "You do not have authority to close that client.");
+            res.redirect(redirect_loc);
+          }
+
+        } else {
+          req.flash("warning", "That user id does not exist.");
+          res.redirect(redirect_loc);
+        }
+
+      }).catch(function (err) { res.redirect("/500"); })
+
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/open", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.user.cmid;
+
+    var clid = req.params.clid;
+    var cmid = req.params.cmid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Case Manager ID does not match user logged-in.");
+      res.redirect(redirect_loc);
+    } else {
+      
+      db("clients").where("clid", clid).limit(1)
+      .then(function (clients) {
+
+        if (clients.length > 0) {
+          var client = clients[0];
+
+          if (client.cm == cmid) {
+
+            db("clients").where("clid", clid)
+            .update({active: true})
+            .then(function (success) {
+              req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
+              res.redirect(redirect_loc);
+
+            }).catch(function (err) {
+              console.log(err);
+              res.redirect("/500");
+            });
+
+          } else {
+            req.flash("warning", "You do not have authority to re-activate that client.");
             res.redirect(redirect_loc);
           }
 
