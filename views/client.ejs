@@ -2,9 +2,16 @@
 
 <div class="right-nav">
 	<div class="nav-btn">
-		<a href="/cms/<%= cm.cmid %>">
+		<a href="/cms/<%= user.cmid %>">
 			<i class="fa fa-reply"></i>
 			Return To All Clients
+		</a>
+	</div>
+
+	<div class="nav-btn">
+		<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/edit">
+			<i class="fa fa-pencil"></i>
+			Edit Client Profile
 		</a>
 	</div>
 </div>

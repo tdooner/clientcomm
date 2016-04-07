@@ -28,8 +28,6 @@ module.exports = {
                   .orderBy("msgs.created", "asc")
                   .then(function (msgs) {
 
-                    console.log(msgs);
-
                     db("comms")
                     .innerJoin("commconns", "comms.commid", "commconns.comm")
                     .where("commconns.client", clid)

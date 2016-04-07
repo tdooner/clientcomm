@@ -1,167 +1,84 @@
 <% include header %>
 
-<div class="nav-btn">
-	<a href="/cms/<%= cm.cmid %>">
-		<i class="fa fa-reply"></i>
-		Return To All Clients
-	</a>
-</div>
-<div class="nav-btn">
-	<a href="/cms/<%= cm.cmid %>">
-		<i class="fa fa-pencil"></i>
-		Edit Client Profile
-	</a>
-</div>
-
-<div>
-	<%= cl.first + " " + cl.middle + " " + cl.last %>
-
-	<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/close" style="float:right;font-size:small;">
-		<input type="submit" value="Closeout Client">
-	</form>
-
-</div>
-
-<div>
-	<ul style="font-size:small;">
-		<% if (cl.otn) { %>
-			<li>OTN: <%= cl.otn %></li>
-		<% } %>
-		<% if (cl.so) { %>
-			<li>SO: <%= cl.so %></li>
-		<% } %>
-	</ul>
-</div>
-
-<hr>
-
-<% if (convos.length > 0) { %>
-	<b>Conversations with client:</b>
-	<ul>
-		<% for (var i = 0; i < convos.length; i++) { %>
-			<li>
-				<a href="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convos[i].convid %>">
-					<%= convos[i].subject %>
-				</a>
-				<ul style="font-size:small;">
-
-					<% if (convos[i].open) { %>
-						<li>CURRENT CONVERSATION</li>
-					<% } %>
-
-					<li>
-						Last updated on
-						<% try { %>
-							<% var upd = new Date(convos[i].updated) %>
-							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %>
-						<% } catch (err) { %>
-							Unknown
-						<% } %>
-					</li>
-
-					<li>
-						Created on
-						<% try { %>
-							<% var cre = new Date(convos[i].updated) %>
-							<%= [cre.getMonth()+1, cre.getDate(), cre.getFullYear()].join("/") + " at " + [cre.getHours(), cre.getMinutes(), cre.getSeconds()].join(':') %>
-						<% } catch (err) { %>
-							Unknown
-						<% } %>
-					</li>
-
-				</ul>
-			</li>
-		<% } %>
-	</ul>
-<% } %>
-
-<hr>
-
-<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos">
-
-	<b>Create a new conversation</b>
-
-	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
-	<input type="hidden" name="clid" value="<%= cl.clid %>">
-
-	<div class="form-row">
-		<div class="form-desc">
-			Subject
-		</div>
-		<div class="form-entry">
-			<input type="text" name="subject" placeholder="e.g., Missed Appointment" required>
-		</div>
+<div class="right-nav">
+	<div class="nav-btn">
+		<a href="/cms/<%= user.cmid %>">
+			<i class="fa fa-reply"></i>
+			Return To Client View
+		</a>
 	</div>
+</div>
 
-	<input type="submit" value="Create New Conversation"> <i style="font-size:x-small">(Note: this will close your other conversations if you do this)</i>
-
-</form>
-
-<hr>
-
-<% if (comms.length > 0) { %>
-	<div>
-		<b>Communication Devices associated with client:</b>
+<div class="infoblock">
+	<div class="infoblock-label">
+		Edit Client Attributes
+	</div>
+	<div class="infoblock-body">
 		<ul>
-			<% for (var i = 0; i < comms.length; i++) { %>
-				<li>
-					<%= comms[i].name %>
-					<ul style="font-size:small;">
-						<li>
-							<%= comms[i].type %>: 
-							<%= comms[i].value %>
-						</li>
-					</ul>
-				</li>
-			<% } %>
+		<form method="post">
+
+			<li>
+				<i>
+					Create a new thread
+				</i>
+				<input type="hidden" name="clid" value="<%= client.clid %>">
+				<input type="hidden" name="cmid" value="<%= user.cmid %>">
+			</li>
+			
+			<li>
+				<div class="infoblock-id">
+					first
+				</div>
+				<input type="text" name="first" value="<%= client.first %>" required>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					middle
+				</div>
+				<input type="text" name="middle" value="<%= client.middle %>">
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					last
+				</div>
+				<input type="text" name="last" value="<%= client.last %>" required>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					dob
+				</div>
+				<% try { var upd = new Date(client.dob); upd = upd.toISOString().split("T")[0] %>
+				<% } catch (e) { var upd = "1955-01-01" } %>
+				<input type="date" name="dob" value="<%= upd %>" required>
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					otn
+				</div>
+				<input type="text" name="otn" value="<%= client.otn %>">
+			</li>
+
+			<li>
+				<div class="infoblock-id">
+					so
+				</div>
+				<input type="text" name="so" value="<%= client.so %>">
+			</li>
+
+			<li>
+				<input type="submit" class="button" value="Submit">
+			</li>
+
+
+		</form>
 		</ul>
 	</div>
-<% } %>
+</div>
 
-<hr>
-
-<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/comm">
-
-	<b>Add a new communication device</b>
-
-	<input type="hidden" name="cmid" value="<%= cm.cmid %>">
-	<input type="hidden" name="clid" value="<%= cl.clid %>">
-
-	<div class="form-row">
-		<div class="form-desc">
-			Communication Type
-		</div>
-		<div class="form-entry">
-			<select name="type" required>
-				<option value="" selected disabled>Comm Method</option>
-				<option value="email" disabled>Email</option>
-				<option value="cell">Cell</option>
-				<option value="landline" disabled>Landline</option>
-			</select>
-		</div>
-	</div>
-
-	<div class="form-row">
-		<div class="form-desc">
-			Number
-		</div>
-		<div class="form-entry">
-			<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
-		</div>
-	</div>
-
-	<div class="form-row">
-		<div class="form-desc">
-			Description
-		</div>
-		<div class="form-entry">
-			<input type="text" name="description" placeholder="e.g. Aunt's Cell" required>
-		</div>
-	</div>
-
-	<input type="submit" value="Submit">
-
-</form>
 
 
 <% include footer %>

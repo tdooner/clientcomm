@@ -137,8 +137,8 @@ module.exports = function (app, passport) {
     db("clients").where("clid", clid).limit(1)
     .then(function (cls) {
       var cl = cls[0];
-      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
 
+      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
         db("convos")
         .where("convos.cm", cmid)
         .andWhere("convos.client", clid)
@@ -156,21 +156,69 @@ module.exports = function (app, passport) {
               convos: convos,
             });
             
-          }).catch(function (err) {
-            res.redirect("/500");
-          })
+          }).catch(function (err) { res.redirect("/500"); })
+        }).catch(function (err) { res.redirect("/500"); })
+      } else { res.redirect("/404"); }
+    }).catch(function (err) { res.redirect("/500"); })
+  });
 
-        }).catch(function (err) {
-          res.redirect("/500");
-        })
+  app.get("/cms/:cmid/cls/:clid/edit", isLoggedIn, function (req, res) { 
+    var clid = Number(req.params.clid);
+    var cmid = Number(req.params.cmid);
+    db("clients").where("clid", clid).limit(1)
+    .then(function (cls) {
+      var cl = cls[0];
+      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
+        res.render("clientedit", { client: cl });
+      } else { res.redirect("/404"); }
+    }).catch(function (err) { res.redirect("/500"); })
+  });
 
-      } else {
-        console.log(cl.cm , cmid , cmid , req.params.cmid)
-        res.redirect("/404");
-      }
-    }).catch(function (err) {
-      res.redirect("/500");
-    })
+  app.post("/cms/:cmid/cls/:clid/edit", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
+
+    var cmid = req.body.cmid;
+    var clid = req.body.clid;
+    var first = req.body.first;
+    var middle = req.body.middle;
+    var last = req.body.last;
+    var dob = Date.parse(req.body.dob);
+    var otn = req.body.otn;
+    var so = req.body.so;
+
+    if (!middle) middle = "";
+    if (!otn) otn = null;
+    if (!so) so = null;
+
+    if (!cmid) {
+      req.flash("warning", "Missing cmid.");
+      res.redirect(redirect_loc);
+    } else if (Number(req.user.cmid) !== Number(cmid)) {
+      req.flash("warning", "This ID does not match with the logged-in user");
+      res.redirect(redirect_loc);
+    } else if (!first) {
+      req.flash("warning", "Missing first name.");
+      res.redirect(redirect_loc);
+    } else if (!last) {
+      req.flash("warning", "Missing last name.");
+      res.redirect(redirect_loc);
+    } else if (isNaN(dob)) {
+      req.flash("warning", "Missing date of birth.");
+      res.redirect(redirect_loc);
+    } else {
+      db("clients").where("clid", clid)
+      .update({
+        first: first,
+        middle: middle,
+        last: last,
+        dob: req.body.dob,
+        otn: otn,
+        so: so
+      }).then(function (success) {
+        req.flash("success", "Updated client.");
+        res.redirect(redirect_loc);
+      }).catch(function (err) { console.log(err); res.redirect("/500") })
+    }
   });
 
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
