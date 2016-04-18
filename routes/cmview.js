@@ -49,7 +49,7 @@ module.exports = function (app, passport) {
           rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
           rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
           rawQuery += "WHERE clients.cm=" + cmid + " AND clients.active=TRUE ";
-          rawQuery += "GROUP BY clients.clid";
+          rawQuery += "GROUP BY clients.clid ORDER BY last ASC";
           
           db.raw(rawQuery).then(function (clients) {
 
