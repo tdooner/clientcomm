@@ -8,11 +8,16 @@ body {
 
 header {
 	min-height: 40px;
-	background-color: #FFF;
+	color: #FFF;
+	background-color: #0084FF;
 	border-bottom: 1px solid;
 }
 
-header div {
+header .container {
+	width: 900px;
+	background-color: red;
+	margin-left: auto;
+	margin-right: auto;
 	padding: 10px 10px 5px 10px;
 }
 
@@ -23,7 +28,6 @@ header .logo-left {
 	text-align: center;
 	color: #FFF;
 	font-weight: 900;
-	background-color: #0084FF;
 }
 
 header .logo-left:hover {
@@ -42,6 +46,23 @@ header .navigation {
 
 header .navigation a {
 	margin-left: 10px;
+}
+
+.right-tag {
+	background-color: red;
+	position: fixed;
+	right: 0px;
+	top: 50%;
+
+	padding: 0px;
+	margin: 0px;
+
+  -webkit-transform: rotate(270deg); /* Safari and Chrome */
+  -moz-transform: rotate(270deg);   /* Firefox */
+  -ms-transform: rotate(270deg);   /* IE 9 */
+  -o-transform: rotate(270deg);   /* Opera */
+  transform: rotate(270deg);
+
 }
 
 footer {

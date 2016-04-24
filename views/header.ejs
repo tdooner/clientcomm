@@ -8,37 +8,46 @@
 	</head>
 
 	<script src="/modules/jquery/dist/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/fa.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/style.css">
 
 	<body>
 
 		<header>
-			<div class="logo-left">
-				<a class="logo" href="/">
-					<i class="fa fa-comments"></i>
-					ClientComm
-				</a>
-			</div>
-
-			<% if (typeof user !== "undefined") { %>
-				<div class="identification">
-					<%= user.first %> <%= user.middle %> <%= user.last %> 
+			<div class="container">
+				<div class="logo-left">
+					<a class="logo" href="/">
+						<i class="fa fa-comments"></i>
+						ClientComm
+					</a>
 				</div>
-			<% } %>
 
-			<div class="navigation">
-				<% if (typeof user !== "undefined" && user.admin) { %>
-					<a href="/admin">Admin</a>
+				<% if (typeof user !== "undefined") { %>
+					<div class="identification">
+						<%= user.first %> <%= user.middle %> <%= user.last %> 
+					</div>
 				<% } %>
 
-				<% if (typeof user == "undefined") { %>
-					<a href="/login">Login</a>
-				<% } else { %>
-					<a href="/logout">Logout</a>
-				<% } %>
+				<div class="navigation">
+					<% if (typeof user !== "undefined" && user.admin) { %>
+						<a href="/admin">Admin</a>
+					<% } %>
+
+					<% if (typeof user == "undefined") { %>
+						<a href="/login">Login</a>
+					<% } else { %>
+						<a href="/logout">Logout</a>
+					<% } %>
+				</div>
 			</div>
 		</header>
+
+		<div class="right-tag">
+			<a class="tag-logo" href="/">
+				<i class="fa fa-comments"></i>
+				ClientComm
+			<a>
+		</div>
 
 		<div id="contents">
 
