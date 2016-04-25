@@ -2,25 +2,22 @@
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
 
-<div class="infoblock">
-	<div class="infoblock-label">
-		Organization
+<div class="chart"><div id="chart-overall"></div>Overall Organization Messaging Activity</div>
+
+<div class="themeblock">
+	<div class="themeblock-label">
+		<%= org.name %>
 	</div>
-	<div class="infoblock-body">
-		<ul>
-			<li>
-				<b><%= org.name %></b>
-			</li>
+	<div class="themeblock-body">
 
-			<li>
-				<div class="infoblock-id">
-					email
-				</div>
-				<%= org.email %>
-			</li>
 
-			<li>
-				<div class="infoblock-id">
+			<div class="themeblock-row">
+				<div class="themeblock-id"> email </div>
+				<div class="themeblock-input"> <%= org.email %> </div>
+			</div>
+
+			<div class="themeblock-row">
+				<div class="themeblock-id">
 					expires
 				</div>
 				<% try { %>
@@ -29,10 +26,10 @@
 				<% } catch (err) { %>
 					Unknown
 				<% } %>
-			</li>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
+			<div class="themeblock-row">
+				<div class="themeblock-id">
 					allotment
 				</div>
 				<%= org.allotment %> users 
@@ -41,10 +38,10 @@
 				<% } catch (err) { %>
 					(error calculating remaining)
 				<% } %>
-			</li>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
+			<div class="themeblock-row">
+				<div class="themeblock-id">
 					created
 				</div>
 				<% try { %>
@@ -53,31 +50,26 @@
 				<% } catch (err) { %>
 					Unknown
 				<% } %>
-			</li>
+			</div>
 
-		</ul>
 	</div>
 </div>
 
-<div class="infoblock">
-	<div class="infoblock-label" onclick="toggle('adminaccounts')">
-		Admin Accounts
-	</div>
-	<div class="infoblock-body">
-		<ul>
-			<li>
-				<i class="fa fa-users"></i>
-				<% var adminCt = 0; %>
-				<% for (var i = 0; i < cms.length; i++) { if (cms[i].admin && cms[i].active) { adminCt += 1; }; } %>
-				<i><%= adminCt %> active admins</i>
-			</li>
 
-			<span id="adminaccounts">
+<% var adminCt = 0; %>
+<% for (var i = 0; i < cms.length; i++) { if (cms[i].admin && cms[i].active) { adminCt += 1; }; } %>
+
+<div class="themeblock">
+	<div class="themeblock-label" onclick="toggle('adminaccounts')">
+		Admin Accounts (<%= adminCt %> active)
+	</div>
+	<div class="themeblock-body">
+
 			<% for (var i = 0; i < cms.length; i++) { %>
 				<% if (cms[i].admin && cms[i].active) { %>
 
-					<li>
-						<div class="infoblock-id">
+					<div class="infoblock-row">
+						<div class="themeblock-id">
 							<div id="chart-<%= cms[i].cmid %>"></div>
 						</div>
 						<b>
@@ -85,31 +77,31 @@
 							<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
 						</a>
 						</b>
-					</li>
+					</div>
 
-					<li>
-						<div class="infoblock-id">
+					<div class="themeblock-row">
+						<div class="themeblock-id">
 							email
 						</div>
 						<%= cms[i].email %>
-					</li>
+					</div>
 
-					<li>
-						<div class="infoblock-id">
+					<div class="themeblock-row">
+						<div class="themeblock-id">
 							probation
 						</div>
 						<%= cms[i].position %>
-					</li>
+					</div>
 
-					<li>
-						<div class="infoblock-id">
+					<div class="themeblock-row">
+						<div class="themeblock-id">
 							department
 						</div>
 						<%= cms[i].department %>
-					</li>
+					</div>
 
-					<li>
-						<div class="infoblock-id">
+					<div class="themeblock-row">
+						<div class="themeblock-id">
 							last login
 						</div>
 						<% try { %>
@@ -118,10 +110,10 @@
 						<% } catch (err) { %>
 							Unknown
 						<% } %>
-					</li>
+					</div>
 
-					<li>
-						<div class="infoblock-id">
+					<div class="themeblock-row">
+						<div class="themeblock-id">
 							created
 						</div>
 						<% try { %>
@@ -130,201 +122,147 @@
 						<% } catch (err) { %>
 							Unknown
 						<% } %>
-					</li>
+					</div>
 
 				<% } %>
 			<% } %>
-			</span>
+	</div>
+</div>
 
-		</ul>
+
+<% var staffCt = 0; %>
+<% for (var i = 0; i < cms.length; i++) { if (!cms[i].admin && cms[i].active) { staffCt += 1; }; } %>
+
+<div class="themeblock">
+	<div class="themeblock-label" onclick="toggle('staffaccounts')">
+		Staff Accounts (<%= staffCt %> active)
+	</div>
+	<div class="themeblock-body">
+		<% for (var i = 0; i < cms.length; i++) { %>
+			<% if (!cms[i].admin && cms[i].active) { %>
+
+
+				<div class="themeblock-row">
+					<div class="themeblock-id">
+						<div id="chart-<%= cms[i].cmid %>"></div>
+					</div>
+					<b>
+					<a href="/cms/<%= cms[i].cmid %>">
+						<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+					</a>
+					</b>
+				</div>
+
+				<div class="themeblock-row">
+					<div class="themeblock-id">
+						email
+					</div>
+					<%= cms[i].email %>
+				</div>
+
+				<div class="themeblock-row">
+					<div class="themeblock-id">
+						position
+					</div>
+					<%= cms[i].position %>
+				</div>
+
+				<div class="themeblock-row">
+					<div class="themeblock-id">
+						department
+					</div>
+					<%= cms[i].department %>
+				</div>
+
+				<div class="themeblock-row">
+					<div class="themeblock-id">
+						last login
+					</div>
+					<% try { %>
+						<% var upd = new Date(cms[i].updated) %>
+						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+					<% } catch (err) { %>
+						Unknown
+					<% } %>
+				</div>
+
+				<div class="themeblock-row">
+					<div class="themeblock-id">
+						created
+					</div>
+					<% try { %>
+						<% var upd = new Date(cms[i].created) %>
+						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
+					<% } catch (err) { %>
+						Unknown
+					<% } %>
+				</div>
+
+			<% } %>
+		<% } %>
 	</div>
 </div>
 
 <div class="infoblock">
-	<div class="infoblock-label" onclick="toggle('staffaccounts')">
-		Staff Accounts
-	</div>
-	<div class="infoblock-body">
-		<ul>
-			<li>
-				<i class="fa fa-users"></i>
-				<% var staffCt = 0; %>
-				<% for (var i = 0; i < cms.length; i++) { if (!cms[i].admin && cms[i].active) { staffCt += 1; }; } %>
-				<i><%= staffCt %> active staff</i>
-			</li>
-
-			<span id="staffaccounts">
-			<% for (var i = 0; i < cms.length; i++) { %>
-				<% if (!cms[i].admin && cms[i].active) { %>
-
-
-					<li>
-						<div class="infoblock-id">
-							<div id="chart-<%= cms[i].cmid %>"></div>
-						</div>
-						<b>
-						<a href="/cms/<%= cms[i].cmid %>">
-							<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
-						</a>
-						</b>
-					</li>
-
-					<li>
-						<div class="infoblock-id">
-							email
-						</div>
-						<%= cms[i].email %>
-					</li>
-
-					<li>
-						<div class="infoblock-id">
-							position
-						</div>
-						<%= cms[i].position %>
-					</li>
-
-					<li>
-						<div class="infoblock-id">
-							department
-						</div>
-						<%= cms[i].department %>
-					</li>
-
-					<li>
-						<div class="infoblock-id">
-							last login
-						</div>
-						<% try { %>
-							<% var upd = new Date(cms[i].updated) %>
-							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
-						<% } catch (err) { %>
-							Unknown
-						<% } %>
-					</li>
-
-					<li>
-						<div class="infoblock-id">
-							created
-						</div>
-						<% try { %>
-							<% var upd = new Date(cms[i].created) %>
-							<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
-						<% } catch (err) { %>
-							Unknown
-						<% } %>
-					</li>
-
-				<% } %>
-			<% } %>
-			</span>
-
-		</ul>
-	</div>
-
-</div>
-
-<div class="infoblock">
-	<div class="infoblock-label" onclick="toggle('newaccount')">
+	<div class="infoblock-label">
 		Create New Account
 	</div>
 	<div class="infoblock-body">
-
-		<ul>
 		<form method="post">
-			
-			<li>
-				<i class="fa fa-user-plus"></i>
-				<input type="hidden" name="orgid" value="<%= org.orgid %>">	
-				<i>Add user to organization</i>
-			</li>
 
-			<span style="display:none" id="newaccount">
-			<li>
-				<div class="infoblock-id">
-					first
-				</div>
-				<input type="text" name="first" placeholder="e.g. Jane" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> first </div>
+				<input class="infoblock-input" type="text" name="first" placeholder="e.g. Jane" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					middle
-				</div>
-				<input type="text" name="middle" placeholder="e.g. M">
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> middle </div>
+				<input class="infoblock-input" type="text" name="middle" placeholder="e.g. M">
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					last
-				</div>
-				<input type="text" name="last" placeholder="e.g. Doe" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> last </div>
+				<input class="infoblock-input" type="text" name="last" placeholder="e.g. Doe" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					email
-				</div>
-				<input type="email" name="email" placeholder="e.g. jane@example.com" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> email </div>
+				<input class="infoblock-input" type="email" name="email" placeholder="e.g. jane@example.com" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					password
-				</div>
-				<input type="password" name="password" placeholder="•••••••" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> password </div>
+				<input class="infoblock-input" type="password" name="password" placeholder="•••••••" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					position
-				</div>
-				<input type="text" name="position" placeholder="e.g. Therapist" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> position </div>
+				<input class="infoblock-input" type="text" name="position" placeholder="e.g. Therapist" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					department
-				</div>
-				<input type="text" name="department" placeholder="e.g. Pretrial Services" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> department </div>
+				<input class="infoblock-input" type="text" name="department" placeholder="e.g. Pretrial Services" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					admin
-				</div>
-				<input type="checkbox" name="admin" value="true"> check for admin privileges
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> admin </div>
+				<label class="infoblock-cblabel"><input type="checkbox" name="admin" value="true"> check for admin privileges </label>
+			</div>
 
-			<li>
+			<div class="infoblock-row">
 				<input type="submit" class="button" value="Submit">
-			</li>
-			</span>
+			</div>
 			
 		</form>
-		</ul>
-
 	</div>
 </div>
-
-<div class="chart"><div id="chart-overall"></div>Overall Organization Messaging Activity</div>
 
 <script src="https://code.jquery.com/jquery-1.12.2.min.js" integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
 
 <script type="text/javascript">
-
-function resizeChart () { 
-	var off = $(".infoblock-body").width() + $(".infoblock-label").width() + 20;
-	var size = window.innerWidth - off;
-	$("#chart-overall").css("width", size); 
-	if (typeof chart !== "undefined") { 
-		if (size > 250) { $(".chart").show(); chart.resize(size); }
-		else { $(".chart").hide(); }
-	}
-}
-window.onresize = function () { resizeChart(); };
-resizeChart();
 
 var msgs = "<%= JSON.stringify(msgs) %>";
 
@@ -349,8 +287,7 @@ function makeChart (id) {
 	  data: { 
 	  	x: "x", 
 	  	columns: [["x"].concat(dates), ["Messages"].concat(vals)], 
-	  	color: function (color, d) { return "#0084FF"; },
-	  	types: { Messages: "spline" }
+	  	color: function (color, d) { return "#4BAEFF"; }
 	  },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" }, show: false }, y: { show: true } },
 	  tooltip: { show: false },
@@ -387,8 +324,7 @@ var w = $(".chart").width();
 	  data: { 
 	  	x: "x", 
 	  	columns: [["x"].concat(keys), ["Messages"].concat(vals)], 
-	  	color: function (color, d) { return "#0084FF"; },
-	  	types: { Messages: "spline" }
+	  	color: function (color, d) { return "#4BAEFF"; }
 	  },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },

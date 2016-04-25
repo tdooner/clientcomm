@@ -14,6 +14,24 @@
 	<div class="infoblock-label">
 		<%= convo.subject %>
 	</div>
+
+	<div style="float: right">
+		<% if (convo.accepted) { %>
+			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
+				<input type="submit" class="button" value="Close" style="background-color:orange; width: 100px">
+			</form>
+		<% } %>
+
+		<% if (!convo.accepted) { %>
+			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
+				<input type="submit" class="button" value="Accept" style="background-color:green; width: 100px">
+			</form>
+			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
+				<input type="submit" class="button" value="Reject" style="background-color:red; width: 100px">
+			</form>
+		<% } %>
+	</div>
+
 	<small>
 		<i class="fa fa-clock-o"></i>
 		<% if (convo.open) { %>
@@ -78,22 +96,17 @@
 	<% } %>
 
 	<div class="response">
-		<% if (!convo.open) { %>
+		<% if (convo.open) { %>
 			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
-				
 					<textarea name="content" rows="5" maxlength="160" style="width:100%;" placeholder="(Max length 160 characters)" required></textarea>
-
 					<select name="commid" required>
 						<option value="" selected disabled>Comm Method</option>
 						<% for (var i = 0; i < comms.length; i++) { %>
 							<option value="<%= comms[i].commid %>"><%= comms[i].name %></option>
 						<% } %>
 					</select>
-
 				<input type="submit" class="button" value="Submit">
-
 			</form>
-
 
 		<% } else { %>
 			<center>
@@ -105,20 +118,7 @@
 </div>
 
 <% if (convo.open) { %>
-	<% if (convo.accepted) { %>
-		<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
-			<input type="submit" class="button" value="Close" style="background-color:orange">
-		</form>
-	<% } %>
 
-	<% if (!convo.accepted) { %>
-		<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
-			<input type="submit" class="button" value="Accept" style="background-color:green">
-		</form>
-		<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
-			<input type="submit" class="button" value="Reject" style="background-color:red">
-		</form>
-	<% } %>
 <% } %>
 
 <% include footer %>

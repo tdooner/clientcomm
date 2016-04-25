@@ -9,16 +9,16 @@
 	</div>
 </div>
 
-<div class="infoblock">
-	<div class="infoblock-label">
+<div class="themeblock">
+	<div class="themeblock-label">
 		Clients
 	</div>
-	<div class="infoblock-body">
+	<div class="themeblock-body">
 
 		<% if (clients.length > 0) { %>
 			<% for (var i = 0; i < clients.length; i++ ) { %>
 
-				<div class="infoblock-row">
+				<div class="themeblock-row">
 					<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
 						<%=  clients[i].last + ", " + clients[i].first + " " + clients[i].middle %>
 					</a>

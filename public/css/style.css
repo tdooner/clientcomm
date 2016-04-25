@@ -9,7 +9,6 @@ body {
 header {
 	height: 40px;
 	color: #FFF;
-	background-color: #4BAEFF;
 	z-index: 10;
 }
 
@@ -31,17 +30,18 @@ header .navigation a {
 }
 
 .container, .contents {
+	background-color: #4BAEFF;
 	width: 850px;
 	margin-left: auto;
 	margin-right: auto;
 	padding: 10px 25px 10px 25px;
-	box-shadow: 0px 5px 10px 5px rgba(0,0,0,0.1);
+	box-shadow: 0px -5px 10px 5px rgba(0,0,0,0.2);
 }
 
 .right-tag {
 	position: fixed;
 	right: -141px;
-	top: 183px;
+	top: 140px;
 
 	width: 275px;
 	height: 14px;
@@ -55,6 +55,7 @@ header .navigation a {
 	border: 1px solid #e7e8e9; 
 	border-radius: 10px 0px 0px 0px;
 	border-bottom: 0px;
+	border-right: 0px;
 
 	line-height: 14px;
 
@@ -159,7 +160,6 @@ input[type=button], .button {
 	clear: both;
 	position: relative;
 	font-size: 0.9em;
-	margin-bottom: 80px;
 	margin-top: 40px;
 }
 
@@ -254,7 +254,8 @@ input[type=button], .button {
 	padding-bottom: 3px;
 }
 
-.contents .themeblock {
+.contents .themeblock .themeblock-body {
+	font-size: 0.8em;
 	color: #777;
 }
 
@@ -303,6 +304,12 @@ input[type=button], .button {
 	border-radius: 5px;
 }
 
+.contents .infoblock .infoblock-cblabel {
+	color: #999;
+	font-size: 0.7em;
+	margin-left: 16px;
+}
+
 .contents .infoblock input.infoblock-input {
 	float: left;
 	border: 0px;
@@ -326,6 +333,10 @@ input[type=button], .button {
 	border-radius: 5px;
 }
 
+.contents .themeblock .themeblock-val {
+	float: left;
+}
+
 .contents .infoblock .button {
 	border: 0px;
 	width: 270px;
@@ -336,13 +347,10 @@ input[type=button], .button {
 }
 
 .contents .chart {
-	margin-right: 8px;
-	position: absolute;
-	right: 0px;
-	top: 50px;
 	font-size: 0.75em;
 	text-align: center;
-	color: rgba(10,0,0,0.5);
+	color: #999;
+	width: 850px;
 }
 
 .contents .badge {
@@ -360,7 +368,7 @@ input[type=button], .button {
 
 .contents .chart svg {
 	height: 205px;
-	width: 100%;
+	width: inherit;
 }
 
 .contents .chart .c3 .c3-grid line {

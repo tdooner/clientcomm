@@ -92,12 +92,8 @@
 
 			<% for (var i = 0; i < comms.length; i++) { %>
 				<div class="themeblock-row">
-					<div class="themeblock-id">
-						<div class="themeblock-id"> <%= comms[i].type %> </div>
-					</div>
-					<div class="themeblock-val"> 
-						<%= comms[i].name %> | <%= comms[i].value %>
-					</div>
+					<div class="themeblock-id"> <%= comms[i].type %> </div>
+					<div class="themeblock-val"> <%= comms[i].name %> | <%= comms[i].value %> </div>
 				</div>
 			<% } %>
 
