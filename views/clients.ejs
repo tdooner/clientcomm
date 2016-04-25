@@ -14,34 +14,27 @@
 		Clients
 	</div>
 	<div class="infoblock-body">
-		<ul>
 
-			<li>
-				<i class="fa fa-users"></i>
-				<i><%= clients.length %> accounts</i>
-			</li>
+		<% if (clients.length > 0) { %>
+			<% for (var i = 0; i < clients.length; i++ ) { %>
 
-			<% if (clients.length > 0) { %>
-				<% for (var i = 0; i < clients.length; i++ ) { %>
+				<div class="infoblock-row">
+					<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
+						<%=  clients[i].last + ", " + clients[i].first + " " + clients[i].middle %>
+					</a>
 
-					<li>
-						<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
-							<%=  clients[i].last + ", " + clients[i].first + " " + clients[i].middle %>
-						</a>
+					<% if (clients[i].msg_ct > 0) { %>
+						<span class="badge">
+							<%= clients[i].msg_ct %> new messages
+						</span>
+					<% } %>
+				</div>
 
-						<% if (clients[i].msg_ct > 0) { %>
-							<span class="badge">
-								<%= clients[i].msg_ct %> new messages
-							</span>
-						<% } %>
-					</li>
-
-				<% } %>
-			<% } else { %>
-				<li>You have no clients.</li>
 			<% } %>
+		<% } else { %>
+			You have no clients.
+		<% } %>
 
-		</ul>
 	</div>
 </div>
 
@@ -53,65 +46,61 @@
 	</div>
 	<div class="infoblock-body">
 
-		<ul>
 		<form method="post">
-			
-			<li>
-				<i class="fa fa-user-plus"></i>
-				<input type="hidden" name="cmid" value="<%= cm.cmid %>">
-				<i>Add new client</i>
-			</li>
 
-			<span style="display:none" id="newaccount">
-			<li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> password </div>
+				<input class="infoblock-input" type="password" name="pass" placeholder="Password">
+			</div>
+			
+
+
+			<div class="infoblock-row">
 				<div class="infoblock-id">
 					first
 				</div>
-				<input type="text" name="first" placeholder="e.g. Jane" required>
-			</li>
+				<input class="infoblock-input" type="text" name="first" placeholder="e.g. Jane" required>
+			</div>
 
-			<li>
+			<div class="infoblock-row">
 				<div class="infoblock-id">
 					middle
 				</div>
-				<input type="text" name="middle" placeholder="e.g. M">
-			</li>
+				<input class="infoblock-input" type="text" name="middle" placeholder="e.g. M">
+			</div>
 
-			<li>
+			<div class="infoblock-row">
 				<div class="infoblock-id">
 					last
 				</div>
-				<input type="text" name="last" placeholder="e.g. Doe" required>
-			</li>
+				<input class="infoblock-input" type="text" name="last" placeholder="e.g. Doe" required>
+			</div>
 
-			<li>
+			<div class="infoblock-row">
 				<div class="infoblock-id">
 					dob
 				</div>
-				<input type="date" name="dob" value="1955-01-01" required>
-			</li>
+				<input class="infoblock-input" type="date" name="dob" value="1955-01-01" required>
+			</div>
 
-			<li>
+			<div class="infoblock-row">
 				<div class="infoblock-id">
 					otn
 				</div>
-				<input type="text" name="otn" placeholder="135792468">
-			</li>
+				<input class="infoblock-input" type="text" name="otn" placeholder="135792468">
+			</div>
 
-			<li>
+			<div class="infoblock-row">
 				<div class="infoblock-id">
 					so
 				</div>
-				<input type="text" name="so" placeholder="246813579">
-			</li>
+				<input class="infoblock-input" type="text" name="so" placeholder="246813579">
+			</div>
 
-			<li>
 				<input type="submit" class="button" value="Submit">
-			</li>
-			</span>
+
 			
 		</form>
-		</ul>
 
 	</div>
 </div>

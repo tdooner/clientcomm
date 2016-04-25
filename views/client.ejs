@@ -18,114 +18,70 @@
 
 <div class="infoblock">
 	<div class="infoblock-label">
-		Client
-	</div>
-	<div class="infoblock-body">
-		<ul>
-
-			<li>
-				<i class="fa fa-user"></i>
-				<b><%= client.last %>, <%= client.first %> <%= client.middle %></b>
-			</li>
-
-			<% if (client.otn) { %>
-				<li>
-					<div class="infoblock-id">
-						otn
-					</div>
-					<%= client.otn %>
-				</li>
-			<% } %>
-
-			<% if (client.so) { %>
-				<li>
-					<div class="infoblock-id">
-						so
-					</div>
-					<%= client.so %>
-				</li>
-			<% } %>
-
-		</ul>
+		<i class="fa fa-user"></i>
+		<b><%= client.last %></b>, <%= client.first %> <%= client.middle %>
 	</div>
 </div>
 
-<div class="infoblock">
-	<div class="infoblock-label">
+<div class="themeblock">
+	<div class="themeblock-label">
 		Conversations
 	</div>
-	<div class="infoblock-body">
-		<ul>
-
-			<li>
-				<i class="fa fa-comments-o"></i>
-				<i><%= convos.length %> Conversations</i>
-			</li>
+	<div class="themeblock-body">
 
 			<% for (var i = 0; i < convos.length; i++) { %>
 
-				<li>
-					<a href="/cms/<%= client.cm %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
-						<%= convos[i].subject %>
-					</a>
+			<div class="themeblock-row">
 
-					<i>
-						<% try { %>
-							<% var upd = new Date(convos[i].updated) %>
-							<%= [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %> 
-							on
-							<%= [upd.getMonth()+1, upd.getDate()].join("/") %>
-						<% } catch (err) { %>
-							Unknown
-						<% } %>
-					</i>
+				<% if (convos[i].open) { %>
+					<div class="themeblock-id"> <span class="badge" style="background-color: green"> open </span> </div>
+				<% } else { %>
+					<div class="themeblock-id"> closed </div>
+				<% } %>
 
-					<% if (convos[i].open) { %>
-						<span class="badge">
-							open
-						</span>
+				<a href="/cms/<%= client.cm %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
+					<%= convos[i].subject %>
+				</a>
+
+				<i>
+					<% try { %>
+						<% var upd = new Date(convos[i].updated) %>
+						<%= [upd.getHours(), upd.getMinutes(), upd.getSeconds()].join(':') %> 
+						on
+						<%= [upd.getMonth()+1, upd.getDate()].join("/") %>
+					<% } catch (err) { %>
+						Unknown
 					<% } %>
-				</li>
+				</i>
 
-			<% } %>
+			</div>
 
-		</ul>
+		<% } %>
+
 	</div>
 </div>
 
+
+
 <div class="infoblock">
-	<div class="infoblock-label" onclick="toggle('newconvo')">
-		New Conversation
-	</div>
+
 	<div class="infoblock-body">
-		<ul>
 		<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos">
 
-			<li>
-				<i class="fa fa-plus-square-o"></i>
-				<i>
-					Create a new thread
-				</i>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id">
+					subject
+				</div>
+				<input type="hidden" name="cmid" value="<%= cm.cmid %>">
+				<input type="hidden" name="clid" value="<%= client.clid %>">
+				<input class="infoblock-input" type="text" name="subject" maxlength="30" placeholder="e.g., Missed Appointment" required>
+			</div>
 
-			<span style="display:none" id="newconvo">
-				<li>
-					<div class="infoblock-id">
-						subject
-					</div>
-					<input type="hidden" name="cmid" value="<%= cm.cmid %>">
-					<input type="hidden" name="clid" value="<%= client.clid %>">
-					<input type="text" name="subject" maxlength="30" placeholder="e.g., Missed Appointment" required>
-				</li>
-
-				<li>
-					<input type="submit" class="button" value="Submit">
-					<br><i style="font-size:x-small">* closes other convos</i>
-				</li>
-			</span>
+			<div class="infoblock-row">
+				<input type="submit" class="button" value="Create new conversation">
+			</div>
 
 		</form>
-		</ul>
 	</div>
 </div>
 
@@ -158,56 +114,36 @@
 </div>
 
 <div class="infoblock">
-	<div class="infoblock-label" onclick="toggle('newcomm')">
-		New Communication
-	</div>
 	<div class="infoblock-body">
-		<ul>
 		<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/comm">
 
-			<li>
-				<i class="fa fa-plus-square-o"></i>
-				<i>
-					Create a contact method
-				</i>
-			</li>
-
-			<span style="display:none" id="newcomm">
-				<li>
-					<div class="infoblock-id">
-						type
-					</div>
+				<div class="infoblock-row">
+					<div class="infoblock-id"> type </div>
 					<input type="hidden" name="cmid" value="<%= cm.cmid %>">
 					<input type="hidden" name="clid" value="<%= client.clid %>">
-					<select name="type" required>
+					<select class="infoblock-select" name="type" required>
 						<option value="" selected disabled>Comm Method</option>
 						<option value="email" disabled>Email</option>
 						<option value="cell">Cell</option>
 						<option value="landline" disabled>Landline</option>
 					</select>
-				</li>
+				</div>
 
-				<li>
-					<div class="infoblock-id">
-						number
-					</div>
-					<input type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
-				</li>
+				<div class="infoblock-row">
+					<div class="infoblock-id"> number </div>
+					<input class="infoblock-input" type="text" name="value" placeholder="e.g. 1-858-487-2638" required>
+				</div>
 
-				<li>
-					<div class="infoblock-id">
-						description
-					</div>
-					<input type="text" name="description" maxlength="30" placeholder="e.g. Aunt's Cell" required>
-				</li>
+				<div class="infoblock-row">
+					<div class="infoblock-id"> description </div>
+					<input class="infoblock-input" type="text" name="description" maxlength="30" placeholder="e.g. Aunt's Cell" required>
+				</div>
 
-				<li>
-					<input type="submit" class="button" value="Submit">
-				</li>
-			</span>
+				<div class="infoblock-row">
+					<input type="submit" class="button" value="Create new communication method">
+				</div>
 
 		</form>
-		</ul>
 	</div>
 </div>
 

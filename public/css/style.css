@@ -3,36 +3,19 @@ body {
 	font-family: arial, sans-serif;
 	margin: 0px;
 	background-color: #f2f3f3;
-	color: #0084FF;
+	color: #4BAEFF;
 }
 
 header {
-	min-height: 40px;
+	height: 40px;
 	color: #FFF;
 	background-color: #4BAEFF;
-	border-bottom: 1px solid;
-}
-
-header .container {
-	width: 900px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 10px 10px 5px 10px;
+	z-index: 10;
 }
 
 header .logo-left {
 	float: left;
-	height: 25px;
-	width: 200px;
-	text-align: center;
-	color: #FFF;
 	font-weight: 900;
-}
-
-header .logo-left:hover {
-	box-shadow: inset 0px 0px 25px rgba(0,0,0,0.2);
-	text-shadow: 0px 0px 5px rgba(0,0,0,0.7);
-	transition: 0.5s;
 }
 
 header .identification {
@@ -45,6 +28,14 @@ header .navigation {
 
 header .navigation a {
 	margin-left: 10px;
+}
+
+.container, .contents {
+	width: 850px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 10px 25px 10px 25px;
+	box-shadow: 0px 5px 10px 5px rgba(0,0,0,0.1);
 }
 
 .right-tag {
@@ -101,30 +92,23 @@ footer {
 	padding: 5px 10px 5px 10px;
 	position: fixed;
 	bottom: 0px;
-	right: 0px;
-	color: #FFF;
 	text-align: right;
 	font-size: 10px;
 	line-height: 10px;
-	background-color: #0084FF;
 }
 
 a, a:visited, a:hover, a:active {
 	text-decoration: none;
-  border-bottom: rgba(0,132,255,0.5);
-  border-width: 0px 0px 1px 0px;
-  border-style: none none dotted none;
 	color: inherit;
 }
 
 a:hover {
-	background-color: #0084FF;
-	color: #FFF;
+	text-decoration: none;
 }
 
 input[type=button], .button {
 	border: 0px;
-	background-color: #0084FF;
+	background-color: #4BAEFF;
 	color: #FFF;
 	min-width: 100px;
 	cursor: pointer;
@@ -133,33 +117,36 @@ input[type=button], .button {
 .alerts {
 	width: 200px;
 	color: #FFF;
-	padding: 5px 10px 5px 10px;
+	padding: 5px 0px 5px 0px;
 	text-align: center;
 	width: inherit;
 	font-size: 10px;
+	margin-bottom: 10px;
+	border-radius: 5px;
 }
 
-#contents {
-	min-height: 575px;
-	display: block; 
-	clear: both;
-	padding-bottom: 25px;
+.contents {
+	padding: 25px;
+	box-shadow: 0px 5px 10px 5px rgba(0,0,0,0.1);
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	background-color: #FFF;
 }
 
-#contents .right-nav {
+.contents .right-nav {
 	position: absolute;
 	top: 41px;
 	right: 0px;
 }
 
-#contents .nav-btn {
+.contents .nav-btn {
 	display: block;
 	clear: both;
 	position: relative;
 	width: 150px;
 	height: 16px;
 	overflow: hidden;
-	background-color: #0084FF;
+	background-color: #4BAEFF;
 	color: #FFF;
 	margin-top: 3px;
 	padding: 3px 10px 3px 10px;
@@ -167,7 +154,7 @@ input[type=button], .button {
 	font-size: 0.8em;
 }
 
-#contents .msg-stream {
+.contents .msg-stream {
 	display: block;
 	clear: both;
 	position: relative;
@@ -176,7 +163,7 @@ input[type=button], .button {
 	margin-top: 40px;
 }
 
-#contents .msg-stream .msg {
+.contents .msg-stream .msg {
 	display: block;
 	clear: both;
 	position: relative;
@@ -184,37 +171,37 @@ input[type=button], .button {
 	padding-bottom: 10px;
 }
 
-#contents .msg-stream .msg .content {
+.contents .msg-stream .msg .content {
 	display: block;
 	max-width: 25%;
 	position: relative;
 	border-radius: 15px;
 }
 
-#contents .msg-stream .msg.inbound {
+.contents .msg-stream .msg.inbound {
 	color: #000;
 }
 
-#contents .msg-stream .msg.outbound {
+.contents .msg-stream .msg.outbound {
 	color: #FFF;
 	text-align: right;
 }
 
-#contents .msg-stream .msg.inbound .date { 
+.contents .msg-stream .msg.inbound .date { 
 	float: left;
 	width: 220px;
 	font-size: 0.75em;
 	text-align: right;
 }
 
-#contents .msg-stream .msg.inbound .content { 
+.contents .msg-stream .msg.inbound .content { 
 	float: left;	
 	margin-left: 10px;
 	padding: 5px 8px 3px 8px;
 	background-color: #f1f0f0;
 }
 
-#contents .msg-stream .msg.inbound .content .description { 
+.contents .msg-stream .msg.inbound .content .description { 
 	display: block;
 	clear: both;
 	position: relative;
@@ -223,7 +210,7 @@ input[type=button], .button {
 	font-size: 0.5em;
 }
 
-#contents .msg-stream .msg.outbound .date { 
+.contents .msg-stream .msg.outbound .date { 
 	float: right;
 	width: 220px;
 	color: rgb(68, 190, 199) ;
@@ -232,19 +219,19 @@ input[type=button], .button {
 	vertical-align: bottom;
 }
 
-#contents .msg-stream .msg.outbound .content { 
+.contents .msg-stream .msg.outbound .content { 
 	float: right;	
 	margin-right: 10px;
 	padding: 5px 8px 3px 8px;
 	background-color: rgb(68, 190, 199);
 }
 
-#contents .msg-stream .msg.outbound .content .description { 
+.contents .msg-stream .msg.outbound .content .description { 
 	opacity: 0.75;
 	font-size: 0.5em;
 }
 
-#contents .msg-stream .response {
+.contents .msg-stream .response {
 	margin-left: 220px;
 	margin-right: 220px;
 	margin-top: 15px;
@@ -252,55 +239,91 @@ input[type=button], .button {
 
 }
 
-#contents .entryform {
+.contents .entryform {
 	margin-left: 140px;
 }
 
-#contents .infoblock {
-	display: block; 
-	clear: both;
-	font-size: 0.8em;
+.contents .infoblock, .contents .themeblock {
+	font-size: 1.25em;
+	line-height: 1.25em;
 	padding-top: 3px;
 	padding-bottom: 3px;
-	line-height: 16px;
 }
 
-#contents .infoblock .infoblock-label {
+.contents .infoblock .infoblock-label {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.contents .infoblock .infoblock-body, .contents .themeblock .themeblock-body {
+	padding: 25px;
+	border-radius: 5px;
+}
+
+.contents .infoblock .infoblock-body {
+	background-color: #e7e8e9;
+
+}
+
+.contents .infoblock .infoblock-row, .contents .themeblock .themeblock-row {
+	display: block;
+	clear: both;
+	height: 2em;
+	line-height: 2em;
+}
+
+.contents .infoblock .infoblock-id, .contents .themeblock .themeblock-id {
 	float: left;
-	width: 200px;
-	background-color: rgba(10,0,0,0.05);
-	color: rgba(10,0,0,0.5);
-	padding: 5px 10px 5px 10px;
-	word-wrap: break-word;
+	height: 2em;
+	line-height: 2em;
+	width: 275px;
 	text-align: right;
-	font-size: 1em;
-	cursor: pointer;
 }
 
-#contents .infoblock .infoblock-id {
+.contents .infoblock .infoblock-id {
+	
+	color: #FFF;
+}
+
+.contents .themeblock .themeblock-id {
+	color: #FFF;
+	margin-right: 10px;
+	border-radius: 5px;
+}
+
+.contents .infoblock input.infoblock-input {
 	float: left;
-	text-align: right;
-	margin-left: -100px;
-	width: 90px;
-	opacity: 0.5;
+	border: 0px;
+	width: 250px;
+	height: 26px;
+	margin-left: 16px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	border-radius: 5px;
+	padding: 3px 10px 3px 10px;
 }
 
-#contents .infoblock .infoblock-body {
+.contents .infoblock select.infoblock-select {
 	float: left;
+	border: 0px;
+	width: 270px;
+	height: 32px;
+	margin-left: 16px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	border-radius: 5px;
 }
 
-#contents .infoblock .infoblock-body ul {
-	list-style-type: none;
-	padding: 0px;
-	margin: 0px;
+.contents .infoblock .button {
+	border: 0px;
+	width: 270px;
+	height: 20px;
+	margin-left: 291px;
+	border-radius: 5px;
+	padding: 3px 10px 3px 10px;
 }
 
-#contents .infoblock .infoblock-body li {
-	color: rgba(10,0,0,0.5);
-	padding: 5px 10px 5px 10px;
-}
-
-#contents .chart {
+.contents .chart {
 	margin-right: 8px;
 	position: absolute;
 	right: 0px;
@@ -310,7 +333,7 @@ input[type=button], .button {
 	color: rgba(10,0,0,0.5);
 }
 
-#contents .badge {
+.contents .badge {
 	background-color: red;
 	color: #FFF;
 	border-radius: 10px;
@@ -323,24 +346,24 @@ input[type=button], .button {
 	padding-bottom: 3px;
 }
 
-#contents .chart svg {
+.contents .chart svg {
 	height: 205px;
 	width: 100%;
 }
 
-#contents .chart .c3 .c3-grid line {
+.contents .chart .c3 .c3-grid line {
   stroke: #e6e6e6;
 }
 
-#contents .chart .c3 .c3-axis path, #contents .chart .c3 .c3-axis line {
+.contents .chart .c3 .c3-axis path, .contents .chart .c3 .c3-axis line {
   stroke: #d3d3d3;
 }
 
-#contents .chart .c3 .c3-axis text {
+.contents .chart .c3 .c3-axis text {
   fill: #b3b3b3;
 }
 
-#contents .chart .c3 .c3-lines {
+.contents .chart .c3 .c3-lines {
   stroke: red;
 }
 
