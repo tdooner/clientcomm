@@ -9,97 +9,69 @@
 	</div>
 </div>
 
-<div class="infoblock">
-	<div class="infoblock-label">
-		Deactive
-	</div>
-	<div class="infoblock-body">
-		<ul>
-			<li>
-				<% if (client.active) { %>
-					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/close" style="float:right">
-						<input type="submit" class="button" value="Close Out Client" style="background-color:red">
-					</form>
-				<% } else { %>
-					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/open" style="float:right">
-						<input type="submit" class="button" value="Re-activate Client" style="background-color:red">
-					</form>
-				<% } %>
-			</li>
-		</ul>
-	</div>
-</div>
 
 <div class="infoblock">
 	<div class="infoblock-label">
-		Client
+		Update Client Information
 	</div>
 	<div class="infoblock-body">
-		<ul>
 		<form method="post">
-
-			<li>
-				<i>
-					Edit <%= client.first %>'s Attributes
-				</i>
-				<input type="hidden" name="clid" value="<%= client.clid %>">
-				<input type="hidden" name="cmid" value="<%= user.cmid %>">
-			</li>
 			
-			<li>
-				<div class="infoblock-id">
-					first
-				</div>
-				<input type="text" name="first" value="<%= client.first %>" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> first </div>
+				<input class="infoblock-input" type="text" name="first" value="<%= client.first %>" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					middle
-				</div>
-				<input type="text" name="middle" value="<%= client.middle %>">
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> middle </div>
+				<input class="infoblock-input" type="text" name="middle" value="<%= client.middle %>">
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					last
-				</div>
-				<input type="text" name="last" value="<%= client.last %>" required>
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> last </div>
+				<input class="infoblock-input" type="text" name="last" value="<%= client.last %>" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					dob
-				</div>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> dob </div>
 				<% try { var upd = new Date(client.dob); upd = upd.toISOString().split("T")[0] %>
 				<% } catch (e) { var upd = "1955-01-01" } %>
-				<input type="date" name="dob" value="<%= upd %>" required>
-			</li>
+				<input class="infoblock-input" type="date" name="dob" value="<%= upd %>" required>
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					otn
-				</div>
-				<input type="text" name="otn" value="<%= client.otn %>">
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> otn </div>
+				<input class="infoblock-input" type="text" name="otn" value="<%= client.otn %>">
+			</div>
 
-			<li>
-				<div class="infoblock-id">
-					so
-				</div>
-				<input type="text" name="so" value="<%= client.so %>">
-			</li>
+			<div class="infoblock-row">
+				<div class="infoblock-id"> so </div>
+				<input class="infoblock-input" type="text" name="so" value="<%= client.so %>">
+			</div>
 
-			<li>
-				<input type="submit" class="button" value="Submit">
-			</li>
-
+			<div class="infoblock-row">
+				<input type="submit" class="button" value="Update Client">
+			</div>
 
 		</form>
-		</ul>
 	</div>
 </div>
 
+<div class="infoblock">
+	<div class="infoblock-body">
+		<div class="infoblock-row">
+			<% if (client.active) { %>
+				<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/close">
+					<input type="submit" class="button" value="Deactivate Client" style="background-color:red">
+				</form>
+			<% } else { %>
+				<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/open">
+					<input type="submit" class="button" value="Re-activate Client" style="background-color:red">
+				</form>
+			<% } %>
+		</div>
+	</div>
+</div>
 
 
 <% include footer %>

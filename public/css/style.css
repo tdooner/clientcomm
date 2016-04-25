@@ -41,7 +41,7 @@ header .navigation a {
 .right-tag {
 	position: fixed;
 	right: -141px;
-	top: 40%;
+	top: 183px;
 
 	width: 275px;
 	height: 14px;
@@ -52,8 +52,8 @@ header .navigation a {
 	background-color: #FFF;
 	color: #4BAEFF;
 
-	border: 1px solid #999999; 
-	border-radius: 10px 10px 0px 0px;
+	border: 1px solid #e7e8e9; 
+	border-radius: 10px 0px 0px 0px;
 	border-bottom: 0px;
 
 	line-height: 14px;
@@ -134,9 +134,9 @@ input[type=button], .button {
 }
 
 .contents .right-nav {
-	position: absolute;
-	top: 41px;
-	right: 0px;
+	position: relative;
+	top: -25px;
+	right: -25px;
 }
 
 .contents .nav-btn {
@@ -336,7 +336,7 @@ input[type=button], .button {
 .contents .badge {
 	background-color: red;
 	color: #FFF;
-	border-radius: 10px;
+	border-radius: 3px;
 	font-size: 0.8em;
 	margin-left: 5px;
 	margin-right: 5px;
