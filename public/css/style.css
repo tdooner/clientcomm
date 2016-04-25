@@ -2,20 +2,19 @@
 body {
 	font-family: arial, sans-serif;
 	margin: 0px;
-	background-color: #FFF;
+	background-color: #f2f3f3;
 	color: #0084FF;
 }
 
 header {
 	min-height: 40px;
 	color: #FFF;
-	background-color: #0084FF;
+	background-color: #4BAEFF;
 	border-bottom: 1px solid;
 }
 
 header .container {
 	width: 900px;
-	background-color: red;
 	margin-left: auto;
 	margin-right: auto;
 	padding: 10px 10px 5px 10px;
@@ -49,20 +48,53 @@ header .navigation a {
 }
 
 .right-tag {
-	background-color: red;
 	position: fixed;
-	right: 0px;
-	top: 50%;
+	right: -141px;
+	top: 40%;
 
-	padding: 0px;
-	margin: 0px;
+	width: 275px;
+	height: 14px;
+
+	padding: 10px 20px 10px 20px;
+	margin: 0px 0px 0px 0px;
+
+	background-color: #FFF;
+	color: #4BAEFF;
+
+	border: 1px solid #999999; 
+	border-radius: 10px 10px 0px 0px;
+	border-bottom: 0px;
+
+	line-height: 14px;
 
   -webkit-transform: rotate(270deg); /* Safari and Chrome */
   -moz-transform: rotate(270deg);   /* Firefox */
   -ms-transform: rotate(270deg);   /* IE 9 */
   -o-transform: rotate(270deg);   /* Opera */
   transform: rotate(270deg);
+}
 
+.right-tag .tag-logo {
+	border-right: 2px solid #4BAEFF;
+	padding-right: 8px;
+	margin-right: 12px;
+	font-weight: 900;
+}
+
+.right-tag .tag-email {
+	color: #aeb0b3;
+}
+
+.right-tag a {
+	text-decoration: none;
+	border-bottom: 0px;
+}
+
+.right-tag a:hover {
+	text-decoration: none;
+	color: inherit;
+	background-color: rgba(255,255,255,0);
+	border-bottom: 0px;
 }
 
 footer {
