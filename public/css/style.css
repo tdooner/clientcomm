@@ -175,7 +175,7 @@ input[type=button], .button {
 	display: block;
 	max-width: 25%;
 	position: relative;
-	border-radius: 15px;
+	border-radius: 3px;
 }
 
 .contents .msg-stream .msg.inbound {
@@ -236,7 +236,11 @@ input[type=button], .button {
 	margin-right: 220px;
 	margin-top: 15px;
 	text-align: right;
+}
 
+.contents .msg-stream .response textarea {
+	border: 1px solid #e7e8e9; 
+	border-radius: 3px;
 }
 
 .contents .entryform {
@@ -250,9 +254,18 @@ input[type=button], .button {
 	padding-bottom: 3px;
 }
 
+.contents .themeblock {
+	color: #777;
+}
+
 .contents .infoblock .infoblock-label {
 	margin-top: 10px;
-	margin-bottom: 10px;
+}
+
+.contents .themeblock .themeblock-label {
+	margin-top: 10px;
+	padding-bottom: 5px;
+	border-bottom: 2px solid #4BAEFF;
 }
 
 .contents .infoblock .infoblock-body, .contents .themeblock .themeblock-body {
@@ -281,12 +294,11 @@ input[type=button], .button {
 }
 
 .contents .infoblock .infoblock-id {
-	
 	color: #FFF;
 }
 
 .contents .themeblock .themeblock-id {
-	color: #FFF;
+	color: #e7e8e9;
 	margin-right: 10px;
 	border-radius: 5px;
 }

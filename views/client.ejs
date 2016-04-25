@@ -18,7 +18,6 @@
 
 <div class="infoblock">
 	<div class="infoblock-label">
-		<i class="fa fa-user"></i>
 		<b><%= client.last %></b>, <%= client.first %> <%= client.middle %>
 	</div>
 </div>
@@ -40,7 +39,7 @@
 				<% } %>
 
 				<a href="/cms/<%= client.cm %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
-					<%= convos[i].subject %>
+					<%= convos[i].subject.length > 30 ? convos[i].subject.substring(0,30) + "..." : convos[i].subject %>
 				</a>
 
 				<i>
@@ -85,31 +84,23 @@
 	</div>
 </div>
 
-<div class="infoblock">
-	<div class="infoblock-label">
+<div class="themeblock">
+	<div class="themeblock-label">
 		Contacts
 	</div>
-	<div class="infoblock-body">
-		<ul>
-
-			<li>
-				<i class="fa fa-comments-o"></i>
-				<i><%= comms.length %> Communication Methods</i>
-			</li>
+	<div class="themeblock-body">
 
 			<% for (var i = 0; i < comms.length; i++) { %>
-
-				<li>
-					<div class="infoblock-id">
-						<%= comms[i].type %>
+				<div class="themeblock-row">
+					<div class="themeblock-id">
+						<div class="themeblock-id"> <%= comms[i].type %> </div>
 					</div>
-					<%= comms[i].name %>
-					(<%= comms[i].value %>)
-				</li>
-
+					<div class="themeblock-val"> 
+						<%= comms[i].name %> | <%= comms[i].value %>
+					</div>
+				</div>
 			<% } %>
 
-		</ul>
 	</div>
 </div>
 
