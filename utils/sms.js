@@ -159,7 +159,7 @@ module.exports = {
 
 				    	var insertList = [];
 				    	var now = new Date(Date.now()).toISOString().split("T");
-				    	var subject = "Automatically created on " + now[0] + " at " + now[1].replace("Z", "");
+				    	var subject = "New Convo " + now[0] + " at " + now[1].replace("Z", "");
 
 				    	for (var i = 0; i < clients.length; i++) {
 				    		var client = clients[i];
@@ -200,7 +200,8 @@ module.exports = {
     	for (var i = 0; i < convos.length; i++) {
     		var convo = convos[i];
     		for (var ii = 0; ii < text.length; ii++) {
-	    		var textPart = text[i];
+	    		var textPart = text[ii];
+	    		console.log("textPart", ii, textPart, commid);
 
 	    		var insertObj = {
 	    			"convo": convo,
