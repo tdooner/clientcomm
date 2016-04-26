@@ -15,22 +15,22 @@
 		<%= convo.subject %>
 	</div>
 
-	<div style="float: right">
-		<% if (convo.accepted) { %>
-			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
-				<input type="submit" class="button" value="Close" style="background-color:orange; width: 100px">
-			</form>
-		<% } %>
-
-		<% if (!convo.accepted) { %>
-			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
-				<input type="submit" class="button" value="Accept" style="background-color:green; width: 100px">
-			</form>
-			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
-				<input type="submit" class="button" value="Reject" style="background-color:red; width: 100px">
-			</form>
-		<% } %>
-	</div>
+	<% if (convo.open) { %>
+		<div style="float: right">
+			<% if (convo.accepted) { %>
+				<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
+					<input type="submit" class="button" value="Close" style="background-color:orange; width: 100px">
+				</form>
+			<% } else { %>
+				<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
+					<input type="submit" class="button" value="Accept" style="background-color:green; width: 100px">
+				</form>
+				<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
+					<input type="submit" class="button" value="Reject" style="background-color:red; width: 100px">
+				</form>
+			<% } %>
+		</div>
+	<% } %>
 
 	<small>
 		<i class="fa fa-clock-o"></i>

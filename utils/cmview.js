@@ -25,8 +25,11 @@ module.exports = {
                   .innerJoin("comms", "comms.commid", "msgs.comm")
                   .innerJoin("commconns", "commconns.comm", "msgs.comm")
                   .where("msgs.convo", convid)
+                  .where("commconns.client", clid)
                   .orderBy("msgs.created", "asc")
                   .then(function (msgs) {
+
+                    console.log(msgs);
 
                     db("comms")
                     .innerJoin("commconns", "comms.commid", "commconns.comm")
