@@ -41,7 +41,7 @@ header .navigation a {
 .right-tag {
 	position: fixed;
 	right: -141px;
-	top: 140px;
+	top: 240px;
 
 	width: 275px;
 	height: 14px;
@@ -53,9 +53,8 @@ header .navigation a {
 	color: #4BAEFF;
 
 	border: 1px solid #e7e8e9; 
-	border-radius: 10px 0px 0px 0px;
+	border-radius: 10px 10px 0px 0px;
 	border-bottom: 0px;
-	border-right: 0px;
 
 	line-height: 14px;
 
