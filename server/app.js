@@ -49,7 +49,7 @@ var auth = require("../utils/utils.js")["pass"];
 require("../utils/superuser-check.js")();
 
 // log flash messages each time
-app.use(function(req, res, next){	
+app.use(function (req, res, next){	
 	res.locals.warning = req.flash("warning");
 	res.locals.success = req.flash("success");
 	res.locals.user = req.user;
@@ -63,6 +63,7 @@ var supermgmt = require("../routes/super");
 require("../routes/access")(app, db, utils, passport);
 require("../routes/cmview")(app, passport);
 require("../routes/sms")(app);
+require("../routes/voice")(app);
 
 // superuser management
 app.use("/admin", auth.isAdmin, adminmgmt)
