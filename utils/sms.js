@@ -8,33 +8,34 @@ module.exports = {
 		return new Promise (function (fulfill, reject) {
 
 			var commid;
+
+			// step 1: see if comm device exists
 			sms.get_or_create_comm_device(from).then(get_clients).catch(errReject);
 			
+
+			// step 2: get clients associated with that device
 			function get_clients (device) {
 				if (device.length > 0) {
 					commid = device[0];
 					sms.get_clients(commid).then(get_or_create_convos).catch(errReject)
-				} else {
-					errReject("Failed to create a comm device.");
-				}
+				} else { errReject("Failed to get clients."); }
 			};
 
+			// step 3: find open conversations for each client
 			function get_or_create_convos (clients, from) {
 				if (clients.length > 0) {
 					sms.get_or_create_convos(clients, from).then(register_message).catch(errReject)
-				} else {
-					errReject("Failed to produce client or null list value.");
-				}
+				} else { errReject("Failed to get or create a conversation."); }
 			};
 
+			// step 4: add messages to those conversations
 			function register_message (convos) {
 				if (convos.length > 0) {
 					sms.register_message(text, commid, convos, tw_status, tw_sid).then(fulfill).catch(errReject)
-				} else {
-					errReject("Failed to produce convos list.");
-				}
+				} else { errReject("Failed to register message."); }
 			};
 
+			// error handling
 			function errReject (err) {
 				reject(String(err));
 			};
@@ -108,9 +109,7 @@ module.exports = {
 	    		return {clid: ea.clid, cmid: ea.cm};
 	    	});
 
-	    	if (clients.length == 0) {
-	    		clients = [{clid: null, cmid: null}];
-	    	}
+	    	if (clients.length == 0) { clients = [{clid: null, cmid: null}]; }
 	    	fulfill(clients);
 	    }).catch(function (err) {
 			  reject(err);
@@ -123,10 +122,23 @@ module.exports = {
     	var cls = clients.map(function (ea) { return ea.clid; });
     	var cms = clients.map(function (ea) { return ea.cmid; });
 
-	    db("convos")
-	    .whereIn("client", cls)
-	    .andWhere("convos.open", true)
-	    .then(function (convos) {
+	    var d = db("convos");
+	    d.whereIn("client", cls)
+
+	    // search for null values as well is null is in list as a convo type
+	    if (cls.indexOf(null) > -1) {
+	    	d.orWhere("client", null);
+
+	    	// i cant see this happening but there could be instance where a clid is null but a cmid is not
+	    	var cmsNulls = clients.filter(function (ea) { return ea.clid == null})
+	    												.map(function (ea) { return ea.cmid; })
+	    												.filter(function (ea) { return ea !== null});
+	    	if (cmsNulls.length > 0) d.whereIn("cm", cmsNulls);
+	    }
+
+	    d.andWhere("convos.open", true);
+	    d.then(function (convos) {
+	    	
 	    	// clean up response
 	    	convos = convos.map(function (ea) { return ea.convid; });
 
@@ -201,7 +213,6 @@ module.exports = {
     		var convo = convos[i];
     		for (var ii = 0; ii < text.length; ii++) {
 	    		var textPart = text[ii];
-	    		console.log("textPart", ii, textPart, commid);
 
 	    		var insertObj = {
 	    			"convo": convo,

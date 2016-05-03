@@ -21,17 +21,22 @@ module.exports = function (app) {
       
       sms.process_incoming_msg(from, text, tw_status, tw_sid)
       .then(function (msgs) {
-        // do nothing for now
+
+        console.log("msgs", msgs);
+
+        // returns msgs
+        // check if some msgs have corresponding convos which are null cms, clients
+        // check if first in that convo
+        // try to figure out who the person is
+
+        // log message being received
         var now = new Date(Date.now()).toISOString().split("T");
         console.log("Message received from " + from + " on " + now[0] + " at " + now[1]);
 
-      }).catch(function (err) {
-        handleError(err);
-      })
 
-    } else {
-      handleError("Text value submitted is not a string.");
-    }
+
+      }).catch(function (err) { handleError(err); });
+    } else { handleError("Text value submitted is not a string."); }
 
     function handleError (err) {
       var now = new Date(Date.now()).toISOString().split("T");
