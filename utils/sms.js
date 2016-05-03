@@ -22,9 +22,9 @@ module.exports = {
 			};
 
 			// step 3: find open conversations for each client
-			function get_or_create_convos (clients, from) {
+			function get_or_create_convos (clients) {
 				if (clients.length > 0) {
-					sms.get_or_create_convos(clients, from).then(register_message).catch(errReject)
+					sms.get_or_create_convos(clients, commid, from).then(register_message).catch(errReject)
 				} else { errReject("Failed to get or create a conversation."); }
 			};
 
@@ -117,29 +117,35 @@ module.exports = {
 		});
 	},
 	
-	get_or_create_convos: function (clients, from) {
+	get_or_create_convos: function (clients, commid, from) {
     return new Promise (function (fulfill, reject) {
     	var cls = clients.map(function (ea) { return ea.clid; });
     	var cms = clients.map(function (ea) { return ea.cmid; });
 
-	    var d = db("convos");
-	    d.whereIn("client", cls)
+	    var d, raw = false;
 
 	    // search for null values as well is null is in list as a convo type
-	    if (cls.indexOf(null) > -1) {
-	    	d.orWhere("client", null);
+	    if (cls.indexOf(null) > -1 && cls.length == 1) {
+	    	raw = true;
+	    	var rawQuery =  "SELECT * FROM convos WHERE convos.convid IN ( ";
+	    			rawQuery += "SELECT msgs.convo FROM msgs ";
+	    			rawQuery += "WHERE msgs.convo IN ( ";
+	    			rawQuery += "SELECT convid FROM convos ";
+	    			rawQuery += "WHERE client IS NULL AND COMM = " + commid + " )";
+	    			rawQuery += "GROUP BY msgs.convo ) ";
+						rawQuery += "AND convos.open = TRUE;";
+	    	d = db.raw(rawQuery);
 
-	    	// i cant see this happening but there could be instance where a clid is null but a cmid is not
-	    	var cmsNulls = clients.filter(function (ea) { return ea.clid == null})
-	    												.map(function (ea) { return ea.cmid; })
-	    												.filter(function (ea) { return ea !== null});
-	    	if (cmsNulls.length > 0) d.whereIn("cm", cmsNulls);
+	    } else {
+	    	d = db("convos")
+		    d.whereIn("client", cls);
+		    d.andWhere("convos.open", true);
 	    }
 
-	    d.andWhere("convos.open", true);
 	    d.then(function (convos) {
-	    	
+
 	    	// clean up response
+	    	if (raw) convos = convos.rows;
 	    	convos = convos.map(function (ea) { return ea.convid; });
 
 	    	// there are existing open conversations
