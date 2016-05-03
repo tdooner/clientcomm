@@ -12,7 +12,6 @@ var bodyParser = require('body-parser');
 var session = require("express-session");
 var cookieParser = require("cookie-parser");
 var flash = require("connect-flash");
-var twilio = require("twilio");
 
 // configurations
 app.set("view engine", "ejs");
@@ -46,8 +45,6 @@ var utils = {
 }
 var auth = require("../utils/utils.js")["pass"];
 
-require("../utils/superuser-check.js")();
-
 // log flash messages each time
 app.use(function (req, res, next){	
 	res.locals.warning = req.flash("warning");
@@ -77,7 +74,12 @@ require("../routes/catchall")(app);
 
 
 var port = 4000;
-app.listen(port, function () { console.log("Listening on port", port); });
+app.listen(port, function () { 
+	console.log("Listening on port", port);
+
+	// hacky method of ensuring that migrations are performed before the super user check occurs
+	setTimeout(function () { require("../utils/superuser-check.js")(); }, 5000);
+});
 
 
 
