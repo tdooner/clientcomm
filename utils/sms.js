@@ -3,6 +3,31 @@ var Promise = require("bluebird");
 
 module.exports = {
 
+	check_new_unknown_msg: function (msg) {
+		return new Promise (function (fulfill, reject) {
+			var rawQuery = "SELECT COUNT(msgs.msgid) FROM msgs WHERE msgs.convo IN (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid = " + msg + ");"
+			db.raw(rawQuery).then(function (res) { 
+				if (res.hasOwnProperty("rows") && res.rows.length == 1 && res.rows[0].hasOwnProperty("count")) { 
+					var count = Number(res.rows[0].count);
+					if (isNaN(count)) reject(res.rows[0].count + "  - (res.rows[0].count) is not convertable into a number");
+					else fulfill(count == 1); 
+				} else { reject("Function check_new_unknown_msg failed to return row values correctly.") };
+			}).catch(function (err) { reject(err); });
+		});
+	},
+
+	check_last_unread: function (msg) {
+		return new Promise (function (fulfill, reject) {
+			var rawQuery = "SELECT created FROM msgs WHERE msgs.convo IN (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid = " + msg + ") AND inbound = TRUE AND read = FALSE LIMIT 1;";
+			db.raw(rawQuery).then(function (res) {
+				if (res.hasOwnProperty("rows")) { 
+					if (res.rows.length == 1 && res.rows[0].hasOwnProperty("created")) { fulfill(res.rows[0].created); }
+					else { fulfill(false); }
+				} else { reject("Function check_new_unknown_msg failed to return row values correctly.") };
+			});
+		});
+	},
+
 	process_incoming_msg: function (from, text, tw_status, tw_sid) {
 		var sms = this;
 		return new Promise (function (fulfill, reject) {
