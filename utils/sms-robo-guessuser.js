@@ -86,7 +86,6 @@ module.exports = {
 							}).catch(function (err) { reject(err); });
 						}).catch(function (err) { reject(err); });
 
-
 					} else { fulfill({state: state, msg: "We couldn't find a specific case manager with that name. You can try again with a different name or wait for staff to assist you."}); };
 
 				}).catch(function (err) { reject(err); });
