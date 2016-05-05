@@ -1,0 +1,49 @@
+<% include header %>
+
+<div class="right-nav">
+	<div class="nav-btn">
+		<a href="/cms/<%= user.cmid %>">
+			<i class="fa fa-reply"></i>
+			Return to Clients
+		</a>
+	</div>
+</div>
+
+
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Message</th> 
+    <th>Communication</th>
+    <th>Time</th>
+  </tr>
+
+	<% floaters.forEach(function (ea) { %>
+	  <tr>
+	    <td><%= ea.msgid %></td>
+	    <td><%= ea.content %></td>
+	    <td><%= ea.value %></td>
+	    <td><%= ea.created %></td>
+	  </tr>
+	<% }); %>
+
+</table>
+
+
+<style type="text/css">
+	table {
+		width: 100%
+	}
+	th {
+		border-bottom: 2px solid grey;
+	}
+	td {
+		border-bottom: 1px solid grey;
+		padding: 5px;
+	}
+</style>
+
+
+
+<% include footer %>

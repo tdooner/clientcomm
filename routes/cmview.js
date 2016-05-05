@@ -16,7 +16,19 @@ var isLoggedIn = pass.isLoggedIn;
 
 module.exports = function (app, passport) {
 
-	// view current clients for a case manager
+  // view captures
+  app.get("/capture", isLoggedIn, function (req, res) { 
+    var rawQuery = "SELECT msgs.msgid, msgs.content, comms.value, msgs.created FROM msgs " +
+                    "JOIN convos ON (msgs.convo = convos.convid) " +
+                    "JOIN comms ON (comms.commid = msgs.comm) " +
+                    "WHERE convos.client IS NULL ORDER BY msgs.created DESC;";
+    
+    db.raw(rawQuery).then(function (floaters) {
+      res.render("capture", { floaters: floaters.rows });
+    }).catch(function (err) { res.redirect("/500"); });
+  });
+
+  // view current clients for a case manager
   app.get("/cms", isLoggedIn, function (req, res) { 
     if (req.user.superuser) {
       res.redirect("/orgs");

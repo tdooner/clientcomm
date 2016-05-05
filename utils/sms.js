@@ -78,19 +78,12 @@ module.exports = {
 	clean_phonenum: function (from) {
 		if (from) {
 			from = from.replace(/\D+/g, "");
-			if (from.length == 10) {
-				from = "1" + from;
-			}
+			if (from.length == 10) { from = "1" + from; }
 
-			if (from.length == 11) {
-				return from;
-			} else {
-				return null;
-			}
+			if (from.length == 11) { return from;
+			} else { return null; }
 
-		} else {
-			return null;
-		}
+		} else { return null; }
 	},
 	
 	get_or_create_comm_device: function (from) {
