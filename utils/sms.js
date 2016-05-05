@@ -18,13 +18,20 @@ module.exports = {
 
 	check_last_unread: function (msg) {
 		return new Promise (function (fulfill, reject) {
-			var rawQuery = "SELECT created FROM msgs WHERE msgs.convo IN (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid = " + msg + ") AND inbound = TRUE AND read = FALSE LIMIT 1;";
+			var rawQuery = "SELECT created FROM msgs WHERE msgs.convo IN (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid = " + msg + ") AND inbound = TRUE AND read = FALSE ORDER BY created DESC LIMIT 1;";
 			db.raw(rawQuery).then(function (res) {
 				if (res.hasOwnProperty("rows")) { 
 					if (res.rows.length == 1 && res.rows[0].hasOwnProperty("created")) { fulfill(res.rows[0].created); }
 					else { fulfill(false); }
 				} else { reject("Function check_new_unknown_msg failed to return row values correctly.") };
-			});
+			}).catch(function (err) { reject(err); });
+		});
+	},
+
+	log_sent_msg: function (msg, msgid) {
+		return new Promise (function (fulfill, reject) {
+			var rawQuery = "INSERT INTO msgs (convo, comm, content, inbound, read, created) VALUES ( (SELECT convo FROM msgs WHERE msgs.msgid = " + msgid + "), (SELECT comm FROM msgs WHERE msgs.msgid = " + msgid + "), '" + msg + "', FALSE, FALSE, now() );";
+			db.raw(rawQuery).then(function (res) { fulfill(); }).catch(function (err) { reject(err); });
 		});
 	},
 

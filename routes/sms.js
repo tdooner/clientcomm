@@ -24,25 +24,29 @@ module.exports = function (app) {
       // we don't handle if multiple messages are created currently how that translates into new message logic
       // we need to enhance later code to incorporate this
       if (msgs.length !== 1) {
-        sendEmptyRes();
+        sendResponse();
 
       } else {
         var msg = msgs[0];
         sms.check_new_unknown_msg(msg).then(function (isNew) {
+
+          console.log("isNew: ", isNew);
+          console.log("ccstate: ", req.session.ccstate);
           
           // if new, then initiate figuring out who person is
           if (isNew) {
-            console.log("got new")
             req.session.ccstate = "initiate-resp";
-            res.send("<?xml version='1.0' encoding='UTF-8'?><Response><Sms>This # is not registered. Help us find you. Reply with your name in the following format: FIRST M LAST.</Sms></Response>");
+            sendResponse("This # is not registered. Help us find you. Reply with your name in the following format: FIRST M LAST.", msg);
 
           // if ongoing auto convo, then continue
-          } else if (req.session.hasOwnProperty("ccstate")) { 
-            console.log("has ccstate!!", req.session.ccstate);
+          } else if (req.session.hasOwnProperty("ccstate") && req.session.ccstate) { 
+            smsguess.logic_tree(req.session.ccstate, req.body.Body, msg).then(function (response) {
+              req.session.ccstate = response.state;
+              sendResponse(response.msg, msg);
+            }).catch(function (err) { handleError(err); });
 
           // see if the person has not been serviced in a long time
           } else { 
-            console.log("not either of above")
             
             // check when last response was
             sms.check_last_unread(msg).then(function (unreadDate) {
@@ -51,19 +55,23 @@ module.exports = function (app) {
                   var d1 = new Date(unreadDate);
                   var d2 = new Date();
                   var diff = (d2.getTime() - d1.getTime()) / (3600*1000);
-
+                  
                   // if it's been more than 4 hours let's notify the case manager
                   if (diff > 4) {
-                    // but only if it is not a weekend
+                    // ... but only if it is not a weekend
                     if (d2.getDay() == 6 || d2.getDay() == 0) {
-                      res.send("<?xml version='1.0' encoding='UTF-8'?><Response><Sms>Message received! Because it is the weekend, your case manager may take until the weekday to respond. Thanks for your patience.</Sms></Response>");
+                      sendResponse("Message received! Because it is the weekend, your case manager may take until the business day to respond. Thanks for your patience.", msg);
                     } else {
-                      res.send("<?xml version='1.0' encoding='UTF-8'?><Response><Sms>Message received! Also, t's been over 4 hours and your case manager has not yet addressed your prior message so we sent them a reminder to get back to you!</Sms></Response>");
+                      sendResponse("Message received! As it has been over 4 hours and your case manager has not yet addressed your prior message so we sent them a reminder to get back to you!", msg);
                       // notify the case manager now...
                     }
-                  } else { sendEmptyRes(); }
-                } catch (e) { sendEmptyRes(); }
-              } else { sendEmptyRes(); }
+                  } else { 
+                    console.log("Everything fine, a normal messsage.");
+                    sendResponse(); 
+                  }
+
+                } catch (e) { sendResponse(); }
+              } else { sendResponse(); }
             }).catch(function (err) { handleError(err); });
           }
         }).catch(function (err) { handleError(err); });
@@ -75,8 +83,13 @@ module.exports = function (app) {
 
     }).catch(function (err) { handleError(err); });
 
-    function sendEmptyRes () { 
-      res.send("<?xml version='1.0' encoding='UTF-8'?><Response></Response>");
+    function sendResponse (msg, msgid) { 
+      var inner = ""
+      if (msg) {
+        sms.log_sent_msg(msg, msgid).then(function () {}).catch(function (err) { handleError(err); });
+        inner = "<Sms>" + msg + "</Sms>";
+      }
+      res.send("<?xml version='1.0' encoding='UTF-8'?><Response>" + inner + "</Response>");
     };
 
     function handleError (err) {
