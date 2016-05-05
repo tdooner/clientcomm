@@ -84,12 +84,15 @@ module.exports = function (app) {
     }).catch(function (err) { handleError(err); });
 
     function sendResponse (msg, msgid) { 
-      var inner = ""
-      if (msg) {
-        sms.log_sent_msg(msg, msgid).then(function () {}).catch(function (err) { handleError(err); });
-        inner = "<Sms>" + msg + "</Sms>";
-      }
-      res.send("<?xml version='1.0' encoding='UTF-8'?><Response>" + inner + "</Response>");
+      if (msg && msgid) {
+        
+        msg = String(msg).replace(/(\r\n|\n|\r)/gm,"");
+        sms.log_sent_msg(msg, msgid).then(function () {
+          var inner = "<Sms>" + msg + "</Sms>";
+          res.send("<?xml version='1.0' encoding='UTF-8'?><Response>" + inner + "</Response>");
+        }).catch(function (err) { handleError(err); });
+
+      } else { res.send("<?xml version='1.0' encoding='UTF-8'?><Response></Response>"); }
     };
 
     function handleError (err) {

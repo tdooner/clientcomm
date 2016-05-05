@@ -9,11 +9,10 @@ module.exports = {
 	logic_tree: function (state, text, msg) {
 		var twiml = new twilio.TwimlResponse();
 		return new Promise (function (fulfill, reject) {
+			text = text.replace("-Sent free from TextNow.com", "");
+			var name = text.trim().split(" ");
 
 			if (state == "initiate-resp") {
-				text = text.replace("-Sent free from TextNow.com", "");
-				var name = text.trim().split(" ");
-				
 				if (name.length > 1) {
 					var first = name[0];
 					var last = name[name.length - 1];
@@ -48,8 +47,7 @@ module.exports = {
 							// we got more than one result
 							} else {
 								var st = "cmname-" + first + "-" + last;
-								fulfill({state: st, msg: "Thanks, " + name + ". Can you also send the name of your case manager's first and last name, for example: SARAH MCKINSEY. Just the first name alone is also okay."});
-
+								fulfill({state: st, msg: "Thanks, " + text + ". Can you also send the first and last name of your case manager, for example: SARAH MCKINSEY. Just the first name alone is also okay."});
 							}
 							
 						} else { reject("Function logic_tree failed to return row values correctly.") };
@@ -66,7 +64,7 @@ module.exports = {
 												"%') AND active = TRUE AND cm IN (SELECT cms.cmid FROM cms WHERE LOWER(first) LIKE LOWER('%" + 
 												cm_first + "%') AND LOWER(last) LIKE LOWER('%" + cm_last + 
 												"%') AND cms.cmid IN (SELECT clients.cm FROM clients WHERE LOWER(first) LIKE LOWER('%" + 
-												cl_first + "%') AND LOWER(last) LIKE LOWER('%" + cl_last"%') AND active = TRUE));";
+												cl_first + "%') AND LOWER(last) LIKE LOWER('%" + cl_last + "%') AND active = TRUE));";
 
 				db.raw(rawQuery).then(function (res) {
 
