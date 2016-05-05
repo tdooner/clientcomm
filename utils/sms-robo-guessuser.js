@@ -11,7 +11,6 @@ module.exports = {
 		return new Promise (function (fulfill, reject) {
 
 			if (state == "initiate-resp") {
-
 				text = text.replace("-Sent free from TextNow.com", "");
 				var name = text.trim().split(" ");
 				
@@ -40,20 +39,16 @@ module.exports = {
 									var d = new Date();
 									var ccName = "New Contact Method on " + String(d.getMonth() + 1) + "/" + d.getDate();
 									var rawQuery3 = "INSERT INTO commconns (client, comm, name, created) VALUES (" + cl + ", (SELECT commid FROM comms WHERE comms.commid = (SELECT msgs.comm FROM msgs WHERE msgs.msgid = " + msg + ") LIMIT 1), '" + ccName + "', now())";
-									console.log("rawQuery3", rawQuery3);
 									db.raw(rawQuery3).then(function (success) {
 										fulfill({state: false, msg: "Thanks! We have added this number to your contacts and forwarded the message on to your case manager."});
 
 									}).catch(function (err) { reject(err); });
 								}).catch(function (err) { reject(err); });
 
-								// need to do 2 things:
-								// 1 update convo
-								// 2 create a comm conn to the client
-
 							// we got more than one result
 							} else {
-								console.log("More than one result.")
+								var st = "cmname-" + first + "-" + last;
+								fulfill({state: st, msg: "Thanks, " + name + ". Can you also send the name of your case manager's first and last name, for example: SARAH MCKINSEY. Just the first name alone is also okay."});
 
 							}
 							
@@ -61,10 +56,44 @@ module.exports = {
 					}).catch(function (err) { reject(err); });
 				} else { fulfill({state: "initiate-resp", msg: "Please provide a first & last name, separated by a space. Example: JANE DOE"}); }
 
-			} else {
+			} else if (state.indexOf("cmname-") == 0 && state.split("-").length) {
+				var cl_first = state.split("-")[1];
+				var cl_last = state.split("-")[2];
+				var cm_first = name[0];
+				var cm_last = name.length > 1 ? name[name.length - 1] : "";
+				var rawQuery = "SELECT * FROM clients WHERE LOWER(first) LIKE LOWER('%" + 
+												cl_first + "%') AND LOWER(last) LIKE LOWER('%" + cl_last + 
+												"%') AND active = TRUE AND cm IN (SELECT cms.cmid FROM cms WHERE LOWER(first) LIKE LOWER('%" + 
+												cm_first + "%') AND LOWER(last) LIKE LOWER('%" + cm_last + 
+												"%') AND cms.cmid IN (SELECT clients.cm FROM clients WHERE LOWER(first) LIKE LOWER('%" + 
+												cl_first + "%') AND LOWER(last) LIKE LOWER('%" + cl_last"%') AND active = TRUE));";
 
-			}
+				db.raw(rawQuery).then(function (res) {
 
+					// we are successful and have found a case manager
+					if (res.hasOwnProperty("rows") && res.rows.length == 1) { 
+						var cm = res.rows[0].cm;
+						var cl = res.rows[0].clid
+								
+						// udpate the associated conversation first with the client and case manager ids
+						var rawQuery2 = "UPDATE convos SET cm=" + cm + ", client=" + cl + ", accepted = TRUE WHERE convos.convid = (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid=" + msg + ");";
+						db.raw(rawQuery2).then(function (success) {
+
+							var d = new Date();
+							var ccName = "New Contact Method on " + String(d.getMonth() + 1) + "/" + d.getDate();
+							var rawQuery3 = "INSERT INTO commconns (client, comm, name, created) VALUES (" + cl + ", (SELECT commid FROM comms WHERE comms.commid = (SELECT msgs.comm FROM msgs WHERE msgs.msgid = " + msg + ") LIMIT 1), '" + ccName + "', now())";
+							db.raw(rawQuery3).then(function (success) {
+								fulfill({state: false, msg: "Thanks! We have added this number to your contacts and forwarded the message on to your case manager."});
+
+							}).catch(function (err) { reject(err); });
+						}).catch(function (err) { reject(err); });
+
+
+					} else { fulfill({state: state, msg: "We couldn't find a specific case manager with that name. You can try again with a different name or wait for staff to assist you."}); };
+
+				}).catch(function (err) { reject(err); });
+			
+			} else { reject("Unknown state supplied"); }
 		});
 	}
 
