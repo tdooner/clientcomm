@@ -29,20 +29,8 @@ module.exports = {
 							} else if (res.rows.length == 1) {
 								var person = res.rows[0];
 								var cm = person.cm;
-								var cl = person.clid
-								
-								// udpate the associated conversation first with the client and case manager ids
-								var rawQuery2 = "UPDATE convos SET cm=" + cm + ", client=" + cl + ", accepted = TRUE WHERE convos.convid = (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid=" + msg + ");";
-								db.raw(rawQuery2).then(function (success) {
-
-									var d = new Date();
-									var ccName = "New Contact Method on " + String(d.getMonth() + 1) + "/" + d.getDate();
-									var rawQuery3 = "INSERT INTO commconns (client, comm, name, created) VALUES (" + cl + ", (SELECT commid FROM comms WHERE comms.commid = (SELECT msgs.comm FROM msgs WHERE msgs.msgid = " + msg + ") LIMIT 1), '" + ccName + "', now())";
-									db.raw(rawQuery3).then(function (success) {
-										fulfill({state: false, msg: "Thanks! We have added this number to your contacts and forwarded the message on to your case manager."});
-
-									}).catch(function (err) { reject(err); });
-								}).catch(function (err) { reject(err); });
+								var cl = person.clid;
+								success_update(cm, cl);
 
 							// we got more than one result
 							} else {
@@ -71,26 +59,29 @@ module.exports = {
 					// we are successful and have found a case manager
 					if (res.hasOwnProperty("rows") && res.rows.length == 1) { 
 						var cm = res.rows[0].cm;
-						var cl = res.rows[0].clid
-								
-						// udpate the associated conversation first with the client and case manager ids
-						var rawQuery2 = "UPDATE convos SET cm=" + cm + ", client=" + cl + ", accepted = TRUE WHERE convos.convid = (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid=" + msg + ");";
-						db.raw(rawQuery2).then(function (success) {
-
-							var d = new Date();
-							var ccName = "New Contact Method on " + String(d.getMonth() + 1) + "/" + d.getDate();
-							var rawQuery3 = "INSERT INTO commconns (client, comm, name, created) VALUES (" + cl + ", (SELECT commid FROM comms WHERE comms.commid = (SELECT msgs.comm FROM msgs WHERE msgs.msgid = " + msg + ") LIMIT 1), '" + ccName + "', now())";
-							db.raw(rawQuery3).then(function (success) {
-								fulfill({state: false, msg: "Thanks! We have added this number to your contacts and forwarded the message on to your case manager."});
-
-							}).catch(function (err) { reject(err); });
-						}).catch(function (err) { reject(err); });
+						var cl = res.rows[0].clid;
+						success_update(cm, cl);
 
 					} else { fulfill({state: state, msg: "We couldn't find a specific case manager with that name. You can try again with a different name or wait for staff to assist you."}); };
 
 				}).catch(function (err) { reject(err); });
 			
 			} else { reject("Unknown state supplied"); }
+
+			// udpate the associated conversation first with the client and case manager ids
+			function success_update (cm, cl) {
+				var rawQuery2 = "UPDATE convos SET cm=" + cm + ", client=" + cl + ", accepted = TRUE WHERE convos.convid = (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid=" + msg + ");";
+				db.raw(rawQuery2).then(function (success) {
+
+					var d = new Date();
+					var ccName = "New Contact Method on " + String(d.getMonth() + 1) + "/" + d.getDate();
+					var rawQuery3 = "INSERT INTO commconns (client, comm, name, created) VALUES (" + cl + ", (SELECT commid FROM comms WHERE comms.commid = (SELECT msgs.comm FROM msgs WHERE msgs.msgid = " + msg + ") LIMIT 1), '" + ccName + "', now())";
+					db.raw(rawQuery3).then(function (success) {
+						fulfill({state: false, msg: "Thanks! We have added this number to your contacts and forwarded the message on to your case manager."});
+
+					}).catch(function (err) { reject(err); });
+				}).catch(function (err) { reject(err); });
+			}
 		});
 	}
 
