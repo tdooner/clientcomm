@@ -10,7 +10,7 @@ module.exports = {
 		var twiml = new twilio.TwimlResponse();
 		return new Promise (function (fulfill, reject) {
 			text = text.replace("-Sent free from TextNow.com", "");
-			var name = text.trim().split(" ");
+			var name = text.replace(/["']/g, "").trim().split(" ");
 
 			if (state == "initiate-resp") {
 				if (name.length > 1) {

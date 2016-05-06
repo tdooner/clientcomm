@@ -13,10 +13,10 @@ module.exports = function (app) {
     var tw_sid = req.body.MessageSid;
 
     // just leaving this in for now while we use free service for testing
-    text = text.replace("-Sent free from TextNow.com", "").trim();
+    text = text.replace("-Sent free from TextNow.com", "");
 
     // break the string up into 160 or less char length segments
-    text = text.match(/.{1,159}/g);
+    text = text.replace(/["']/g, "").trim().match(/.{1,159}/g);
     
     sms.process_incoming_msg(from, text, tw_status, tw_sid)
     .then(function (msgs) {
@@ -60,7 +60,7 @@ module.exports = function (app) {
                   if (diff > 4) {
                     // ... but only if it is not a weekend
                     if (d2.getDay() == 6 || d2.getDay() == 0) {
-                      sendResponse("Message received! Because it is the weekend, your case manager may take until the business day to respond. Thanks for your patience.", msg);
+                      sendResponse("Message received! Because it is the weekend, your case manager may take until the next business day to respond. Thanks for your patience.", msg);
                     } else {
                       sendResponse("Message received! As it has been over 4 hours and your case manager has not yet addressed your prior message so we sent them a reminder to get back to you!", msg);
                       // notify the case manager now...
