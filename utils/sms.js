@@ -5,7 +5,7 @@ module.exports = {
 
 	check_new_unknown_msg: function (msg) {
 		return new Promise (function (fulfill, reject) {
-			var rawQuery = "SELECT COUNT(msgs.msgid) FROM msgs WHERE msgs.convo IN (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid = " + msg + ");"
+			var rawQuery = "SELECT COUNT(msgs.msgid) FROM msgs WHERE msgs.convo IN (SELECT convos.convid FROM msgs INNER JOIN convos ON (msgs.convo = convos.convid) WHERE msgs.msgid = " + msg + " AND convos.client IS NULL);"
 			db.raw(rawQuery).then(function (res) { 
 				if (res.hasOwnProperty("rows") && res.rows.length == 1 && res.rows[0].hasOwnProperty("count")) { 
 					var count = Number(res.rows[0].count);
@@ -23,7 +23,7 @@ module.exports = {
 				if (res.hasOwnProperty("rows")) { 
 					if (res.rows.length == 1 && res.rows[0].hasOwnProperty("created")) { fulfill(res.rows[0].created); }
 					else { fulfill(false); }
-				} else { reject("Function check_new_unknown_msg failed to return row values correctly.") };
+				} else { reject("Function check_last_unread failed to return row values correctly.") };
 			}).catch(function (err) { reject(err); });
 		});
 	},
