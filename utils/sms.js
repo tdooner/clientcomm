@@ -145,7 +145,7 @@ module.exports = {
 	    			rawQuery += "SELECT msgs.convo FROM msgs ";
 	    			rawQuery += "WHERE msgs.convo IN ( ";
 	    			rawQuery += "SELECT convid FROM convos ";
-	    			rawQuery += "WHERE client IS NULL AND COMM = " + commid + " )";
+	    			rawQuery += "WHERE client IS NULL AND comm = " + commid + " )";
 	    			rawQuery += "GROUP BY msgs.convo ) ";
 						rawQuery += "AND convos.open = TRUE;";
 	    	d = db.raw(rawQuery);
