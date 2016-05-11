@@ -1,0 +1,89 @@
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	font-family: Arial, sans-serif;
+  -webkit-font-smoothing:antialiased;
+	margin: 0px;
+	background-color: #C8C7C7;
+	color: #FFF;
+}
+
+.contents {
+	width: 850px;
+	padding: 80px 25px 10px 25px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #F4F4F4;
+	
+	min-height: 100%;
+	min-height: -moz-calc(100% - 90px);
+	min-height: -webkit-calc(100% - 90px);
+	min-height: calc(100% - 90px);
+}
+
+.contents .card {
+	width: 300px;
+	padding: 110px 150px 80px 150px;
+	background-color: #344289;
+	margin: auto;
+	border-radius: 10px;
+}
+
+.card .logo {
+	font-size: 35px;
+	font-weight: 900;
+	text-align: center;
+	margin-bottom: 60px;
+	color: #2F8CE8;
+}
+
+.card .logo .fa {
+	font-size: 60px;
+}
+
+.card .title {
+	font-size: 30px;
+	text-align: center;
+	font-weight: 100;
+	color: #92C9FF;
+	padding-bottom: 15px;
+}
+
+.card .form-row {
+	padding: 5px 10px 0px 10px;
+}
+
+.card .form-label {
+	font-size: 12px;
+	padding-bottom: 3px;
+}
+
+.card .form-input {
+	width: 276px;
+	height: 31px;
+	border: 2px solid #2F8CE8;
+	border-radius: 7px;
+}
+
+.card .form-submit {
+	border: 0px;
+	border-radius: 7px;
+	width: 150px;
+	height: 35px;
+	margin-top: 32px;
+	margin-left: 75px;
+	margin-right: 75px;
+	background-color: #4A90E2;
+	color: #FFF;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.card .form-submit:hover {
+	background-color: #92C9FF;
+	color: #344289;
+}

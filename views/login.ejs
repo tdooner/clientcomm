@@ -1,29 +1,32 @@
-<% include header %>
+<% include header-card %>
 
-<div class="infoblock">
+<div class="card">
+
+	<div class="logo">
+		<i class="fa fa-comments"></i><br>
+		ClientComm
+	</div>
+
+	<div class="title">
+		Login
+	</div>
+
 	<form method="post">
 
-		<div class="infoblock-label">
-			Account Login
+		<div class="form-row">
+			<div class="form-label"> Email </div>
+			<input class="form-input" type="text" name="email" required>
 		</div>
 
-		<div class="infoblock-body">
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> email </div>
-				<input class="infoblock-input" type="text" name="email" placeholder="Email" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> password </div>
-				<input class="infoblock-input" type="password" name="pass" placeholder="Password">
-			</div>
-
-			<input type="submit" class="button" value="Submit">
-
+		<div class="form-row">
+			<div class="form-label"> Password </div>
+			<input class="form-input" type="password" name="pass" required>
 		</div>
+
+		<input type="submit" class="form-submit" value="Submit">
 
 	</form>
+
 </div>
 
 
