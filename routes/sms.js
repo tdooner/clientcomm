@@ -29,9 +29,6 @@ module.exports = function (app) {
       } else {
         var msg = msgs[0];
         sms.check_new_unknown_msg(msg).then(function (isNew) {
-
-          console.log("isNew: ", isNew);
-          console.log("ccstate: ", req.session.ccstate);
           
           // if new, then initiate figuring out who person is
           if (isNew) {
@@ -66,7 +63,6 @@ module.exports = function (app) {
                       // notify the case manager now...
                     }
                   } else { 
-                    console.log("Everything fine, a normal messsage.");
                     sendResponse(); 
                   }
 

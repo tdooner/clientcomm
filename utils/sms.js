@@ -50,14 +50,14 @@ module.exports = {
 				if (device.length > 0) {
 					commid = device[0];
 					sms.get_clients(commid).then(get_or_create_convos).catch(errReject)
-				} else { errReject("Failed to get clients."); }
+				} else { errReject("No devices were found or created for this number."); }
 			};
 
 			// step 3: find open conversations for each client
 			function get_or_create_convos (clients) {
 				if (clients.length > 0) {
 					sms.get_or_create_convos(clients, commid, from).then(register_message).catch(errReject)
-				} else { errReject("Failed to get or create a conversation."); }
+				} else { errReject("Failed to produce or create at least one client object in function get_clients."); }
 			};
 
 			// step 4: add messages to those conversations
@@ -68,9 +68,7 @@ module.exports = {
 			};
 
 			// error handling
-			function errReject (err) {
-				reject(String(err));
-			};
+			function errReject (err) { reject(String(err)); };
 
 		});
 	},
@@ -110,35 +108,26 @@ module.exports = {
 				  	"description": description
 				  }).then(function (commid) {
 						fulfill(commid);
-				  }).catch(function (err) {
-					  reject(err);
-					});
+				  }).catch(function (err) { reject(err); });
 		  	}
 
-		  }).catch(function (err) {
-			  reject(err);
-			});
+		  }).catch(function (err) { reject(err); });
 		});
 	},
 	
 	get_clients: function (commid) {
     return new Promise (function (fulfill, reject) {
-	    db("clients")
-	    .innerJoin("commconns", "commconns.client", "clients.clid")
-	    .innerJoin("comms", "commconns.comm", "comms.commid")
-	    .innerJoin("cms", "clients.cm", "cms.cmid")
-	    .whereNull("commconns.retired")
-	    .andWhere("commconns.comm", commid)
-	    .then(function (clients) {
-	    	clients = clients.map(function (ea) {
-	    		return {clid: ea.clid, cmid: ea.cm};
-	    	});
+    	var rawQuery = "SELECT clients.clid, clients.cm FROM clients JOIN (SELECT * FROM commconns WHERE commconns.comm = " + commid + 
+    									") AS commconns ON (commconns.client = clients.clid AND commconns.comm = " + commid + 
+    									" AND commconns.retired IS NULL) GROUP BY clid, cm;";
 
-	    	if (clients.length == 0) { clients = [{clid: null, cmid: null}]; }
+    	db.raw(rawQuery).then(function (res) {
+    		var clients = res.rows.map(function (ea) { return {clid: ea.clid, cmid: ea.cm}; });
+    		if (clients.length == 0) { clients = [{clid: null, cmid: null}]; }
+    		console.log("Cient", clients, commid);
 	    	fulfill(clients);
-	    }).catch(function (err) {
-			  reject(err);
-			});
+
+    	}).catch(function (err) { reject(err); });
 		});
 	},
 	
