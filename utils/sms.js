@@ -141,13 +141,9 @@ module.exports = {
 	    // search for null values as well is null is in list as a convo type
 	    if (cls.indexOf(null) > -1 && cls.length == 1) {
 	    	raw = true;
-	    	var rawQuery =  "SELECT * FROM convos WHERE convos.convid IN ( ";
-	    			rawQuery += "SELECT msgs.convo FROM msgs ";
-	    			rawQuery += "WHERE msgs.convo IN ( ";
-	    			rawQuery += "SELECT convid FROM convos ";
-	    			rawQuery += "WHERE client IS NULL AND comm = " + commid + " )";
-	    			rawQuery += "GROUP BY msgs.convo ) ";
-						rawQuery += "AND convos.open = TRUE;";
+	    	var rawQuery =  "SELECT * FROM convos WHERE convos.convid IN (SELECT msgs.convo FROM msgs WHERE msgs.convo IN " + 
+	    									" (SELECT convos.convid FROM convos WHERE client IS NULL AND convos.open = TRUE) AND msgs.comm = " + commid + 
+	    									" GROUP BY msgs.convo) AND convos.open = TRUE;";
 	    	d = db.raw(rawQuery);
 
 	    } else {
@@ -227,12 +223,15 @@ module.exports = {
 	},
 
 	register_message: function (text, commid, convos, tw_status, tw_sid) {
+		console.log("commid: ", commid);
+		console.log("convos: ", convos);
+
     return new Promise (function (fulfill, reject) {
     	var insertList = [];
     	for (var i = 0; i < convos.length; i++) {
     		var convo = convos[i];
-    		for (var ii = 0; ii < text.length; ii++) {
-	    		var textPart = text[ii];
+    		for (var txt_i = 0; txt_i < text.length; txt_i++) {
+	    		var textPart = text[txt_i];
 
 	    		var insertObj = {
 	    			"convo": convo,
@@ -246,6 +245,8 @@ module.exports = {
 	    		insertList.push(insertObj);    			
     		}
     	}
+
+    	console.log("insertList", insertList);
 
 	    db("msgs")
 	    .insert(insertList)

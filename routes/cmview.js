@@ -525,6 +525,7 @@ module.exports = function (app, passport) {
           }, function (err, msg) {
             if (err) {
               console.log('Oops! There was an error.', err);
+              res.redirect("/500");
             } else {
               db("msgs")
               .insert({
@@ -545,23 +546,13 @@ module.exports = function (app, passport) {
                   req.flash("success", "Sent message.");
                   res.redirect(redirect_loc)
 
-                }).catch(function (err) {
-                  res.redirect("/500");
-                })
-
-              }).catch(function (err) {
-                res.redirect("/500");
-              });
-
+                }).catch(function (err) { res.redirect("/500"); });
+              }).catch(function (err) { res.redirect("/500"); });
             }
-          });          
-        } else {
-          res.redirect("/404");
-        }
+          });
 
-      }).catch(function (err) {
-        res.redirect("/500");
-      })
+        } else { res.redirect("/500"); }
+      }).catch(function (err) { res.redirect("/500"); });
 
     }
   });
