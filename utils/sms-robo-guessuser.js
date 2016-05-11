@@ -23,7 +23,8 @@ module.exports = {
 
 							// we found no one
 							if (res.rows.length == 0) {
-								fulfill({state: "initiate-resp", msg: "Sorry we do not have the name " + name + " in the system. Try again with a different name or wait for a case manager to assist you."});
+								var nameConcat = name.join(" ");
+								fulfill({state: "initiate-resp", msg: "Sorry we do not have the name " + nameConcat + " in the system. Try again with a different name or wait for a case manager to assist you."});
 
 							// we got the person, we know who it is
 							} else if (res.rows.length == 1) {
