@@ -7,7 +7,7 @@ var isLoggedIn = pass.isLoggedIn;
 module.exports = function (app, db, utils, passport) {
 
 	app.get("/", function (req, res) {
-		res.render("index");
+		res.redirect("/login");
 	});
 
 	app.get("/login", function (req, res) {
