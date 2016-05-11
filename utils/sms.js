@@ -206,19 +206,13 @@ module.exports = {
 					    .returning("convid")
 					    .then(function (convos) {
 					    	fulfill(convos);
-					    }).catch(function (err) {
-							  reject(err);
-							});
+					    }).catch(function (err) { reject(err); });
 						}
 
-			    }).catch(function (err) {
-					  reject(err);
-					});
+			    }).catch(function (err) { reject(err); });
 
 	    	}
-	    }).catch(function (err) {
-			  reject(err);
-			});
+	    }).catch(function (err) { reject(err); });
 		});
 	},
 

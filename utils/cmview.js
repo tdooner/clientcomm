@@ -20,14 +20,15 @@ module.exports = {
 
                 if (convo.cm == cmid) {
 
-                  db.select("msgs.content", "msgs.inbound", "msgs.read", "msgs.tw_status", "msgs.created", "comms.type", "comms.value", "commconns.name")
-                  .from("msgs")
-                  .innerJoin("comms", "comms.commid", "msgs.comm")
-                  .innerJoin("commconns", "commconns.comm", "msgs.comm")
-                  .where("msgs.convo", convid)
-                  .where("commconns.client", clid)
-                  .orderBy("msgs.created", "asc")
-                  .then(function (msgs) {
+                  var rawQuery = "SELECT msgs.content, msgs.inbound, msgs.read, msgs.tw_status, msgs.created, comms.type, comms.value, commconns.name FROM msgs " + 
+                                  " JOIN (SELECT commconnid, comm, client, name FROM commconns WHERE commconns.commconnid IN (SELECT MIN(commconnid) FROM commconns " + 
+                                  " WHERE commconns.comm IN (SELECT msgs.comm FROM msgs WHERE msgs.convo = " + convid + " AND commconns.client = " + clid + " GROUP BY msgs.comm) " + 
+                                  " GROUP BY client, comm, client)) AS commconns ON (msgs.comm = commconns.comm) " +
+                                  " LEFT JOIN comms ON (comms.commid = commconns.comm) WHERE msgs.convo = " + convid + " ORDER BY msgs.created ASC;";
+console.log("raw query: ", rawQuery);
+                  db.raw(rawQuery).then(function (msgs) { 
+
+console.log("msgs: ", msgs);
 
                     db("comms")
                     .innerJoin("commconns", "comms.commid", "commconns.comm")
@@ -37,39 +38,47 @@ module.exports = {
                       fulfill({
                         cl: client,
                         convo: convo,
-                        msgs: msgs,
+                        msgs: msgs.rows,
                         comms: comms
                       });
                       
-                    }).catch(function (err) {
-                      reject("500");
-                    })
+                    }).catch(function (err) { reject("500"); });
+                  }).catch(function (err) { reject(err); });
 
-                  }).catch(function (err) {
-                    reject("500")
-                  })
+                  // db.select("msgs.content", "msgs.inbound", "msgs.read", "msgs.tw_status", "msgs.created", "comms.type", "comms.value", "commconns.name")
+                  // .from("msgs")
+                  // .innerJoin("comms", "comms.commid", "msgs.comm")
+                  // .innerJoin("commconns", "commconns.comm", "msgs.comm")
+                  // .where("msgs.convo", convid)
+                  // .where("commconns.client", clid)
+                  // .orderBy("msgs.created", "asc")
+                  // .then(function (msgs) {
 
-                } else { 
-                  // actually not allowed to view
-                  reject("404");
-                }
+                  //   db("comms")
+                  //   .innerJoin("commconns", "comms.commid", "commconns.comm")
+                  //   .where("commconns.client", clid)
+                  //   .then(function (comms) {
 
-              } else { 
+                  //     fulfill({
+                  //       cl: client,
+                  //       convo: convo,
+                  //       msgs: msgs,
+                  //       comms: comms
+                  //     });
+                      
+                  //   }).catch(function (err) { reject("500"); });
+                  // }).catch(function (err) { reject("500"); });
+
                 // actually not allowed to view
-                reject("404");
-              }
+                } else { reject("404"); }
+
+              // actually not allowed to view
+              } else { reject("404"); }
             });
 
-          } else {
-            reject("404");
-          }
-
-        } else {
-          reject("404");
-        }
-	    }).catch(function (err) {
-			  reject(err);
-			});
+          } else { reject("404"); }
+        } else { reject("404"); }
+	    }).catch(function (err) { reject(err); });
 		});
 	},
 

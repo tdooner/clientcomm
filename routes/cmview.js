@@ -478,11 +478,8 @@ module.exports = function (app, passport) {
         }).catch(function (err) { res.redirect("/500"); })
 
       }).catch(function (err) {
-        if (err == "404") {
-          res.redirect("/404");
-        } else {
-          res.redirect("/500");
-        }
+        if (err == "404") { res.redirect("/404"); } 
+        else { res.redirect("/500"); }
       })
 
     }
