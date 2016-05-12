@@ -62,20 +62,29 @@
 					</td>
 
 					<td>
-						<% if (clients[i].active) { %>
-							<span class="fa-stack fa-lg">
-								<i class="fa fa-circle fa-stack-2x"></i>
-								<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
-							</span>
+						<% if (clients[i].clid !== null && clients[i].active) { %>
+							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+						<% } else { %>
+							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
 						<% } %>
 
-						Upcoming Foobar
+							<% if (clients[i].active) { %>
+								<span class="fa-stack fa-lg">
+									<i class="fa fa-circle fa-stack-2x"></i>
+									<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+								</span>
+							<% } %>
 
-						<% if (clients[i].msg_ct > 0) { %>
-							<span class="badge">
-								<%= clients[i].msg_ct %> unread
-							</span>
-						<% } %>
+							<% var subj = (clients[i].subject !== null && clients[i].subject.length) < 35 ? clients[i].subject : clients[i].subject.substr(0,35) + "..." %>
+							<%= subj %>
+
+							<% if (clients[i].msg_ct > 0) { %>
+								<span class="badge">
+									<%= clients[i].msg_ct %> unread
+								</span>
+							<% } %>
+
+						</a>
 					</td>
 					
 					<td>

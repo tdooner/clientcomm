@@ -59,14 +59,14 @@ module.exports = function (app, passport) {
         if (thisIsUser || req.user.superuser) {
           var rawQuery = "SELECT " +
                             "count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, " +
-                            "convos.open, convos.subject, " +
+                            "convos.open, convos.subject, convos.convid, " +
                             "clients.*  " +
                           "FROM clients " + 
                           "LEFT JOIN (SELECT * FROM convos WHERE convos.updated IN (SELECT MAX(convos.updated) FROM convos WHERE cm = " + cmid + " GROUP BY client) " + 
                             "AND cm = " + cmid + ") AS convos ON (convos.client=clients.clid) " +
                           "LEFT JOIN msgs ON (msgs.convo=convos.convid) " +
                           "WHERE clients.cm = " + cmid + " " +
-                          "GROUP BY clients.clid, convos.open, convos.subject ORDER BY last ASC;";
+                          "GROUP BY clients.clid, convos.open, convos.subject, convos.convid ORDER BY last ASC;";
 
           console.log("rawQuery", rawQuery);
           
