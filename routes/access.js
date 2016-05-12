@@ -10,6 +10,11 @@ module.exports = function (app, db, utils, passport) {
 		res.redirect("/login");
 	});
 
+	app.get("/login-fail", function (req, res) {
+		req.flash("warning", "Email password combination did not work.");
+		res.redirect("/login");
+	});
+
 	app.get("/login", function (req, res) {
 		// check if the user is already logged in
 		if (req.hasOwnProperty("user")) {
@@ -21,7 +26,7 @@ module.exports = function (app, db, utils, passport) {
 
   app.post("/login", passport.authenticate("local-login", {
       successRedirect: "/cms",
-      failureRedirect: "/login"
+      failureRedirect: "/login-fail"
     })
   );
 

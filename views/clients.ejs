@@ -1,4 +1,69 @@
-<% include header %>
+<% include header-base %>
+<% include header-navbar %>
+<div class="contents">
+
+	<div class="sort-opts">
+		<div class="toggle selected"> Current Clients </div>
+		<div class="toggle"> Archived </div>
+	</div>
+
+	<div class="newclient"> 
+		<i class="fa fa-user-plus"></i> 
+		New Client 
+	</div>
+
+	<div class="title">
+		Client List
+	</div>
+
+	<table class="cl-list">
+		<tr>
+			<th>Client</th>
+			<th>Conversation</th>
+			<th>Last Activity</th>
+			<th>Archive</th>
+		</tr>
+
+
+		<% if (clients.length > 0) { %>
+			<% for (var i = 0; i < clients.length; i++ ) { %>
+
+				<tr>
+					<td>
+						<i class="fa fa-user"></i>
+						<%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
+					</td>
+					<td>
+						<span class="fa-stack fa-lg">
+							<i class="fa fa-circle fa-stack-2x"></i>
+							<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+						</span>
+						Upcoming Foobar
+					</td>
+					<td>
+						<% try { %>
+							<% var d = new Date(clients[i].updated); %>
+							<%= [d.getMonth()+1, d.getDate(), d.getYear() - 100].join("/") %>
+						<% } catch (e) { %>
+							Unknown
+						<% } %>
+					</td>
+					<td>
+						<i class="fa fa-archive"></i>
+					</td>
+				</tr>
+
+			<% } %>
+		<% } %>
+
+	</table>
+
+
+
+
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
 
 <div class="right-nav">
 	<div class="nav-btn">
@@ -18,7 +83,7 @@
 
 <div class="themeblock">
 	<div class="themeblock-label">
-		Clients
+		ClientsSS
 	</div>
 	<div class="themeblock-body">
 
@@ -106,4 +171,5 @@
 	</div>
 </div>
 
+</div>
 <% include footer %>

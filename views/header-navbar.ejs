@@ -1,0 +1,23 @@
+
+<div class="navbar">
+	
+	<div class="username">
+		<i class="fa fa-home"></i>
+		<%= user.first %> <%= user.middle %> <%= user.last %>
+	</div>
+	
+	<div class="nav-right">
+	<a href="/logout">
+		<small>Logout</small>
+		<i class="fa fa-times"></i>
+	</a>
+	</div>
+	
+	<div class="nav-right">
+	<a href="/cms/<%= user.cmid %>">
+		<small>Check for Messages</small>
+		<i class="fa fa-refresh"></i>
+	</a>
+	</div>
+
+</div>

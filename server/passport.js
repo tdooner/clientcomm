@@ -49,9 +49,7 @@ module.exports = function (passport) {
 
 						// fails because bad password
 						} else { return done(null, false); }
-
 					} else { return done(null, false); }
-
 				}).catch(function (err) { return done(err); });
 			});
 		})
