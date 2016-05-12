@@ -57,11 +57,18 @@ module.exports = function (app, passport) {
 
         // user trying to view their own profile
         if (thisIsUser || req.user.superuser) {
-          var rawQuery = "SELECT count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, clients.* FROM clients ";
-          rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
-          rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
-          rawQuery += "WHERE clients.cm=" + cmid + " AND clients.active=TRUE ";
-          rawQuery += "GROUP BY clients.clid ORDER BY last ASC";
+          var rawQuery = "SELECT " +
+                            "count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, " +
+                            "convos.open, convos.subject, " +
+                            "clients.*  " +
+                          "FROM clients " + 
+                          "LEFT JOIN (SELECT * FROM convos WHERE convos.updated IN (SELECT MAX(convos.updated) FROM convos WHERE cm = " + cmid + " GROUP BY client) " + 
+                            "AND cm = " + cmid + ") AS convos ON (convos.client=clients.clid) " +
+                          "LEFT JOIN msgs ON (msgs.convo=convos.convid) " +
+                          "WHERE clients.cm = " + cmid + " " +
+                          "GROUP BY clients.clid, convos.open, convos.subject ORDER BY last ASC;";
+
+          console.log("rawQuery", rawQuery);
           
           db.raw(rawQuery).then(function (clients) {
 
@@ -231,6 +238,26 @@ module.exports = function (app, passport) {
         res.redirect(redirect_loc);
       }).catch(function (err) { console.log(err); res.redirect("/500") })
     }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/restore", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid;
+
+    db("clients").where("clid", req.params.clid)
+    .update({active: true}).then(function (success) {
+      req.flash("success", "Restored client.");
+      res.redirect(redirect_loc);
+    }).catch(function (err) { console.log(err); res.redirect("/500") })
+  });
+
+  app.post("/cms/:cmid/cls/:clid/archive", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid;
+
+    db("clients").where("clid", req.params.clid)
+    .update({active: false}).then(function (success) {
+      req.flash("success", "Archived client.");
+      res.redirect(redirect_loc);
+    }).catch(function (err) { console.log(err); res.redirect("/500") })
   });
 
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 

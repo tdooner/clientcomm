@@ -25,10 +25,8 @@ module.exports = {
                                   " WHERE commconns.comm IN (SELECT msgs.comm FROM msgs WHERE msgs.convo = " + convid + " AND commconns.client = " + clid + " GROUP BY msgs.comm) " + 
                                   " GROUP BY client, comm, client)) AS commconns ON (msgs.comm = commconns.comm) " +
                                   " LEFT JOIN comms ON (comms.commid = commconns.comm) WHERE msgs.convo = " + convid + " ORDER BY msgs.created ASC;";
-console.log("raw query: ", rawQuery);
-                  db.raw(rawQuery).then(function (msgs) { 
 
-console.log("msgs: ", msgs);
+                  db.raw(rawQuery).then(function (msgs) { 
 
                     db("comms")
                     .innerJoin("commconns", "comms.commid", "commconns.comm")
@@ -44,30 +42,6 @@ console.log("msgs: ", msgs);
                       
                     }).catch(function (err) { reject("500"); });
                   }).catch(function (err) { reject(err); });
-
-                  // db.select("msgs.content", "msgs.inbound", "msgs.read", "msgs.tw_status", "msgs.created", "comms.type", "comms.value", "commconns.name")
-                  // .from("msgs")
-                  // .innerJoin("comms", "comms.commid", "msgs.comm")
-                  // .innerJoin("commconns", "commconns.comm", "msgs.comm")
-                  // .where("msgs.convo", convid)
-                  // .where("commconns.client", clid)
-                  // .orderBy("msgs.created", "asc")
-                  // .then(function (msgs) {
-
-                  //   db("comms")
-                  //   .innerJoin("commconns", "comms.commid", "commconns.comm")
-                  //   .where("commconns.client", clid)
-                  //   .then(function (comms) {
-
-                  //     fulfill({
-                  //       cl: client,
-                  //       convo: convo,
-                  //       msgs: msgs,
-                  //       comms: comms
-                  //     });
-                      
-                  //   }).catch(function (err) { reject("500"); });
-                  // }).catch(function (err) { reject("500"); });
 
                 // actually not allowed to view
                 } else { reject("404"); }

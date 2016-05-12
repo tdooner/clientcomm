@@ -144,8 +144,27 @@
 	background-color: #FFF;
 }
 
+.cl-list tr.archive {
+	background-color: #898989;
+}
+
 .cl-list tr:hover {
 	background-color: #FBFBFB;
+}
+
+.cl-list tr.archive:hover {
+	background-color: #646464;
+}
+
+.cl-list tr .badge {
+	font-size: 10px;
+	line-height: 18px;
+	vertical-align: middle;
+	background-color: red;
+	color: #FFF;
+	padding: 5px 10px 5px 10px;
+	border-radius: 7px;
+	margin-left: 10px;
 }
 
 .cl-list th, .cl-list td {
@@ -171,12 +190,17 @@
 
 .cl-list th:nth-child(4), .cl-list td:nth-child(4) {
 	width: 30px;
+	text-align: center;
 }
 
-.cl-list td:nth-child(4) {
-	text-align: center;
-	color: #D8D8D8;
+.cl-list th:nth-child(4) button, .cl-list td:nth-child(4) button {
+	border: 0px;
+	background-color: rgba(255,255,255,0);
+	font-size: 18px;
+	color: #b3b3b3;
+	cursor: pointer;
 }
+
 
 .cl-list th {
 	height: 17px;
@@ -191,6 +215,11 @@
 	height: 55px;
 	font-size: 18px;
 	color: #0ADA34;
+}
+
+
+.cl-list tr.archive td {
+	color: #FFF;
 }
 
 .cl-list td .fa-stack {

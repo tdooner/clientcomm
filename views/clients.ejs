@@ -1,10 +1,26 @@
 <% include header-base %>
 <% include header-navbar %>
+
+<% function formatAMPM (date) { %>
+<%   var hours = date.getHours(); %>
+<%   var minutes = date.getMinutes(); %>
+<%   var ampm = hours >= 12 ? 'PM' : 'AM'; %>
+<%   hours = hours % 12; %>
+<%   hours = hours ? hours : 12; %>
+<%   minutes = minutes < 10 ? '0'+minutes : minutes; %>
+<%   var strTime = hours + ':' + minutes + ' ' + ampm; %>
+<%   return strTime; %>
+<% } %>
+
 <div class="contents">
 
 	<div class="sort-opts">
-		<div class="toggle selected"> Current Clients </div>
-		<div class="toggle"> Archived </div>
+		<div class="toggle selected" id="current_tag" onclick="showCurrent()">
+			Current Clients
+		</div>
+		<div class="toggle" id="archive_tag" onclick="showArchive()">
+			Archived
+		</div>
 	</div>
 
 	<div class="newclient"> 
@@ -17,40 +33,72 @@
 	</div>
 
 	<table class="cl-list">
-		<tr>
+
+		<tr class="current">
 			<th>Client</th>
 			<th>Conversation</th>
 			<th>Last Activity</th>
 			<th>Archive</th>
 		</tr>
 
+		<tr class="archive">
+			<th>Client</th>
+			<th>Last Conversation</th>
+			<th>Last Activity</th>
+			<th>Restore</th>
+		</tr>
+
 
 		<% if (clients.length > 0) { %>
 			<% for (var i = 0; i < clients.length; i++ ) { %>
 
-				<tr>
+				<tr class="<%= clients[i].active ? 'current' : 'archive' %>">
+
 					<td>
-						<i class="fa fa-user"></i>
-						<%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
+						<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
+							<i class="fa fa-user"></i>
+							<%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
+						</a>
 					</td>
+
 					<td>
-						<span class="fa-stack fa-lg">
-							<i class="fa fa-circle fa-stack-2x"></i>
-							<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
-						</span>
+						<% if (clients[i].active) { %>
+							<span class="fa-stack fa-lg">
+								<i class="fa fa-circle fa-stack-2x"></i>
+								<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+							</span>
+						<% } %>
+
 						Upcoming Foobar
+
+						<% if (clients[i].msg_ct > 0) { %>
+							<span class="badge">
+								<%= clients[i].msg_ct %> unread
+							</span>
+						<% } %>
 					</td>
+					
 					<td>
 						<% try { %>
 							<% var d = new Date(clients[i].updated); %>
-							<%= [d.getMonth()+1, d.getDate(), d.getYear() - 100].join("/") %>
+							<%= [d.getMonth()+1, d.getDate()].join("/") + " at " + formatAMPM(d) %>
 						<% } catch (e) { %>
 							Unknown
 						<% } %>
 					</td>
+					
 					<td>
-						<i class="fa fa-archive"></i>
+						<% if (clients[i].active) { %>
+							<form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
+								<button type="submit"><i class="fa fa-archive"></i></button>
+							</form>
+						<% } else { %>
+							<form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/restore">
+								<button type="submit"><i class="fa fa-undo"></i></button>
+							</form>
+						<% } %>
 					</td>
+
 				</tr>
 
 			<% } %>
@@ -172,4 +220,23 @@
 </div>
 
 </div>
+
+
+
+
+<script type="text/javascript">
+	function showCurrent () {
+		$("#current_tag").addClass("selected");
+		$("#archive_tag").removeClass("selected");
+		$(".archive").hide();
+		$(".current").show();
+	};
+	function showArchive () {
+		$("#current_tag").removeClass("selected");
+		$("#archive_tag").addClass("selected");
+		$(".archive").show();
+		$(".current").hide();
+	};
+	showCurrent();
+</script>
 <% include footer %>
