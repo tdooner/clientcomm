@@ -156,6 +156,10 @@
 	background-color: #646464;
 }
 
+.cl-list tr.nonew td {
+	color: #898989;
+}
+
 .cl-list tr .badge {
 	font-size: 10px;
 	line-height: 18px;

@@ -52,7 +52,7 @@
 		<% if (clients.length > 0) { %>
 			<% for (var i = 0; i < clients.length; i++ ) { %>
 
-				<tr class="<%= clients[i].active ? 'current' : 'archive' %>">
+				<tr class="<%= clients[i].active ? 'current' : 'archive' %> <%= clients[i].active && !clients[i].open ? 'nonew' : '' %>">
 
 					<td>
 						<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
@@ -69,13 +69,20 @@
 						<% } %>
 
 							<% if (clients[i].active) { %>
-								<span class="fa-stack fa-lg">
-									<i class="fa fa-circle fa-stack-2x"></i>
-									<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
-								</span>
+								<% if (clients[i].open) { %>
+									<span class="fa-stack fa-lg">
+										<i class="fa fa-circle fa-stack-2x"></i>
+										<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+									</span>
+								<% } else { %>
+									<span class="fa-stack fa-lg">
+										<i class="fa fa-comments fa-stack-1x"></i>
+									</span>
+								<% } %>
 							<% } %>
 
 							<% var subj = (clients[i].subject !== null && clients[i].subject.length) < 35 ? clients[i].subject : clients[i].subject.substr(0,35) + "..." %>
+							<% if (!subj) { subj = "No conversations." } %>
 							<%= subj %>
 
 							<% if (clients[i].msg_ct > 0) { %>
@@ -88,12 +95,20 @@
 					</td>
 					
 					<td>
-						<% try { %>
-							<% var d = new Date(clients[i].updated); %>
-							<%= [d.getMonth()+1, d.getDate()].join("/") + " at " + formatAMPM(d) %>
-						<% } catch (e) { %>
-							Unknown
+						<% if (clients[i].clid !== null && clients[i].active) { %>
+							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+						<% } else { %>
+							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
 						<% } %>
+
+							<% try { %>
+								<% var d = new Date(clients[i].updated); %>
+								<%= [d.getMonth()+1, d.getDate()].join("/") + " at " + formatAMPM(d) %>
+							<% } catch (e) { %>
+								Unknown
+							<% } %>
+
+						</a>
 					</td>
 					
 					<td>

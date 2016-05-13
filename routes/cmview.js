@@ -36,7 +36,7 @@ module.exports = function (app, passport) {
       res.redirect("/admin");
     } else {
       var cmid = req.user.cmid;
-      res.redirect("/cms/" + cmid);
+      res.render("cmlanding", {});
     }
   });
 
