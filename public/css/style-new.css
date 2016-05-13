@@ -59,10 +59,11 @@
 }
 
 .card .form-input {
-	width: 276px;
-	height: 31px;
+	width: 260px;
+	height: 21px;
 	border: 2px solid #2F8CE8;
 	border-radius: 7px;
+	padding: 5px 8px 5px 8px;
 }
 
 .card textarea.form-input {

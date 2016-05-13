@@ -343,7 +343,7 @@ module.exports = function (app, passport) {
             value: value,
             description: description
           }).returning("commid").then(function (commids) {
-            
+
             var commid = commids[0];
 
             db("commconns").insert({
@@ -504,11 +504,55 @@ module.exports = function (app, passport) {
             subject: subject,
             open: true,
             accepted: true
-          }).returning("convids").then(function (success) {
+          }).returning("convid").then(function (convids) {
 
+            var convids = convids[0];
             var content = req.body.content;
             var commid = req.body.commid;
 
+            db("comms")
+            .where("commid", commid)
+            .limit(1)
+            .then(function (comms) {
+              
+              if (comms.length > 0) {
+                var comm = comms[0];
+
+                twClient.sendSms({
+                  to: comm.value,
+                  from: TWILIO_NUM,
+                  body: content
+                }, function (err, msg) {
+                  if (err) {
+                    console.log('Oops! There was an error.', err);
+                    res.redirect("/500");
+                  } else {
+                    db("msgs")
+                    .insert({
+                      convo: convid,
+                      comm: commid,
+                      content: content,
+                      inbound: false,
+                      read: true,
+                      tw_sid: msg.sid,
+                      tw_status: msg.status
+                    })
+                    .returning("msgid")
+                    .then(function (msgs) {
+
+                      db("convos").where("convid", convid)
+                      .update({updated: db.fn.now()})
+                      .then(function (success) {
+                        req.flash("success", "Sent message.");
+                        res.redirect(redirect_loc)
+
+                      }).catch(function (err) { res.redirect("/500"); });
+                    }).catch(function (err) { res.redirect("/500"); });
+                  }
+                });
+
+              } else { res.redirect("/500"); }
+            }).catch(function (err) { res.redirect("/500"); });
 
             req.flash("success", "New conversation created.");
             res.redirect(redirect_loc);
