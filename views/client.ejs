@@ -1,4 +1,120 @@
-<% include header %>
+<% include header-base %>
+<% include header-navbar %>
+
+<% function formatAMPM (date) { %>
+<%   var hours = date.getHours(); %>
+<%   var minutes = date.getMinutes(); %>
+<%   var ampm = hours >= 12 ? 'PM' : 'AM'; %>
+<%   hours = hours % 12; %>
+<%   hours = hours ? hours : 12; %>
+<%   minutes = minutes < 10 ? '0'+minutes : minutes; %>
+<%   var strTime = hours + ':' + minutes + ' ' + ampm; %>
+<%   return strTime; %>
+<% } %>
+
+<div class="contents">
+
+	<div class="sort-opts">
+		<div class="toggle selected" id="current_tag">
+			Conversations
+		</div>
+		<div class="toggle" id="archive_tag">
+			Contacts
+		</div>
+	</div>
+
+	<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos">
+		<div class="newclient"> 
+			<i class="fa fa-user-plus"></i> 
+			New Conversation 
+		</div>
+	</a>
+
+	<div class="title">
+		Conversations with <%= client.first %>
+	</div>
+
+	<table class="cl-list">
+
+		<tr>
+			<th>Conversation</th>
+			<th>Communication Method</th>
+			<th>Last Contact</th>
+		</tr>
+
+
+		<% if (convos.length > 0) { %>
+			<% for (var i = 0; i < convos.length; i++ ) { %>
+
+				<tr class="<%= convos[i].open ? '' : 'archive' %>">
+
+					<td>
+						<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
+
+							<% if (convos[i].open) { %>
+								<span class="fa-stack fa-lg">
+									<i class="fa fa-circle fa-stack-2x"></i>
+									<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+								</span>
+
+							<% } else { %>
+								<span class="fa-stack fa-lg">
+									<i class="fa fa-comments fa-stack-1x"></i>
+								</span>
+							<% } %>
+
+							<% var subj = (convos[i].subject !== null && convos[i].subject.length) < 35 ? convos[i].subject : convos[i].subject.substr(0,35) + "..." %>
+							<% if (!subj) { subj = "No conversations." } %>
+							<%= subj %>
+
+							<% if (client.msg_ct > 0) { %>
+								<span class="badge">
+									<%= client.msg_ct %> unread
+								</span>
+							<% } %>
+
+						</a>
+					</td>
+					
+					<td>
+						
+					</td>
+					
+					<td>
+						<% try { %>
+							<% var d = new Date(client.updated); %>
+							<%= [d.getMonth()+1, d.getDate()].join("/") + " at " + formatAMPM(d) %>
+						<% } catch (e) { %>
+							Unknown
+						<% } %>
+					</td>
+
+				</tr>
+
+			<% } %>
+		<% } %>
+
+	</table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div class="right-nav">
 	<div class="nav-btn">
@@ -11,7 +127,7 @@
 	<div class="nav-btn">
 		<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/edit">
 			<i class="fa fa-pencil"></i>
-			Edit Client Profile
+			Edit Client ProfileSS
 		</a>
 	</div>
 </div>

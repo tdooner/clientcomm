@@ -506,7 +506,7 @@ module.exports = function (app, passport) {
             accepted: true
           }).returning("convid").then(function (convids) {
 
-            var convids = convids[0];
+            var convid = convids[0];
             var content = req.body.content;
             var commid = req.body.commid;
 
@@ -540,13 +540,10 @@ module.exports = function (app, passport) {
                     .returning("msgid")
                     .then(function (msgs) {
 
-                      db("convos").where("convid", convid)
-                      .update({updated: db.fn.now()})
-                      .then(function (success) {
-                        req.flash("success", "Sent message.");
-                        res.redirect(redirect_loc)
+                      req.flash("success", "New conversation created.");
+                      redirect_loc = redirect_loc + "/convos/" + convid;
+                      res.redirect(redirect_loc);
 
-                      }).catch(function (err) { res.redirect("/500"); });
                     }).catch(function (err) { res.redirect("/500"); });
                   }
                 });
@@ -554,8 +551,6 @@ module.exports = function (app, passport) {
               } else { res.redirect("/500"); }
             }).catch(function (err) { res.redirect("/500"); });
 
-            req.flash("success", "New conversation created.");
-            res.redirect(redirect_loc);
           }).catch(function (err) { console.log(err); res.redirect("/500"); });
 
         }).catch(function (err) { res.redirect("/500"); })
