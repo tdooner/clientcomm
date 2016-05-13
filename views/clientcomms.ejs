@@ -15,83 +15,83 @@
 <div class="contents">
 
 	<div class="sort-opts">
-		<div class="toggle selected" id="current_tag">
-			Conversations
-		</div>
-		<div class="toggle" id="archive_tag">
-			Contacts
-		</div>
+		<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>">
+			<div class="toggle">
+				Conversations
+			</div>
+		</a>
+
+		<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/comms">
+			<div class="toggle selected">
+				Contacts
+			</div>
+		</a>
 	</div>
 
-	<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos">
+	<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/comm">
 		<div class="newclient"> 
 			<i class="fa fa-user-plus"></i> 
-			New Conversation 
+			New Contact
 		</div>
 	</a>
 
 	<div class="title">
-		Conversations with <%= client.first %>
+		Contacts for <%= client.first %>
 	</div>
 
-	<table class="cl-list">
+	<table class="comm-list">
 
 		<tr>
-			<th>Conversation</th>
-			<th>Communication Method</th>
-			<th>Last Contact</th>
+			<th>Edit</th>
+			<th>Contact Title</th>
+			<th>Contact Type</th>
+			<th>Details</th>
+			<th>Used</th>
+			<th>Last Use</th>
 		</tr>
 
 
-		<% if (convos.length > 0) { %>
-			<% for (var i = 0; i < convos.length; i++ ) { %>
+		<% for (var i = 0; i < comms.length; i++ ) { %>
 
-				<tr class="<%= convos[i].open ? '' : 'archive' %>">
+			<tr class="<%= comms[i].open ? '' : 'archive' %>">
 
-					<td>
-						<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
+				<td>
+					<i class="fa fa-pencil"></i>
+				</td>
 
-							<% if (convos[i].open) { %>
-								<span class="fa-stack fa-lg">
-									<i class="fa fa-circle fa-stack-2x"></i>
-									<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
-								</span>
+				<td>
+					<%= comms[i].name %>
+				</td>
+				
+				<td>
+					<small>
+						<%= comms[i].type %>
+					</small>
+				</td>
+				
+				<td>
+					<small>
+						<%= comms[i].value %>
+					</small>
+				</td>
+				
+				<td>
+					4
+				</td>
+				
+				<td>
+					<small>
+					<% try { %>
+						<% var d = new Date(comms[i].created); %>
+						<%= [d.getMonth()+1, d.getDate()].join("/") %>
+					<% } catch (e) { %>
+						Unknown
+					<% } %>
+					</small>
+				</td>
 
-							<% } else { %>
-								<span class="fa-stack fa-lg">
-									<i class="fa fa-comments fa-stack-1x"></i>
-								</span>
-							<% } %>
+			</tr>
 
-							<% var subj = (convos[i].subject !== null && convos[i].subject.length) < 35 ? convos[i].subject : convos[i].subject.substr(0,35) + "..." %>
-							<% if (!subj) { subj = "No conversations." } %>
-							<%= subj %>
-
-							<% if (client.msg_ct > 0) { %>
-								<span class="badge">
-									<%= client.msg_ct %> unread
-								</span>
-							<% } %>
-
-						</a>
-					</td>
-					
-					<td>
-						
-					</td>
-					
-					<td>
-						<% try { %>
-							<% var d = new Date(client.updated); %>
-							<%= [d.getMonth()+1, d.getDate()].join("/") + " at " + formatAMPM(d) %>
-						<% } catch (e) { %>
-							Unknown
-						<% } %>
-					</td>
-
-				</tr>
-
-			<% } %>
 		<% } %>
 
 	</table>

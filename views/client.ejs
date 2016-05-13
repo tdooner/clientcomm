@@ -15,12 +15,17 @@
 <div class="contents">
 
 	<div class="sort-opts">
-		<div class="toggle selected" id="current_tag">
-			Conversations
-		</div>
-		<div class="toggle" id="archive_tag">
-			Contacts
-		</div>
+		<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>">
+			<div class="toggle selected">
+				Conversations
+			</div>
+		</a>
+
+		<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/comms">
+			<div class="toggle">
+				Contacts
+			</div>
+		</a>
 	</div>
 
 	<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos">
@@ -82,7 +87,7 @@
 					
 					<td>
 						<% try { %>
-							<% var d = new Date(client.updated); %>
+							<% var d = new Date(convos[i].updated); %>
 							<%= [d.getMonth()+1, d.getDate()].join("/") + " at " + formatAMPM(d) %>
 						<% } catch (e) { %>
 							Unknown

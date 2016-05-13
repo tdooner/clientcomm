@@ -149,16 +149,18 @@
 	border-radius: 10px;
 }
 
-.contents .cl-list {
+.contents .cl-list, .contents .comm-list {
 	width: 100%;
 	color: #898989;
+	/*margin-left: -25px;*/
+	/*margin-right: -25px;*/
 }
 
-.cl-list {
+.cl-list, .comm-list {
 	border-collapse: collapse;
 }
 
-.cl-list tr {
+.cl-list tr, .comm-list tr {
 	border-top: 0px;
 	border-right: 0px;
 	border-bottom: 1px;
@@ -168,12 +170,12 @@
 	background-color: #FFF;
 }
 
-.cl-list tr.archive {
-	background-color: #898989;
+.cl-list tr:hover, .comm-list tr:hover {
+	background-color: #FBFBFB;
 }
 
-.cl-list tr:hover {
-	background-color: #FBFBFB;
+.cl-list tr.archive {
+	background-color: #898989;
 }
 
 .cl-list tr.archive:hover {
@@ -184,7 +186,7 @@
 	color: #898989;
 }
 
-.cl-list tr .badge {
+.cl-list tr .badge, .comm-list tr .badge {
 	font-size: 10px;
 	line-height: 18px;
 	vertical-align: middle;
@@ -195,7 +197,7 @@
 	margin-left: 10px;
 }
 
-.cl-list th, .cl-list td {
+.cl-list th, .cl-list td, .comm-list th, .comm-list td {
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -229,8 +231,22 @@
 	cursor: pointer;
 }
 
+.comm-list th:nth-child(5), .comm-list td:nth-child(5) {
+	text-align: center;
+}
 
-.cl-list th {
+.comm-list th:nth-child(6), .comm-list td:nth-child(6) {
+	width: 60px;
+}
+
+.comm-list td:nth-child(5) {
+	font-size: 24px;
+	font-weight: 700;
+	color: #2F8CE8;
+}
+
+
+.cl-list th, .comm-list th {
 	height: 17px;
 	font-weight: 300;
 	font-size: 12px;
@@ -239,9 +255,12 @@
 	color: #898989;
 }
 
-.cl-list td {
+.cl-list td, .comm-list td {
 	height: 55px;
 	font-size: 18px;
+}
+
+.cl-list td {
 	color: #0ADA34;
 }
 

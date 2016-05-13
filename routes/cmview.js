@@ -191,6 +191,37 @@ module.exports = function (app, passport) {
     }).catch(function (err) { res.redirect("/500"); })
   });
 
+  app.get("/cms/:cmid/cls/:clid/comms", isLoggedIn, function (req, res) { 
+    var clid = Number(req.params.clid);
+    var cmid = Number(req.params.cmid);
+    db("clients").where("clid", clid).limit(1)
+    .then(function (cls) {
+      var cl = cls[0];
+
+      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
+        db("convos")
+        .where("convos.cm", cmid)
+        .andWhere("convos.client", clid)
+        .orderBy("convos.updated", "desc")
+        .then(function (convos) {
+
+          db("comms").innerJoin("commconns", "comms.commid", "commconns.comm")
+          .where("commconns.client", cl.clid)
+          .then(function (comms) {
+
+            res.render("clientcomms", {
+              cm: req.user,
+              client: cl,
+              comms: comms,
+              convos: convos,
+            });
+            
+          }).catch(function (err) { res.redirect("/500"); })
+        }).catch(function (err) { res.redirect("/500"); })
+      } else { res.redirect("/404"); }
+    }).catch(function (err) { res.redirect("/500"); })
+  });
+
   app.get("/cms/:cmid/cls/:clid/edit", isLoggedIn, function (req, res) { 
     var clid = Number(req.params.clid);
     var cmid = Number(req.params.cmid);
@@ -285,7 +316,7 @@ module.exports = function (app, passport) {
 
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
     var retry_view = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
 
     var clid = req.params.clid;
     var cmid = req.user.cmid;
