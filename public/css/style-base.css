@@ -10,6 +10,8 @@ body {
 	margin: 0px;
 	background-color: #C8C7C7;
 	color: #FFF;
+	background-image: url("../bg.png");
+	background-size: 275px 145px;
 }
 
 a, a:hover, a:active {
