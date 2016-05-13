@@ -205,14 +205,20 @@ module.exports = function (app, passport) {
         .orderBy("convos.updated", "desc")
         .then(function (convos) {
 
-          db("comms").innerJoin("commconns", "comms.commid", "commconns.comm")
-          .where("commconns.client", cl.clid)
-          .then(function (comms) {
+          var rawQuery = "SELECT * FROM comms " +
+                          " JOIN commconns ON (comms.commid = commconns.comm) " + 
+                          " LEFT JOIN (SELECT count(msgid) AS use_ct, msgs.comm FROM msgs " +
+                              " WHERE msgs.convo " +
+                              " IN (SELECT convos.convid FROM convos WHERE convos.client = " + clid + ") " + 
+                          " GROUP BY msgs.comm) AS counts ON (counts.comm = commconns.comm) " +
+                          " WHERE commconns.client = " + clid + ";";
+
+          db.raw(rawQuery).then(function (comms) {
 
             res.render("clientcomms", {
               cm: req.user,
               client: cl,
-              comms: comms,
+              comms: comms.rows,
               convos: convos,
             });
             
