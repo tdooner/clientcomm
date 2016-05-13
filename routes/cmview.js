@@ -322,7 +322,7 @@ module.exports = function (app, passport) {
 
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
     var retry_view = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
     var clid = req.params.clid;
     var cmid = req.user.cmid;
