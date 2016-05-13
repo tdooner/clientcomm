@@ -67,8 +67,6 @@ module.exports = function (app, passport) {
                           "LEFT JOIN msgs ON (msgs.convo=convos.convid) " +
                           "WHERE clients.cm = " + cmid + " " +
                           "GROUP BY clients.clid, convos.open, convos.subject, convos.convid ORDER BY last ASC;";
-
-          console.log("rawQuery", rawQuery);
           
           db.raw(rawQuery).then(function (clients) {
 
@@ -94,8 +92,11 @@ module.exports = function (app, passport) {
     
   });
 
-  
-  app.post("/cms/:cmid", isLoggedIn, function (req, res) { 
+  app.get("/cms/:cmid/cls", isLoggedIn, function (req, res) { 
+    res.render("clientnew");
+  });
+
+  app.post("/cms/:cmid/cls", isLoggedIn, function (req, res) { 
     var redirect_loc = "/cms/" + req.params.cmid;
 
     var cmid = req.body.cmid;
@@ -136,18 +137,16 @@ module.exports = function (app, passport) {
         otn: otn,
         so: so,
         active: true
-      }).then(function (success) {
-        req.flash("success", "Added a new client.");
-        res.redirect(redirect_loc);
-      }).catch(function (err) {
-        res.redirect("/500")
-      })
-    }
-    
-  });
+      }).returning("clid").then(function (clids) {
 
-  app.get("/cms/:cmid/cls", isLoggedIn, function (req, res) { 
-    res.redirect("/cms");
+        req.flash("success", "Added a new client.");
+        if (clids.length > 0 && clids[0]) {
+          redirect_loc = redirect_loc + "/cls/" + clids[0];
+          res.redirect(redirect_loc);
+        } else { res.redirect("/500"); }
+
+      }).catch(function (err) { res.redirect("/500"); });
+    }
   });
 
   app.get("/cms/:cmid/cls/:clid", isLoggedIn, function (req, res) { 
@@ -168,12 +167,23 @@ module.exports = function (app, passport) {
           .where("commconns.client", cl.clid)
           .then(function (comms) {
 
-            res.render("client", {
-              cm: req.user,
-              client: cl,
-              comms: comms,
-              convos: convos,
-            });
+            // add comm screen
+            if (comms.length == 0) {
+              res.redirect("/cms/" + cmid + "/cls/" + clid + "/comm");
+
+            // start convo
+            } else if (convos.length == 0) {
+              res.redirect("/cms/" + cmid + "/cls/" + clid + "/convos");
+
+            // go to normal client mgmt view
+            } else {
+              res.render("client", {
+                cm: req.user,
+                client: cl,
+                comms: comms,
+                convos: convos,
+              });
+            }
             
           }).catch(function (err) { res.redirect("/500"); })
         }).catch(function (err) { res.redirect("/500"); })
@@ -260,7 +270,21 @@ module.exports = function (app, passport) {
     }).catch(function (err) { console.log(err); res.redirect("/500") })
   });
 
+  app.get("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
+    if (req.params.cmid == req.user.cmid) {
+
+      db("clients").where("cm", req.params.cmid).andWhere("clid", req.params.clid)
+      .then(function (clients) {
+        if (clients.length > 0) {
+          res.render("clientcontact", {client: clients[0]});
+        } else { res.redirect("/404"); }
+
+      }).catch(function (err) { res.redirect("/500"); })
+    } else { res.redirect("/404"); }
+  });
+
   app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
+    var retry_view = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
     var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
     var clid = req.params.clid;
@@ -278,22 +302,22 @@ module.exports = function (app, passport) {
 
     if (Number(clid) !== Number(req.body.clid)) {
       req.flash("warning", "Client ID does not match.");
-      res.redirect(redirect_loc);
+      res.redirect(retry_view);
     } else if (Number(cmid) !== Number(req.body.cmid)) {
       req.flash("warning", "Case Manager ID does not match user logged-in.");
-      res.redirect(redirect_loc);
+      res.redirect(retry_view);
     } else if (!type) {
       req.flash("warning", "Missing the communication type.");
-      res.redirect(redirect_loc);
+      res.redirect(retry_view);
     } else if (!value) {
       req.flash("warning", "Missing the communication value (e.g. the phone number).");
-      res.redirect(redirect_loc);
+      res.redirect(retry_view);
     } else if (type == "cell" && value.length !== 11) {
       req.flash("warning", "Incorrect phone value.");
-      res.redirect(redirect_loc);
+      res.redirect(retry_view);
     } else if (!description) {
       req.flash("warning", "Missing description value.");
-      res.redirect(redirect_loc);
+      res.redirect(retry_view);
     } else {
       
       db("comms").where("value", value).limit(1)
@@ -311,15 +335,15 @@ module.exports = function (app, passport) {
             req.flash("success", "Added a new communication method.");
             res.redirect(redirect_loc);
 
-          }).catch(function (err) { res.redirect("/500"); })
+          }).catch(function (err) { res.redirect("/500"); });
 
         } else {
           db("comms").insert({
             type: type,
             value: value,
             description: description
-          }).returning("commid")
-          .then(function (commids) {
+          }).returning("commid").then(function (commids) {
+            
             var commid = commids[0];
 
             db("commconns").insert({
@@ -331,12 +355,10 @@ module.exports = function (app, passport) {
               req.flash("success", "Added a new communication method.");
               res.redirect(redirect_loc);
 
-            }).catch(function (err) { res.redirect("/500"); })
-
-          }).catch(function (err) { res.redirect("/500"); })
+            }).catch(function (err) { res.redirect("/500"); });
+          }).catch(function (err) { res.redirect("/500"); });
         }
-
-      }).catch(function (err) { res.redirect("/500"); })
+      }).catch(function (err) { res.redirect("/500"); });
 
     }
   });
@@ -366,10 +388,7 @@ module.exports = function (app, passport) {
               req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
               res.redirect(redirect_loc);
 
-            }).catch(function (err) {
-              console.log(err);
-              res.redirect("/500");
-            });
+            }).catch(function (err) { console.log(err); res.redirect("/500"); });
 
           } else {
             req.flash("warning", "You do not have authority to close that client.");
@@ -411,10 +430,7 @@ module.exports = function (app, passport) {
               req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
               res.redirect(redirect_loc);
 
-            }).catch(function (err) {
-              console.log(err);
-              res.redirect("/500");
-            });
+            }).catch(function (err) { console.log(err); res.redirect("/500"); });
 
           } else {
             req.flash("warning", "You do not have authority to re-activate that client.");
@@ -431,6 +447,30 @@ module.exports = function (app, passport) {
     }
   });
 
+  app.get("/cms/:cmid/cls/:clid/convos", isLoggedIn, function (req, res) {
+    var cmid = Number(req.params.cmid);
+    var cmid2 = Number(req.user.cmid);
+    var clid = Number(req.params.clid);
+
+    if (cmid !== cmid2) { res.redirect("/404"); } 
+    else { 
+
+      db("clients").where("cm", cmid).andWhere("clid", clid)
+      .then(function (clients) {
+        if (clients.length == 0) { res.redirect("/404"); }
+        else { 
+
+          db("comms").innerJoin("commconns", "comms.commid", "commconns.comm").where("commconns.client", clid)
+          .then(function (comms) {
+
+            res.render("clientconvo", {client: clients[0], comms: comms});
+            
+          }).catch(function (err) { res.redirect("/500"); });
+        } 
+      }).catch(function (err) { res.redirect("/500"); })
+    }
+  });
+
   app.post("/cms/:cmid/cls/:clid/convos", isLoggedIn, function (req, res) {
     var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
 
@@ -443,6 +483,7 @@ module.exports = function (app, passport) {
       res.redirect(redirect_loc);
     } else {
 
+      // close all the other conversations
       db("convos")
       .where("client", clid)
       .andWhere("cm", cmid)
@@ -463,13 +504,15 @@ module.exports = function (app, passport) {
             subject: subject,
             open: true,
             accepted: true
-          }).then(function (success) {
+          }).returning("convids").then(function (success) {
+
+            var content = req.body.content;
+            var commid = req.body.commid;
+
+
             req.flash("success", "New conversation created.");
             res.redirect(redirect_loc);
-          }).catch(function (err) {
-            console.log(err);
-            res.redirect("/500");
-          });
+          }).catch(function (err) { console.log(err); res.redirect("/500"); });
 
         }).catch(function (err) { res.redirect("/500"); })
 

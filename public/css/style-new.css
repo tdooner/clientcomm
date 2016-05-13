@@ -6,6 +6,7 @@
 	padding: 110px 150px 80px 150px;
 	background-color: #344289;
 	margin-top: 70px;
+	margin-bottom: 70px;
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 10px;
@@ -23,7 +24,7 @@
 	font-size: 60px;
 }
 
-.card .title {
+.card .card-title {
 	font-size: 30px;
 	text-align: center;
 	font-weight: 100;
@@ -33,6 +34,23 @@
 
 .card .form-row {
 	padding: 5px 10px 0px 10px;
+}
+
+.card .form-row .opt {
+	float: right;
+	color: #4A90E2;
+}
+
+.card .form-row .blue-select {
+	width: 280px;
+	height: 35px;
+	border: 2px solid #2F8CE8;
+	border-radius: 7px;
+	background-color: #92C9FF;
+	text-align: center;
+	font-size: 16px;
+	font-weight: 700;
+	color: #344289;
 }
 
 .card .form-label {
@@ -47,6 +65,10 @@
 	border-radius: 7px;
 }
 
+.card textarea.form-input {
+	height: 110px;
+}
+
 .card .form-submit {
 	border: 0px;
 	border-radius: 7px;
@@ -59,6 +81,7 @@
 	color: #FFF;
 	font-size: 14px;
 	font-weight: 700;
+	cursor: pointer;
 }
 
 .card .form-submit:hover {

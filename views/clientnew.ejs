@@ -1,0 +1,51 @@
+<% include header-base %>
+<div class="contents">
+
+<div class="card">
+
+	<div class="card-title">
+		Add a New Client
+	</div>
+
+	<form method="post">
+
+		<input type="hidden" name="cmid" value="<%= user.cmid %>">
+
+		<div class="form-row">
+			<div class="form-label"> First </div>
+			<input class="form-input" type="text" name="first" required>
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Middle </div>
+			<input class="form-input" type="text" name="middle" required>
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Last </div>
+			<input class="form-input" type="text" name="last" required>
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Date of Birth <span class="opt">optional</span> </div>
+			<input class="form-input" type="date" name="dob" value="1955-01-01">
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Offender Tracking Number (OTN) <span class="opt">optional</span> </div>
+			<input class="form-input" type="text" name="otn">
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Sheriff's Number (SO#) <span class="opt">optional</span> </div>
+			<input class="form-input" type="text" name="so">
+		</div>
+
+		<input type="submit" class="form-submit" value="Submit">
+
+	</form>
+
+</div>
+
+</div>
+<% include footer %>
