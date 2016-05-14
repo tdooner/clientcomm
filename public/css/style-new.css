@@ -273,7 +273,89 @@
 	font-size: 0.9em;
 }
 
+.msgs {
+	width: 900px;
+	margin: -10px -25px -10px -25px;
+	background-color: #FFF;
+}
 
+.msgs .msg-head {
+	color: #344289;
+	background-color: #FFF;
+	padding: 20px 50px 40px 50px;
+}
+
+.msgs .msg-head .subject {
+	color: #344289;
+	background-color: #FFF;
+	font-size: 22px;
+}
+
+.msgs .msg-head .state-btn {
+	float: right;
+}
+
+.msgs .msg-head .state-btn input.button {
+	font-size: 12px;
+	font-weight: 700;
+	color: #D2C308;
+	border: 1px solid #D2C308;
+	border-radius: 7px;
+	padding: 7px 10px 7px 10px;
+	background: rgba(0,0,0,0);
+}
+
+.msgs .msg-stream {
+	background-color: #E5F0FA;
+	padding: 20px 50px 20px 50px;
+}
+
+.msgs .msg-stream .msg {
+	width: 420px;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+.msgs .msg-stream .msg .content {
+	border: 3px solid #FFF;
+	border-radius: 7px;
+	padding: 7px 10px 7px 10px;
+	background-color: #FFF;
+	color: #2F8CE8;
+
+	margin: 5px 0 5px 0;
+}
+
+.msgs .msg-stream .msg .sub {
+	color: #898989;
+	font-size: 12px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
+.msgs .msg-stream .msg .sub .state {
+	float: right;
+	color: #0AA629;
+	font-weight: 700;
+}
+
+.msgs .msg-stream .msg.outbound {
+	margin-left: 375px;
+}
+
+.msgs .msg-stream .msg.outbound .content {
+	background-color: rgba(0,0,0,0);
+	color: #444;
+}
+
+.msgs .msg-stream .msg.outbound .sub {
+}
+
+
+.msgs .msg-stream .msg.outbound .sub .state {
+	color: #FF911E;
+}
 
 
 

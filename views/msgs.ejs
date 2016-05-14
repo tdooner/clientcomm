@@ -1,36 +1,86 @@
-<% include header %>
+<% include header-base %>
+<% include header-navbar %>
 
+<% function formatAMPM (date) { %>
+<%   var hours = date.getHours(); %>
+<%   var minutes = date.getMinutes(); %>
+<%   var ampm = hours >= 12 ? 'PM' : 'AM'; %>
+<%   hours = hours % 12; %>
+<%   hours = hours ? hours : 12; %>
+<%   minutes = minutes < 10 ? '0'+minutes : minutes; %>
+<%   var strTime = hours + ':' + minutes + ' ' + ampm; %>
+<%   return strTime; %>
+<% } %>
 
-<div class="right-nav">
-	<div class="nav-btn">
-		<a href="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>">
-			<i class="fa fa-reply"></i>
-			Client Overview
-		</a>
+<div class="contents">
+<div class="msgs">
+
+	<div class="msg-head">
+
+		<% if (convo.open) { %>
+			<div class="state-btn">
+				<% if (convo.accepted) { %>
+					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
+						<input type="submit" class="button" value="Close Conversation">
+					</form>
+				<% } else { %>
+					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
+						<input type="submit" class="button" value="Accept Conversation">
+					</form>
+					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
+						<input type="submit" class="button" value="Reject Conversation">
+					</form>
+				<% } %>
+			</div>
+		<% } %>
+
+		<div class="subject">
+			<%= convo.subject %>
+		</div>
 	</div>
-</div>
+
+	<div class="msg-stream">
+		<% for (var i = 0; i < msgs.length; i++) { %>
+
+				<div class="msg <%= msgs[i].inbound ? '' : 'outbound' %>">
+					<div class="content">
+						<%= msgs[i].content %>
+					</div>
+
+					<div class="sub">
+						<b><%= msgs[i].name %></b>
+						
+						<% try { %>
+							<% var d = new Date(msgs[i].created) %>
+							<%= [d.getMonth()+1, d.getDate()].join("/") + " " + formatAMPM(d) %>
+						<% } catch (err) { %>
+							Unknown
+						<% } %>
+
+						<span class="state">
+							<% if (msgs[i].inbound) { %>
+								<%= msgs[i].tw_status %>
+							<% } else { %>
+								sent
+							<% } %>
+						</span>
+					</div>
+				</div>
+
+		<% } %>
+	</div>
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 <div class="infoblock">
-	<div class="infoblock-label">
-		<%= convo.subject %>
-	</div>
 
-	<% if (convo.open) { %>
-		<div style="float: right">
-			<% if (convo.accepted) { %>
-				<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
-					<input type="submit" class="button" value="Close" style="background-color:orange; width: 100px">
-				</form>
-			<% } else { %>
-				<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
-					<input type="submit" class="button" value="Accept" style="background-color:green; width: 100px">
-				</form>
-				<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
-					<input type="submit" class="button" value="Reject" style="background-color:red; width: 100px">
-				</form>
-			<% } %>
-		</div>
-	<% } %>
+
 
 	<small>
 		<i class="fa fa-clock-o"></i>
@@ -117,8 +167,7 @@
 
 </div>
 
-<% if (convo.open) { %>
 
-<% } %>
-
+</div>
+</div>
 <% include footer %>
