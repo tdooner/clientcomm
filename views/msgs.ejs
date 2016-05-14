@@ -106,7 +106,14 @@
 		</div>
 
 		<% } else { %>
+			<div class="closed-msg">
 				Can't write new messages. This conversation is closed.
+				<div class="form-row">
+					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/open">
+						<input type="submit" class="form-submit" value="Restore Convo">
+					</form>
+				</div>
+			</div>
 		<% } %>
 	</div>
 

@@ -301,14 +301,20 @@
 	float: right;
 }
 
-.msgs .msg-head .state-btn input.button {
+.msgs .state-btn input.button {
 	font-size: 12px;
 	font-weight: 700;
 	color: #D2C308;
 	border: 1px solid #D2C308;
 	border-radius: 7px;
 	padding: 7px 10px 7px 10px;
-	background: rgba(0,0,0,0);
+	background: #FFF;
+	cursor: pointer;
+}
+
+.msgs .state-btn input.button:hover {
+	background-color: #D2C308;
+	color: #FFF;
 }
 
 .msgs .msg-stream {
@@ -374,6 +380,10 @@
 	width: 420px;
 }
 
+.msgs .msg-resp .state-btn {
+	float: right;
+}
+
 .msgs .form-row .blue-select {
 	width: 420px;
 }
@@ -402,6 +412,7 @@
 	background-color: #2F8CE8;
 	color: #FFF;
 }
+
 
 
 

@@ -530,8 +530,7 @@ module.exports = function (app, passport) {
         
         db("convos").whereIn("convid", convos)
         .update({
-          open: false,
-          updated: db.fn.now()
+          open: false
         }).then(function (success) {
           
           db("convos")
@@ -736,6 +735,54 @@ module.exports = function (app, passport) {
         }
       })
 
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/convos/:convid/open", isLoggedIn, function (req, res) {
+    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+    var cmid = req.params.cmid;
+    var clid = req.params.clid;
+    var convid = req.params.convid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+      res.redirect(redirect_loc);
+    } else {
+
+      db("convos")
+      .where("client", clid)
+      .andWhere("cm", cmid)
+      .andWhere("convos.open", true)
+      .pluck("convid")
+      .then(function (convos) {
+        
+        db("convos").whereIn("convid", convos)
+        .update({ open: false })
+        .then(function (success) {
+
+          cmview.get_convo(cmid, clid, convid)
+          .then(function (obj) {
+            
+            db("convos").where("convid", convid).update({open: true, updated: db.fn.now()})
+            .then(function (success) {
+              req.flash("success", "Closed conversation.");
+              res.redirect(redirect_loc);
+
+            }).catch(function (err) {
+              res.redirect("/500");
+            })
+
+          }).catch(function (err) {
+            if (err == "404") {
+              res.redirect("/404");
+            } else {
+              res.redirect("/500");
+            }
+          });
+
+        }).catch(function (err) { res.redirect("/500"); })
+      }).catch(function (err) { res.redirect("/500"); })
     }
   });
 
