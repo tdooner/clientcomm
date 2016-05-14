@@ -380,6 +380,10 @@
 	width: 420px;
 }
 
+.msgs .msg-resp .closed-msg p {
+	float: right;
+}
+
 .msgs .msg-resp .state-btn {
 	float: right;
 }
