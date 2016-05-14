@@ -41,8 +41,7 @@
 	color: #4A90E2;
 }
 
-.card .form-row .blue-select {
-	width: 280px;
+.card .form-row .blue-select, .msgs .form-row .blue-select {
 	height: 35px;
 	border: 2px solid #2F8CE8;
 	border-radius: 7px;
@@ -51,6 +50,10 @@
 	font-size: 16px;
 	font-weight: 700;
 	color: #344289;
+}
+
+.card .form-row .blue-select {
+	width: 280px;
 }
 
 .card .form-label {
@@ -70,19 +73,22 @@
 	height: 110px;
 }
 
-.card .form-submit {
+.card .form-submit, .msgs .form-submit {
 	border: 0px;
 	border-radius: 7px;
 	width: 150px;
 	height: 35px;
-	margin-top: 32px;
-	margin-left: 75px;
-	margin-right: 75px;
 	background-color: #4A90E2;
 	color: #FFF;
 	font-size: 14px;
 	font-weight: 700;
 	cursor: pointer;
+}
+
+.card .form-submit {
+	margin-top: 32px;
+	margin-left: 75px;
+	margin-right: 75px;
 }
 
 .card .form-submit:hover {
@@ -358,7 +364,7 @@
 }
 
 .msgs .msg-resp {
-	min-height: 40px;
+	min-height: 300px;
 	background-color: #898989;
 	padding: 25px 50px 25px 50px;
 }
@@ -367,6 +373,43 @@
 	margin-left: 375px;
 	width: 420px;
 }
+
+.msgs .form-row .blue-select {
+	width: 420px;
+}
+
+.msgs .form-row textarea {
+	width: 396px;
+	height: 80px;
+	border: 2px solid #FFF;
+	border-radius: 7px;
+	background-color: #CDE6FF;
+	padding: 15px 10px 15px 10px;
+	font-size: 12px;
+	color: #444;
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
+.msgs .form-submit {
+	float: right;
+	border: 2px solid #FFF;
+	background-color: #FFF;
+	color: #2F8CE8;
+}
+
+.msgs .form-submit:hover {
+	background-color: #2F8CE8;
+	color: #FFF;
+}
+
+
+
+
+
+
+
+
 
 
 
