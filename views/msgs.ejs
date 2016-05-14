@@ -12,6 +12,8 @@
 <%   return strTime; %>
 <% } %>
 
+<% var most_recent_comm = null; %>
+
 <div class="contents">
 <div class="msgs">
 
@@ -42,35 +44,65 @@
 	<div class="msg-stream">
 		<% for (var i = 0; i < msgs.length; i++) { %>
 
-				<div class="msg <%= msgs[i].inbound ? '' : 'outbound' %>">
-					<div class="content">
-						<%= msgs[i].content %>
-					</div>
+			<% if (i == msgs.length - 1) { most_recent_comm = msgs[i].value } %>
 
-					<div class="sub">
-						<b><%= msgs[i].name %></b>
-						
-						<% try { %>
-							<% var d = new Date(msgs[i].created) %>
-							<%= [d.getMonth()+1, d.getDate()].join("/") + " " + formatAMPM(d) %>
-						<% } catch (err) { %>
-							Unknown
-						<% } %>
-
-						<span class="state">
-							<% if (msgs[i].inbound) { %>
-								<%= msgs[i].tw_status %>
-							<% } else { %>
-								sent
-							<% } %>
-						</span>
-					</div>
+			<div class="msg <%= msgs[i].inbound ? '' : 'outbound' %>">
+				<div class="content">
+					<%= msgs[i].content %>
 				</div>
+
+				<div class="sub">
+					<b><%= msgs[i].name %></b>
+					
+					<% try { %>
+						<% var d = new Date(msgs[i].created) %>
+						<%= [d.getMonth()+1, d.getDate()].join("/") + " " + formatAMPM(d) %>
+					<% } catch (err) { %>
+						Unknown
+					<% } %>
+
+					<span class="state">
+						<% if (msgs[i].inbound) { %>
+							<%= msgs[i].tw_status %>
+						<% } else { %>
+							sent
+						<% } %>
+					</span>
+				</div>
+			</div>
 
 		<% } %>
 	</div>
 
+	<div class="msg-resp">
+		<% if (convo.open) { %>
+			<form method="post">
 
+				<div class="form-row">
+					<select name="commid" class="blue-select" required>
+						<option value="" selected disabled>Comm Method</option>
+						<% for (var i = 0; i < comms.length; i++) { %>
+							<option value="<%= comms[i].commid %>" <% if (comms[i].value == most_recent_comm) { %> selected <% } %>>
+								<%= comms[i].name %>
+							</option>
+						<% } %>
+					</select>
+				</div>
+
+				<div class="form-row">
+					<textarea name="content" rows="5" maxlength="160" style="width:100%;" placeholder="<%= most_recent_comm == null ? 'NULLLLLL ' : most_recent_comm %>" required></textarea>
+				</div>
+
+				<div class="form-row">
+					<input type="submit" class="" value="Submit">
+				</div>
+			</form>
+		</div>
+
+		<% } else { %>
+				Can't write new messages. This conversation is closed.
+		<% } %>
+	</div
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>

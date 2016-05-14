@@ -307,7 +307,7 @@
 
 .msgs .msg-stream {
 	background-color: #E5F0FA;
-	padding: 20px 50px 20px 50px;
+	padding: 25px 50px 25px 50px;
 }
 
 .msgs .msg-stream .msg {
@@ -355,6 +355,17 @@
 
 .msgs .msg-stream .msg.outbound .sub .state {
 	color: #FF911E;
+}
+
+.msgs .msg-resp {
+	min-height: 40px;
+	background-color: #898989;
+	padding: 25px 50px 25px 50px;
+}
+
+.msgs .msg-resp form {
+	margin-left: 375px;
+	width: 420px;
 }
 
 
