@@ -619,8 +619,12 @@ module.exports = function (app, passport) {
         rawQuery += "WHERE clients.cm=" + cmid  + " AND clients.clid=" + clid + " AND msgs.read=FALSE) ";
 
         db.raw(rawQuery).then(function (success) {
-          obj.cm = req.user;
-          res.render("msgs", obj);
+
+          db("clients").where("clid", clid).limit(1).then(function (cls) {
+            obj.client = cls[0];
+            res.render("msgs", obj);
+          }).catch(function (err) { res.redirect("/500"); })
+
         }).catch(function (err) { res.redirect("/500"); })
 
       }).catch(function (err) {

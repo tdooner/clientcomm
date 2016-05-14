@@ -16,12 +16,23 @@
 	</div>
 
 	<% if (typeof client !== "undefined") { %>
+	
 		<div class="nav-right">
 		<a href="/cms/<%= user.cmid %>">
 			<small>Clients List</small>
 			<i class="fa fa-list-ol"></i>
 		</a>
 		</div>
+
+		<% if (!(typeof msgs == "undefined" && typeof comms == "undefined")) { %>
+			<div class="nav-right">
+			<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
+				<small>Client Page</small>
+				<i class="fa fa-user"></i>
+			</a>
+			</div>
+		<%} %>
+
 	<%} %>
 	
 	<div class="nav-right">

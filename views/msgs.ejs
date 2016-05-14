@@ -20,14 +20,14 @@
 		<% if (convo.open) { %>
 			<div class="state-btn">
 				<% if (convo.accepted) { %>
-					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
+					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
 						<input type="submit" class="button" value="Close Conversation">
 					</form>
 				<% } else { %>
-					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
+					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
 						<input type="submit" class="button" value="Accept Conversation">
 					</form>
-					<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
+					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
 						<input type="submit" class="button" value="Reject Conversation">
 					</form>
 				<% } %>
@@ -147,7 +147,7 @@
 
 	<div class="response">
 		<% if (convo.open) { %>
-			<form method="post" action="/cms/<%= cm.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
+			<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>">
 					<textarea name="content" rows="5" maxlength="160" style="width:100%;" placeholder="(Max length 160 characters)" required></textarea>
 					<select name="commid" required>
 						<option value="" selected disabled>Comm Method</option>
