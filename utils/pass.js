@@ -8,7 +8,7 @@ module.exports = {
 		if (req.isAuthenticated() || realsuper) { 
 			return next(); 
 		} else { 
-			req.flash("warning", "No access allowed, not logged in.");
+			req.flash("warning", "Please log in for access.");
 			res.redirect("/login"); 
 		}
 	},
@@ -19,7 +19,7 @@ module.exports = {
 		if (realadmin || realsuper) { 
 			return next(); 
 		} else { 
-			req.flash("warning", "No access allowed, you do not have ADMIN access.");
+			req.flash("warning", "Sorry you cannot view this page because you do not have Admin access.");
 			res.redirect("/401"); 
 		}
 	},
