@@ -18,6 +18,12 @@
 <%   return strTime; %>
 <% } %>
 
+<% function cleanText (txt) { %>
+<%   txt = txt.split(" "); %>
+<%   txt = txt.map(function (ea) { return ea[0].toUpperCase() + ea.substr(1, ea.length); }); %>
+<%   return txt; %>
+<% } %>
+
 <% var most_recent_comm = null; %>
 
 <div class="contents">
@@ -74,9 +80,9 @@
 
 					<span class="state">
 						<% if (msgs[i].inbound) { %>
-							<%= msgs[i].tw_status %>
+							<%= cleanText(msgs[i].tw_status) %>
 						<% } else { %>
-							sent
+							Sent
 						<% } %>
 					</span>
 				</div>
