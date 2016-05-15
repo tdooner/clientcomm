@@ -191,43 +191,6 @@ module.exports = function (app, passport) {
     }).catch(function (err) { res.redirect("/500"); })
   });
 
-  app.get("/cms/:cmid/cls/:clid/comms", isLoggedIn, function (req, res) { 
-    var clid = Number(req.params.clid);
-    var cmid = Number(req.params.cmid);
-    db("clients").where("clid", clid).limit(1)
-    .then(function (cls) {
-      var cl = cls[0];
-
-      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
-        db("convos")
-        .where("convos.cm", cmid)
-        .andWhere("convos.client", clid)
-        .orderBy("convos.updated", "desc")
-        .then(function (convos) {
-
-          var rawQuery = "SELECT * FROM comms " +
-                          " JOIN commconns ON (comms.commid = commconns.comm) " + 
-                          " LEFT JOIN (SELECT count(msgid) AS use_ct, msgs.comm FROM msgs " +
-                              " WHERE msgs.convo " +
-                              " IN (SELECT convos.convid FROM convos WHERE convos.client = " + clid + ") " + 
-                          " GROUP BY msgs.comm) AS counts ON (counts.comm = commconns.comm) " +
-                          " WHERE commconns.client = " + clid + ";";
-
-          db.raw(rawQuery).then(function (comms) {
-
-            res.render("clientcomms", {
-              cm: req.user,
-              client: cl,
-              comms: comms.rows,
-              convos: convos,
-            });
-            
-          }).catch(function (err) { res.redirect("/500"); })
-        }).catch(function (err) { res.redirect("/500"); })
-      } else { res.redirect("/404"); }
-    }).catch(function (err) { res.redirect("/500"); })
-  });
-
   app.get("/cms/:cmid/cls/:clid/edit", isLoggedIn, function (req, res) { 
     var clid = Number(req.params.clid);
     var cmid = Number(req.params.cmid);
@@ -386,7 +349,8 @@ module.exports = function (app, passport) {
             db("commconns").insert({
               client: clid,
               comm: commid,
-              name: description
+              name: description,
+              retired: false
             })
             .then(function (success) {
               req.flash("success", "Added a new communication method.");
@@ -397,6 +361,70 @@ module.exports = function (app, passport) {
         }
       }).catch(function (err) { res.redirect("/500"); });
 
+    }
+  });
+
+  app.get("/cms/:cmid/cls/:clid/comms", isLoggedIn, function (req, res) { 
+    var clid = Number(req.params.clid);
+    var cmid = Number(req.params.cmid);
+    db("clients").where("clid", clid).limit(1)
+    .then(function (cls) {
+      var cl = cls[0];
+
+      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
+        db("convos")
+        .where("convos.cm", cmid)
+        .andWhere("convos.client", clid)
+        .orderBy("convos.updated", "desc")
+        .then(function (convos) {
+
+          var rawQuery = "SELECT * FROM comms " +
+                          " JOIN commconns ON (comms.commid = commconns.comm) " + 
+                          " LEFT JOIN (SELECT count(msgid) AS use_ct, msgs.comm FROM msgs " +
+                              " WHERE msgs.convo " +
+                              " IN (SELECT convos.convid FROM convos WHERE convos.client = " + clid + ") " + 
+                          " GROUP BY msgs.comm) AS counts ON (counts.comm = commconns.comm) " +
+                          " WHERE commconns.client = " + clid + ";";
+
+          db.raw(rawQuery).then(function (comms) {
+
+            res.render("clientcomms", {
+              cm: req.user,
+              client: cl,
+              comms: comms.rows,
+              convos: convos,
+            });
+            
+          }).catch(function (err) { res.redirect("/500"); })
+        }).catch(function (err) { res.redirect("/500"); })
+      } else { res.redirect("/404"); }
+    }).catch(function (err) { res.redirect("/500"); })
+  });
+
+  app.get("/cms/:cmid/cls/:clid/comms/:commconnid", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
+
+    var clid = req.params.clid;
+    var cmid = req.params.cmid;
+    var commconnid = req.params.commconnid;
+
+    if (Number(cmid) !== Number(req.user.cmid)) {
+      req.flash("warning", "Case Manager ID does not match user logged-in.");
+      res.redirect(redirect_loc);
+    
+    } else {
+      var rawQuery = "SELECT * FROM commconns " + 
+                      " JOIN (SELECT clients.clid FROM clients WHERE clients.cm = 33) AS clients ON (clients.clid = commconns.client) " + 
+                      " WHERE commconns.client = 145 " +
+                      " AND commconns.commconnid = 172 LIMIT 1";
+
+      db.raw(rawQuery).then(function (commconns) {
+        if (commconns.rows && commconns.rows.length == 1) {
+          commconn = commconns[0];
+          res.render("clientcontactedit", { commconn: commconns });
+
+        } else { res.redirect("/404"); }
+      }).catch(function (err) { console.log(err); res.redirect("/500"); });
     }
   });
 
@@ -420,7 +448,7 @@ module.exports = function (app, passport) {
           if (client.cm == cmid) {
 
             db("clients").where("clid", clid)
-            .update({active: false})
+            .update({active: false, updated: db.fn.now()})
             .then(function (success) {
               req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
               res.redirect(redirect_loc);
@@ -462,7 +490,7 @@ module.exports = function (app, passport) {
           if (client.cm == cmid) {
 
             db("clients").where("clid", clid)
-            .update({active: true})
+            .update({active: true, updated: db.fn.now()})
             .then(function (success) {
               req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
               res.redirect(redirect_loc);
