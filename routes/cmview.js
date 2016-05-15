@@ -110,6 +110,7 @@ module.exports = function (app, passport) {
     if (!middle) middle = "";
     if (!otn) otn = null;
     if (!so) so = null;
+    if (!dob) dob = "1955-01-01";
 
     if (!cmid) {
       req.flash("warning", "Missing cmid.");
