@@ -48,6 +48,7 @@
 			<th>Details</th>
 			<th>Used</th>
 			<th>Last Use</th>
+			<th>Remove</th>
 		</tr>
 
 
@@ -90,6 +91,12 @@
 						Unknown
 					<% } %>
 					</small>
+				</td>
+
+				<td>
+					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/comms/<%= comms[i].commconnid %>/close">
+						<button type="submit"><i class="fa fa-trash-o"></i></button>
+					</form>
 				</td>
 
 			</tr>

@@ -249,7 +249,7 @@
 	text-align: center;
 }
 
-.cl-list th:nth-child(4) button, .cl-list td:nth-child(4) button {
+.cl-list th:nth-child(4) button, .cl-list td:nth-child(4) button, .comm-list th:nth-child(7) button, .comm-list td:nth-child(7) button {
 	border: 0px;
 	background-color: rgba(255,255,255,0);
 	font-size: 18px;
@@ -261,14 +261,21 @@
 	text-align: center;
 }
 
-.comm-list th:nth-child(6), .comm-list td:nth-child(6) {
-	width: 60px;
-}
-
 .comm-list td:nth-child(5) {
 	font-size: 24px;
 	font-weight: 700;
 	color: #2F8CE8;
+}
+
+.comm-list th:nth-child(6), .comm-list td:nth-child(6) {
+	width: 60px;
+}
+
+.comm-list th:nth-child(7), .comm-list td:nth-child(7) {
+	width: 30px;
+}
+.comm-list td:nth-child(7) {
+	text-align: center;
 }
 
 

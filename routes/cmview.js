@@ -387,7 +387,7 @@ module.exports = function (app, passport) {
                               " WHERE msgs.convo " +
                               " IN (SELECT convos.convid FROM convos WHERE convos.client = " + clid + ") " + 
                           " GROUP BY msgs.comm) AS counts ON (counts.comm = commconns.comm) " +
-                          " WHERE commconns.client = " + clid + ";";
+                          " WHERE commconns.client = " + clid + " AND commconns.retired IS NULL;";
 
           db.raw(rawQuery).then(function (comms) {
 
@@ -467,6 +467,36 @@ module.exports = function (app, passport) {
         req.flash("success", "Contact method updated.");
         res.redirect(redirect_loc);
       }).catch(function (err) { console.log(err); res.redirect("/500"); });
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/comms/:commconnid/close", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
+    var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
+
+    var clid = Number(req.params.clid);
+
+    var cmid = Number(req.params.cmid);
+    var cmid2 = Number(req.user.cmid);
+
+    var commconnid = Number(req.params.commconnid);
+
+    if (cmid !== cmid2) {
+      req.flash("warning", "Case Manager ID does not match user logged-in.");
+      res.redirect(retry_loc);
+    } else if (isNaN(commconnid)) {
+      req.flash("warning", "Invalid commconnid provided.");
+      res.redirect(retry_loc);
+    
+    } else {
+      db("commconns").where("commconnid", commconnid)
+      .update({retired: db.fn.now()})
+      .then(function (success) {
+        req.flash("success", "Retired contact method.");
+        res.redirect(redirect_loc);
+
+      }).catch(function (err) { console.log(err); res.redirect("/500"); });
+
     }
   });
 
