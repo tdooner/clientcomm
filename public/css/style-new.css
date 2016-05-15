@@ -212,8 +212,16 @@
 	width: 250px;
 }
 
+.cl-list.convo-list th:nth-child(1), .cl-list.convo-list td:nth-child(1) {
+	width: 375px;
+}
+
 .cl-list th:nth-child(2), .cl-list td:nth-child(2) {
 	width: 400px;
+}
+
+.cl-list.convo-list th:nth-child(2), .cl-list.convo-list td:nth-child(2) {
+	width: 275px;
 }
 
 .cl-list th:nth-child(3), .cl-list td:nth-child(3) {
