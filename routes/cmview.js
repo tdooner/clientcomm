@@ -630,8 +630,9 @@ module.exports = function (app, passport) {
                   body: content
                 }, function (err, msg) {
                   if (err) {
-                    console.log('Oops! There was an error.', err);
-                    res.redirect("/500");
+                    console.log("Twilio send error: ", err);
+                    if (err.hasOwnProperty("code") && err.code == 21211) res.status(500).send("That number is not a valid phone number.");
+                    else res.redirect("/500");
                   } else {
                     db("msgs")
                     .insert({
@@ -740,8 +741,9 @@ module.exports = function (app, passport) {
             body: content
           }, function (err, msg) {
             if (err) {
-              console.log('Oops! There was an error.', err);
-              res.redirect("/500");
+              console.log("Twilio send error: ", err);
+              if (err.hasOwnProperty("code") && err.code == 21211) res.status(500).send("That number is not a valid phone number.");
+              else res.redirect("/500");
             } else {
               db("msgs")
               .insert({
