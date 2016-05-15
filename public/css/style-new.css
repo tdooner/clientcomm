@@ -317,6 +317,38 @@
 	color: #FFF;
 }
 
+.msgs .msg-head .state-btn .acceptreject {
+	width: 400px; 
+}
+.msgs .msg-head .state-btn .acceptreject input.button {
+	float: right;
+}
+
+.msgs .msg-head .state-btn .acceptreject input.button:nth-child(1) {
+	margin-left: 15px;
+}
+
+.msgs .state-btn input.button.red {
+	color: red;
+	border: 1px solid red;
+}
+
+.msgs .state-btn input.button:hover.red {
+	background-color: red;
+	color: #FFF;
+}
+
+.msgs .state-btn input.button.green {
+	color: #00e500;
+	border: 1px solid #00e500;
+}
+
+.msgs .state-btn input.button:hover.green {
+	background-color: #00e500;
+	color: #FFF;
+}
+
+
 .msgs .msg-stream {
 	background-color: #E5F0FA;
 	padding: 25px 50px 25px 50px;

@@ -31,14 +31,19 @@
 					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/close">
 						<input type="submit" class="button" value="Close Conversation">
 					</form>
+
 				<% } else { %>
-					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
-						<input type="submit" class="button" value="Accept Conversation">
-					</form>
-					<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
-						<input type="submit" class="button" value="Reject Conversation">
-					</form>
+					<div class="acceptreject">
+						<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/accept">
+							<input type="submit" class="button green" value="Accept Conversation">
+						</form>
+
+						<form method="post" action="/cms/<%= user.cmid %>/cls/<%= cl.clid %>/convos/<%= convo.convid %>/reject">
+							<input type="submit" class="button red" value="Reject Conversation">
+						</form>
+					</div>
 				<% } %>
+
 			</div>
 		<% } %>
 
