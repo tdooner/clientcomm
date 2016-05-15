@@ -65,7 +65,11 @@
 
 					<td>
 						<% if (clients[i].clid !== null && clients[i].active) { %>
-							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+							<% if (clients[i].open) { %>
+								<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+							<% } else { %>
+								<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %> %>">
+							<% } %>
 						<% } else { %>
 							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
 						<% } %>

@@ -290,7 +290,7 @@ module.exports = function (app, passport) {
     var clid = req.params.clid;
     var cmid = req.user.cmid;
     var type = req.body.type;
-    var value = req.body.value;
+    var value = String(req.body.value);
     var description = req.body.description;
 
     if (type == "cell" || type == "landline") {
@@ -312,14 +312,18 @@ module.exports = function (app, passport) {
     } else if (!value) {
       req.flash("warning", "Missing the communication value (e.g. the phone number).");
       res.redirect(retry_view);
+
     } else if (type == "cell" && value.length !== 11) {
       req.flash("warning", "Incorrect phone value.");
+      res.redirect(retry_view);
+    } else if (type == "cell" && isNaN(Number(value))) {
+      req.flash("warning", "Value supplied is not a number.");
       res.redirect(retry_view);
     } else if (!description) {
       req.flash("warning", "Missing description value.");
       res.redirect(retry_view);
+    
     } else {
-      
       db("comms").where("value", value).limit(1)
       .then(function (comms) {
 
@@ -349,10 +353,9 @@ module.exports = function (app, passport) {
             db("commconns").insert({
               client: clid,
               comm: commid,
-              name: description,
-              retired: false
-            })
-            .then(function (success) {
+              name: description
+            }).then(function (success) {
+
               req.flash("success", "Added a new communication method.");
               res.redirect(redirect_loc);
 
@@ -414,16 +417,55 @@ module.exports = function (app, passport) {
     
     } else {
       var rawQuery = "SELECT * FROM commconns " + 
-                      " JOIN (SELECT clients.clid FROM clients WHERE clients.cm = 33) AS clients ON (clients.clid = commconns.client) " + 
-                      " WHERE commconns.client = 145 " +
-                      " AND commconns.commconnid = 172 LIMIT 1";
+                      " JOIN (SELECT clients.clid FROM clients WHERE clients.cm = " + cmid + 
+                          ") AS clients ON (clients.clid = commconns.client) " + 
+                      " LEFT JOIN comms ON (comms.commid = commconns.comm) " + 
+                      " WHERE commconns.client = " + clid + " " +
+                      " AND commconns.commconnid = " + commconnid + " LIMIT 1";
 
       db.raw(rawQuery).then(function (commconns) {
         if (commconns.rows && commconns.rows.length == 1) {
-          commconn = commconns[0];
-          res.render("clientcontactedit", { commconn: commconns });
+          commconn = commconns.rows[0];
+          res.render("clientcontactedit", { commconn: commconn });
 
         } else { res.redirect("/404"); }
+      }).catch(function (err) { console.log(err); res.redirect("/500"); });
+    }
+  });
+
+  app.post("/cms/:cmid/cls/:clid/comms/:commconnid", isLoggedIn, function (req, res) { 
+    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
+    var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
+
+    var clid = Number(req.params.clid);
+    var clid2 = Number(req.body.clid);
+
+    var cmid = Number(req.params.cmid);
+    var cmid2 = Number(req.body.cmid);
+    var cmid3 = Number(req.user.cmid);
+
+    var commconnid = Number(req.params.commconnid);
+
+    if (cmid !== cmid2 && cmid !== cmid3) {
+      req.flash("warning", "Case Manager ID does not match user logged-in.");
+      res.redirect(retry_loc);
+    } else if (clid !== clid2) {
+      req.flash("warning", "Client IDs do not match from post body and URL route.");
+      res.redirect(retry_loc);
+    } else if (isNaN(commconnid)) {
+      req.flash("warning", "Invalid commconnid provided.");
+      res.redirect(retry_loc);
+    } else if (!req.body.description) {
+      req.flash("warning", "Missing new name for communication.");
+      res.redirect(retry_loc);
+    
+    } else {
+      var name = req.body.description.replace(/["']/g, "").trim().split(" ").filter(function (ea) { return ea.length > 0; }).join(" ");
+      var rawQuery = "UPDATE commconns SET name = '" + name + "' WHERE commconnid = " + commconnid + ";";
+
+      db.raw(rawQuery).then(function (commconns) {
+        req.flash("success", "Contact method updated.");
+        res.redirect(redirect_loc);
       }).catch(function (err) { console.log(err); res.redirect("/500"); });
     }
   });
