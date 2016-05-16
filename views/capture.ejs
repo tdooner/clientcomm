@@ -1,49 +1,54 @@
-<% include header %>
+<% include header-base %>
+<% include header-navbar %>
 
-<div class="right-nav">
-	<div class="nav-btn">
-		<a href="/cms/<%= user.cmid %>">
-			<i class="fa fa-reply"></i>
-			Return to Clients
-		</a>
+<% function formatAMPM (date) { %>
+<%   var hours = date.getHours(); %>
+<%   var minutes = date.getMinutes(); %>
+<%   var ampm = hours >= 12 ? 'PM' : 'AM'; %>
+<%   hours = hours % 12; %>
+<%   hours = hours ? hours : 12; %>
+<%   minutes = minutes < 10 ? '0'+minutes : minutes; %>
+<%   var strTime = hours + ':' + minutes + ' ' + ampm; %>
+<%   return strTime; %>
+<% } %>
+
+<div class="contents">
+
+	<div class="title">
+		Capture Board
 	</div>
+
+	<% convos.forEach(function (convo) { %>
+
+		<table class="capture-list">
+		  <tr>
+		    <th>Message</th> 
+		    <th>Time</th>
+		    <th>Contact Info</th>
+		    <th>Capture</th>
+		  </tr>
+
+			<% convo.msgs.forEach(function (ea) { %>
+			  <tr>
+			    <td>
+			    	<%= ea.content %>
+			    </td>
+			    <td>
+						<% var d = new Date(ea.created); %>
+						<%= [d.getMonth()+1, d.getDate()].join("/") + ' at ' + formatAMPM(d) %>
+			    </td>
+			    <td>
+			    	<%= '8588694738' %>
+			    </td>
+			    <td>
+			    	<i class="fa fa-user-plus"></i>
+			    </td>
+			  </tr>
+			<% }); %>
+
+		</table>
+	<% }) %>
+
 </div>
-
-
-
-<table>
-  <tr>
-    <th>ID</th>
-    <th>Message</th> 
-    <th>Communication</th>
-    <th>Time</th>
-  </tr>
-
-	<% floaters.forEach(function (ea) { %>
-	  <tr>
-	    <td><%= ea.msgid %></td>
-	    <td><%= ea.content %></td>
-	    <td><%= ea.value %></td>
-	    <td><%= ea.created %></td>
-	  </tr>
-	<% }); %>
-
-</table>
-
-
-<style type="text/css">
-	table {
-		width: 100%
-	}
-	th {
-		border-bottom: 2px solid grey;
-	}
-	td {
-		border-bottom: 1px solid grey;
-		padding: 5px;
-	}
-</style>
-
-
 
 <% include footer %>

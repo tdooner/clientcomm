@@ -18,13 +18,26 @@ module.exports = function (app, passport) {
 
   // view captures
   app.get("/capture", isLoggedIn, function (req, res) { 
-    var rawQuery = "SELECT msgs.msgid, msgs.content, comms.value, msgs.created FROM msgs " +
+    var rawQuery = "SELECT * FROM msgs " +
                     "JOIN convos ON (msgs.convo = convos.convid) " +
                     "JOIN comms ON (comms.commid = msgs.comm) " +
                     "WHERE convos.client IS NULL ORDER BY msgs.created DESC;";
     
     db.raw(rawQuery).then(function (floaters) {
-      res.render("capture", { floaters: floaters.rows });
+      var convos = floaters.rows.map(function (ea) { return ea.convo; }).reduce(function (a,b){ 
+        if (a.indexOf(b) < 0 ) a.push(b);
+        return a;
+      },[]).map(function (ea) { return {convo: ea, msgs: []}; });
+
+      floaters.rows.forEach(function (ea) { 
+        for (var i = 0; i < convos.length; i++) {
+          if (convos[i].convo == ea.convo) {
+            convos[i].msgs.push(ea);
+          }
+        }
+      });
+
+      res.render("capture", { convos: convos });
     }).catch(function (err) { res.redirect("/500"); });
   });
 
@@ -247,7 +260,7 @@ module.exports = function (app, passport) {
       };
 
       if (dob) updatedClient.dob = req.body.dob;
-      
+
       db("clients").where("clid", clid)
       .update(updatedClient).then(function (success) {
         req.flash("success", "Updated client.");
