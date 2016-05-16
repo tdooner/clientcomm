@@ -149,7 +149,7 @@
 .contents .newclient {
 	float: right;
 	color: #D2C308;
-	padding: 10px 25px 10px 25px;
+	padding: 10px 10px 10px 10px;
 	font-size: 18px;
 	line-height: 35px;
 	vertical-align: top;
@@ -159,7 +159,6 @@
 .contents .newclient:hover {
 	color: #FFF;
 	background-color: #D2C308;
-	padding: 10px 25px 10px 25px;
 	border-radius: 10px;
 }
 

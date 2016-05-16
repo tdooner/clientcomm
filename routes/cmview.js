@@ -219,6 +219,7 @@ module.exports = function (app, passport) {
     if (!middle) middle = "";
     if (!otn) otn = null;
     if (!so) so = null;
+    if (!req.body.dob) dob = null;
 
     if (!cmid) {
       req.flash("warning", "Missing cmid.");
@@ -232,19 +233,23 @@ module.exports = function (app, passport) {
     } else if (!last) {
       req.flash("warning", "Missing last name.");
       res.redirect(redirect_loc);
-    } else if (isNaN(dob)) {
-      req.flash("warning", "Missing date of birth.");
+    } else if (isNaN(dob) && req.body.dob) {
+      req.flash("warning", "Date of birth incorrectly formatted.");
       res.redirect(redirect_loc);
+    
     } else {
-      db("clients").where("clid", clid)
-      .update({
+      var updatedClient = {
         first: first,
         middle: middle,
         last: last,
-        dob: req.body.dob,
         otn: otn,
         so: so
-      }).then(function (success) {
+      };
+
+      if (dob) updatedClient.dob = req.body.dob;
+      
+      db("clients").where("clid", clid)
+      .update(updatedClient).then(function (success) {
         req.flash("success", "Updated client.");
         res.redirect(redirect_loc);
       }).catch(function (err) { console.log(err); res.redirect("/500") })

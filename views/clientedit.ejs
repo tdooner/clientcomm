@@ -1,78 +1,54 @@
-<% include header %>
+<% include header-base %>
 
-<div class="right-nav">
-	<div class="nav-btn">
-		<a href="/cms/<%= user.cmid %>">
-			<i class="fa fa-reply"></i>
-			Return To Client View
-		</a>
+<div class="contents">
+<div class="card">
+
+	<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>"><% include card-exit %></a>
+
+	<div class="card-title">
+		Edit Client Attributes
 	</div>
-</div>
 
+	<form method="post">
 
-<div class="infoblock">
-	<div class="infoblock-label">
-		Update Client Information
-	</div>
-	<div class="infoblock-body">
-		<form method="post">
-			
-			<div class="infoblock-row">
-				<div class="infoblock-id"> first </div>
-				<input type="hidden" name="cmid" value="<%= client.cm %>">
-				<input type="hidden" name="clid" value="<%= client.clid %>">
-				<input class="infoblock-input" type="text" name="first" value="<%= client.first %>" required>
-			</div>
+		<input type="hidden" name="cmid" value="<%= client.cm %>">
+		<input type="hidden" name="clid" value="<%= client.clid %>">
 
-			<div class="infoblock-row">
-				<div class="infoblock-id"> middle </div>
-				<input class="infoblock-input" type="text" name="middle" value="<%= client.middle %>">
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> last </div>
-				<input class="infoblock-input" type="text" name="last" value="<%= client.last %>" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> dob </div>
-				<% try { var upd = new Date(client.dob); upd = upd.toISOString().split("T")[0] %>
-				<% } catch (e) { var upd = "1955-01-01" } %>
-				<input class="infoblock-input" type="date" name="dob" value="<%= upd %>" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> otn </div>
-				<input class="infoblock-input" type="text" name="otn" value="<%= client.otn %>">
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> so </div>
-				<input class="infoblock-input" type="text" name="so" value="<%= client.so %>">
-			</div>
-
-			<div class="infoblock-row">
-				<input type="submit" class="button" value="Update Client">
-			</div>
-
-		</form>
-	</div>
-</div>
-
-<div class="infoblock">
-	<div class="infoblock-body">
-		<div class="infoblock-row">
-			<% if (client.active) { %>
-				<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/close">
-					<input type="submit" class="button" value="Deactivate Client" style="background-color:red">
-				</form>
-			<% } else { %>
-				<form method="post" action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/open">
-					<input type="submit" class="button" value="Re-activate Client" style="background-color:red">
-				</form>
-			<% } %>
+		<div class="form-row">
+			<div class="form-label"> First </div>
+			<input class="form-input" type="text" name="first" value="<%= client.first %>" required>
 		</div>
-	</div>
+
+		<div class="form-row">
+			<div class="form-label"> Middle </div>
+			<input class="form-input" type="text" name="middle" value="<%= client.middle %>" required>
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Last </div>
+			<input class="form-input" type="text" name="last" value="<%= client.last %>" required>
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Date of Birth <span class="opt">optional</span> </div>
+			<input class="form-input" type="date" name="dob" value="<%= client.dob %>">
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Offender Tracking Number (OTN) <span class="opt">optional</span> </div>
+			<input class="form-input" type="text" name="otn" value="<%= client.otn %>">
+		</div>
+
+		<div class="form-row">
+			<div class="form-label"> Sheriff's Number (SO#) <span class="opt">optional</span> </div>
+			<input class="form-input" type="text" name="so" value="<%= client.so %>">
+		</div>
+
+		<input type="submit" class="form-submit" value="Update">
+
+	</form>
+
+</div>
 </div>
 
 
