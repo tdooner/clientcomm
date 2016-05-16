@@ -869,7 +869,7 @@ module.exports = function (app, passport) {
             
             db("convos").where("convid", convid).update({open: true, updated: db.fn.now()})
             .then(function (success) {
-              req.flash("success", "Closed conversation.");
+              req.flash("success", "Conversation reopened.");
               res.redirect(redirect_loc);
 
             }).catch(function (err) {
