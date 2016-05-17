@@ -1,4 +1,5 @@
 var db = require("../server/db");
+var nodemailer = require('nodemailer');
 
 var credentials = require("../credentials");
 var empw = credentials.em.password;
