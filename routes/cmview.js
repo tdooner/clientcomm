@@ -24,7 +24,7 @@ module.exports = function (app, passport) {
                     "WHERE convos.client IS NULL ORDER BY msgs.created DESC;";
     
     db.raw(rawQuery).then(function (floaters) {
-      var convos = floaters.rows.map(function (ea) { return ea.convo; }).reduce(function (a,b){ 
+      var convos = floaters.rows.map(function (ea) { return ea.convo; }).reduce(function (a,b) { 
         if (a.indexOf(b) < 0 ) a.push(b);
         return a;
       },[]).map(function (ea) { return {convo: ea, msgs: []}; });
@@ -84,6 +84,11 @@ module.exports = function (app, passport) {
 
             var insertList = [];
 
+            comms = comms.reduce(function (a,b) { 
+              if (a.indexOf(b) < 0 ) a.push(b);
+              return a;
+            },[]);
+
             comms.forEach(function (comm, i) {
               var name = i == 0 ? devicename : devicename + "_num_" + String(i + 1);
               insertList.push({
@@ -94,9 +99,10 @@ module.exports = function (app, passport) {
             });
 
             db("commconns").insert(insertList).then(function (success) {
+              var reroute = "/cms/" + cmid + "/cls/" + clid + "/convos/" + convid;
 
               req.flash("success", "Captured conversation.");
-              res.redirect(redirect_loc);
+              res.redirect(reroute);
 
             }).catch(function (err) { console.log(err); res.redirect("/500"); });
           }).catch(function (err) { console.log(err); res.redirect("/500"); });
