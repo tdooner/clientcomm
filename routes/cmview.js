@@ -299,14 +299,14 @@ module.exports = function (app, passport) {
     var first = req.body.first;
     var middle = req.body.middle;
     var last = req.body.last;
-    var dob = Date.parse(req.body.dob);
+    var dob = new Date(req.body.dob);
     var otn = req.body.otn;
     var so = req.body.so;
 
     if (!middle) middle = "";
     if (!otn) otn = null;
     if (!so) so = null;
-    if (!req.body.dob) dob = null;
+    if (dob == "Invalid Date") dob = null;
 
     if (!cmid) {
       req.flash("warning", "Missing cmid.");
@@ -320,7 +320,7 @@ module.exports = function (app, passport) {
     } else if (!last) {
       req.flash("warning", "Missing last name.");
       res.redirect(redirect_loc);
-    } else if (isNaN(dob) && req.body.dob) {
+    } else if (dob == null) {
       req.flash("warning", "Date of birth incorrectly formatted.");
       res.redirect(redirect_loc);
     
