@@ -27,7 +27,7 @@
 		<div class="form-row">
 			<div class="form-label"> Send Via </div>
 			<select class="blue-select" name="commid" required>
-				<option value="" selected disabled>Registered Communication Methods</option>
+				<option value="" selected disabled>Communication Methods</option>
 				<% for (var i = 0; i < comms.length; i++) { %>
 					<option value="<%= comms[i].commid %>" <%= i == comms.length - 1 ? 'selected' : '' %>>
 						<%= comms[i].name %> 
