@@ -85,7 +85,7 @@ app.listen(port, function () {
 var timeDelay = 1000 * 60 * 60 * 24;
 setInterval(function () {
 	require("../utils/em-notify").runEmailUpdates();
-}, 2000); 
+}, timeDelay); 
 
 
 
