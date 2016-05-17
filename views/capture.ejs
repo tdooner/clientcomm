@@ -19,34 +19,39 @@
 	</div>
 
 	<% convos.forEach(function (convo) { %>
-
-		<table class="capture-list">
-		  <tr>
-		    <th>Message</th> 
-		    <th>Time</th>
-		    <th>Contact Info</th>
-		    <th>Capture</th>
-		  </tr>
-
-			<% convo.msgs.forEach(function (ea) { %>
+		<div class="conversation">
+			<table class="capture-list">
 			  <tr>
-			    <td>
-			    	<%= ea.content %>
-			    </td>
-			    <td>
-						<% var d = new Date(ea.created); %>
-						<%= [d.getMonth()+1, d.getDate()].join("/") + ' at ' + formatAMPM(d) %>
-			    </td>
-			    <td>
-			    	<%= '8588694738' %>
-			    </td>
-			    <td>
-			    	<i class="fa fa-user-plus"></i>
-			    </td>
+			    <th>Message</th> 
+			    <th>Time</th>
+			    <th>Contact Info</th>
+			    <th>Capture</th>
 			  </tr>
-			<% }); %>
 
-		</table>
+				<% convo.msgs.forEach(function (ea, i) { %>
+				  <tr>
+				    <td>
+				    	<%= ea.content %>
+				    </td>
+				    <td>
+							<% var d = new Date(ea.created); %>
+							<%= [d.getMonth()+1, d.getDate()].join("/") + ' at ' + formatAMPM(d) %>
+				    </td>
+				    <td>
+				    	<%= '8588694738' %>
+				    </td>
+				    <% if (i == 0) { %>
+				    	<td class="conversation-claim" rowspan="<%= convo.msgs.length %>">
+								<form method="post" action="/capture/<%= convo.convo %>">
+									<button type="submit"><i class="fa fa-plus"></i></i></button>
+								</form>
+							</td>
+						<% } %>
+				  </tr>
+				<% }); %>
+
+			</table>
+		</div>
 	<% }) %>
 
 </div>
