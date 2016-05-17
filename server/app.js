@@ -81,6 +81,15 @@ app.listen(port, function () {
 	setTimeout(function () { require("../utils/superuser-check.js")(); }, 5000);
 });
 
+// logic to check once a day re: emails
+var timeDelay = 1000 * 60 * 60 * 24;
+setInterval(function () {
+	require("../utils/em-notify").runEmailUpdates();
+}, 2000); 
+
+
+
+
 
 
 
