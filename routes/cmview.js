@@ -330,7 +330,7 @@ module.exports = function (app, passport) {
         so: so
       };
 
-      if (dob !== null) updatedClient.dob = dob;)
+      if (dob !== null) updatedClient.dob = dob;
 
       db("clients").where("clid", clid)
       .update(updatedClient).then(function (success) {
