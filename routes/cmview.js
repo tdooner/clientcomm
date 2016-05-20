@@ -320,9 +320,6 @@ module.exports = function (app, passport) {
     } else if (!last) {
       req.flash("warning", "Missing last name.");
       res.redirect(redirect_loc);
-    } else if (dob == null) {
-      req.flash("warning", "Date of birth incorrectly formatted.");
-      res.redirect(redirect_loc);
     
     } else {
       var updatedClient = {
@@ -333,7 +330,7 @@ module.exports = function (app, passport) {
         so: so
       };
 
-      if (dob) updatedClient.dob = req.body.dob;
+      if (dob !== null) updatedClient.dob = dob;)
 
       db("clients").where("clid", clid)
       .update(updatedClient).then(function (success) {
