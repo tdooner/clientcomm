@@ -52,6 +52,12 @@
 		</div>
 	<% }) %>
 
+	<% if (convos.length == 0) { %>
+		<center style="color:#888">
+			Good news! There are no conversations left in the capture board.
+		</center>
+	<% } %>
+
 </div>
 
 <% include footer %>
