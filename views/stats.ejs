@@ -100,7 +100,11 @@ try {
 	days = JSON.parse(days.replace(/&#34;/g, '"'));
 
 	var mStart = msgs.splice(8);
-	msgs = mStart.concat(msgs);
+	msgs = msgs.concat(mStart);
+	msgs.map(function (ea, i) { 
+		ea.date_hr = i;
+		return ea; 
+	});
 
 	makeBigChart();
 } catch (e) { console.log(e); }
