@@ -99,6 +99,9 @@ try {
 	msgs = JSON.parse(msgs.replace(/&#34;/g, '"'));
 	days = JSON.parse(days.replace(/&#34;/g, '"'));
 
+	var mStart = msgs.splice(8);
+	msgs = mStart.concat(msgs);
+
 	makeBigChart();
 } catch (e) { console.log(e); }
 
