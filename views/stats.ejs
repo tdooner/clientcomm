@@ -99,10 +99,10 @@ try {
 	msgs = JSON.parse(msgs.replace(/&#34;/g, '"'));
 	days = JSON.parse(days.replace(/&#34;/g, '"'));
 
-	var mStart = msgs.splice(8);
-	msgs = msgs.concat(mStart);
 	msgs.map(function (ea, i) { 
-		ea.date_hr = i;
+		console.log(ea.date_hr);
+		if (ea.date_hr <= 7) ea.date_hr = 16 + ea.date_hr;
+		else ea.date_hr = ea.date_hr - 7;
 		return ea; 
 	});
 
