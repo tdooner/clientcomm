@@ -111,10 +111,10 @@ function makeBigChart () {
 	var inbound = msgs.filter(function (ea) { return ea.inbound; });
 	var outbound = msgs.filter(function (ea) { return !ea.inbound; });
 
-	var keysIn = inbound.map(function (ea) { return (Number(ea.date_hr) - 7) * 100; });
+	var keysIn = inbound.map(function (ea) { return (Number(ea.date_hr)) * 100; });
 	var valsIn = inbound.map(function (ea) { return Number(ea.count); });
 
-	var keysOut = outbound.map(function (ea) { return (Number(ea.date_hr) - 7) * 100; });
+	var keysOut = outbound.map(function (ea) { return (Number(ea.date_hr)) * 100; });
 	var valsOut = outbound.map(function (ea) { return Number(ea.count); });
 
 	c3.generate({
