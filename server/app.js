@@ -41,7 +41,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// utilities
+// UTILITIES
 var utils = {
 	accountSid: credentials.accountSid,
 	authToken: credentials.authToken,
@@ -49,11 +49,26 @@ var utils = {
 }
 var auth = require("../utils/utils.js")["pass"];
 
-// log flash messages each time
+
+// DATETIME VARIABLES FOR EJS
+var moment = require('moment');
+var moment_tz = require('moment-timezone');
+
+
+// DEFAULT EJS VARIABLES
 app.use(function (req, res, next){	
+	// Flash messages
 	res.locals.warning = req.flash("warning");
 	res.locals.success = req.flash("success");
-	res.locals.user = req.user;
+
+	// Inclusion of momentJS for datetime modifications
+	res.locals.moment = moment;
+	res.locals.moment_tz = moment_tz;
+
+	// Include user if logged in
+	if (req.user) res.locals.user = req.user;
+
+	// Proceed with routing
 	next();
 });
 
