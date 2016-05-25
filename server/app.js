@@ -7,10 +7,6 @@ var express = require("express");
 var app = express();
 var db  = require("./db");
 
-// before we continue, make it all in utah MST timezone... 
-// should have a way to have this be custom when multiple orgs
-process.env.TZ = "America/Denver";
-
 // dependencies
 var bodyParser = require('body-parser');
 var session = require("express-session");

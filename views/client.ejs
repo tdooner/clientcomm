@@ -1,17 +1,6 @@
 <% include header-base %>
 <% include header-navbar %>
 
-<% function formatAMPM (date) { %>
-<%   var hours = date.getHours(); %>
-<%   var minutes = date.getMinutes(); %>
-<%   var ampm = hours >= 12 ? 'PM' : 'AM'; %>
-<%   hours = hours % 12; %>
-<%   hours = hours ? hours : 12; %>
-<%   minutes = minutes < 10 ? '0'+minutes : minutes; %>
-<%   var strTime = hours + ':' + minutes + ' ' + ampm; %>
-<%   return strTime; %>
-<% } %>
-
 <div class="contents">
 
 	<div class="sort-opts">
@@ -93,8 +82,9 @@
 					
 					<td>
 						<% try { %>
-							<% var d = new Date(convos[i].updated); %>
-							<%= [d.getMonth()+1, d.getDate()].join("/") + " at " + formatAMPM(d) %>
+							<% var day = moment.tz(convos[i].updated, "America/Denver").format("MM/DD");%>
+							<% var hrs = moment.tz(convos[i].updated, "America/Denver").format("hh:MM A"); %>
+							<%= day + " " + hrs %>
 						<% } catch (e) { %>
 							Unknown
 						<% } %>

@@ -7,17 +7,6 @@
 	}
 </style>
 
-<% function formatAMPM (date) { %>
-<%   var hours = date.getHours(); %>
-<%   var minutes = date.getMinutes(); %>
-<%   var ampm = hours >= 12 ? 'PM' : 'AM'; %>
-<%   hours = hours % 12; %>
-<%   hours = hours ? hours : 12; %>
-<%   minutes = minutes < 10 ? '0'+minutes : minutes; %>
-<%   var strTime = hours + ':' + minutes + ' ' + ampm; %>
-<%   return strTime; %>
-<% } %>
-
 <% function cleanText (txt) { %>
 <%   txt = txt.split(" "); %>
 <%   txt = txt.map(function (ea) { return ea[0].toUpperCase() + ea.substr(1, ea.length); }); %>
@@ -72,8 +61,9 @@
 					<b><%= msgs[i].name %></b>
 					
 					<% try { %>
-						<% var d = new Date(msgs[i].created) %>
-						<%= [d.getMonth()+1, d.getDate()].join("/") + " " + formatAMPM(d) %>
+						<% var day = moment.tz(msgs[i].created, "America/Denver").format("MM/DD"); %>
+						<% var hrs = moment.tz(msgs[i].created, "America/Denver").format("hh:MM A"); %>
+						<%= day + " " + hrs %>
 					<% } catch (err) { %>
 						Unknown
 					<% } %>
