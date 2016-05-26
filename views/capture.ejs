@@ -23,8 +23,8 @@
 				    	<%= ea.content %>
 				    </td>
 				    <td>
-							<% var day = moment.tz(ea.created, "America/Denver").format("MM/DD");%>
-							<% var hrs = moment.tz(ea.created, "America/Denver").format("hh:MM A"); %>
+							<% var day = moment.tz(ea.created, local_tz).format("MM/DD");%>
+							<% var hrs = moment.tz(ea.created, local_tz).format("hh:MM A"); %>
 							<%= day + " " + hrs %>
 				    </td>
 				    <td>

@@ -97,8 +97,8 @@
 						<% } %>
 
 							<% try { %>
-								<% var day = moment.tz(clients[i].updated, "America/Denver").format("MM/DD"); %>
-								<% var hrs = moment.tz(clients[i].updated, "America/Denver").format("hh:MM A"); %>
+								<% var day = moment.tz(clients[i].updated, local_tz).format("MM/DD"); %>
+								<% var hrs = moment.tz(clients[i].updated, local_tz).format("hh:MM A"); %>
 								<%= day + " " + hrs %>
 							<% } catch (e) { %>
 								Unknown

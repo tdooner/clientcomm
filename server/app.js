@@ -62,10 +62,25 @@ app.use(function (req, res, next){
 	res.locals.moment_tz = moment_tz;
 
 	// Include user if logged in
-	if (req.user) res.locals.user = req.user;
+	if (req.user) { 
+		res.locals.user = req.user;
+		res.locals.local_tz = "America/Denver";
 
-	// Proceed with routing
-	next();
+		// See if we can find the organizations special timezone setting
+		db.raw("SELECT * FROM orgs WHERE orgs.orgid = (SELECT cms.org FROM cms WHERE cms.cmid = 17)").then(function (org) {
+			if (org && org.rows && org.rows[0]) {
+				var o = org.rows[0];
+				if (o.tz) res.locals.local_tz = o.tz; 
+				next();
+
+			// No results, so use default
+			} else { next(); }
+
+		// Something happened so fall back on default
+		}).catch(function (err) { next(); });
+
+	// No known org so set default timezone to MST 
+	} else { next(); }
 });
 
 // routes

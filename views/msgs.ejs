@@ -61,8 +61,8 @@
 					<b><%= msgs[i].name %></b>
 					
 					<% try { %>
-						<% var day = moment.tz(msgs[i].created, "America/Denver").format("MM/DD"); %>
-						<% var hrs = moment.tz(msgs[i].created, "America/Denver").format("hh:MM A"); %>
+						<% var day = moment.tz(msgs[i].created, local_tz).format("MM/DD"); %>
+						<% var hrs = moment.tz(msgs[i].created, local_tz).format("hh:MM A"); %>
 						<%= day + " " + hrs %>
 					<% } catch (err) { %>
 						Unknown
