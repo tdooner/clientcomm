@@ -1,11 +1,17 @@
-// db via knex.js to run queries
+
+
+
+// DEPENDENCIES
+// DB via knex.js to run queries
 var db  = require("../server/db");
 
 // Utility checks if a client is logged in
 var pass = require("../utils/utils.js")["pass"];
 var isLoggedIn = pass.isLoggedIn;
 
-module.exports = function (app, db, utils, passport) {
+
+
+module.exports = function (app, passport) {
 
 
 	// MAIN PAGE CURRENTLY ROUTES STRAIGHT TO LOGIN
@@ -85,3 +91,6 @@ module.exports = function (app, db, utils, passport) {
 	});
 
 };
+
+
+
