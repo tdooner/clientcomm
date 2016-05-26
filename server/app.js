@@ -38,64 +38,31 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // UTILITIES
-var utils = {
+var utilsTEMP = {
 	accountSid: credentials.accountSid,
 	authToken: credentials.authToken,
 	twilioNum: credentials.twilioNum
 }
-var auth = require("../utils/utils.js")["pass"];
+
+var utils = require("../utils/utils.js");
+var auth = utils["pass"];
 
 
-// DATETIME VARIABLES FOR EJS
-var moment = require('moment');
-var moment_tz = require('moment-timezone');
-
-
-// DEFAULT EJS VARIABLES
-app.use(function (req, res, next){	
-	// Flash messages
-	res.locals.warning = req.flash("warning");
-	res.locals.success = req.flash("success");
-
-	// Inclusion of momentJS for datetime modifications
-	res.locals.moment = moment;
-	res.locals.moment_tz = moment_tz;
-
-	// Include user if logged in
-	if (req.user) { 
-		res.locals.user = req.user;
-		res.locals.local_tz = "America/Denver";
-
-		// See if we can find the organizations special timezone setting
-		db.raw("SELECT * FROM orgs WHERE orgs.orgid = (SELECT cms.org FROM cms WHERE cms.cmid = 17)").then(function (org) {
-			if (org && org.rows && org.rows[0]) {
-				var o = org.rows[0];
-				if (o.tz) res.locals.local_tz = o.tz; 
-				next();
-
-			// No results, so use default
-			} else { next(); }
-
-		// Something happened so fall back on default
-		}).catch(function (err) { next(); });
-
-	// No known org so set default timezone to MST 
-	} else { next(); }
-});
+// ALWAYS RUN BEFORE ROUTES
+require("../routes/request-defaults")(app);
 
 // routes
-var adminmgmt = require("../routes/admin");
-var supermgmt = require("../routes/super");
-
-require("../routes/access")(app, db, utils, passport);
+require("../routes/access")(app, db, utilsTEMP, passport);
 require("../routes/cmview")(app, passport);
 require("../routes/sms")(app);
 require("../routes/voice")(app);
 
 // superuser management
+var adminmgmt = require("../routes/admin");
 app.use("/admin", auth.isAdmin, adminmgmt)
 
 // superuser management
+var supermgmt = require("../routes/super");
 app.use("/orgs", auth.isSuper, supermgmt)
 
 // catch alls
