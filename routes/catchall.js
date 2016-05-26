@@ -6,9 +6,15 @@ module.exports = function (app, db, utils, passport) {
   });
 
 
+  app.get("/400", function (req, res) {
+    req.flash("warning", "400 Malformed request.");
+    res.redirect("/login");
+  });
+
+
   app.get("/401", function (req, res) {
-  	req.flash("warning", "401 Unauthorized access.");
-  	res.redirect("/login");
+    req.flash("warning", "401 Unauthorized access.");
+    res.redirect("/login");
   });
 
   app.get("/500", function (req, res) {
