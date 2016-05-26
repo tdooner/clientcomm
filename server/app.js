@@ -54,12 +54,6 @@ app.use(passport.session());
 
 
 // UTILITIES
-var utilsTEMP = {
-	accountSid: credentials.accountSid,
-	authToken: credentials.authToken,
-	twilioNum: credentials.twilioNum
-}
-
 var utils = require("../utils/utils.js");
 var auth = utils["pass"];
 
@@ -69,8 +63,11 @@ var auth = utils["pass"];
 // Always run before routes
 require("../routes/request-defaults")(app);
 
-require("../routes/access")(app, db, utilsTEMP, passport);
+// User routes
+require("../routes/access")(app, passport);
 require("../routes/cmview")(app, passport);
+
+// Twilio-facing routes
 require("../routes/sms")(app);
 require("../routes/voice")(app);
 
