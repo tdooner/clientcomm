@@ -4,26 +4,26 @@
 <div class="contents">
 
 	<div class="sort-opts">
-		<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>">
+		<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
 			<div class="toggle selected">
 				Conversations
 			</div>
 		</a>
 
-		<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/comms">
+		<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/comms">
 			<div class="toggle">
 				Contacts
 			</div>
 		</a>
 
-		<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/edit" style="float:right">
+		<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/edit" style="float:right">
 			<div class="toggle">
 				Edit Client
 			</div>
 		</a>
 	</div>
 
-	<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos">
+	<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/convos">
 		<div class="newclient"> 
 			<i class="fa fa-user-plus"></i> 
 			New Conversation 
@@ -49,7 +49,7 @@
 				<tr class="<%= convos[i].open ? '' : 'archive' %>">
 
 					<td>
-						<a href="/cms/<%= cm.cmid %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
+						<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/convos/<%= convos[i].convid %>">
 
 							<% if (convos[i].open) { %>
 								<span class="fa-stack fa-lg">
