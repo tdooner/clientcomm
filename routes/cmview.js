@@ -108,8 +108,7 @@ router.post("/:cmid/cls", function (req, res) {
   // When things break, reroute here
   var redirect_loc = "/cms/" + req.user.cmid;
 
-  // Load in all the body elements we will be working with
-  
+  // Load in all the body elements we will be working with  
   // String variables
   var first  = req.body.first && typeof req.body.first == "string" && req.body.first.length > 0 ? req.body.first.trim() : null;
   var middle = req.body.middle && typeof req.body.middle == "string" && req.body.middle.length > 0 ? req.body.middle.trim() : null;
@@ -131,7 +130,7 @@ router.post("/:cmid/cls", function (req, res) {
 
   // Make sure that the required submissions are included
   if (!cmid || !first || !last) {
-    req.flash("warning", "Missing required entry of new client creation.");
+    req.flash("warning", "Missing required entries of new client creation.");
     res.redirect(redirect_loc);
 
   // Makre sure the query is going to a the case managers own cmid
@@ -253,6 +252,8 @@ router.get("/:cmid/cls/:clid/edit", function (req, res) {
     .then(function (cls) {
 
       var cl = cls[0];
+
+      // Make sure that the client's CM is same as user (or user is superuser)
       if (cmid == Number(cl.cm) || req.user.superuser) {
         res.render("clientedit", { client: cl });
       } else { res.redirect("/401"); }
@@ -262,90 +263,139 @@ router.get("/:cmid/cls/:clid/edit", function (req, res) {
   }
 });
 
-router.post("/:cmid/cls/:clid/edit", function (req, res) { 
-  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
-  var cmid = req.body.cmid;
-  var clid = req.body.clid;
-  var first = req.body.first;
-  var middle = req.body.middle;
-  var last = req.body.last;
-  var dob = new Date(req.body.dob);
-  var otn = req.body.otn;
-  var so = req.body.so;
+
+// SUBMIT AN EDIT FOR THE CLIENT
+router.post("/:cmid/cls/:clid/edit", function (req, res) { 
+
+  // Default redirect
+  var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
+
+  // Reference cmid to compare with submitted
+  var cmid2  = Number(req.user.cmid);
+
+  // String variables
+  var first  = req.body.first && typeof req.body.first == "string" && req.body.first.length > 0 ? req.body.first.trim() : null;
+  var middle = req.body.middle && typeof req.body.middle == "string" && req.body.middle.length > 0 ? req.body.middle.trim() : null;
+  var last   = req.body.last && typeof req.body.last == "string" && req.body.last.length > 0 ? req.body.last.trim() : null;
+  
+  // Integer variables
+  var cmid   = isNaN(req.body.cmid) ? null : Number(req.body.cmid);
+  var clid   = isNaN(req.body.clid) ? null : Number(req.body.clid);
+  var otn    = isNaN(req.body.otn) ? null : Number(req.body.otn);
+  var so     = isNaN(req.body.so) ? null : Number(req.body.so);
+
+  // Dates
+  var dob    = isNaN(Date.parse(req.body.dob)) ? null : req.body.dob;
 
   if (!middle) middle = "";
   if (!otn) otn = null;
   if (!so) so = null;
   if (dob == "Invalid Date") dob = null;
 
-  if (!cmid) {
-    req.flash("warning", "Missing cmid.");
+
+  // Make null any optional components if not supplied
+  if (!middle) middle = "";
+  if (!otn)    otn = null;
+  if (!so)     so = null;
+  if (!dob)    dob = "1955-01-01"; // default dob in system
+
+  // Make sure that the required submissions are included
+  if (!cmid || !first || !last) {
+    req.flash("warning", "Missing required entries of new client creation.");
     res.redirect(redirect_loc);
-  } else if (Number(req.user.cmid) !== Number(cmid)) {
+
+  // Makre sure the query is going to a the case managers own cmid
+  } else if (cmid !== cmid2) {
     req.flash("warning", "This ID does not match with the logged-in user");
     res.redirect(redirect_loc);
-  } else if (!first) {
-    req.flash("warning", "Missing first name.");
-    res.redirect(redirect_loc);
-  } else if (!last) {
-    req.flash("warning", "Missing last name.");
-    res.redirect(redirect_loc);
-  
+
+  // All clear to proceed
   } else {
-    var updatedClient = {
-      first: first,
-      middle: middle,
-      last: last,
-      otn: otn,
-      so: so
+
+    var insertObj = {
+      cm:     cmid,
+      first:  first,
+      last:   last,
+      active: true
     };
 
-    if (dob !== null) updatedClient.dob = dob;
+    // include options if not null
+    if (middle) insertObj.middle = middle;
+    if (dob)    insertObj.dob = dob;
+    if (otn)    insertObj.otn = otn;
+    if (so)     insertObj.so = so;
 
-    db("clients").where("clid", clid)
-    .update(updatedClient).then(function (success) {
+    // Run insert
+    db("clients")
+    .where("clid", clid)
+    .update(insertObj)
+    .then(function (success) {
       req.flash("success", "Updated client.");
       res.redirect(redirect_loc);
-    }).catch(function (err) { console.log(err); res.redirect("/500") })
+    }).catch(function (err) { res.redirect("/500") })
   }
 });
 
-router.post("/:cmid/cls/:clid/restore", function (req, res) { 
-  var redirect_loc = "/cms/" + req.params.cmid;
 
-  db("clients").where("clid", req.params.clid)
-  .update({active: true}).then(function (success) {
-    req.flash("success", "Restored client.");
-    res.redirect(redirect_loc);
-  }).catch(function (err) { console.log(err); res.redirect("/500") });
-});
 
+// ARCHIVE A CLIENT
 router.post("/:cmid/cls/:clid/archive", function (req, res) { 
   var redirect_loc = "/cms/" + req.params.cmid;
 
-  db("clients").where("clid", req.params.clid)
-  .update({active: false}).then(function (success) {
+  db("clients")
+  .where("clid", req.params.clid)
+  .update({active: false})
+  .then(function (success) {
     req.flash("success", "Archived client.");
     res.redirect(redirect_loc);
-  }).catch(function (err) { console.log(err); res.redirect("/500") })
+  }).catch(function (err) { res.redirect("/500") })
 });
 
-router.get("/:cmid/cls/:clid/comm", function (req, res) { 
-  if (req.params.cmid == req.user.cmid) {
 
-    db("clients").where("cm", req.params.cmid).andWhere("clid", req.params.clid)
+
+// RESTORE AN ARCHIVED CLIENT
+router.post("/:cmid/cls/:clid/restore", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid;
+
+  db("clients")
+  .where("clid", req.params.clid)
+  .update({active: true})
+  .then(function (success) {
+    req.flash("success", "Restored client.");
+    res.redirect(redirect_loc);
+  }).catch(function (err) { res.redirect("/500") });
+});
+
+
+
+// GET A CLIENT'S COMMCONN
+router.get("/:cmid/cls/:clid/comm", function (req, res) { 
+  var cmid = Number(req.params.cmid);
+  var cmid2 = Number(req.user.cmid);
+
+  // Make sure that cmid queried for is same as user
+  if (cmid !== cmid2) { res.redirect("/404"); }
+  else {
+
+    // Query for client with case manager's ID
+    db("clients")
+    .where("cm", req.params.cmid)
+    .andWhere("clid", req.params.clid)
     .then(function (clients) {
-      if (clients.length > 0) {
-        res.render("clientcontact", {client: clients[0]});
-      } else { res.redirect("/404"); }
+      if (clients.length > 0) { res.render("clientcontact", {client: clients[0]}); } 
+      else { res.redirect("/404"); }
 
     }).catch(function (err) { res.redirect("/500"); })
-  } else { res.redirect("/404"); }
+  }
 });
 
+
+
+// CREATE A NEW COMMCONN (AND POTENTIALLY A NEW COMM)
 router.post("/:cmid/cls/:clid/comm", function (req, res) { 
-  var retry_view = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
+  // Redirect options
+  var retry_view   = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
   var clid = req.params.clid;
