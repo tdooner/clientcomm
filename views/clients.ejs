@@ -76,7 +76,7 @@
 								<% } %>
 							<% } %>
 
-							<% var subj = (clients[i].subject !== null && clients[i].subject.length) < 35 ? clients[i].subject : clients[i].subject.substr(0,35) + "..." %>
+							<% var subj = (clients[i].subject !== null && clients[i].subject.length) < 25 ? clients[i].subject : clients[i].subject.substr(0,25) + "..." %>
 							<% if (!subj) { subj = "No conversations." } %>
 							<%= subj %>
 
