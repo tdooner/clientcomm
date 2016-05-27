@@ -71,12 +71,12 @@ router.get("/:convid", function (req, res) {
 router.post("/:convid", function (req, res) { 
 
   // Make sure all vars that are supposed to be numbers are indeed numbers
-  var cmid = req.body.cmid && !isNaN(req.body.cmid) ? Number(req.body.cmid) : null;
-  var clid = req.body.clid && !isNaN(req.body.clid) ? Number(req.body.clid) : null;
+  var cmid   = req.body.cmid && !isNaN(req.body.cmid) ? Number(req.body.cmid) : null;
+  var clid   = req.body.clid && !isNaN(req.body.clid) ? Number(req.body.clid) : null;
   var convid = req.body.convid && !isNaN(req.body.convid) ? Number(req.body.convid) : null;
 
   // Check that text strings are sufficient
-  var subject = req.body.subject && typeof req.body.subject == "string" && req.body.subject.length > 0 ? req.body.subject.trim() : null;
+  var subject    = req.body.subject && typeof req.body.subject == "string" && req.body.subject.length > 0 ? req.body.subject.trim() : null;
   var devicename = req.body.device && typeof req.body.device == "string" && req.body.device.length > 0 ? req.body.device.trim() : null;
 
 	// Default redirect is set to main capture screen  
@@ -153,17 +153,17 @@ router.post("/:convid", function (req, res) {
 		    db("commconns").insert(insertList).then(function (success) {
 		      req.flash("success", "Captured conversation and added new communication methods.");
 		      res.redirect(reroute);
-		    }).catch(function (err) { res.redirect("/500"); });
+		    }).catch(function (err) { res.redirect("/500"); }); // Query 5
     	
     	} else {
 	      req.flash("success", "Captured conversation.");
 	      res.redirect(reroute);
     	}
 
-		}).catch(function (err) { res.redirect("/500"); }); // Query 1
-		}).catch(function (err) { res.redirect("/500"); }); // Query 2
-		}).catch(function (err) { res.redirect("/500"); }); // Query 3
 		}).catch(function (err) { res.redirect("/500"); }); // Query 4
+		}).catch(function (err) { res.redirect("/500"); }); // Query 3
+		}).catch(function (err) { res.redirect("/500"); }); // Query 2
+		}).catch(function (err) { res.redirect("/500"); }); // Query 1
 
   }
 });

@@ -80,7 +80,15 @@ module.exports = function (app, passport) {
 		var rawQuery5 = "SELECT count(clid) FROM clients WHERE clients.active = TRUE;";
 		db.raw(rawQuery5).then(function (clsct) {
 
-				res.render("stats", {msgs: msgs.rows, days: days.rows, overall: { msgs: msgct.rows[0].count, convos: convosct.rows[0].count, clients: clsct.rows[0].count } });
+				res.render("stats", {
+					msgs: msgs.rows, 
+					days: days.rows, 
+					overall: { 
+						msgs: msgct.rows[0].count, 
+						convos: convosct.rows[0].count, 
+						clients: clsct.rows[0].count 
+					} 
+				});
 
 		}).catch(function (err) { res.redirect("/500"); }); // query 1
 		}).catch(function (err) { res.redirect("/500"); }); // query 2
