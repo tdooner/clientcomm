@@ -627,13 +627,14 @@ router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
     req.flash("warning", "Invalid commconnid provided.");
     res.redirect(retry_loc);
 
-
+  // Make sure description body element okay
   } else if (!description) {
     req.flash("warning", "Missing updated name for communication.");
     res.redirect(retry_loc);
-  
+
+  // TO DO: Control again SQL injection here
   } else {
-    var name = req.body.description.replace(/["']/g, "").trim().split(" ").filter(function (ea) { return ea.length > 0; }).join(" ");
+    var name = description.replace(/["']/g, "").trim().split(" ").filter(function (ea) { return ea.length > 0; }).join(" ");
     var rawQuery = "UPDATE commconns SET name = '" + name + "' WHERE commconnid = " + commconnid + ";";
 
     db.raw(rawQuery).then(function (commconns) {
