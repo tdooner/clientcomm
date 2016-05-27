@@ -83,7 +83,14 @@ router.post("/:convid", function (req, res) {
   var redirect_loc = "/capture";
   var reroute = "/cms/" + String(cmid) + "/cls/" + String(clid) + "/convos/" + String(convid);
 
-  if (subject && cmid && clid && convid && devicename) {
+  // Check to make sure all POST body variables are okay
+  var variableAllClear = subject && cmid && clid && convid && devicename;
+  if (!variableAllClear) {
+		req.flash("warning", "Incorrectly formatted POST body components from capture card submission.");
+		res.redirect(redirect_loc);
+
+	// Proceed if they are and run PgSQL queries
+	} else {
 
     var rawQuery = 	" PREPARE convocapture (text, int, int, int) AS " +
 										" 	UPDATE convos SET subject = $1, cm = $2, client = $3, accepted = TRUE, open = TRUE " + 
@@ -158,9 +165,6 @@ router.post("/:convid", function (req, res) {
 		}).catch(function (err) { res.redirect("/500"); }); // Query 3
 		}).catch(function (err) { res.redirect("/500"); }); // Query 4
 
-  } else {
-    req.flash("warning", "Incorrectly formatted POST body components from capture card submission.");
-    res.redirect(redirect_loc);
   }
 });
 
