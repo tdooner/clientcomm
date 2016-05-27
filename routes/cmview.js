@@ -10,7 +10,14 @@ var TWILIO_NUM = credentials.twilioNum;
 
 
 // DEPENDENCIES
-var db = require("../server/db");
+// Router
+var express = require("express");
+var router = express.Router();
+
+// DB via knex.js to run queries
+var db  = require("../server/db");
+
+// Twilio tools
 var twilio = require("twilio");
 var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
@@ -25,947 +32,938 @@ var cmview = utils["cmview"];
 
 // Session status control
 var auth = utils["pass"];
-var isLoggedIn = auth.isLoggedIn;
-
-
-
-module.exports = function (app, passport) {
-
-
-
-  // CAPTURE ROUTING
-  var captureRoutes = require("./cm-subroutes/capture");
-  app.use("/capture", isLoggedIn, captureRoutes);
 
 
 
 
-  // view current clients for a case manager
-  app.get("/cms", isLoggedIn, function (req, res) { 
-    if (req.user.superuser) {
-      res.redirect("/orgs");
-    } else if (req.user.admin) {
-      res.redirect("/admin");
-    } else {
-      var cmid = req.user.cmid;
-      res.render("cmlanding", {});
-    }
-  });
-
-  app.get("/cms/:cmid", isLoggedIn, function (req, res) { 
-    var cmid = req.params.cmid;
-
-    db("cms").where("cmid", cmid).limit(1)
-    .then(function (cms) {
-
-      // if no results, this client does not exist
-      if (cms.length == 0) {
-        res.redirect("/404");
-
-      } else {
-        var cm = cms[0];
-        var thisIsUser = req.user.cmid == cmid;
-        var adminView = (req.user.cmid !== cmid) && (req.user.org == cm.org);
-
-        // user trying to view their own profile
-        if (thisIsUser || req.user.superuser) {
-          var rawQuery = "SELECT " +
-                            "count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, " +
-                            "convos.open, convos.subject, convos.convid, " +
-                            "clients.*  " +
-                          "FROM clients " + 
-                          "LEFT JOIN (SELECT * FROM convos WHERE convos.updated IN (SELECT MAX(convos.updated) FROM convos WHERE cm = " + cmid + " GROUP BY client) " + 
-                            "AND cm = " + cmid + ") AS convos ON (convos.client=clients.clid) " +
-                          "LEFT JOIN msgs ON (msgs.convo=convos.convid) " +
-                          "WHERE clients.cm = " + cmid + " " +
-                          "GROUP BY clients.clid, convos.open, convos.subject, convos.convid ORDER BY last ASC;";
-          
-          db.raw(rawQuery).then(function (clients) {
-
-            res.render("clients", {
-              cm: cm,
-              clients: clients.rows,
-            });
-
-          }).catch(function (err) { res.redirect("/500"); });
-
-        // admin trying to view one of his staff's profiles
-        } else if (adminView) {
-          res.redirect("/admin/cms/" + cmid);
-
-        // no view permissions
-        } else {
-          res.redirect("/401");
-        }
 
 
-      }
-    }).catch(function (err) { res.redirect("/500"); })
+
+// LOGIN LANDING PAGE ROUTER
+router.get("/", function (req, res) { 
+  if (req.user.superuser)  { res.redirect("/orgs");   } 
+  else if (req.user.admin) { res.redirect("/admin");  } 
+  else                     { res.render("cmlanding"); }
+});
+
+
+
+// SHOW ALL CASE MANAGER CLIENTS WITH NEW MSG NOTIFICATIONS
+router.get("/:cmid", function (req, res) { 
+  var cmid = Number(req.params.cmid);
+  var cmid2 = Number(req.user.cmid);
+
+  // Make sure cmid variable else 400
+  if (isNaN(cmid)) { res.redirect("/400"); }
+
+  // Make sure that cmids line up or reroute if admin
+  else if (cmid !== cmid2 && !req.user.superuser) { 
+
+    // If an admin is trying to view this page, it should reroute to the admin CM file view
+    var adminViewing = (req.user.cmid !== cmid) && (req.user.org == cm.org);
+    if (adminViewing) { res.redirect("/admin/cms/" + cmid); }
+
+    // If individual is not an admin and this is not their page, 401
+    else { res.redirect("/401"); }
+
+  // All clear, proceed
+  } else {
+
+    // TO DO: Discuss SQL injection risk - I think not possible due to fact that cmid is INT type
+    var rawQuery = " SELECT " +
+                    "   count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, " +
+                    "   convos.open, convos.subject, convos.convid, " +
+                    "   clients.*  " +
+                    " FROM clients " + 
+                    " LEFT JOIN (SELECT * FROM convos WHERE convos.updated IN (SELECT MAX(convos.updated) FROM convos WHERE cm = " + cmid + 
+                    "     GROUP BY client) " + 
+                    "     AND cm = " + cmid + ") AS convos " + 
+                    "     ON (convos.client=clients.clid) " +
+                    " LEFT JOIN msgs ON (msgs.convo=convos.convid) " +
+                    " WHERE clients.cm = " + cmid + " " +
+                    " GROUP BY clients.clid, convos.open, convos.subject, convos.convid ORDER BY last ASC; ";
     
-  });
+    db.raw(rawQuery).then(function (clients) {
 
-  app.get("/cms/:cmid/cls", isLoggedIn, function (req, res) { 
-    res.render("clientnew");
-  });
+      res.render("clients", {
+        clients: clients.rows,
+      });
 
-  app.post("/cms/:cmid/cls", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid;
+    }).catch(function (err) { res.redirect("/500"); });
+  }
+});
 
-    var cmid = req.body.cmid;
-    var first = req.body.first;
-    var middle = req.body.middle;
-    var last = req.body.last;
-    var dob = req.body.dob;
-    var otn = req.body.otn;
-    var so = req.body.so;
 
-    if (!middle) middle = "";
-    if (!otn) otn = null;
-    if (!so) so = null;
-    if (!dob) dob = "1955-01-01";
 
-    if (!cmid) {
-      req.flash("warning", "Missing cmid.");
-      res.redirect(redirect_loc);
-    } else if (Number(req.user.cmid) !== Number(cmid)) {
-      req.flash("warning", "This ID does not match with the logged-in user");
-      res.redirect(redirect_loc);
-    } else if (!first) {
-      req.flash("warning", "Missing first name.");
-      res.redirect(redirect_loc);
-    } else if (!last) {
-      req.flash("warning", "Missing last name.");
-      res.redirect(redirect_loc);
-    } else if (isNaN(Date.parse(dob))) {
-      req.flash("warning", "Missing date of birth.");
-      res.redirect(redirect_loc);
-    } else {
-      db("clients")
-      .insert({
-        cm: cmid,
-        first: first,
-        middle: middle,
-        last: last,
-        dob: dob,
-        otn: otn,
-        so: so,
-        active: true
-      }).returning("clid").then(function (clids) {
+// RENDER NEW CLIENT CARD
+router.get("/:cmid/cls", function (req, res) { 
+  res.render("clientnew");
+});
 
-        req.flash("success", "Added a new client.");
-        if (clids.length > 0 && clids[0]) {
-          redirect_loc = redirect_loc + "/cls/" + clids[0];
-          res.redirect(redirect_loc);
-        } else { res.redirect("/500"); }
 
-      }).catch(function (err) { res.redirect("/500"); });
-    }
-  });
 
-  app.get("/cms/:cmid/cls/:clid", isLoggedIn, function (req, res) { 
-    var clid = Number(req.params.clid);
-    var cmid = Number(req.params.cmid);
-    db("clients").where("clid", clid).limit(1)
-    .then(function (cls) {
-      var cl = cls[0];
+// CREATE A NEW CLIENT
+router.post("/:cmid/cls", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid;
 
-      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
-        db("convos")
-        .where("convos.cm", cmid)
-        .andWhere("convos.client", clid)
-        .orderBy("convos.updated", "desc")
-        .then(function (convos) {
+  var cmid = req.body.cmid;
+  var first = req.body.first;
+  var middle = req.body.middle;
+  var last = req.body.last;
+  var dob = req.body.dob;
+  var otn = req.body.otn;
+  var so = req.body.so;
 
-          db("comms").innerJoin("commconns", "comms.commid", "commconns.comm")
-          .where("commconns.client", cl.clid)
-          .then(function (comms) {
+  if (!middle) middle = "";
+  if (!otn) otn = null;
+  if (!so) so = null;
+  if (!dob) dob = "1955-01-01";
 
-            // add comm screen
-            if (comms.length == 0) {
-              res.redirect("/cms/" + cmid + "/cls/" + clid + "/comm");
+  if (!cmid) {
+    req.flash("warning", "Missing cmid.");
+    res.redirect(redirect_loc);
+  } else if (Number(req.user.cmid) !== Number(cmid)) {
+    req.flash("warning", "This ID does not match with the logged-in user");
+    res.redirect(redirect_loc);
+  } else if (!first) {
+    req.flash("warning", "Missing first name.");
+    res.redirect(redirect_loc);
+  } else if (!last) {
+    req.flash("warning", "Missing last name.");
+    res.redirect(redirect_loc);
+  } else if (isNaN(Date.parse(dob))) {
+    req.flash("warning", "Missing date of birth.");
+    res.redirect(redirect_loc);
+  } else {
+    db("clients")
+    .insert({
+      cm: cmid,
+      first: first,
+      middle: middle,
+      last: last,
+      dob: dob,
+      otn: otn,
+      so: so,
+      active: true
+    }).returning("clid").then(function (clids) {
 
-            // start convo
-            } else if (convos.length == 0) {
-              res.redirect("/cms/" + cmid + "/cls/" + clid + "/convos");
-
-            // go to normal client mgmt view
-            } else {
-              res.render("client", {
-                cm: req.user,
-                client: cl,
-                comms: comms,
-                convos: convos,
-              });
-            }
-            
-          }).catch(function (err) { res.redirect("/500"); })
-        }).catch(function (err) { res.redirect("/500"); })
-      } else { res.redirect("/404"); }
-    }).catch(function (err) { res.redirect("/500"); })
-  });
-
-  app.get("/cms/:cmid/cls/:clid/edit", isLoggedIn, function (req, res) { 
-    var clid = Number(req.params.clid);
-    var cmid = Number(req.params.cmid);
-    db("clients").where("clid", clid).limit(1)
-    .then(function (cls) {
-      var cl = cls[0];
-      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
-        res.render("clientedit", { client: cl });
-      } else { res.redirect("/404"); }
-    }).catch(function (err) { res.redirect("/500"); })
-  });
-
-  app.post("/cms/:cmid/cls/:clid/edit", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
-
-    var cmid = req.body.cmid;
-    var clid = req.body.clid;
-    var first = req.body.first;
-    var middle = req.body.middle;
-    var last = req.body.last;
-    var dob = new Date(req.body.dob);
-    var otn = req.body.otn;
-    var so = req.body.so;
-
-    if (!middle) middle = "";
-    if (!otn) otn = null;
-    if (!so) so = null;
-    if (dob == "Invalid Date") dob = null;
-
-    if (!cmid) {
-      req.flash("warning", "Missing cmid.");
-      res.redirect(redirect_loc);
-    } else if (Number(req.user.cmid) !== Number(cmid)) {
-      req.flash("warning", "This ID does not match with the logged-in user");
-      res.redirect(redirect_loc);
-    } else if (!first) {
-      req.flash("warning", "Missing first name.");
-      res.redirect(redirect_loc);
-    } else if (!last) {
-      req.flash("warning", "Missing last name.");
-      res.redirect(redirect_loc);
-    
-    } else {
-      var updatedClient = {
-        first: first,
-        middle: middle,
-        last: last,
-        otn: otn,
-        so: so
-      };
-
-      if (dob !== null) updatedClient.dob = dob;
-
-      db("clients").where("clid", clid)
-      .update(updatedClient).then(function (success) {
-        req.flash("success", "Updated client.");
+      req.flash("success", "Added a new client.");
+      if (clids.length > 0 && clids[0]) {
+        redirect_loc = redirect_loc + "/cls/" + clids[0];
         res.redirect(redirect_loc);
-      }).catch(function (err) { console.log(err); res.redirect("/500") })
-    }
-  });
+      } else { res.redirect("/500"); }
 
-  app.post("/cms/:cmid/cls/:clid/restore", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid;
+    }).catch(function (err) { res.redirect("/500"); });
+  }
+});
 
-    db("clients").where("clid", req.params.clid)
-    .update({active: true}).then(function (success) {
-      req.flash("success", "Restored client.");
-      res.redirect(redirect_loc);
-    }).catch(function (err) { console.log(err); res.redirect("/500") });
-  });
+router.get("/:cmid/cls/:clid", function (req, res) { 
+  var clid = Number(req.params.clid);
+  var cmid = Number(req.params.cmid);
+  db("clients").where("clid", clid).limit(1)
+  .then(function (cls) {
+    var cl = cls[0];
 
-  app.post("/cms/:cmid/cls/:clid/archive", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid;
+    if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
+      db("convos")
+      .where("convos.cm", cmid)
+      .andWhere("convos.client", clid)
+      .orderBy("convos.updated", "desc")
+      .then(function (convos) {
 
-    db("clients").where("clid", req.params.clid)
-    .update({active: false}).then(function (success) {
-      req.flash("success", "Archived client.");
-      res.redirect(redirect_loc);
-    }).catch(function (err) { console.log(err); res.redirect("/500") })
-  });
+        db("comms").innerJoin("commconns", "comms.commid", "commconns.comm")
+        .where("commconns.client", cl.clid)
+        .then(function (comms) {
 
-  app.get("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
-    if (req.params.cmid == req.user.cmid) {
+          // add comm screen
+          if (comms.length == 0) {
+            res.redirect("/cms/" + cmid + "/cls/" + clid + "/comm");
 
-      db("clients").where("cm", req.params.cmid).andWhere("clid", req.params.clid)
-      .then(function (clients) {
-        if (clients.length > 0) {
-          res.render("clientcontact", {client: clients[0]});
-        } else { res.redirect("/404"); }
+          // start convo
+          } else if (convos.length == 0) {
+            res.redirect("/cms/" + cmid + "/cls/" + clid + "/convos");
 
+          // go to normal client mgmt view
+          } else {
+            res.render("client", {
+              cm: req.user,
+              client: cl,
+              comms: comms,
+              convos: convos,
+            });
+          }
+          
+        }).catch(function (err) { res.redirect("/500"); })
       }).catch(function (err) { res.redirect("/500"); })
     } else { res.redirect("/404"); }
-  });
+  }).catch(function (err) { res.redirect("/500"); })
+});
 
-  app.post("/cms/:cmid/cls/:clid/comm", isLoggedIn, function (req, res) { 
-    var retry_view = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
+router.get("/:cmid/cls/:clid/edit", function (req, res) { 
+  var clid = Number(req.params.clid);
+  var cmid = Number(req.params.cmid);
+  db("clients").where("clid", clid).limit(1)
+  .then(function (cls) {
+    var cl = cls[0];
+    if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
+      res.render("clientedit", { client: cl });
+    } else { res.redirect("/404"); }
+  }).catch(function (err) { res.redirect("/500"); })
+});
 
-    var clid = req.params.clid;
-    var cmid = req.user.cmid;
-    var type = req.body.type;
-    var value = String(req.body.value);
-    var description = req.body.description;
+router.post("/:cmid/cls/:clid/edit", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
-    if (type == "cell" || type == "landline") {
-      value = value.replace(/[^0-9.]/g, "");
-      if (value.length == 10) {
-        value = "1" + value;
-      }
+  var cmid = req.body.cmid;
+  var clid = req.body.clid;
+  var first = req.body.first;
+  var middle = req.body.middle;
+  var last = req.body.last;
+  var dob = new Date(req.body.dob);
+  var otn = req.body.otn;
+  var so = req.body.so;
+
+  if (!middle) middle = "";
+  if (!otn) otn = null;
+  if (!so) so = null;
+  if (dob == "Invalid Date") dob = null;
+
+  if (!cmid) {
+    req.flash("warning", "Missing cmid.");
+    res.redirect(redirect_loc);
+  } else if (Number(req.user.cmid) !== Number(cmid)) {
+    req.flash("warning", "This ID does not match with the logged-in user");
+    res.redirect(redirect_loc);
+  } else if (!first) {
+    req.flash("warning", "Missing first name.");
+    res.redirect(redirect_loc);
+  } else if (!last) {
+    req.flash("warning", "Missing last name.");
+    res.redirect(redirect_loc);
+  
+  } else {
+    var updatedClient = {
+      first: first,
+      middle: middle,
+      last: last,
+      otn: otn,
+      so: so
+    };
+
+    if (dob !== null) updatedClient.dob = dob;
+
+    db("clients").where("clid", clid)
+    .update(updatedClient).then(function (success) {
+      req.flash("success", "Updated client.");
+      res.redirect(redirect_loc);
+    }).catch(function (err) { console.log(err); res.redirect("/500") })
+  }
+});
+
+router.post("/:cmid/cls/:clid/restore", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid;
+
+  db("clients").where("clid", req.params.clid)
+  .update({active: true}).then(function (success) {
+    req.flash("success", "Restored client.");
+    res.redirect(redirect_loc);
+  }).catch(function (err) { console.log(err); res.redirect("/500") });
+});
+
+router.post("/:cmid/cls/:clid/archive", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid;
+
+  db("clients").where("clid", req.params.clid)
+  .update({active: false}).then(function (success) {
+    req.flash("success", "Archived client.");
+    res.redirect(redirect_loc);
+  }).catch(function (err) { console.log(err); res.redirect("/500") })
+});
+
+router.get("/:cmid/cls/:clid/comm", function (req, res) { 
+  if (req.params.cmid == req.user.cmid) {
+
+    db("clients").where("cm", req.params.cmid).andWhere("clid", req.params.clid)
+    .then(function (clients) {
+      if (clients.length > 0) {
+        res.render("clientcontact", {client: clients[0]});
+      } else { res.redirect("/404"); }
+
+    }).catch(function (err) { res.redirect("/500"); })
+  } else { res.redirect("/404"); }
+});
+
+router.post("/:cmid/cls/:clid/comm", function (req, res) { 
+  var retry_view = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
+  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
+
+  var clid = req.params.clid;
+  var cmid = req.user.cmid;
+  var type = req.body.type;
+  var value = String(req.body.value);
+  var description = req.body.description;
+
+  if (type == "cell" || type == "landline") {
+    value = value.replace(/[^0-9.]/g, "");
+    if (value.length == 10) {
+      value = "1" + value;
     }
+  }
 
-    if (Number(clid) !== Number(req.body.clid)) {
-      req.flash("warning", "Client ID does not match.");
-      res.redirect(retry_view);
-    } else if (Number(cmid) !== Number(req.body.cmid)) {
-      req.flash("warning", "Case Manager ID does not match user logged-in.");
-      res.redirect(retry_view);
-    } else if (!type) {
-      req.flash("warning", "Missing the communication type.");
-      res.redirect(retry_view);
-    } else if (!value) {
-      req.flash("warning", "Missing the communication value (e.g. the phone number).");
-      res.redirect(retry_view);
+  if (Number(clid) !== Number(req.body.clid)) {
+    req.flash("warning", "Client ID does not match.");
+    res.redirect(retry_view);
+  } else if (Number(cmid) !== Number(req.body.cmid)) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(retry_view);
+  } else if (!type) {
+    req.flash("warning", "Missing the communication type.");
+    res.redirect(retry_view);
+  } else if (!value) {
+    req.flash("warning", "Missing the communication value (e.g. the phone number).");
+    res.redirect(retry_view);
 
-    } else if (type == "cell" && value.length !== 11) {
-      req.flash("warning", "Incorrect phone value.");
-      res.redirect(retry_view);
-    } else if (type == "cell" && isNaN(Number(value))) {
-      req.flash("warning", "Value supplied is not a number.");
-      res.redirect(retry_view);
-    } else if (!description) {
-      req.flash("warning", "Missing description value.");
-      res.redirect(retry_view);
-    
-    } else {
-      db("comms").where("value", value).limit(1)
-      .then(function (comms) {
+  } else if (type == "cell" && value.length !== 11) {
+    req.flash("warning", "Incorrect phone value.");
+    res.redirect(retry_view);
+  } else if (type == "cell" && isNaN(Number(value))) {
+    req.flash("warning", "Value supplied is not a number.");
+    res.redirect(retry_view);
+  } else if (!description) {
+    req.flash("warning", "Missing description value.");
+    res.redirect(retry_view);
+  
+  } else {
+    db("comms").where("value", value).limit(1)
+    .then(function (comms) {
 
-        if (comms.length > 0) {
-          var commid = comms[0].commid;
+      if (comms.length > 0) {
+        var commid = comms[0].commid;
+
+        db("commconns").insert({
+          client: clid,
+          comm: commid,
+          name: description
+        })
+        .then(function (success) {
+          req.flash("success", "Added a new communication method.");
+          res.redirect(redirect_loc);
+
+        }).catch(function (err) { res.redirect("/500"); });
+
+      } else {
+        db("comms").insert({
+          type: type,
+          value: value,
+          description: description
+        }).returning("commid").then(function (commids) {
+
+          var commid = commids[0];
 
           db("commconns").insert({
             client: clid,
             comm: commid,
             name: description
-          })
-          .then(function (success) {
+          }).then(function (success) {
+
             req.flash("success", "Added a new communication method.");
             res.redirect(redirect_loc);
 
           }).catch(function (err) { res.redirect("/500"); });
+        }).catch(function (err) { res.redirect("/500"); });
+      }
+    }).catch(function (err) { res.redirect("/500"); });
 
-        } else {
-          db("comms").insert({
-            type: type,
-            value: value,
-            description: description
-          }).returning("commid").then(function (commids) {
+  }
+});
 
-            var commid = commids[0];
+router.get("/:cmid/cls/:clid/comms", function (req, res) { 
+  var clid = Number(req.params.clid);
+  var cmid = Number(req.params.cmid);
+  db("clients").where("clid", clid).limit(1)
+  .then(function (cls) {
+    var cl = cls[0];
 
-            db("commconns").insert({
-              client: clid,
-              comm: commid,
-              name: description
-            }).then(function (success) {
-
-              req.flash("success", "Added a new communication method.");
-              res.redirect(redirect_loc);
-
-            }).catch(function (err) { res.redirect("/500"); });
-          }).catch(function (err) { res.redirect("/500"); });
-        }
-      }).catch(function (err) { res.redirect("/500"); });
-
-    }
-  });
-
-  app.get("/cms/:cmid/cls/:clid/comms", isLoggedIn, function (req, res) { 
-    var clid = Number(req.params.clid);
-    var cmid = Number(req.params.cmid);
-    db("clients").where("clid", clid).limit(1)
-    .then(function (cls) {
-      var cl = cls[0];
-
-      if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
-        db("convos")
-        .where("convos.cm", cmid)
-        .andWhere("convos.client", clid)
-        .orderBy("convos.updated", "desc")
-        .then(function (convos) {
-
-          var rawQuery = "SELECT * FROM comms " +
-                          " JOIN commconns ON (comms.commid = commconns.comm) " + 
-                          " LEFT JOIN (SELECT count(msgid) AS use_ct, msgs.comm FROM msgs " +
-                              " WHERE msgs.convo " +
-                              " IN (SELECT convos.convid FROM convos WHERE convos.client = " + clid + ") " + 
-                          " GROUP BY msgs.comm) AS counts ON (counts.comm = commconns.comm) " +
-                          " WHERE commconns.client = " + clid + " AND commconns.retired IS NULL;";
-
-          db.raw(rawQuery).then(function (comms) {
-
-            res.render("clientcomms", {
-              cm: req.user,
-              client: cl,
-              comms: comms.rows,
-              convos: convos,
-            });
-            
-          }).catch(function (err) { res.redirect("/500"); })
-        }).catch(function (err) { res.redirect("/500"); })
-      } else { res.redirect("/404"); }
-    }).catch(function (err) { res.redirect("/500"); })
-  });
-
-  app.get("/cms/:cmid/cls/:clid/comms/:commconnid", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
-
-    var clid = req.params.clid;
-    var cmid = req.params.cmid;
-    var commconnid = req.params.commconnid;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Case Manager ID does not match user logged-in.");
-      res.redirect(redirect_loc);
-    
-    } else {
-      var rawQuery = "SELECT * FROM commconns " + 
-                      " JOIN (SELECT clients.clid FROM clients WHERE clients.cm = " + cmid + 
-                          ") AS clients ON (clients.clid = commconns.client) " + 
-                      " LEFT JOIN comms ON (comms.commid = commconns.comm) " + 
-                      " WHERE commconns.client = " + clid + " " +
-                      " AND commconns.commconnid = " + commconnid + " LIMIT 1";
-
-      db.raw(rawQuery).then(function (commconns) {
-        if (commconns.rows && commconns.rows.length == 1) {
-          commconn = commconns.rows[0];
-          res.render("clientcontactedit", { commconn: commconn });
-
-        } else { res.redirect("/404"); }
-      }).catch(function (err) { console.log(err); res.redirect("/500"); });
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/comms/:commconnid", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
-    var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
-
-    var clid = Number(req.params.clid);
-    var clid2 = Number(req.body.clid);
-
-    var cmid = Number(req.params.cmid);
-    var cmid2 = Number(req.body.cmid);
-    var cmid3 = Number(req.user.cmid);
-
-    var commconnid = Number(req.params.commconnid);
-
-    if (cmid !== cmid2 && cmid !== cmid3) {
-      req.flash("warning", "Case Manager ID does not match user logged-in.");
-      res.redirect(retry_loc);
-    } else if (clid !== clid2) {
-      req.flash("warning", "Client IDs do not match from post body and URL route.");
-      res.redirect(retry_loc);
-    } else if (isNaN(commconnid)) {
-      req.flash("warning", "Invalid commconnid provided.");
-      res.redirect(retry_loc);
-    } else if (!req.body.description) {
-      req.flash("warning", "Missing new name for communication.");
-      res.redirect(retry_loc);
-    
-    } else {
-      var name = req.body.description.replace(/["']/g, "").trim().split(" ").filter(function (ea) { return ea.length > 0; }).join(" ");
-      var rawQuery = "UPDATE commconns SET name = '" + name + "' WHERE commconnid = " + commconnid + ";";
-
-      db.raw(rawQuery).then(function (commconns) {
-        req.flash("success", "Contact method updated.");
-        res.redirect(redirect_loc);
-      }).catch(function (err) { console.log(err); res.redirect("/500"); });
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/comms/:commconnid/close", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
-    var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
-
-    var clid = Number(req.params.clid);
-
-    var cmid = Number(req.params.cmid);
-    var cmid2 = Number(req.user.cmid);
-
-    var commconnid = Number(req.params.commconnid);
-
-    if (cmid !== cmid2) {
-      req.flash("warning", "Case Manager ID does not match user logged-in.");
-      res.redirect(retry_loc);
-    } else if (isNaN(commconnid)) {
-      req.flash("warning", "Invalid commconnid provided.");
-      res.redirect(retry_loc);
-    
-    } else {
-      db("commconns").where("commconnid", commconnid)
-      .update({retired: db.fn.now()})
-      .then(function (success) {
-        req.flash("success", "Retired contact method.");
-        res.redirect(redirect_loc);
-
-      }).catch(function (err) { console.log(err); res.redirect("/500"); });
-
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/close", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.user.cmid;
-
-    var clid = req.params.clid;
-    var cmid = req.params.cmid;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Case Manager ID does not match user logged-in.");
-      res.redirect(redirect_loc);
-    } else {
-      
-      db("clients").where("clid", clid).limit(1)
-      .then(function (clients) {
-
-        if (clients.length > 0) {
-          var client = clients[0];
-
-          if (client.cm == cmid) {
-
-            db("clients").where("clid", clid)
-            .update({active: false, updated: db.fn.now()})
-            .then(function (success) {
-              req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
-              res.redirect(redirect_loc);
-
-            }).catch(function (err) { console.log(err); res.redirect("/500"); });
-
-          } else {
-            req.flash("warning", "You do not have authority to close that client.");
-            res.redirect(redirect_loc);
-          }
-
-        } else {
-          req.flash("warning", "That user id does not exist.");
-          res.redirect(redirect_loc);
-        }
-
-      }).catch(function (err) { res.redirect("/500"); })
-
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/open", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/cms/" + req.user.cmid;
-
-    var clid = req.params.clid;
-    var cmid = req.params.cmid;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Case Manager ID does not match user logged-in.");
-      res.redirect(redirect_loc);
-    } else {
-      
-      db("clients").where("clid", clid).limit(1)
-      .then(function (clients) {
-
-        if (clients.length > 0) {
-          var client = clients[0];
-
-          if (client.cm == cmid) {
-
-            db("clients").where("clid", clid)
-            .update({active: true, updated: db.fn.now()})
-            .then(function (success) {
-              req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
-              res.redirect(redirect_loc);
-
-            }).catch(function (err) { console.log(err); res.redirect("/500"); });
-
-          } else {
-            req.flash("warning", "You do not have authority to re-activate that client.");
-            res.redirect(redirect_loc);
-          }
-
-        } else {
-          req.flash("warning", "That user id does not exist.");
-          res.redirect(redirect_loc);
-        }
-
-      }).catch(function (err) { res.redirect("/500"); })
-
-    }
-  });
-
-  app.get("/cms/:cmid/cls/:clid/convos", isLoggedIn, function (req, res) {
-    var cmid = Number(req.params.cmid);
-    var cmid2 = Number(req.user.cmid);
-    var clid = Number(req.params.clid);
-
-    if (cmid !== cmid2) { res.redirect("/404"); } 
-    else { 
-
-      db("clients").where("cm", cmid).andWhere("clid", clid)
-      .then(function (clients) {
-        if (clients.length == 0) { res.redirect("/404"); }
-        else { 
-
-          db("comms").innerJoin("commconns", "comms.commid", "commconns.comm").where("commconns.client", clid)
-          .then(function (comms) {
-
-            res.render("clientconvo", {client: clients[0], comms: comms});
-            
-          }).catch(function (err) { res.redirect("/500"); });
-        } 
-      }).catch(function (err) { res.redirect("/500"); })
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/convos", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
-
-    var cmid = req.body.cmid;
-    var clid = req.body.clid;
-    var subject = req.body.subject;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
-    } else {
-
-      // close all the other conversations
+    if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
       db("convos")
-      .where("client", clid)
-      .andWhere("cm", cmid)
-      .andWhere("convos.open", true)
-      .pluck("convid")
+      .where("convos.cm", cmid)
+      .andWhere("convos.client", clid)
+      .orderBy("convos.updated", "desc")
       .then(function (convos) {
-        
-        db("convos").whereIn("convid", convos)
-        .update({
-          open: false
-        }).then(function (success) {
+
+        var rawQuery = "SELECT * FROM comms " +
+                        " JOIN commconns ON (comms.commid = commconns.comm) " + 
+                        " LEFT JOIN (SELECT count(msgid) AS use_ct, msgs.comm FROM msgs " +
+                            " WHERE msgs.convo " +
+                            " IN (SELECT convos.convid FROM convos WHERE convos.client = " + clid + ") " + 
+                        " GROUP BY msgs.comm) AS counts ON (counts.comm = commconns.comm) " +
+                        " WHERE commconns.client = " + clid + " AND commconns.retired IS NULL;";
+
+        db.raw(rawQuery).then(function (comms) {
+
+          res.render("clientcomms", {
+            cm: req.user,
+            client: cl,
+            comms: comms.rows,
+            convos: convos,
+          });
           
-          db("convos")
-          .insert({
-            cm: cmid,
-            client: clid,
-            subject: subject,
-            open: true,
-            accepted: true
-          }).returning("convid").then(function (convids) {
+        }).catch(function (err) { res.redirect("/500"); })
+      }).catch(function (err) { res.redirect("/500"); })
+    } else { res.redirect("/404"); }
+  }).catch(function (err) { res.redirect("/500"); })
+});
 
-            var convid = convids[0];
-            var content = req.body.content;
-            var commid = req.body.commid;
+router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
 
-            db("comms")
-            .where("commid", commid)
-            .limit(1)
-            .then(function (comms) {
-              
-              if (comms.length > 0) {
-                var comm = comms[0];
+  var clid = req.params.clid;
+  var cmid = req.params.cmid;
+  var commconnid = req.params.commconnid;
 
-                twClient.sendSms({
-                  to: comm.value,
-                  from: TWILIO_NUM,
-                  body: content
-                }, function (err, msg) {
-                  if (err) {
-                    console.log("Twilio send error: ", err);
-                    if (err.hasOwnProperty("code") && err.code == 21211) res.status(500).send("That number is not a valid phone number.");
-                    else res.redirect("/500");
-                  } else {
-                    db("msgs")
-                    .insert({
-                      convo: convid,
-                      comm: commid,
-                      content: content,
-                      inbound: false,
-                      read: true,
-                      tw_sid: msg.sid,
-                      tw_status: msg.status
-                    })
-                    .returning("msgid")
-                    .then(function (msgs) {
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(redirect_loc);
+  
+  } else {
+    var rawQuery = "SELECT * FROM commconns " + 
+                    " JOIN (SELECT clients.clid FROM clients WHERE clients.cm = " + cmid + 
+                        ") AS clients ON (clients.clid = commconns.client) " + 
+                    " LEFT JOIN comms ON (comms.commid = commconns.comm) " + 
+                    " WHERE commconns.client = " + clid + " " +
+                    " AND commconns.commconnid = " + commconnid + " LIMIT 1";
 
-                      req.flash("success", "New conversation created.");
-                      redirect_loc = redirect_loc + "/convos/" + convid;
-                      res.redirect(redirect_loc);
+    db.raw(rawQuery).then(function (commconns) {
+      if (commconns.rows && commconns.rows.length == 1) {
+        commconn = commconns.rows[0];
+        res.render("clientcontactedit", { commconn: commconn });
 
-                    }).catch(function (err) { res.redirect("/500"); });
-                  }
-                });
+      } else { res.redirect("/404"); }
+    }).catch(function (err) { console.log(err); res.redirect("/500"); });
+  }
+});
 
-              } else { res.redirect("/500"); }
-            }).catch(function (err) { res.redirect("/500"); });
+router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
+  var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
+
+  var clid = Number(req.params.clid);
+  var clid2 = Number(req.body.clid);
+
+  var cmid = Number(req.params.cmid);
+  var cmid2 = Number(req.body.cmid);
+  var cmid3 = Number(req.user.cmid);
+
+  var commconnid = Number(req.params.commconnid);
+
+  if (cmid !== cmid2 && cmid !== cmid3) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(retry_loc);
+  } else if (clid !== clid2) {
+    req.flash("warning", "Client IDs do not match from post body and URL route.");
+    res.redirect(retry_loc);
+  } else if (isNaN(commconnid)) {
+    req.flash("warning", "Invalid commconnid provided.");
+    res.redirect(retry_loc);
+  } else if (!req.body.description) {
+    req.flash("warning", "Missing new name for communication.");
+    res.redirect(retry_loc);
+  
+  } else {
+    var name = req.body.description.replace(/["']/g, "").trim().split(" ").filter(function (ea) { return ea.length > 0; }).join(" ");
+    var rawQuery = "UPDATE commconns SET name = '" + name + "' WHERE commconnid = " + commconnid + ";";
+
+    db.raw(rawQuery).then(function (commconns) {
+      req.flash("success", "Contact method updated.");
+      res.redirect(redirect_loc);
+    }).catch(function (err) { console.log(err); res.redirect("/500"); });
+  }
+});
+
+router.post("/:cmid/cls/:clid/comms/:commconnid/close", function (req, res) { 
+  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
+  var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
+
+  var clid = Number(req.params.clid);
+
+  var cmid = Number(req.params.cmid);
+  var cmid2 = Number(req.user.cmid);
+
+  var commconnid = Number(req.params.commconnid);
+
+  if (cmid !== cmid2) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(retry_loc);
+  } else if (isNaN(commconnid)) {
+    req.flash("warning", "Invalid commconnid provided.");
+    res.redirect(retry_loc);
+  
+  } else {
+    db("commconns").where("commconnid", commconnid)
+    .update({retired: db.fn.now()})
+    .then(function (success) {
+      req.flash("success", "Retired contact method.");
+      res.redirect(redirect_loc);
+
+    }).catch(function (err) { console.log(err); res.redirect("/500"); });
+
+  }
+});
+
+router.post("/:cmid/cls/:clid/close", function (req, res) { 
+  var redirect_loc = "/cms/" + req.user.cmid;
+
+  var clid = req.params.clid;
+  var cmid = req.params.cmid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(redirect_loc);
+  } else {
+    
+    db("clients").where("clid", clid).limit(1)
+    .then(function (clients) {
+
+      if (clients.length > 0) {
+        var client = clients[0];
+
+        if (client.cm == cmid) {
+
+          db("clients").where("clid", clid)
+          .update({active: false, updated: db.fn.now()})
+          .then(function (success) {
+            req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
+            res.redirect(redirect_loc);
 
           }).catch(function (err) { console.log(err); res.redirect("/500"); });
 
-        }).catch(function (err) { res.redirect("/500"); })
-
-      }).catch(function (err) { res.redirect("/500"); })
-
-    }
-  });
-
-  app.get("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
-
-    var cmid = req.params.cmid;
-    var clid = req.params.clid;
-    var convid = req.params.convid;
-
-    if ((Number(cmid) !== Number(req.user.cmid)) && !req.user.superuser) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
-
-    } else {
-      cmview.get_convo(cmid, clid, convid)
-      .then(function (obj) {
-
-        var rawQuery = "UPDATE msgs SET read = TRUE WHERE msgid IN ( ";
-        rawQuery += "SELECT msgs.msgid FROM clients ";
-        rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
-        rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
-        rawQuery += "WHERE clients.cm=" + cmid  + " AND clients.clid=" + clid + " AND msgs.read=FALSE) ";
-
-        db.raw(rawQuery).then(function (success) {
-
-          db("clients").where("clid", clid).limit(1).then(function (cls) {
-            obj.client = cls[0];
-            res.render("msgs", obj);
-          }).catch(function (err) { res.redirect("/500"); })
-
-        }).catch(function (err) { res.redirect("/500"); })
-
-      }).catch(function (err) {
-        if (err == "404") { res.redirect("/404"); } 
-        else { res.redirect("/500"); }
-      })
-
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/convos/:convid", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
-
-    var cmid = req.params.cmid;
-    var clid = req.params.clid;
-    var convid = req.params.convid;
-
-    var commid = req.body.commid;
-    var content = req.body.content;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect("/cms/" + req.user.cmid);
-    } else if (typeof content !== "string" || content == "") {
-      req.flash("warning", "Text entry either too short or not of type string.");
-      res.redirect(redirect_loc)
-    } else if (typeof content == "string" && content.length > 160) {
-      req.flash("warning", "Text entry is too long; limit is 160 characters.");
-      res.redirect(redirect_loc)
-    } else {
-      content = content.trim().substr(0,159);
-
-      db("comms")
-      .where("commid", commid)
-      .limit(1)
-      .then(function (comms) {
-        
-        if (comms.length > 0) {
-          var comm = comms[0];
-
-          twClient.sendSms({
-            to: comm.value,
-            from: TWILIO_NUM,
-            body: content
-          }, function (err, msg) {
-            if (err) {
-              console.log("Twilio send error: ", err);
-              if (err.hasOwnProperty("code") && err.code == 21211) res.status(500).send("That number is not a valid phone number.");
-              else res.redirect("/500");
-            } else {
-              db("msgs")
-              .insert({
-                convo: convid,
-                comm: commid,
-                content: content,
-                inbound: false,
-                read: true,
-                tw_sid: msg.sid,
-                tw_status: msg.status
-              })
-              .returning("msgid")
-              .then(function (msgs) {
-
-                db("convos").where("convid", convid)
-                .update({updated: db.fn.now()})
-                .then(function (success) {
-                  req.flash("success", "Sent message.");
-                  res.redirect(redirect_loc)
-
-                }).catch(function (err) { res.redirect("/500"); });
-              }).catch(function (err) { res.redirect("/500"); });
-            }
-          });
-
-        } else { res.redirect("/500"); }
-      }).catch(function (err) { res.redirect("/500"); });
-
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/convos/:convid/close", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
-
-    var cmid = req.params.cmid;
-    var clid = req.params.clid;
-    var convid = req.params.convid;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
-    } else {
-
-      cmview.get_convo(cmid, clid, convid)
-      .then(function (obj) {
-        
-        db("convos").where("convid", convid).update({open: false, updated: db.fn.now()})
-        .then(function (success) {
-          req.flash("success", "Closed conversation.");
-          res.redirect(redirect_loc);
-
-        }).catch(function (err) {
-          res.redirect("/500");
-        })
-
-      }).catch(function (err) {
-        if (err == "404") {
-          res.redirect("/404");
         } else {
-          res.redirect("/500");
-        }
-      })
-
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/convos/:convid/open", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
-
-    var cmid = req.params.cmid;
-    var clid = req.params.clid;
-    var convid = req.params.convid;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
-    } else {
-
-      db("convos")
-      .where("client", clid)
-      .andWhere("cm", cmid)
-      .andWhere("convos.open", true)
-      .pluck("convid")
-      .then(function (convos) {
-        
-        db("convos").whereIn("convid", convos)
-        .update({ open: false })
-        .then(function (success) {
-
-          cmview.get_convo(cmid, clid, convid)
-          .then(function (obj) {
-            
-            db("convos").where("convid", convid).update({open: true, updated: db.fn.now()})
-            .then(function (success) {
-              req.flash("success", "Conversation reopened.");
-              res.redirect(redirect_loc);
-
-            }).catch(function (err) {
-              res.redirect("/500");
-            })
-
-          }).catch(function (err) {
-            if (err == "404") {
-              res.redirect("/404");
-            } else {
-              res.redirect("/500");
-            }
-          });
-
-        }).catch(function (err) { res.redirect("/500"); })
-      }).catch(function (err) { res.redirect("/500"); })
-    }
-  });
-
-  app.post("/cms/:cmid/cls/:clid/convos/:convid/accept", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
-
-    var cmid = req.params.cmid;
-    var clid = req.params.clid;
-    var convid = req.params.convid;
-
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
-    } else {
-
-      cmview.get_convo(cmid, clid, convid)
-      .then(function (obj) {
-        
-        db("convos").where("convid", convid).update({accepted: true, updated: db.fn.now()})
-        .then(function (success) {
-          req.flash("success", "Closed conversation.");
+          req.flash("warning", "You do not have authority to close that client.");
           res.redirect(redirect_loc);
-
-        }).catch(function (err) {
-          res.redirect("/500");
-        })
-
-      }).catch(function (err) {
-        if (err == "404") {
-          res.redirect("/404");
-        } else {
-          res.redirect("/500");
         }
-      })
 
-    }
-  });
+      } else {
+        req.flash("warning", "That user id does not exist.");
+        res.redirect(redirect_loc);
+      }
 
+    }).catch(function (err) { res.redirect("/500"); })
 
-  app.post("/cms/:cmid/cls/:clid/convos/:convid/reject", isLoggedIn, function (req, res) {
-    var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
+  }
+});
 
-    var cmid = req.params.cmid;
-    var clid = req.params.clid;
-    var convid = req.params.convid;
+router.post("/:cmid/cls/:clid/open", function (req, res) { 
+  var redirect_loc = "/cms/" + req.user.cmid;
 
-    if (Number(cmid) !== Number(req.user.cmid)) {
-      req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
-      res.redirect(redirect_loc);
-    } else {
+  var clid = req.params.clid;
+  var cmid = req.params.cmid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(redirect_loc);
+  } else {
+    
+    db("clients").where("clid", clid).limit(1)
+    .then(function (clients) {
+
+      if (clients.length > 0) {
+        var client = clients[0];
+
+        if (client.cm == cmid) {
+
+          db("clients").where("clid", clid)
+          .update({active: true, updated: db.fn.now()})
+          .then(function (success) {
+            req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
+            res.redirect(redirect_loc);
+
+          }).catch(function (err) { console.log(err); res.redirect("/500"); });
+
+        } else {
+          req.flash("warning", "You do not have authority to re-activate that client.");
+          res.redirect(redirect_loc);
+        }
+
+      } else {
+        req.flash("warning", "That user id does not exist.");
+        res.redirect(redirect_loc);
+      }
+
+    }).catch(function (err) { res.redirect("/500"); })
+
+  }
+});
+
+router.get("/:cmid/cls/:clid/convos", function (req, res) {
+  var cmid = Number(req.params.cmid);
+  var cmid2 = Number(req.user.cmid);
+  var clid = Number(req.params.clid);
+
+  if (cmid !== cmid2) { res.redirect("/404"); } 
+  else { 
+
+    db("clients").where("cm", cmid).andWhere("clid", clid)
+    .then(function (clients) {
+      if (clients.length == 0) { res.redirect("/404"); }
+      else { 
+
+        db("comms").innerJoin("commconns", "comms.commid", "commconns.comm").where("commconns.client", clid)
+        .then(function (comms) {
+
+          res.render("clientconvo", {client: clients[0], comms: comms});
+          
+        }).catch(function (err) { res.redirect("/500"); });
+      } 
+    }).catch(function (err) { res.redirect("/500"); })
+  }
+});
+
+router.post("/:cmid/cls/:clid/convos", function (req, res) {
+  var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
+
+  var cmid = req.body.cmid;
+  var clid = req.body.clid;
+  var subject = req.body.subject;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+    res.redirect(redirect_loc);
+  } else {
+
+    // close all the other conversations
+    db("convos")
+    .where("client", clid)
+    .andWhere("cm", cmid)
+    .andWhere("convos.open", true)
+    .pluck("convid")
+    .then(function (convos) {
       
-      db("msgs").where("convo", convid).delete()
+      db("convos").whereIn("convid", convos)
+      .update({
+        open: false
+      }).then(function (success) {
+        
+        db("convos")
+        .insert({
+          cm: cmid,
+          client: clid,
+          subject: subject,
+          open: true,
+          accepted: true
+        }).returning("convid").then(function (convids) {
+
+          var convid = convids[0];
+          var content = req.body.content;
+          var commid = req.body.commid;
+
+          db("comms")
+          .where("commid", commid)
+          .limit(1)
+          .then(function (comms) {
+            
+            if (comms.length > 0) {
+              var comm = comms[0];
+
+              twClient.sendSms({
+                to: comm.value,
+                from: TWILIO_NUM,
+                body: content
+              }, function (err, msg) {
+                if (err) {
+                  console.log("Twilio send error: ", err);
+                  if (err.hasOwnProperty("code") && err.code == 21211) res.status(500).send("That number is not a valid phone number.");
+                  else res.redirect("/500");
+                } else {
+                  db("msgs")
+                  .insert({
+                    convo: convid,
+                    comm: commid,
+                    content: content,
+                    inbound: false,
+                    read: true,
+                    tw_sid: msg.sid,
+                    tw_status: msg.status
+                  })
+                  .returning("msgid")
+                  .then(function (msgs) {
+
+                    req.flash("success", "New conversation created.");
+                    redirect_loc = redirect_loc + "/convos/" + convid;
+                    res.redirect(redirect_loc);
+
+                  }).catch(function (err) { res.redirect("/500"); });
+                }
+              });
+
+            } else { res.redirect("/500"); }
+          }).catch(function (err) { res.redirect("/500"); });
+
+        }).catch(function (err) { console.log(err); res.redirect("/500"); });
+
+      }).catch(function (err) { res.redirect("/500"); })
+
+    }).catch(function (err) { res.redirect("/500"); })
+
+  }
+});
+
+router.get("/:cmid/cls/:clid/convos/:convid", function (req, res) {
+  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+  var cmid = req.params.cmid;
+  var clid = req.params.clid;
+  var convid = req.params.convid;
+
+  if ((Number(cmid) !== Number(req.user.cmid)) && !req.user.superuser) {
+    req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+    res.redirect(redirect_loc);
+
+  } else {
+    cmview.get_convo(cmid, clid, convid)
+    .then(function (obj) {
+
+      var rawQuery = "UPDATE msgs SET read = TRUE WHERE msgid IN ( ";
+      rawQuery += "SELECT msgs.msgid FROM clients ";
+      rawQuery += "LEFT JOIN convos ON (convos.client=clients.clid) ";
+      rawQuery += "LEFT JOIN msgs ON (msgs.convo=convos.convid) ";
+      rawQuery += "WHERE clients.cm=" + cmid  + " AND clients.clid=" + clid + " AND msgs.read=FALSE) ";
+
+      db.raw(rawQuery).then(function (success) {
+
+        db("clients").where("clid", clid).limit(1).then(function (cls) {
+          obj.client = cls[0];
+          res.render("msgs", obj);
+        }).catch(function (err) { res.redirect("/500"); })
+
+      }).catch(function (err) { res.redirect("/500"); })
+
+    }).catch(function (err) {
+      if (err == "404") { res.redirect("/404"); } 
+      else { res.redirect("/500"); }
+    })
+
+  }
+});
+
+router.post("/:cmid/cls/:clid/convos/:convid", function (req, res) {
+  var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+  var cmid = req.params.cmid;
+  var clid = req.params.clid;
+  var convid = req.params.convid;
+
+  var commid = req.body.commid;
+  var content = req.body.content;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+    res.redirect("/cms/" + req.user.cmid);
+  } else if (typeof content !== "string" || content == "") {
+    req.flash("warning", "Text entry either too short or not of type string.");
+    res.redirect(redirect_loc)
+  } else if (typeof content == "string" && content.length > 160) {
+    req.flash("warning", "Text entry is too long; limit is 160 characters.");
+    res.redirect(redirect_loc)
+  } else {
+    content = content.trim().substr(0,159);
+
+    db("comms")
+    .where("commid", commid)
+    .limit(1)
+    .then(function (comms) {
+      
+      if (comms.length > 0) {
+        var comm = comms[0];
+
+        twClient.sendSms({
+          to: comm.value,
+          from: TWILIO_NUM,
+          body: content
+        }, function (err, msg) {
+          if (err) {
+            console.log("Twilio send error: ", err);
+            if (err.hasOwnProperty("code") && err.code == 21211) res.status(500).send("That number is not a valid phone number.");
+            else res.redirect("/500");
+          } else {
+            db("msgs")
+            .insert({
+              convo: convid,
+              comm: commid,
+              content: content,
+              inbound: false,
+              read: true,
+              tw_sid: msg.sid,
+              tw_status: msg.status
+            })
+            .returning("msgid")
+            .then(function (msgs) {
+
+              db("convos").where("convid", convid)
+              .update({updated: db.fn.now()})
+              .then(function (success) {
+                req.flash("success", "Sent message.");
+                res.redirect(redirect_loc)
+
+              }).catch(function (err) { res.redirect("/500"); });
+            }).catch(function (err) { res.redirect("/500"); });
+          }
+        });
+
+      } else { res.redirect("/500"); }
+    }).catch(function (err) { res.redirect("/500"); });
+
+  }
+});
+
+router.post("/:cmid/cls/:clid/convos/:convid/close", function (req, res) {
+  var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+  var cmid = req.params.cmid;
+  var clid = req.params.clid;
+  var convid = req.params.convid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+    res.redirect(redirect_loc);
+  } else {
+
+    cmview.get_convo(cmid, clid, convid)
+    .then(function (obj) {
+      
+      db("convos").where("convid", convid).update({open: false, updated: db.fn.now()})
+      .then(function (success) {
+        req.flash("success", "Closed conversation.");
+        res.redirect(redirect_loc);
+
+      }).catch(function (err) {
+        res.redirect("/500");
+      })
+
+    }).catch(function (err) {
+      if (err == "404") {
+        res.redirect("/404");
+      } else {
+        res.redirect("/500");
+      }
+    })
+
+  }
+});
+
+router.post("/:cmid/cls/:clid/convos/:convid/open", function (req, res) {
+  var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+  var cmid = req.params.cmid;
+  var clid = req.params.clid;
+  var convid = req.params.convid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+    res.redirect(redirect_loc);
+  } else {
+
+    db("convos")
+    .where("client", clid)
+    .andWhere("cm", cmid)
+    .andWhere("convos.open", true)
+    .pluck("convid")
+    .then(function (convos) {
+      
+      db("convos").whereIn("convid", convos)
+      .update({ open: false })
       .then(function (success) {
 
-        db("convos").where("convid", convid).delete()
-        .then(function (success) {
-          req.flash("success", "Closed conversation.");
-          res.redirect(redirect_loc);
+        cmview.get_convo(cmid, clid, convid)
+        .then(function (obj) {
+          
+          db("convos").where("convid", convid).update({open: true, updated: db.fn.now()})
+          .then(function (success) {
+            req.flash("success", "Conversation reopened.");
+            res.redirect(redirect_loc);
 
-        }).catch(function (err) { res.redirect("/500"); })
+          }).catch(function (err) {
+            res.redirect("/500");
+          })
+
+        }).catch(function (err) {
+          if (err == "404") {
+            res.redirect("/404");
+          } else {
+            res.redirect("/500");
+          }
+        });
+
+      }).catch(function (err) { res.redirect("/500"); })
+    }).catch(function (err) { res.redirect("/500"); })
+  }
+});
+
+router.post("/:cmid/cls/:clid/convos/:convid/accept", function (req, res) {
+  var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
+
+  var cmid = req.params.cmid;
+  var clid = req.params.clid;
+  var convid = req.params.convid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+    res.redirect(redirect_loc);
+  } else {
+
+    cmview.get_convo(cmid, clid, convid)
+    .then(function (obj) {
+      
+      db("convos").where("convid", convid).update({accepted: true, updated: db.fn.now()})
+      .then(function (success) {
+        req.flash("success", "Closed conversation.");
+        res.redirect(redirect_loc);
+
+      }).catch(function (err) {
+        res.redirect("/500");
+      })
+
+    }).catch(function (err) {
+      if (err == "404") {
+        res.redirect("/404");
+      } else {
+        res.redirect("/500");
+      }
+    })
+
+  }
+});
+
+
+router.post("/:cmid/cls/:clid/convos/:convid/reject", function (req, res) {
+  var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
+
+  var cmid = req.params.cmid;
+  var clid = req.params.clid;
+  var convid = req.params.convid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
+    res.redirect(redirect_loc);
+  } else {
+    
+    db("msgs").where("convo", convid).delete()
+    .then(function (success) {
+
+      db("convos").where("convid", convid).delete()
+      .then(function (success) {
+        req.flash("success", "Closed conversation.");
+        res.redirect(redirect_loc);
 
       }).catch(function (err) { res.redirect("/500"); })
 
-    }
-  });
+    }).catch(function (err) { res.redirect("/500"); })
+
+  }
+});
 
 
 
-};
+// EXPORT ROUTER OBJECt
+module.exports = router;
+
+

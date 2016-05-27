@@ -12,7 +12,7 @@
 		</div>
 	</div>
 
-	<a href="/cms/<%= cm.cmid %>/cls">
+	<a href="/cms/<%= user.cmid %>/cls">
 		<div class="newclient"> 
 			<i class="fa fa-user-plus"></i> 
 			New Client 
@@ -46,7 +46,7 @@
 				<tr class="<%= clients[i].active ? 'current' : 'archive' %> <%= clients[i].active && !clients[i].open ? 'nonew' : '' %>">
 
 					<td>
-						<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
+						<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
 							<i class="fa fa-user"></i>
 							<%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
 						</a>
@@ -55,12 +55,12 @@
 					<td>
 						<% if (clients[i].clid !== null && clients[i].active) { %>
 							<% if (clients[i].open) { %>
-								<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+								<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
 							<% } else { %>
-								<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %> %>">
+								<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %> %>">
 							<% } %>
 						<% } else { %>
-							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
+							<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
 						<% } %>
 
 							<% if (clients[i].active) { %>
@@ -91,9 +91,9 @@
 					
 					<td>
 						<% if (clients[i].clid !== null && clients[i].active) { %>
-							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+							<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
 						<% } else { %>
-							<a href="/cms/<%= cm.cmid %>/cls/<%= clients[i].clid %>">
+							<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
 						<% } %>
 
 							<% try { %>

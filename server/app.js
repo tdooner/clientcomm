@@ -63,9 +63,16 @@ var auth = utils["pass"];
 // Always run before routes
 require("../routes/request-defaults")(app);
 
-// User routes
+// Login and session management
 require("../routes/access")(app, passport);
-require("../routes/cmview")(app, passport);
+
+// Case manager workflow
+var cmview = require("../routes/cmview");
+app.use("/cms", auth.isLoggedIn, cmview)
+
+// Capture view
+var captureRoutes = require("../routes/cm-subroutes/capture");
+app.use("/capture", auth.isLoggedIn, captureRoutes);
 
 // Twilio-facing routes
 require("../routes/sms")(app);
