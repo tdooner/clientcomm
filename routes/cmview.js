@@ -496,41 +496,55 @@ router.post("/:cmid/cls/:clid/comm", function (req, res) {
   }
 });
 
+
+
+// VIEW ALL COMMCONNS FOR A CLIENT
 router.get("/:cmid/cls/:clid/comms", function (req, res) { 
-  var clid = Number(req.params.clid);
-  var cmid = Number(req.params.cmid);
-  db("clients").where("clid", clid).limit(1)
-  .then(function (cls) {
-    var cl = cls[0];
+  var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
-    if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
-      db("convos")
-      .where("convos.cm", cmid)
-      .andWhere("convos.client", clid)
-      .orderBy("convos.updated", "desc")
-      .then(function (convos) {
+  var clid  = Number(req.params.clid);
+  var cmid  = Number(req.params.cmid);
+  var cmid2 = Number(req.user.cmid);
 
-        var rawQuery = "SELECT * FROM comms " +
+  // Make sure that cmid is user
+  if (cmid !== cmid2) { res.redirect(redirect_loc); }
+  else {
+
+    // Query 1: Get all client with that cm
+    db("clients")
+    .where("clid", clid)
+    .andWhere("cm", cmid)
+    .limit(1)
+    .then(function (cls) {
+
+      // Make sure that the client exists under the CM
+      if (cls.length == 0) { res.redirect("/404"); }
+      else { 
+        var cl = cls[0];
+
+        // Query 2: Get all convos from that case manager
+        // TO DO: Confirm injection of clid acceptable because it is cleaned type INT
+        var rawQuery =  " SELECT * FROM comms " +
                         " JOIN commconns ON (comms.commid = commconns.comm) " + 
                         " LEFT JOIN (SELECT count(msgid) AS use_ct, msgs.comm FROM msgs " +
-                            " WHERE msgs.convo " +
-                            " IN (SELECT convos.convid FROM convos WHERE convos.client = " + clid + ") " + 
+                        "   WHERE msgs.convo " +
+                        "   IN (SELECT convos.convid FROM convos WHERE convos.client = " + String(clid) + ") " + 
                         " GROUP BY msgs.comm) AS counts ON (counts.comm = commconns.comm) " +
-                        " WHERE commconns.client = " + clid + " AND commconns.retired IS NULL;";
+                        " WHERE commconns.client = " + String(clid) + " AND commconns.retired IS NULL; ";
 
         db.raw(rawQuery).then(function (comms) {
 
           res.render("clientcomms", {
             cm: req.user,
-            client: cl,
-            comms: comms.rows,
-            convos: convos,
+            comms: comms.rows
           });
           
-        }).catch(function (err) { res.redirect("/500"); })
-      }).catch(function (err) { res.redirect("/500"); })
-    } else { res.redirect("/404"); }
-  }).catch(function (err) { res.redirect("/500"); })
+        }).catch(function (err) { res.redirect("/500"); }); // Query 2
+      }
+
+    }).catch(function (err) { res.redirect("/500"); }); // Query 1
+
+  }
 });
 
 router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) { 
