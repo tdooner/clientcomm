@@ -6,7 +6,7 @@ var db = require("./db");
 module.exports = function (passport) {
 
 	// bcrypt methods
-	hashPw = function(pw) { return bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null); };
+	hashPw  = function(pw)       { return bcrypt.hashSync(pw, bcrypt.genSaltSync(8), null); };
 	validPw = function(pw1, pw2) { return bcrypt.compareSync(pw1, pw2); };
 
 	// user serialization
@@ -16,14 +16,15 @@ module.exports = function (passport) {
 
 	// user deserialization
 	passport.deserializeUser(function (id, done) {
-		db("cms").where("cmid", id).limit(1)
+		db("cms")
+		.where("cmid", id)
+		.limit(1)
 		.then(function (cm) {
+
 			if (cm.constructor === Array) { cm = cm[0]; }
 			done(null, cm);
-		})
-		.catch(function (err) {
-			done(err, null);
-		});
+
+		}).catch(function (err) { done(err, null); });
 	});
 
 	passport.use("local-login", new local({
@@ -35,7 +36,9 @@ module.exports = function (passport) {
 		function (req, email, password, done) {
 			process.nextTick(function () {
 
-				db("cms").where("email", email).limit(1)
+				db("cms")
+				.whereRaw("LOWER(email) = LOWER('" + String(email) + "')")
+				.limit(1)
 				.then(function (acct) {
 					if (acct.constructor === Array && acct.length == 1) {
 						acct = acct[0];
