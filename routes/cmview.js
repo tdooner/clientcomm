@@ -1,119 +1,44 @@
-var db = require("../server/db");
 
+
+
+// SECRET STUFF
 var credentials = require("../credentials");
 var ACCOUNT_SID = credentials.accountSid;
 var AUTH_TOKEN = credentials.authToken;
 var TWILIO_NUM = credentials.twilioNum;
 
+
+
+// DEPENDENCIES
+var db = require("../server/db");
 var twilio = require("twilio");
 var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
-var pass = require("../utils/utils.js")["pass"];
-var sms = require("../utils/utils.js")["sms"];
-var cmview = require("../utils/utils.js")["cmview"];
-var isLoggedIn = pass.isLoggedIn;
+
+
+// UTILITIES
+var utils = require("../utils/utils.js");
+
+// Query tools
+var sms = utils["sms"];
+var cmview = utils["cmview"];
+
+// Session status control
+var auth = utils["pass"];
+var isLoggedIn = auth.isLoggedIn;
+
 
 
 module.exports = function (app, passport) {
 
-  // view captures
-  app.get("/capture", isLoggedIn, function (req, res) { 
-    var rawQuery = "SELECT * FROM msgs " +
-                    "JOIN convos ON (msgs.convo = convos.convid) " +
-                    "JOIN comms ON (comms.commid = msgs.comm) " +
-                    "WHERE convos.client IS NULL ORDER BY msgs.created DESC;";
-    
-    db.raw(rawQuery).then(function (floaters) {
-      var convos = floaters.rows.map(function (ea) { return ea.convo; }).reduce(function (a,b) { 
-        if (a.indexOf(b) < 0 ) a.push(b);
-        return a;
-      },[]).map(function (ea) { return {convo: ea, msgs: []}; });
-
-      floaters.rows.forEach(function (ea) { 
-        for (var i = 0; i < convos.length; i++) {
-          if (convos[i].convo == ea.convo) {
-            convos[i].msgs.push(ea);
-          }
-        }
-      });
-
-      res.render("capture", { convos: convos });
-    }).catch(function (err) { res.redirect("/500"); });
-  });
-
-  // view to claim a specific conversation
-  app.get("/capture/:convid", isLoggedIn, function (req, res) { 
-    var rawQuery = "SELECT * FROM convos WHERE convos.client IS NULL AND convos.convid = " + req.params.convid + " LIMIT 1;";
-    
-    db.raw(rawQuery).then(function (convos) {
-      if (convos.rows.length == 1) {
-
-        db("clients").where("clients.cm", req.user.cmid).andWhere("clients.active", true)
-        .then(function (clients) {
-          res.render("capturecard", { convo: convos.rows[0], clients: clients });
-
-        }).catch(function (err) { res.redirect("/500"); });
-      } else { res.redirect("/404"); }
-    }).catch(function (err) { res.redirect("/500"); });
-  });
 
 
-  // submitting request to claim a conversation
-  app.post("/capture/:convid", isLoggedIn, function (req, res) { 
-    var redirect_loc = "/capture";
+  // CAPTURE ROUTING
+  var captureRoutes = require("./cm-subroutes/capture");
+  app.use("/capture", isLoggedIn, captureRoutes);
 
-    var subject = req.body.subject && typeof req.body.subject == "string" && req.body.subject.length > 0 ? req.body.subject.trim() : null;
-    var cmid = req.body.cmid == req.user.cmid ? Number(req.user.cmid) : null;
-    var clid = Number(req.body.clid);
-    var convid = req.body.convid && !isNaN(req.body.convid) ? Number(req.body.convid) : null;
-    var devicename = req.body.device && typeof req.body.device == "string" && req.body.device.length > 0 ? req.body.device.trim() : null;
 
-    if (subject && cmid && clid && convid && devicename) {
-      var rawQuery = "UPDATE convos SET subject = '" + subject + "', cm = " + cmid + ", client = " + clid + ", accepted = TRUE, open = TRUE WHERE convid = " + convid + " AND client IS NULL;";
-      
-      db.raw(rawQuery).then(function (success) {
 
-        // close all other conversations
-        db("convos").whereNot("convid", convid).andWhere("cm", cmid).andWhere("client", clid)
-        .update({ open: false }).then(function (success) {
-
-          // create a commconn for this comm device
-
-          db("msgs").where("convo", convid).pluck("comm")
-          .then(function (comms) {
-
-            var insertList = [];
-
-            comms = comms.reduce(function (a,b) { 
-              if (a.indexOf(b) < 0 ) a.push(b);
-              return a;
-            },[]);
-
-            comms.forEach(function (comm, i) {
-              var name = i == 0 ? devicename : devicename + "_num_" + String(i + 1);
-              insertList.push({
-                client: clid,
-                comm: comm,
-                name: name
-              });
-            });
-
-            db("commconns").insert(insertList).then(function (success) {
-              var reroute = "/cms/" + cmid + "/cls/" + clid + "/convos/" + convid;
-
-              req.flash("success", "Captured conversation.");
-              res.redirect(reroute);
-
-            }).catch(function (err) { console.log(err); res.redirect("/500"); });
-          }).catch(function (err) { console.log(err); res.redirect("/500"); });
-        }).catch(function (err) { console.log(err); res.redirect("/500") });
-      }).catch(function (err) { console.log(err); res.redirect("/500"); });
-
-    } else {
-      req.flash("warning", "Incorrectly formatted POST body components from capture card submission.");
-      res.redirect(redirect_loc);
-    }
-  });
 
   // view current clients for a case manager
   app.get("/cms", isLoggedIn, function (req, res) { 
