@@ -209,15 +209,15 @@ router.get("/:cmid/cls/:clid", function (req, res) {
 
           var redirect_loc = "/cms/" + String(cmid) + "/cls/" + String(clid) + "/";
 
-          // add comm screen
+          // If there are no commconns, prompt user to add one
           if (comms.length == 0) {
             res.redirect(redirect_loc + "comm");
 
-          // start convo
+          // If there are no convos, prompt user to start one
           } else if (convos.length == 0) {
             res.redirect(redirect_loc + "convos");
 
-          // go to normal client mgmt view
+          // Standard view
           } else {
             res.render("client", {
               client: cl,
