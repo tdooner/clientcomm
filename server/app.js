@@ -93,7 +93,7 @@ require("../routes/catchall")(app);
 
 // START UP CLIENTCOMM
 var port = 4000;
-app.listen(port, function () { 
+var server = app.listen(port, function () { 
 	console.log("Listening on port", port);
 
 	// Run super user check (after migrations)
@@ -101,6 +101,10 @@ app.listen(port, function () {
 	setTimeout(function () { require("../utils/superuser-check.js")(); }, 5000);
 });
 
+
+
+// EXPORT SERVER
+module.exports = server;
 
 
 // SCHEDULER
