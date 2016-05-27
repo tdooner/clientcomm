@@ -565,7 +565,7 @@ router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
     res.redirect(redirect_loc);
 
   // All IDs should be numbers
-  else if (isNaN(commconnid) || isNaN(clid) || isNaN(cmid)) {
+  } else if (isNaN(commconnid) || isNaN(clid) || isNaN(cmid)) {
     res.redirect("/404");
   
   // Proceed if all is clear
