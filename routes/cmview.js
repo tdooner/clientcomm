@@ -547,24 +547,39 @@ router.get("/:cmid/cls/:clid/comms", function (req, res) {
   }
 });
 
+
+
+// SHOW EDIT CARD FOR A COMMCONN
 router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) { 
+  // Redirect to main commconn view for client as fallback
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
 
-  var clid = req.params.clid;
-  var cmid = req.params.cmid;
-  var commconnid = req.params.commconnid;
+  var commconnid = Number(req.params.commconnid);
+  var clid  = Number(req.params.clid);
+  var cmid  = Number(req.params.cmid);
+  var cmid2 = Number(req.user.cmid);
 
-  if (Number(cmid) !== Number(req.user.cmid)) {
+  // Make sure cmids line up
+  if (cmid !== cmid2) {
     req.flash("warning", "Case Manager ID does not match user logged-in.");
     res.redirect(redirect_loc);
+
+  // All IDs should be numbers
+  else if (isNaN(commconnid) || isNaN(clid) || isNaN(cmid)) {
+    res.redirect("/404");
   
+  // Proceed if all is clear
+  // TO DO: Confirm that SQL vulnerabilities do not exist
   } else {
+    // Query: Get commconn information and join with comms information
+    // TO DO: Refactor this query I think the join could just use the clid we have already
     var rawQuery = "SELECT * FROM commconns " + 
-                    " JOIN (SELECT clients.clid FROM clients WHERE clients.cm = " + cmid + 
-                        ") AS clients ON (clients.clid = commconns.client) " + 
+                    " JOIN (SELECT clients.clid " + 
+                    "     FROM clients WHERE clients.cm = " + String(cmid) + ") " +
+                    "   AS clients ON (clients.clid = commconns.client) " + 
                     " LEFT JOIN comms ON (comms.commid = commconns.comm) " + 
-                    " WHERE commconns.client = " + clid + " " +
-                    " AND commconns.commconnid = " + commconnid + " LIMIT 1";
+                    " WHERE commconns.client = " + String(clid) + " " +
+                    "   AND commconns.commconnid = " + String(commconnid) + " LIMIT 1; ";
 
     db.raw(rawQuery).then(function (commconns) {
       if (commconns.rows && commconns.rows.length == 1) {
@@ -576,30 +591,45 @@ router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
   }
 });
 
+
+
+// SUBMIT CHANGES TO A COMMCONN
+// Note: Currently we only support the name being updated for the commconn
+// Note: We want CMs to remove a number rather than change this number - to preserve numbers
 router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) { 
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
-  var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
+  var retry_loc    = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
 
-  var clid = Number(req.params.clid);
+  var clid  = Number(req.params.clid);
   var clid2 = Number(req.body.clid);
 
-  var cmid = Number(req.params.cmid);
+  var cmid  = Number(req.params.cmid);
   var cmid2 = Number(req.body.cmid);
   var cmid3 = Number(req.user.cmid);
 
   var commconnid = Number(req.params.commconnid);
 
-  if (cmid !== cmid2 && cmid !== cmid3) {
+  // Stirng submission
+  var description  = req.body.description && typeof req.body.description == "string" && req.body.description.length > 0 ? req.body.description.trim() : null;
+
+  // Make sure cmids line up
+  if (cmid !== cmid2 || cmid !== cmid3) {
     req.flash("warning", "Case Manager ID does not match user logged-in.");
     res.redirect(retry_loc);
+
+  // Make sure that clids line up
   } else if (clid !== clid2) {
     req.flash("warning", "Client IDs do not match from post body and URL route.");
     res.redirect(retry_loc);
+
+  // Ensure that commconnid is a number
   } else if (isNaN(commconnid)) {
     req.flash("warning", "Invalid commconnid provided.");
     res.redirect(retry_loc);
-  } else if (!req.body.description) {
-    req.flash("warning", "Missing new name for communication.");
+
+
+  } else if (!description) {
+    req.flash("warning", "Missing updated name for communication.");
     res.redirect(retry_loc);
   
   } else {
