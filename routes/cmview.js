@@ -170,6 +170,7 @@ router.post("/:cmid/cls", function (req, res) {
 });
 
 
+
 // VIEW A CLIENT
 router.get("/:cmid/cls/:clid", function (req, res) { 
 
@@ -179,7 +180,7 @@ router.get("/:cmid/cls/:clid", function (req, res) {
   var cmid2 = Number(req.user.cmid);
 
   // Make sure that the case manager id lines up
-  if (cmid !== cmid2 && !req.user.superuser) { res.redirect("/404"); }
+  if (cmid !== cmid2 && !req.user.superuser) { res.redirect("/401"); }
   else {
 
     // Query 1: Get client information
@@ -233,16 +234,32 @@ router.get("/:cmid/cls/:clid", function (req, res) {
   }
 });
 
+
+
+// EDIT VIEW FOR A CLIENT
 router.get("/:cmid/cls/:clid/edit", function (req, res) { 
+  
   var clid = Number(req.params.clid);
+
   var cmid = Number(req.params.cmid);
-  db("clients").where("clid", clid).limit(1)
-  .then(function (cls) {
-    var cl = cls[0];
-    if (cmid == Number(cl.cm) && (cmid == Number(req.user.cmid) || req.user.superuser)) {
-      res.render("clientedit", { client: cl });
-    } else { res.redirect("/404"); }
-  }).catch(function (err) { res.redirect("/500"); })
+  var cmid2 = Number(req.user.cmid);
+  
+  if (cmid !== cmid2) { res.redirect("/401"); }
+  else {
+    
+    db("clients")
+    .where("clid", clid)
+    .limit(1)
+    .then(function (cls) {
+
+      var cl = cls[0];
+      if (cmid == Number(cl.cm) || req.user.superuser) {
+        res.render("clientedit", { client: cl });
+      } else { res.redirect("/401"); }
+
+    }).catch(function (err) { res.redirect("/500"); })
+
+  }
 });
 
 router.post("/:cmid/cls/:clid/edit", function (req, res) { 
@@ -629,11 +646,13 @@ router.post("/:cmid/cls/:clid/open", function (req, res) {
 });
 
 router.get("/:cmid/cls/:clid/convos", function (req, res) {
-  var cmid = Number(req.params.cmid);
-  var cmid2 = Number(req.user.cmid);
+  
   var clid = Number(req.params.clid);
 
-  if (cmid !== cmid2) { res.redirect("/404"); } 
+  var cmid = Number(req.params.cmid);
+  var cmid2 = Number(req.user.cmid);
+
+  if (cmid !== cmid2) { res.redirect("/400"); } 
   else { 
 
     db("clients").where("cm", cmid).andWhere("clid", clid)
