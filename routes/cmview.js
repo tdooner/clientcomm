@@ -398,80 +398,98 @@ router.post("/:cmid/cls/:clid/comm", function (req, res) {
   var retry_view   = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
-  var clid = req.params.clid;
-  var cmid = req.user.cmid;
-  var type = req.body.type;
-  var value = String(req.body.value);
-  var description = req.body.description;
+  // Numbers submitted
+  var cmid = isNaN(req.body.cmid) ? null : Number(req.body.cmid);
+  var clid = isNaN(req.body.clid) ? null : Number(req.body.clid);
 
-  if (type == "cell" || type == "landline") {
+  // Strings submitted
+  var type         = req.body.type        && typeof req.body.type == "string"        && req.body.type.length > 0 ? req.body.type.trim() : null;
+  var value        = req.body.value       && typeof req.body.value == "string"       && req.body.value.length > 0 ? req.body.value.trim() : null;
+  var description  = req.body.description && typeof req.body.description == "string" && req.body.description.length > 0 ? req.body.description.trim() : null;
+
+  // To compare with post body
+  var cmid2 = Number(req.user.cmid);
+  var clid2 = isNaN(req.body.clid) ? null : Number(req.body.clid);
+
+  // To check phones
+  var cellOrLandline = (type == "cell" || type == "landline");
+
+  // If the value is a phone number, clean it
+  if (cellOrLandline) {
     value = value.replace(/[^0-9.]/g, "");
-    if (value.length == 10) {
-      value = "1" + value;
-    }
+    if (value.length == 10) { value = "1" + value; }
   }
 
-  if (Number(clid) !== Number(req.body.clid)) {
+  // Make sure that clids line up
+  if (clid !== clid2) {
     req.flash("warning", "Client ID does not match.");
     res.redirect(retry_view);
-  } else if (Number(cmid) !== Number(req.body.cmid)) {
+
+  // Make sure that cmids line up
+  } else if (cmid !== cmid2) {
     req.flash("warning", "Case Manager ID does not match user logged-in.");
     res.redirect(retry_view);
-  } else if (!type) {
-    req.flash("warning", "Missing the communication type.");
-    res.redirect(retry_view);
-  } else if (!value) {
-    req.flash("warning", "Missing the communication value (e.g. the phone number).");
+
+  // Make sure that all required components are submitted
+  } else if (!type || !value || !description) {
+    req.flash("warning", "Missing the required form elements.");
     res.redirect(retry_view);
 
-  } else if (type == "cell" && value.length !== 11) {
+  // Make sure that phone numbers are 11 digits
+  } else if (cellOrLandline && value.length !== 11) {
     req.flash("warning", "Incorrect phone value.");
     res.redirect(retry_view);
-  } else if (type == "cell" && isNaN(Number(value))) {
+
+  // Make sure that the value supplied is indeed a number for phones
+  } else if (cellOrLandline && isNaN(value)) {
     req.flash("warning", "Value supplied is not a number.");
     res.redirect(retry_view);
-  } else if (!description) {
-    req.flash("warning", "Missing description value.");
-    res.redirect(retry_view);
   
+  // All clear to proceed
   } else {
-    db("comms").where("value", value).limit(1)
+
+    // See if this value is already in system
+    // TO DO: Confirm value injection does not expose SQL injection vulnerabilities
+    db("comms")
+    .whereRaw("LOWER(value) = LOWER('" + String(value) + "')")
+    .limit(1)
     .then(function (comms) {
 
+      // Comm already exists so just create the commconn
       if (comms.length > 0) {
-        var commid = comms[0].commid;
 
         db("commconns").insert({
           client: clid,
-          comm: commid,
+          comm: comms[0].commid,
           name: description
-        })
-        .then(function (success) {
+        }).then(function (success) {
           req.flash("success", "Added a new communication method.");
           res.redirect(redirect_loc);
-
         }).catch(function (err) { res.redirect("/500"); });
 
+      // No comms exist, so we have to create one first
       } else {
+
+        // Query 1: First create the base communication entry
         db("comms").insert({
           type: type,
           value: value,
           description: description
         }).returning("commid").then(function (commids) {
 
-          var commid = commids[0];
+        // Query 2: Create the commconn with the new commid
+        db("commconns")
+        .insert({
+          client: clid,
+          comm: commids[0],
+          name: description
+        }).then(function (success) {
+          req.flash("success", "Added a new communication method.");
+          res.redirect(redirect_loc);
 
-          db("commconns").insert({
-            client: clid,
-            comm: commid,
-            name: description
-          }).then(function (success) {
+        }).catch(function (err) { res.redirect("/500"); }); // Query 2
+        }).catch(function (err) { res.redirect("/500"); }); // Query 1
 
-            req.flash("success", "Added a new communication method.");
-            res.redirect(redirect_loc);
-
-          }).catch(function (err) { res.redirect("/500"); });
-        }).catch(function (err) { res.redirect("/500"); });
       }
     }).catch(function (err) { res.redirect("/500"); });
 
