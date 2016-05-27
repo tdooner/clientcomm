@@ -609,7 +609,7 @@ router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
 
   var commconnid = Number(req.params.commconnid);
 
-  // Stirng submission
+  // String submission
   var description  = req.body.description && typeof req.body.description == "string" && req.body.description.length > 0 ? req.body.description.trim() : null;
 
   // Make sure cmids line up
@@ -643,6 +643,9 @@ router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
     }).catch(function (err) { console.log(err); res.redirect("/500"); });
   }
 });
+
+
+
 
 router.post("/:cmid/cls/:clid/comms/:commconnid/close", function (req, res) { 
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
