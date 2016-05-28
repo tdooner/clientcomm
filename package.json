@@ -27,5 +27,8 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/"
+  },
+  "devDependencies": {
+    "supertest": "^1.2.0"
   }
 }
