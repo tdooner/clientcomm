@@ -17,6 +17,11 @@ var request = require("supertest");
 
 
 // Work through the routes
+// TO DO: Resolve requirements issues
+// Requirement 1: Organization must already be created
+// Requirement 2: User accounts for both a case manager and a supervisor must already be created
+// Requirement 3: Database prepopulated
+
 describe("Boot up express.", function () {
   var server;
   
@@ -51,6 +56,13 @@ describe("Boot up express.", function () {
       .field("email", "TEST@foo.com")
       .field("pass", "123")
       .expect(302, done);
+  });
+  
+  it("Be rerouted to splash page when already logged in", function (done) {
+    request(server).post("/login")
+      .field("email", "test@foo.com")
+      .field("pass", "123")
+      .expect(302);
   });
   
   it("All unknown paths 404", function (done) {
