@@ -263,8 +263,6 @@ router.get("/:cmid/cls/:clid/edit", function (req, res) {
   }
 });
 
-
-
 // SUBMIT AN EDIT FOR THE CLIENT
 router.post("/:cmid/cls/:clid/edit", function (req, res) { 
 

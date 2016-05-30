@@ -5,6 +5,7 @@
 var db = require("../server/db");
 var assert = require("chai").assert;
 var creds = require("../credentials");
+var u = require("./utils");
 
 // Makes sure that testing is functioning okay
 // If this fails, then everything else is likely failing as well
@@ -16,6 +17,7 @@ describe("Array", function() {
     });
   });
 });
+
 
 
 // Load up Supertest package
@@ -52,10 +54,8 @@ function runTests () {
     });
 
     it("Login as super user", function (done) {
-      request(server).post("/login")
-        .field("email", creds.db.user)
-        .field("pass", creds.db.password)
-        .expect(302, done);
+      var req = request(server);
+      u.superuserLogin(req, done);
     });
 
     it("Login as super user and create an org", function (done) {
@@ -63,10 +63,7 @@ function runTests () {
       var req = request(server)
 
       // P1: First login as superuser
-      req.post("/login")
-        .field("email", creds.db.user)
-        .field("pass", creds.db.password)
-        .expect(302, function () {
+      u.superuserLogin(req, function () {
 
       // P2: POST a new organization
       req.post("/orgs")
@@ -85,10 +82,7 @@ function runTests () {
       var req = request(server)
 
       // P1: First login as superuser
-      req.post("/login")
-        .field("email", creds.db.user)
-        .field("pass", creds.db.password)
-        .expect(302, function () {
+      u.superuserLogin(req, function () {
 
       // P2: POST a new organization
       req.post("/orgs")
@@ -121,39 +115,12 @@ function runTests () {
       var req = request(server)
 
       // P1: First login as superuser
-      req.post("/login")
-        .field("email", creds.db.user)
-        .field("pass", creds.db.password)
-        .expect(302, function () {
+      u.superuserLogin(req, function () {
 
-      // P2: POST a new organization
-      req.post("/orgs")
-        .field("name", "Example Organization")
-        .field("phone", "18008008000")
-        .field("email", "fooorg@foo.com")
-        .field("expiration", "2020-01-01")
-        .field("allotment", "10000")
-        .expect(302, function() {
-
-      // P3: Create first supervisor for organization
-      req.post("/orgs/1")
-        .field("orgid", "1")
-        .field("first", "Jim")
-        .field("middle", "M")
-        .field("last", "Surie")
-        .field("email", "jim@foo.com")
-        .field("password", "123")
-        .field("position", "Supervisor")
-        .field("department", "Pretrial")
-        .field("admin", "true")
-        .expect(302, function () {
-
-      // P4: Logout
+      // P2: Logout
       req.get("/logout")
         .expect(302, done);
 
-      }); // P3
-      }); // P2
       }); // P1
     });
 
@@ -162,10 +129,7 @@ function runTests () {
       var req = request(server)
 
       // P1: First login as superuser
-      req.post("/login")
-        .field("email", creds.db.user)
-        .field("pass", creds.db.password)
-        .expect(302, function () {
+      u.superuserLogin(req, function () {
 
       // P2: POST a new organization
       req.post("/orgs")
