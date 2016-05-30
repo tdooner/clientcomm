@@ -1,4 +1,10 @@
+
+
+
+// DEPENDENCIES
+var db = require("../server/db");
 var assert = require("chai").assert;
+var creds = require("../credentials");
 
 // Makes sure that testing is functioning okay
 // If this fails, then everything else is likely failing as well
@@ -14,60 +20,211 @@ describe("Array", function() {
 
 // Load up Supertest package
 var request = require("supertest");
-
+setTimeout(runTests, 000);
 
 // Work through the routes
-// TO DO: Resolve requirements issues
-// Requirement 1: Organization must already be created
-// Requirement 2: User accounts for both a case manager and a supervisor must already be created
-// Requirement 3: Database prepopulated
+// TO DO: Resolve issue of delay in superuser being created
+function runTests () {
+  describe("Boot up express.", function () {
+    var server;
+    
+    // Start up the server each time (does this mean we have to login each time?)
+    beforeEach(function () {
+      server = require("../server/app");
+    });
+    
+    // Drop all row values from the test table
+    afterEach(function () {
+      var deleteEverything = "TRUNCATE clients, cms, commconns, comms, convos, msgs, orgs;";
+      db.raw(deleteEverything).then(function () {
+        server.close();
+      }).catch(function (err) { throw Error("afterEach failed during DB TRUNCATE: ", err)});
+    });
+    
+    it("Index page", function (done) {
+      request(server).get("/")
+        .expect(302, done);
+    });
+    
+    it("Login page", function (done) {
+      request(server).get("/login")
+        .expect(200, done);
+    });
 
-describe("Boot up express.", function () {
-  var server;
-  
-  // Start up the server each time (does this mean we have to login each time?)
-  beforeEach(function () {
-    server = require("../server/app");
-  });
-  
-  afterEach(function () {
-    server.close();
-  });
-  
-  it("Index page", function (done) {
-    request(server).get("/")
-      .expect(302, done);
-  });
-  
-  it("Login page", function (done) {
-    request(server).get("/login")
-      .expect(200, done);
-  });
-  
-  it("POST to login page", function (done) {
-    request(server).post("/login")
-      .field("email", "tEsT@foo.com")
-      .field("pass", "123")
-      .expect(302, done);
-  });
-  
-  it("POST to login page (V2 - Email must not be case sensitive)", function (done) {
-    request(server).post("/login")
-      .field("email", "TEST@foo.com")
-      .field("pass", "123")
-      .expect(302, done);
-  });
-  
-  it("Be rerouted to splash page when already logged in", function (done) {
-    request(server).post("/login")
-      .field("email", "test@foo.com")
-      .field("pass", "123")
-      .expect(302);
-  });
-  
-  it("All unknown paths 404", function (done) {
-    request(server).get("/foo/bar")
-      .expect(404, done);
-  });
+    it("Login as super user", function (done) {
+      request(server).post("/login")
+        .field("email", creds.db.user)
+        .field("pass", creds.db.password)
+        .expect(302, done);
+    });
 
-});
+    it("Login as super user and create an org", function (done) {
+      // Create server request object
+      var req = request(server)
+
+      // P1: First login as superuser
+      req.post("/login")
+        .field("email", creds.db.user)
+        .field("pass", creds.db.password)
+        .expect(302, function () {
+
+      // P2: POST a new organization
+      req.post("/orgs")
+        .field("name", "Example Organization")
+        .field("phone", "18008008000")
+        .field("email", "fooorg@foo.com")
+        .field("expiration", "2020-01-01")
+        .field("allotment", "10000")
+        .expect(302, done);
+
+      }); // P1
+    });
+
+    it("Create a supervisor for an organization", function (done) {
+      // Create server request object
+      var req = request(server)
+
+      // P1: First login as superuser
+      req.post("/login")
+        .field("email", creds.db.user)
+        .field("pass", creds.db.password)
+        .expect(302, function () {
+
+      // P2: POST a new organization
+      req.post("/orgs")
+        .field("name", "Example Organization")
+        .field("phone", "18008008000")
+        .field("email", "fooorg@foo.com")
+        .field("expiration", "2020-01-01")
+        .field("allotment", "10000")
+        .expect(302, function() {
+
+      // P3: Create first supervisor for organization
+      req.post("/orgs/1")
+        .field("orgid", "1")
+        .field("first", "Jim")
+        .field("middle", "M")
+        .field("last", "Surie")
+        .field("email", "jim@foo.com")
+        .field("password", "123")
+        .field("position", "Supervisor")
+        .field("department", "Pretrial")
+        .field("admin", "true")
+        .expect(302, done);
+        
+      }); // P2
+      }); // P1
+    });
+
+    it("Successful session logout", function (done) {
+      // Create server request object
+      var req = request(server)
+
+      // P1: First login as superuser
+      req.post("/login")
+        .field("email", creds.db.user)
+        .field("pass", creds.db.password)
+        .expect(302, function () {
+
+      // P2: POST a new organization
+      req.post("/orgs")
+        .field("name", "Example Organization")
+        .field("phone", "18008008000")
+        .field("email", "fooorg@foo.com")
+        .field("expiration", "2020-01-01")
+        .field("allotment", "10000")
+        .expect(302, function() {
+
+      // P3: Create first supervisor for organization
+      req.post("/orgs/1")
+        .field("orgid", "1")
+        .field("first", "Jim")
+        .field("middle", "M")
+        .field("last", "Surie")
+        .field("email", "jim@foo.com")
+        .field("password", "123")
+        .field("position", "Supervisor")
+        .field("department", "Pretrial")
+        .field("admin", "true")
+        .expect(302, function () {
+
+      // P4: Logout
+      req.get("/logout")
+        .expect(302, done);
+
+      }); // P3
+      }); // P2
+      }); // P1
+    });
+
+    it("POST to login page", function (done) {
+      // Create server request object
+      var req = request(server)
+
+      // P1: First login as superuser
+      req.post("/login")
+        .field("email", creds.db.user)
+        .field("pass", creds.db.password)
+        .expect(302, function () {
+
+      // P2: POST a new organization
+      req.post("/orgs")
+        .field("name", "Example Organization")
+        .field("phone", "18008008000")
+        .field("email", "fooorg@foo.com")
+        .field("expiration", "2020-01-01")
+        .field("allotment", "10000")
+        .expect(302, function() {
+
+      // P3: Create first supervisor for organization
+      req.post("/orgs/1")
+        .field("orgid", "1")
+        .field("first", "Jim")
+        .field("middle", "M")
+        .field("last", "Surie")
+        .field("email", "jim@foo.com")
+        .field("password", "123")
+        .field("position", "Supervisor")
+        .field("department", "Pretrial")
+        .field("admin", "true")
+        .expect(302, function () {
+
+      // P4: Logout
+      req.get("/logout")
+        .expect(302, function () {
+
+      // P5: Login as the new user
+      req.post("/login")
+        .field("email", "jim@foo.com")
+        .field("pass", "123")
+        .expect(302, done);
+
+      }); // P4
+      }); // P3
+      }); // P2
+      }); // P1
+    });
+    
+    it("POST to login page (V2 - Email must not be case sensitive)", function (done) {
+      request(server).post("/login")
+        .field("email", "JiM@foo.com")
+        .field("pass", "123")
+        .expect(302, done);
+    });
+    
+    it("Be rerouted to splash page when already logged in", function (done) {
+      request(server).post("/login")
+        .field("email", "jim@foo.com")
+        .field("pass", "123")
+        .expect(302, done);
+    });
+    
+    it("All unknown paths 404", function (done) {
+      request(server).get("/foo/bar")
+        .expect(404, done);
+    });
+
+  });
+};
+
+
