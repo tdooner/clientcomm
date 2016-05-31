@@ -5,8 +5,11 @@
 // DB via knex.js to run queries
 var db  = require("../server/db");
 
+var uuid = require("node-uuid");
+
 // Utility checks if a client is logged in
-var pass = require("../utils/utils.js")["pass"];
+var utils = require("../utils/utils.js");
+var pass = utils["pass"];
 var isLoggedIn = pass.isLoggedIn;
 
 
@@ -25,6 +28,38 @@ module.exports = function (app, passport) {
 		// check if the user is already logged in
 		if (req.hasOwnProperty("user")) { res.redirect("/cms"); } 
 		else { res.render("login"); }
+	});
+
+
+	// FORGOT LOGIN PAGE RENDER
+	app.get("/login/reset", function (req, res) {
+		res.render("loginreset");
+	});
+
+
+	// SUBMIT REQUEST FOR PASSWORD RESET EMAIL
+	app.post("/login/reset", function (req, res) {
+		var em = req.body.email;
+
+		// See if this email is even in the system
+		db("cms")
+		.whereRaw("LOWER(email) = LOWER('" + em + "')")
+		.limit(1)
+		.then(function (cms) {
+
+			// This email is not in the system, they need to try again
+			if (cms.length == 0) {
+				req.flash("warning", "Could not find an account with that email.");
+				res.redirect("/login/reset");
+
+			// There is an account with this email in the system
+			} else {
+				var cm = cms[0];
+				req.flash("success", "Reset password email was sent to " + cm.email );
+				res.render("loginresetsent", {cm: cm});
+			}
+			
+		}).catch(function (err) { res.redirect("/500"); });
 	});
 
 

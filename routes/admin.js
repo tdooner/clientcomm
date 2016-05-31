@@ -47,7 +47,7 @@ router.get("/", function (req, res) {
 						msgs: m2
 					});
 
-	      }).catch(function (err) { console.log(err); res.redirect("/500"); });
+	      }).catch(function (err) { res.redirect("/500"); });
 
 				
 			}).catch(function (err) { res.redirect("/500"); });
