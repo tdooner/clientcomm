@@ -4,7 +4,7 @@ var nodemailer = require('nodemailer');
 var credentials = require("../credentials");
 var empw = credentials.em.password;
 
-// create reusable transporter object using the default SMTP transport
+// Create reusable transporter object using the default SMTP transport
 var smtps = "smtps://kuan%40codeforamerica.org:" + empw + "@smtp.gmail.com";
 var transporter = nodemailer.createTransport(smtps);
 

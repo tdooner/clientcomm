@@ -1,3 +1,7 @@
+
+
+
+// DEPENDENCIES
 var bcrypt = require("bcrypt-nodejs");
 var credentials = require("../credentials");
 
