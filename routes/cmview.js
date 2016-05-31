@@ -75,12 +75,12 @@ router.get("/:cmid", function (req, res) {
                     "   convos.open, convos.subject, convos.convid, " +
                     "   clients.*  " +
                     " FROM clients " + 
-                    " LEFT JOIN (SELECT * FROM convos WHERE convos.updated IN (SELECT MAX(convos.updated) FROM convos WHERE cm = " + cmid + 
+                    " LEFT JOIN (SELECT * FROM convos WHERE convos.updated IN (SELECT MAX(convos.updated) FROM convos WHERE cm = " + String(cmid) + 
                     "     GROUP BY client) " + 
-                    "     AND cm = " + cmid + ") AS convos " + 
+                    "     AND cm = " + String(cmid) + ") AS convos " + 
                     "     ON (convos.client=clients.clid) " +
                     " LEFT JOIN msgs ON (msgs.convo=convos.convid) " +
-                    " WHERE clients.cm = " + cmid + " " +
+                    " WHERE clients.cm = " + String(cmid) + " " +
                     " GROUP BY clients.clid, convos.open, convos.subject, convos.convid ORDER BY last ASC; ";
     
     db.raw(rawQuery).then(function (clients) {
