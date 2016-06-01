@@ -4,10 +4,8 @@
 Communications interface for case managers at Criminal Justice Services (CJS) in Salt Lake County, Utah. Code for America 2016 Fellowship Project.
 
 
-## Up and running
-[![Join the chat at https://gitter.im/slco-2016/clientcomm](https://badges.gitter.im/slco-2016/clientcomm.svg)](https://gitter.im/slco-2016/clientcomm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-Need assistance setting up this tool? Questions about the application structure? [Ask Kuan](http://kuanbutts.com/contact/).
+## Up and running [![Join the chat at https://gitter.im/slco-2016/clientcomm](https://badges.gitter.im/slco-2016/clientcomm.svg)](https://gitter.im/slco-2016/clientcomm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Need assistance setting up this tool? Questions about the application structure? Send Kuan an [email](http://kuanbutts.com/contact/), or join the [conversation on Gitter](https://gitter.im/slco-2016/clientcomm).
 
 
 ## How to run
