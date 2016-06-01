@@ -8,9 +8,9 @@ module.exports = {
 			
 			// Log the error if passed in
 			if (typeof err !== "undefined") {
-				console.log("Error occured. \n Timestampt: " + new Date());
+				console.log("\n Error occured. \n Timestamp: " + new Date());
 				console.log(err);
-				console.log("---");
+				console.log("--- \n");
 			}
 
 			// Run the redirect
