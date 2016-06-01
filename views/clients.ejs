@@ -110,7 +110,7 @@
 					<td>
 						<% if (clients[i].active) { %>
 							<form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
-								<button type="submit"><i class="fa fa-archive"></i></button>
+								<button type="submit"><img src="/static/icons/archive.svg" alt="Archive box" class="icon"></button>
 							</form>
 						<% } else { %>
 							<form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/restore">
