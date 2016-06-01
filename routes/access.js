@@ -223,11 +223,16 @@ module.exports = function (app, passport) {
 	// TO DO: As tool increases in size, we need this to not hit up the actual data base but to show some numbers that are crunches X times a day.
 	app.get("/stats", function (req, res) {
 
+		// Get msg counts, grouped by week
+		var rawQuery0 = " SELECT count(msgid), date_trunc('week', created) AS week " + 
+										" FROM msgs GROUP BY week ORDER BY week ASC; ";
+		db.raw(rawQuery0).then(function (weeks) {
+
 		// Get msg counts, grouped by hour and out/inbound
 		var rawQuery1 = " SELECT count(msgid), inbound, trunc(EXTRACT(HOUR FROM created)) AS date_hr " + 
 										" FROM msgs " +
 										" GROUP BY date_hr, inbound " +
-										" ORDER BY date_hr ASC;";
+										" ORDER BY date_hr ASC; ";
 		db.raw(rawQuery1).then(function (msgs) {
 
 		// Get msg counts by day of week
@@ -249,6 +254,7 @@ module.exports = function (app, passport) {
 				res.render("stats", {
 					msgs: msgs.rows, 
 					days: days.rows, 
+					weeks: weeks.rows, 
 					overall: { 
 						msgs: msgct.rows[0].count, 
 						convos: convosct.rows[0].count, 
@@ -256,11 +262,12 @@ module.exports = function (app, passport) {
 					} 
 				});
 
-		}).catch(function (err) { res.redirect("/500"); }); // Query 1
-		}).catch(function (err) { res.redirect("/500"); }); // Query 2
-		}).catch(function (err) { res.redirect("/500"); }); // Query 3
-		}).catch(function (err) { res.redirect("/500"); }); // Query 4
 		}).catch(function (err) { res.redirect("/500"); }); // Query 5
+		}).catch(function (err) { res.redirect("/500"); }); // Query 4
+		}).catch(function (err) { res.redirect("/500"); }); // Query 3
+		}).catch(function (err) { res.redirect("/500"); }); // Query 2
+		}).catch(function (err) { res.redirect("/500"); }); // Query 1
+		}).catch(function (err) { res.redirect("/500"); }); // Query 0
 	});
 
 };

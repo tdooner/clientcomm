@@ -18,7 +18,7 @@ var twilio = require("twilio");
 var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 
-
+var module = {}; // REMOVE
 module.exports = {
 
 	checkSMSstatus: function () {
@@ -27,12 +27,45 @@ module.exports = {
 		.from("msgs")
 		.leftJoin("comms", "comms.commid", "msgs.comm")
 		.where("msgs.status_cleared", false)
-		.then(function () {
+		.limit(1)
+		.then(function (msgs) {
 
-		}).catch(function (err) { res.redirect("/500"); });
+			// Iterate through list, checking to see if any have changes status
+			for (var i = 0; i < msgs.length; i++) {
+				checkMsgAgainstTwilio(msgs[i]);
+			}
+			
+		}).catch(function (err) { console.log(err); });
 
 	}
 
+};
+
+function checkMsgAgainstTwilio (msg) {
+
+	// Hit up Twilio API for the 
+	twClient.sms.messages(msg.tw_sid)
+	.get(function (err, sms) {
+
+		// Handling for messages sent to Twilio
+		if (sms.direction == "inbound") {
+			// If no change occured over msg prior status
+			if (msg.tw_status == sms.status) {
+				// We can close out cleared messages
+				if (sms.status == "received") {
+					db("msgs")
+					.where("msgid", msg.msgid)
+					.update({status_cleared: true})
+					.then(function (success) {
+						console.log("Cleared msg " + msg.msgid);
+					}).catch(function (err) { console.log(err); });
+				}
+			}
+
+		// Handling for messages received by Twilio
+		} else {
+
+		}
 };
 
 

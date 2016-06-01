@@ -200,6 +200,7 @@ router.get("/cms/:cmid", function (req, res) {
 
 	      // Get messages grouped by conversation and day
       	} else {
+      		// Safe from SQL injection becase we can be sure of what string convos looks like
 	      	var rawQuery =  " SELECT COUNT(*), convo, date(msgs.created) " + 
 	      									" FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) " + 
 	      									" WHERE convos.convid IN (" + convos.join(", ") + ") " +

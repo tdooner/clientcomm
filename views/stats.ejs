@@ -44,6 +44,16 @@
 
 
 	<div class="title">
+		Application Growth Trajectory
+	</div>
+		<p><b> Week-on-week growth </b></p>
+		<div class="chart0"><div id="chart-weekly"></div></div>
+		<p>
+			Application use as measured by messaging activity by case managers, segmented by week since the application was deployed.
+		</p>
+
+
+	<div class="title">
 		Messaging Activity
 	</div>
 		<p><b> Distribution by Hour of Day </b></p>
@@ -92,15 +102,16 @@
 <script type="text/javascript">
 
 var msgs = "<%= JSON.stringify(msgs) %>";
+var weeks = "<%= JSON.stringify(weeks) %>";
 var days = "<%= JSON.stringify(days) %>";
 var dow = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
 try {
 	msgs = JSON.parse(msgs.replace(/&#34;/g, '"'));
+	weeks = JSON.parse(weeks.replace(/&#34;/g, '"'));
 	days = JSON.parse(days.replace(/&#34;/g, '"'));
 
 	msgs.map(function (ea, i) { 
-		console.log(ea.date_hr);
 		if (ea.date_hr <= 6) ea.date_hr = 17 + ea.date_hr;
 		else ea.date_hr = ea.date_hr - 7;
 		return ea; 
@@ -110,7 +121,56 @@ try {
 } catch (e) { console.log(e); }
 
 function makeBigChart () {
+
+	// weekly growth graph
+	var weekDates = weeks.map(function (ea) { return ea.week.split("T")[0]; });
+	var weekVals  = weeks.map(function (ea) { return Number(ea.count); });
 	
+	// add first week of null
+	weekDates = ["2016-03-14"].concat(weekDates);
+	weekVals  = [0].concat(weekVals);
+
+	try {
+		var wvlen = weekVals.length;
+		if (weekVals[wvlen - 1] < weekVals[wvlen - 2]) {
+			weekDates.pop();
+			weekVals.pop();
+		}
+	} catch (e) { console.log(e); }
+
+	var tempX = Array.apply(null, {length: weekVals.length}).map(Number.call, Number);
+	var tempY = [].concat(weekVals);
+	for (var i = 1; i < weekVals.length; i++) {
+		tempY[i] = tempY[i-1] + tempY[i];
+	}
+	console.log(findLineByLeastSquares(tempX, weekVals));
+	var bestFit = findLineByLeastSquares(tempX, weekVals)[1];
+
+	c3.generate({
+	  data: { 
+	  	x: "x",
+	  	columns: [
+	  		["x"].concat(weekDates), 
+	  		["Activity"].concat(weekVals),
+	  		["Best Fit (Linear)"].concat(bestFit)
+	  	],
+	  	types: {Activity: "area"},
+	  },
+		axis: {
+			x: {
+				label: "Week",
+				type: 'timeseries',
+				tick: {
+					format: '%Y-%m-%d'
+				}
+			},
+			y: { label: "Messaging Activity" }
+		},
+		padding: { right: 25 },
+	  bindto: "#chart-weekly"
+	});
+
+
 	// msgs by hour graph
 	var inbound = msgs.filter(function (ea) { return ea.inbound; });
 	var outbound = msgs.filter(function (ea) { return !ea.inbound; });
@@ -153,8 +213,60 @@ function makeBigChart () {
 		bindto: "#chart-overall2"
 	});
 
+};
 
-}
+
+// Source: https://dracoblue.net/dev/linear-least-squares-in-javascript/
+function findLineByLeastSquares(values_x, values_y) {
+  var sum_x = 0;
+  var sum_y = 0;
+  var sum_xy = 0;
+  var sum_xx = 0;
+  var count = 0;
+
+  // We'll use those variables for faster read/write access.
+  var x = 0;
+  var y = 0;
+  var values_length = values_x.length;
+
+  if (values_length != values_y.length) {
+    throw new Error('The parameters values_x and values_y need to have same size!');
+  }
+
+ 	// Nothing to do.
+  if (values_length === 0) {
+    return [ [], [] ];
+  }
+
+  // Calculate the sum for each of the parts necessary.
+  for (var v = 0; v < values_length; v++) {
+    x = values_x[v];
+    y = values_y[v];
+    sum_x += x;
+    sum_y += y;
+    sum_xx += x*x;
+    sum_xy += x*y;
+    count++;
+  }
+
+  // Calculate m and b for the formular:
+  // y = x * m + b
+  var m = (count*sum_xy - sum_x*sum_y) / (count*sum_xx - sum_x*sum_x);
+  var b = (sum_y/count) - (m*sum_x)/count;
+
+  // We will make the x and y result line now
+  var result_values_x = [];
+  var result_values_y = [];
+
+  for (var v = 0; v < values_length; v++) {
+    x = values_x[v];
+    y = x * m + b;
+    result_values_x.push(x);
+    result_values_y.push(y);
+  }
+
+  return [result_values_x, result_values_y];
+};
 
 </script>
 
