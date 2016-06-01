@@ -121,7 +121,7 @@ if (EMNOTIF && EMNOTIF == "true") {
 
 	// Set activities
 	setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, dailyTimer); 
-	setInterval(function () { require("../utils/sms-status-check").checkSMSstatus(); }, 2000); 
+	setInterval(function () { require("../utils/sms-status-check").checkSMSstatus(); }, qrtrHrTimer); 
 }
 
 
