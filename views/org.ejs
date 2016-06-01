@@ -1,5 +1,7 @@
 <% include header %>
 
+<% var adminPrepend = user.admin ? "/admin" : "" %>
+
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
 
 <div class="chart"><div id="chart-overall"></div>Overall Organization Messaging Activity</div>
@@ -73,7 +75,7 @@
 							<div id="chart-<%= cms[i].cmid %>"></div>
 						</div>
 						<b>
-						<a href="/cms/<%= cms[i].cmid %>">
+						<a href="<%= adminPrepend %>/cms/<%= cms[i].cmid %>">
 							<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
 						</a>
 						</b>
@@ -147,7 +149,7 @@
 						<div id="chart-<%= cms[i].cmid %>"></div>
 					</div>
 					<b>
-					<a href="/cms/<%= cms[i].cmid %>">
+					<a href="<%= adminPrepend %>/cms/<%= cms[i].cmid %>">
 						<%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
 					</a>
 					</b>
