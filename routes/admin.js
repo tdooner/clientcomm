@@ -165,7 +165,7 @@ router.get("/cms/:cmid", function (req, res) {
 	      .then(function (msgs) {console.log(rawQuery);console.log(msgs);
 
 	      	if (convos[0] == "null") { msgs.rows = []; };
-
+	      	
 	        res.render("clientstats", {
 	          cm: cm,
 	          msgs: msgs.rows,

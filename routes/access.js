@@ -18,11 +18,14 @@ var isLoggedIn = pass.isLoggedIn;
 
 module.exports = function (app, passport) {
 
+
+
 	// MAIN PAGE CURRENTLY ROUTES STRAIGHT TO LOGIN
 	// TO DO: Make a splash page (GH Issue: https://github.com/slco-2016/clientcomm/issues/72)
 	app.get("/", function (req, res) {
 		res.redirect("/login");
 	});
+
 
 
 	// LOGIN PAGE RENDER
@@ -33,10 +36,12 @@ module.exports = function (app, passport) {
 	});
 
 
+
 	// FORGOT LOGIN PAGE RENDER
 	app.get("/login/reset", function (req, res) {
 		res.render("loginreset");
 	});
+
 
 
 	// SUBMIT REQUEST FOR PASSWORD RESET EMAIL
@@ -89,6 +94,7 @@ module.exports = function (app, passport) {
 	});
 
 
+
 	// UNIQUE KEY FROM EMAIL TO RESET PASSWORD PAGE RENDER
 	app.get("/login/reset/:uid", function (req, res) {
 
@@ -111,9 +117,11 @@ module.exports = function (app, passport) {
 
 	});
 
+
+
 	// SUBMIT NEW PASSWORD
 	app.post("/login/reset/:uid", function (req, res) {
-
+		// Redirect options
 		var retry_loc = "/login/reset/" + req.params.uid;
 		var redirect_loc = "/login/reset/";
 
@@ -124,8 +132,8 @@ module.exports = function (app, passport) {
 		var uid     = String(req.body.uid);
 		var uid2    = String(req.params.uid);
 
-		var pass   = String(req.body.pass);
-		var pass2  = String(req.body.pass2);
+		var pass    = String(req.body.pass);
+		var pass2   = String(req.body.pass2);
 
 
 		// Make sure that passwords line up
@@ -157,30 +165,30 @@ module.exports = function (app, passport) {
 				// Found the relevant row
 				} else {
 
-					// Update the case manager's password
+					// Query 2: Update the case manager's password
 					db("cms")
 					.where("cmid", cmid)
 					.update({pass: hashPw(pass)})
 					.then(function (rows) {
 						
-						// We can delete that pw reset row now
-						db("pwresets")
-						.where("pwresid", pwresid)
-						.del()
-						.then(function () {
+					// Query 3: We can delete that pw reset row now
+					db("pwresets")
+					.where("pwresid", pwresid)
+					.del()
+					.then(function () {
 
-							// Prompt the case manager to log in with new pw
-							req.flash("success", "You have updated your account password.");
-							res.redirect("/login");
+						// Prompt the case manager to log in with new pw
+						req.flash("success", "You have updated your account password.");
+						res.redirect("/login");
 
-						}).catch(function (err) { res.redirect("/500"); });
-
-					}).catch(function (err) { res.redirect("/500"); });
+					}).catch(function (err) { res.redirect("/500"); }); // Query 3
+					}).catch(function (err) { res.redirect("/500"); }); // Query 2
 
 				}
 			}).catch(function (err) { res.redirect("/500"); });
 		}
 	});
+
 
 
 	// LOGIN REQUEST & PASSPORT LOGIN LOGIC
@@ -189,6 +197,7 @@ module.exports = function (app, passport) {
       failureRedirect: "/login-fail"
     })
   );
+
 
 
 	// LOGIN FAIL REROUTE LOGIC
@@ -200,12 +209,14 @@ module.exports = function (app, passport) {
 	});
 
 
+
   // LOGOUT
 	app.get("/logout", isLoggedIn, function (req, res) {
 		req.logout();
 		req.flash("success", "Successfully logged out.");
 		res.redirect("/")
 	});
+
 
 
 	// PUBLIC STATS VIEW
@@ -245,11 +256,11 @@ module.exports = function (app, passport) {
 					} 
 				});
 
-		}).catch(function (err) { res.redirect("/500"); }); // query 1
-		}).catch(function (err) { res.redirect("/500"); }); // query 2
-		}).catch(function (err) { res.redirect("/500"); }); // query 3
-		}).catch(function (err) { res.redirect("/500"); }); // query 4
-		}).catch(function (err) { res.redirect("/500"); }); // query 5
+		}).catch(function (err) { res.redirect("/500"); }); // Query 1
+		}).catch(function (err) { res.redirect("/500"); }); // Query 2
+		}).catch(function (err) { res.redirect("/500"); }); // Query 3
+		}).catch(function (err) { res.redirect("/500"); }); // Query 4
+		}).catch(function (err) { res.redirect("/500"); }); // Query 5
 	});
 
 };
