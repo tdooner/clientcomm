@@ -1,9 +1,19 @@
 {
-  "name": "ch-courtsms",
+  "name": "ClientComm",
+  "version": "3.0.2",
+  "description": "Client to case manager communications management service.",
+  
+  "author": "Kuan Butts",
+  "contributors": [
+    "Kuan Butts <kuanbutts@gmail.com> (http://kuanbutts.com)"
+  ],
+
   "main": "server/app.js",
+  
   "engines": {
     "node": ">=0.10.0"
   },
+
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.3.3",
@@ -26,10 +36,29 @@
     "pg": "^4.4.6",
     "twilio": "^3.3.0-edge"
   },
+
   "scripts": {
-    "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/"
+    "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/",
+    "startWithEmail": "node server/app.js email"
   },
+
   "devDependencies": {
     "supertest": "^1.2.0"
-  }
+  },
+
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slco-2016/clientcomm"
+  },
+  
+  "license": "",
+
+  "keywords": [
+    "node",
+    "express",
+    "twilio",
+    "case management",
+    "communications"
+  ]
 }
