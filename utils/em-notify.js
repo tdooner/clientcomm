@@ -21,7 +21,7 @@ module.exports = {
 		db.raw(rawQuery).then(function (msgs) {
 			msgs.rows.forEach(function (msg, i) {
 
-				var text =  " Hello " + msg.first + " " + msg.last + ", this is Kuan from Code for America. " + 
+				var text =  " Hello, " + msg.first + " " + msg.last + ", this is Kuan from Code for America. " + 
 										" You are receiving this automated email because you have " + msg.count + " message(s) waiting for you in ClientComm that is more than 4 hours old. " +
 										" To view this message go to ClientComm.org and login with your user name and password. " +
 										" If you are having issues accessing your account, send me an email at kuan@codeforamerica.org and I will be happy to assist you any time, day or night!"; 
@@ -34,8 +34,8 @@ module.exports = {
 					html: text 
 				};
 
-				// send mail with defined transport object
-				transporter.sendMail(mailOptions, function(error, info){
+				// Send mail with defined transport object
+				transporter.sendMail (mailOptions, function(error, info){
 				    if (error) { console.log(error); } 
 				    else { console.log('Message sent: ' + info.response); }
 
@@ -48,6 +48,31 @@ module.exports = {
 		}).catch(function (err) { 
 			console.log(err); 
 		});
+
+	}, 
+
+	sendPassResetEmail: function (cm, uid, cb) {
+
+		var text = "  Hello, " + cm.first + " " + cm.last + ". You are recieving this email because your account (" + cm.email + ") has requested a password reset. " +
+								" \n If this was not you, you don't need to do anything. If it was you and you did intend to reset your password, please go to the " + 
+								" following address by either clicking on or cutting and pasting the following address: " + 
+								" \n https://clientcomm.org/login/reset/" + String(uid) + 
+								" \n The above link will expire within 24 hours. After that time, please request a new key to update your password. ";
+
+		var html = "<p>" + text.split("\n").join("</p><p>") + "</p>";
+
+		var mailOptions = {
+			from: '"ClientComm - CJS" <kuan@codeforamerica.org>', 
+			to: cm.email, 
+			subject: "CientComm Password Reset Email", 
+			text: text, 
+			html: html 
+		};
+
+		transporter.sendMail(mailOptions, function (error, info){
+		    if (error) console.log(error);
+		    cb()
+		});	
 
 	}
 };

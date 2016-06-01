@@ -6,10 +6,12 @@
 var db  = require("../server/db");
 
 var uuid = require("node-uuid");
+var emUtil = require("../utils/em-notify");
 
 // Utility checks if a client is logged in
 var utils = require("../utils/utils.js");
 var pass = utils["pass"];
+var hashPw = pass.hashPw;
 var isLoggedIn = pass.isLoggedIn;
 
 
@@ -55,11 +57,131 @@ module.exports = function (app, passport) {
 			// There is an account with this email in the system
 			} else {
 				var cm = cms[0];
-				req.flash("success", "Reset password email was sent to " + cm.email );
-				res.render("loginresetsent", {cm: cm});
+				var uid = uuid.v1();
+
+				// Remove all prior requests for password reset
+				db("pwresets")
+				.where("cmid", cm.cmid)
+				.del()
+				.then(function () { 
+
+				// Create a new row with current pw request
+				db("pwresets")
+				.insert({
+					cmid: cm.cmid,
+					uid: uid,
+					email: cm.email
+				})
+				.then(function () {
+
+					emUtil.sendPassResetEmail(cm, uid, function () {
+						// Render direction to check email card
+						req.flash("success", "Reset password email was sent to " + cm.email );
+						res.render("loginresetsent", {cm: cm});
+					});
+
+				}).catch(function (err) { res.redirect("/500"); }); // Query 3
+				}).catch(function (err) { res.redirect("/500"); }); // Query 2
+
 			}
-			
+
+		}).catch(function (err) { res.redirect("/500"); }); // Query 1
+	});
+
+
+	// UNIQUE KEY FROM EMAIL TO RESET PASSWORD PAGE RENDER
+	app.get("/login/reset/:uid", function (req, res) {
+
+		// Make sure that is a valid uid being provided
+		db("pwresets")
+		.where("uid", req.params.uid)
+		.andWhere("expiration", ">", db.fn.now())
+		.limit(1)
+		.then(function (rows) {
+
+			if (rows.length == 0) { 
+				req.flash("warning", "That address does not point to a valid password reset link. Try again.");
+				res.redirect("/login/reset");
+			} else {
+				var reset = rows[0];
+				res.render("loginresetphasetwo", {reset: reset});
+			}
+
 		}).catch(function (err) { res.redirect("/500"); });
+
+	});
+
+	// SUBMIT NEW PASSWORD
+	app.post("/login/reset/:uid", function (req, res) {
+
+		console.log("HER")
+
+		var retry_loc = "/login/reset/" + req.params.uid;
+		var redirect_loc = "/login/reset/";
+
+		// Critical body elements
+		var pwresid = Number(req.body.pwresid);
+		var cmid    = Number(req.body.cmid);
+
+		var uid     = String(req.body.uid);
+		var uid2    = String(req.params.uid);
+
+		var pass   = String(req.body.pass);
+		var pass2  = String(req.body.pass2);
+
+
+		// Make sure that passwords line up
+		if (pass !== pass2) { 
+			req.flash("warning", "Passwords do not match, please try again.");
+			res.redirect(retry_loc);
+
+		// Make sure key form components line up
+		} else if (uid !== uid2) { 
+			req.flash("warning", "Bad form entry (uid), please try applying for a new reset key.");
+			res.redirect(redirect_loc);
+
+		} else {
+			// Make sure that is a valid uid being provided
+			db("pwresets")
+			.where("uid", uid)
+			.andWhere("cmid", cmid)
+			.andWhere("pwresid", pwresid)
+			.andWhere("expiration", ">", db.fn.now())
+			.limit(1)
+			.returning("email")
+			.then(function (rows) {
+
+				// Form entry is bad, they did include correct hidden components
+				if (rows.length == 0) { 
+					req.flash("warning", "Bad form entry, please try applying for a new reset key.");
+					res.redirect(redirect_loc);
+
+				// Found the relevant row
+				} else {
+
+					// Update the case manager's password
+					db("cms")
+					.where("cmid", cmid)
+					.update({pass: hashPw(pass)})
+					.then(function (rows) {
+						
+						// We can delete that pw reset row now
+						db("pwresets")
+						.where("pwresid", pwresid)
+						.del()
+						.then(function () {
+
+							// Prompt the case manager to log in with new pw
+							req.flash("success", "You have updated your account password.");
+							res.redirect("/login");
+
+						}).catch(function (err) { res.redirect("/500"); });
+
+					}).catch(function (err) { res.redirect("/500"); });
+
+				}
+			}).catch(function (err) { res.redirect("/500"); });
+		}
 	});
 
 
