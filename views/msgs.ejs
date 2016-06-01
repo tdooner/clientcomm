@@ -89,9 +89,14 @@
 					<select name="commid" class="blue-select" required>
 						<option value="" selected disabled>Comm Method</option>
 						<% for (var i = 0; i < comms.length; i++) { %>
+
+							<!-- Only include options that are not retired -->
+							<% if (!comms[i].retired) { %>
 							<option value="<%= comms[i].commid %>" <% if (comms[i].value == most_recent_comm) { %> selected <% } %>>
 								<%= comms[i].name + ' (' + comms[i].value + ')' %>
 							</option>
+							<% } %>
+
 						<% } %>
 					</select>
 				</div>
