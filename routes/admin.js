@@ -140,43 +140,58 @@ router.get("/cms", function (req, res) {
 	res.redirect("/admin");
 })
 
+
+
+// Admin view of case manager activity
 router.get("/cms/:cmid", function (req, res) {
 	var cmid = req.params.cmid;
 
-	db("cms").where("cmid", cmid).limit(1)
+	// Make sure that cm of same org
+	// Make sure you are not querying yoruself
+	db("cms")
+	.whereNot("cmid", req.user.cmid)
+	.andWhere("cmid", cmid)
+	.andWhere("org", req.user.org)
+	.limit(1)
   .then(function (cms) {
 
-    // if no results, this client does not exist
+    // If no results, this client does not exist
     if (cms.length == 0) {
       res.redirect("/404");
 
-    } else if ((req.user.cmid !== cmid) && (req.user.org == cms[0].org)) {
+    } else {
       var cm = cms[0];
-      db("convos").where("cm", cmid).pluck("convid")
+
+      // Get conversations from that case manager
+      db("convos")
+      .where("cm", cmid)
+      .pluck("convid")
       .then(function (convos) {
 
-      	if (convos.length == 0) { convos = ["null"]; };
-
-      	var rawQuery = "SELECT COUNT(*), convo, date(msgs.created) FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) WHERE convos.convid IN (";
-      	rawQuery += convos.join(", ");
-      	rawQuery += ") GROUP BY convo, date(msgs.created) ORDER BY DATE DESC";
-      	if (convos[0] == "null") { rawQuery += " LIMIT 0"; };
-	      db.raw(rawQuery)
-	      .then(function (msgs) {console.log(rawQuery);console.log(msgs);
-
-	      	if (convos[0] == "null") { msgs.rows = []; };
-	      	
+      	// No messages if no conversations
+      	if (convos.length == 0) { 
 	        res.render("clientstats", {
 	          cm: cm,
-	          msgs: msgs.rows,
+	          msgs: [],
 	        });
 
-	      }).catch(function (err) { res.redirect("/500"); });
+	      // Get messages grouped by conversation and day
+      	} else {
+	      	var rawQuery = "  SELECT COUNT(*), convo, date(msgs.created) " + 
+	      									" FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) " + 
+	      									" WHERE convos.convid IN (" + convos.join(", ") + ") " +
+			      							" GROUP BY convo, date(msgs.created) ORDER BY DATE DESC; ";
+		      
+		      db.raw(rawQuery).then(function (msgs) {
+		        res.render("clientstats", {
+		          cm: cm,
+		          msgs: msgs.rows,
+		        });
+		      }).catch(function (err) { res.redirect("/500"); });
+      	}
 
       }).catch(function (err) { res.redirect("/500"); });
-
-    } else { res.redirect("/401"); }
-
+    }
   }).catch(function (err) { res.redirect("/500"); });
 })
 
