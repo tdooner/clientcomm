@@ -133,8 +133,7 @@ function makeChart () {
 	  data: { 
 	  	x: "x", 
 	  	columns: [["x"].concat(dates), ["Messages"].concat(vals)], 
-	  	color: function (color, d) { return "#0084FF"; },
-	  	types: { Messages: "spline" }
+	  	color: function (color, d) { return "#0084FF"; }
 	  },
 	  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" } } },
 	  legend: { hide: true },
