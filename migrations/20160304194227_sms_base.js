@@ -147,5 +147,5 @@ exports.down = function(knex, Promise) {
 		knex.schema.dropTable("comms"),
 		knex.schema.dropTable("leads")
 
-	])
+	]);
 };
