@@ -107,10 +107,14 @@ var server = app.listen(port, function () {
 module.exports = server;
 
 
+
 // SCHEDULER
 // TO DO: Make anything here a CRON job
-var timeDelay = 1000 * 60 * 60 * 24; 
-setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, timeDelay); 
+var EMNOTIF = process.env.EMNOTIF;
+if (EMNOTIF && EMNOTIF == "true") {
+	var timeDelay = 1000 * 60 * 60 * 24; 
+	setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, timeDelay); 
+}
 
 
 

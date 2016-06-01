@@ -39,7 +39,6 @@
 
   "scripts": {
     "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/",
-    "startWithEmail": "node server/app.js email"
   },
 
   "devDependencies": {
