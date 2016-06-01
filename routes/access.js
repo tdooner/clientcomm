@@ -114,8 +114,6 @@ module.exports = function (app, passport) {
 	// SUBMIT NEW PASSWORD
 	app.post("/login/reset/:uid", function (req, res) {
 
-		console.log("HER")
-
 		var retry_loc = "/login/reset/" + req.params.uid;
 		var redirect_loc = "/login/reset/";
 
