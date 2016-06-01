@@ -110,14 +110,14 @@ router.post("/:cmid/cls", function (req, res) {
 
   // Load in all the body elements we will be working with  
   // String variables
-  var first  = req.body.first && typeof req.body.first == "string" && req.body.first.length > 0 ? req.body.first.trim() : null;
+  var first  = req.body.first  && typeof req.body.first  == "string" && req.body.first.length  > 0 ? req.body.first.trim()  : null;
   var middle = req.body.middle && typeof req.body.middle == "string" && req.body.middle.length > 0 ? req.body.middle.trim() : null;
-  var last   = req.body.last && typeof req.body.last == "string" && req.body.last.length > 0 ? req.body.last.trim() : null;
+  var last   = req.body.last   && typeof req.body.last   == "string" && req.body.last.length   > 0 ? req.body.last.trim()   : null;
   
   // Integer variables
   var cmid   = isNaN(req.body.cmid) ? null : Number(req.body.cmid);
-  var otn    = isNaN(req.body.otn) ? null : Number(req.body.otn);
-  var so     = isNaN(req.body.so) ? null : Number(req.body.so);
+  var otn    = isNaN(req.body.otn)  ? null : Number(req.body.otn);
+  var so     = isNaN(req.body.so)   ? null : Number(req.body.so);
 
   // Dates
   var dob    = isNaN(Date.parse(req.body.dob)) ? null : req.body.dob;
@@ -533,7 +533,7 @@ router.get("/:cmid/cls/:clid/comms", function (req, res) {
         db.raw(rawQuery).then(function (comms) {
 
           res.render("clientcomms", {
-            cm: req.user,
+            client: cl,
             comms: comms.rows
           });
           
