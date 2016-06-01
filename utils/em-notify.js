@@ -51,6 +51,38 @@ module.exports = {
 
 	}, 
 
+	notifyUserFailedSend: function (msg) {
+		var text = "  You are recieving this email because a message you wrote failed to send. " +
+								" This was not your fault - it was likely an error with the SMS service provider. " + 
+								
+								" \n <b> What was the message? </b> " +
+								" The contents of the message are included below: \n " +
+								" \"" + msg.content + "\"" + 
+								
+								" \n <b> More details: </b> " +
+								" The message was sent at " + msg.created + ". " +
+								" It's last known status was: " + msg.tw_status + 
+								
+								" \n <b> What should I do? </b> " +
+								" Please check the message and send it again, if needed. " + 
+								" \n Thanks much and apologies for the inconvenience, " + 
+								" Kuan and Code for America, Team Salt Lake County";
+
+		var html = "<p>" + text.split("\n").join("</p><p>") + "</p>";
+
+		var mailOptions = {
+			from: '"ClientComm - CJS" <kuan@codeforamerica.org>', 
+			to: "kuanbutts@gmail.com", 
+			subject: "Alert: Error sending message from ClientComm!", 
+			text: text, 
+			html: html 
+		};
+
+		transporter.sendMail(mailOptions, function (error, info){
+		    if (error) console.log(error);
+		});	
+	},
+
 	sendPassResetEmail: function (cm, uid, cb) {
 
 		var text = "  Hello, " + cm.first + " " + cm.last + ". You are recieving this email because your account (" + cm.email + ") has requested a password reset. " +
