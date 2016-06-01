@@ -23,7 +23,7 @@ var emNotify = require("../utils/em-notify");
 var notifyUserFailedSend = emNotify.notifyUserFailedSend;
 
 
-var module = {}; // REMOVE
+
 module.exports = {
 
 	checkSMSstatus: function () {
@@ -116,7 +116,21 @@ function checkMsgAgainstTwilio (msg) {
 						.update({status_cleared: true})
 						.then(function (success) {
 							console.log("Cleared msg " + msg.msgid + ", but it failed to send.");
-							notifyUserFailedSend(msg);
+							
+							// Send an email to the case manager
+							db("cms")
+							.join("convos", "cms.cmid", "convos.cm")
+							.where("convos.convid", msg.convo)
+							.then(function (cms) {
+
+								// Can only send if we find a cm associated with that convo
+								// TO DO: Include information about the client in the email
+								if (cms.length > 0) {
+									var cm = cms[0];
+									notifyUserFailedSend(cm, msg); 	
+								}
+								
+							}).catch(function (err) { console.log(err); });
 
 						}).catch(function (err) { console.log(err); });
 					}
@@ -150,7 +164,5 @@ function checkMsgAgainstTwilio (msg) {
 	});
 };
 
-
-module.exports.checkSMSstatus();
 
 

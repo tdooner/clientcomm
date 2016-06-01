@@ -111,10 +111,17 @@ module.exports = server;
 // SCHEDULER
 // TO DO: Make anything here a CRON job
 //        Get rid of need for these arbitrary env vars
+// Process environment indicator
 var EMNOTIF = process.env.EMNOTIF;
+
+// EMNOTIF means run email notifications, including regular check up on text messages
 if (EMNOTIF && EMNOTIF == "true") {
-	var timeDelay = 1000 * 60 * 60 * 24; 
-	setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, timeDelay); 
+	var dailyTimer = 1000 * 60 * 60 * 24; 
+	var qrtrHrTimer = 1000 * 60 * 15; 
+
+	// Set activities
+	setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, dailyTimer); 
+	setInterval(function () { require("../utils/sms-status-check").checkSMSstatus(); }, 2000); 
 }
 
 

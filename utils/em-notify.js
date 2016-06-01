@@ -51,8 +51,8 @@ module.exports = {
 
 	}, 
 
-	notifyUserFailedSend: function (msg) {
-		var text = "  You are recieving this email because a message you wrote failed to send. " +
+	notifyUserFailedSend: function (cm, msg) {
+		var text = "  Hi, " + cm.first + ". You are recieving this email because a message you wrote failed to send. " +
 								" This was not your fault - it was likely an error with the SMS service provider. " + 
 								
 								" \n <b> What was the message? </b> " +
@@ -65,14 +65,14 @@ module.exports = {
 								
 								" \n <b> What should I do? </b> " +
 								" Please check the message and send it again, if needed. " + 
-								" \n Thanks much and apologies for the inconvenience, " + 
+								" \n Thanks much and apologies for the inconvenience, " + cm.email + 
 								" Kuan and Code for America, Team Salt Lake County";
 
 		var html = "<p>" + text.split("\n").join("</p><p>") + "</p>";
 
 		var mailOptions = {
 			from: '"ClientComm - CJS" <kuan@codeforamerica.org>', 
-			to: "kuanbutts@gmail.com", 
+			to: cm.email, 
 			subject: "Alert: Error sending message from ClientComm!", 
 			text: text, 
 			html: html 
