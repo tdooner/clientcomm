@@ -1,5 +1,5 @@
 # ClientComm
-Communications interface for case managers at Criminal Justice Services (CJS) in Salt Lake County, Utah. Code for America 2016 Fellowship Project.
+Communications interface for case managers at Criminal Justice Services (CJS) in Salt Lake County, Utah. Code for America 2016 Fellowship Project. Need assistance setting up this tool? Questions about the application structure? [Ask Kuan](http://kuanbutts.com/contact/).
 
 
 ## How to run
