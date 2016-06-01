@@ -33,9 +33,9 @@ var cmview = utils["cmview"];
 // Session status control
 var auth = utils["pass"];
 
-
-
-
+// Error handling
+var errorHandlers = utils["errorHandlers"];
+var fivehundred   = errorHandlers.fivehundred;
 
 
 
@@ -50,6 +50,9 @@ router.get("/", function (req, res) {
 
 // SHOW ALL CASE MANAGER CLIENTS WITH NEW MSG NOTIFICATIONS
 router.get("/:cmid", function (req, res) { 
+  var errorRedirect = fivehundred(res);
+
+  // Parameters
   var cmid = Number(req.params.cmid);
   var cmid2 = Number(req.user.cmid);
 
@@ -89,7 +92,7 @@ router.get("/:cmid", function (req, res) {
         clients: clients.rows,
       });
 
-    }).catch(function (err) { res.redirect("/500"); });
+    }).catch(errorRedirect);
   }
 });
 
@@ -105,7 +108,8 @@ router.get("/:cmid/cls", function (req, res) {
 // CREATE A NEW CLIENT
 router.post("/:cmid/cls", function (req, res) { 
 
-  // When things break, reroute here
+  // Reroute here
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid;
 
   // Load in all the body elements we will be working with  
@@ -164,7 +168,7 @@ router.post("/:cmid/cls", function (req, res) {
       redirect_loc = redirect_loc + "/cls/" + clids[0];
       res.redirect(redirect_loc);
 
-    }).catch(function (err) { res.redirect("/500"); });
+    }).catch(errorRedirect);
   }
 });
 
@@ -172,9 +176,12 @@ router.post("/:cmid/cls", function (req, res) {
 
 // VIEW A CLIENT
 router.get("/:cmid/cls/:clid", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
 
+  // Parameters
   var clid = Number(req.params.clid);
-
   var cmid = Number(req.params.cmid);
   var cmid2 = Number(req.user.cmid);
 
@@ -226,10 +233,10 @@ router.get("/:cmid/cls/:clid", function (req, res) {
             });
           }
           
-        }).catch(function (err) { res.redirect("/500"); }) // Query 3
-        }).catch(function (err) { res.redirect("/500"); }) // Query 2
+        }).catch(errorRedirect);
+        }).catch(errorRedirect);
       }
-    }).catch(function (err) { res.redirect("/500"); }) // Query 1
+    }).catch(errorRedirect);
   }
 });
 
@@ -238,8 +245,11 @@ router.get("/:cmid/cls/:clid", function (req, res) {
 // EDIT VIEW FOR A CLIENT
 router.get("/:cmid/cls/:clid/edit", function (req, res) { 
   
+  // Reroute
+  var errorRedirect = fivehundred(res);
+  
+  // Parameters
   var clid = Number(req.params.clid);
-
   var cmid = Number(req.params.cmid);
   var cmid2 = Number(req.user.cmid);
   
@@ -258,15 +268,16 @@ router.get("/:cmid/cls/:clid/edit", function (req, res) {
         res.render("clientedit", { client: cl });
       } else { res.redirect("/401"); }
 
-    }).catch(function (err) { res.redirect("/500"); })
+    }).catch(errorRedirect);
 
   }
 });
 
 // SUBMIT AN EDIT FOR THE CLIENT
 router.post("/:cmid/cls/:clid/edit", function (req, res) { 
-
-  // Default redirect
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
 
   // Reference cmid to compare with submitted
@@ -331,7 +342,7 @@ router.post("/:cmid/cls/:clid/edit", function (req, res) {
     .then(function (success) {
       req.flash("success", "Updated client.");
       res.redirect(redirect_loc);
-    }).catch(function (err) { res.redirect("/500") })
+    }).catch(errorRedirect)
   }
 });
 
@@ -339,6 +350,9 @@ router.post("/:cmid/cls/:clid/edit", function (req, res) {
 
 // ARCHIVE A CLIENT
 router.post("/:cmid/cls/:clid/archive", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid;
 
   db("clients")
@@ -347,13 +361,16 @@ router.post("/:cmid/cls/:clid/archive", function (req, res) {
   .then(function (success) {
     req.flash("success", "Archived client.");
     res.redirect(redirect_loc);
-  }).catch(function (err) { res.redirect("/500") })
+  }).catch(errorRedirect)
 });
 
 
 
 // RESTORE AN ARCHIVED CLIENT
 router.post("/:cmid/cls/:clid/restore", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid;
 
   db("clients")
@@ -362,13 +379,18 @@ router.post("/:cmid/cls/:clid/restore", function (req, res) {
   .then(function (success) {
     req.flash("success", "Restored client.");
     res.redirect(redirect_loc);
-  }).catch(function (err) { res.redirect("/500") });
+  }).catch(errorRedirect);
 });
 
 
 
 // GET A CLIENT'S COMMCONN
 router.get("/:cmid/cls/:clid/comm", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
+
+  // Parameters
   var cmid = Number(req.params.cmid);
   var cmid2 = Number(req.user.cmid);
 
@@ -384,7 +406,7 @@ router.get("/:cmid/cls/:clid/comm", function (req, res) {
       if (clients.length > 0) { res.render("clientcontact", {client: clients[0]}); } 
       else { res.redirect("/404"); }
 
-    }).catch(function (err) { res.redirect("/500"); })
+    }).catch(errorRedirect);
   }
 });
 
@@ -392,7 +414,9 @@ router.get("/:cmid/cls/:clid/comm", function (req, res) {
 
 // CREATE A NEW COMMCONN (AND POTENTIALLY A NEW COMM)
 router.post("/:cmid/cls/:clid/comm", function (req, res) { 
-  // Redirect options
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var retry_view   = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comm";
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
@@ -463,7 +487,7 @@ router.post("/:cmid/cls/:clid/comm", function (req, res) {
         }).then(function (success) {
           req.flash("success", "Added a new communication method.");
           res.redirect(redirect_loc);
-        }).catch(function (err) { res.redirect("/500"); });
+        }).catch(errorRedirect);
 
       // No comms exist, so we have to create one first
       } else {
@@ -485,11 +509,11 @@ router.post("/:cmid/cls/:clid/comm", function (req, res) {
           req.flash("success", "Added a new communication method.");
           res.redirect(redirect_loc);
 
-        }).catch(function (err) { res.redirect("/500"); }); // Query 2
-        }).catch(function (err) { res.redirect("/500"); }); // Query 1
+        }).catch(errorRedirect); // Query 2
+        }).catch(errorRedirect); // Query 1
 
       }
-    }).catch(function (err) { res.redirect("/500"); });
+    }).catch(errorRedirect);
 
   }
 });
@@ -498,6 +522,9 @@ router.post("/:cmid/cls/:clid/comm", function (req, res) {
 
 // VIEW ALL COMMCONNS FOR A CLIENT
 router.get("/:cmid/cls/:clid/comms", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid;
 
   var clid  = Number(req.params.clid);
@@ -537,10 +564,10 @@ router.get("/:cmid/cls/:clid/comms", function (req, res) {
             comms: comms.rows
           });
           
-        }).catch(function (err) { res.redirect("/500"); }); // Query 2
+        }).catch(errorRedirect); // Query 2
       }
 
-    }).catch(function (err) { res.redirect("/500"); }); // Query 1
+    }).catch(errorRedirect); // Query 1
 
   }
 });
@@ -549,7 +576,9 @@ router.get("/:cmid/cls/:clid/comms", function (req, res) {
 
 // SHOW EDIT CARD FOR A COMMCONN
 router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) { 
-  // Redirect to main commconn view for client as fallback
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
 
   var commconnid = Number(req.params.commconnid);
@@ -585,7 +614,7 @@ router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
         res.render("clientcontactedit", { commconn: commconn });
 
       } else { res.redirect("/404"); }
-    }).catch(function (err) { console.log(err); res.redirect("/500"); });
+    }).catch(errorRedirect);
   }
 });
 
@@ -595,6 +624,9 @@ router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
 // Note: Currently we only support the name being updated for the commconn
 // Note: We want CMs to remove a number rather than change this number - to preserve numbers
 router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
   var retry_loc    = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
 
@@ -638,7 +670,7 @@ router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
     db.raw(rawQuery).then(function (commconns) {
       req.flash("success", "Contact method updated.");
       res.redirect(redirect_loc);
-    }).catch(function (err) { console.log(err); res.redirect("/500"); });
+    }).catch(errorRedirect);
   }
 });
 
@@ -646,6 +678,9 @@ router.post("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
 
 
 router.post("/:cmid/cls/:clid/comms/:commconnid/close", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms";
   var retry_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/comms/" + req.params.commconnid;
 
@@ -670,12 +705,15 @@ router.post("/:cmid/cls/:clid/comms/:commconnid/close", function (req, res) {
       req.flash("success", "Retired contact method.");
       res.redirect(redirect_loc);
 
-    }).catch(function (err) { console.log(err); res.redirect("/500"); });
+    }).catch(errorRedirect);
 
   }
 });
 
 router.post("/:cmid/cls/:clid/close", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid;
 
   var clid = req.params.clid;
@@ -700,7 +738,7 @@ router.post("/:cmid/cls/:clid/close", function (req, res) {
             req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
             res.redirect(redirect_loc);
 
-          }).catch(function (err) { console.log(err); res.redirect("/500"); });
+          }).catch(errorRedirect);
 
         } else {
           req.flash("warning", "You do not have authority to close that client.");
@@ -712,12 +750,15 @@ router.post("/:cmid/cls/:clid/close", function (req, res) {
         res.redirect(redirect_loc);
       }
 
-    }).catch(function (err) { res.redirect("/500"); })
+    }).catch(errorRedirect);
 
   }
 });
 
 router.post("/:cmid/cls/:clid/open", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid;
 
   var clid = req.params.clid;
@@ -742,7 +783,7 @@ router.post("/:cmid/cls/:clid/open", function (req, res) {
             req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
             res.redirect(redirect_loc);
 
-          }).catch(function (err) { console.log(err); res.redirect("/500"); });
+          }).catch(errorRedirect);
 
         } else {
           req.flash("warning", "You do not have authority to re-activate that client.");
@@ -754,15 +795,20 @@ router.post("/:cmid/cls/:clid/open", function (req, res) {
         res.redirect(redirect_loc);
       }
 
-    }).catch(function (err) { res.redirect("/500"); })
+    }).catch(errorRedirect);
 
   }
 });
 
+
+
 router.get("/:cmid/cls/:clid/convos", function (req, res) {
   
+  // Reroute
+  var errorRedirect = fivehundred(res);
+  
+  // Parameters
   var clid = Number(req.params.clid);
-
   var cmid = Number(req.params.cmid);
   var cmid2 = Number(req.user.cmid);
 
@@ -779,13 +825,18 @@ router.get("/:cmid/cls/:clid/convos", function (req, res) {
 
           res.render("clientconvo", {client: clients[0], comms: comms});
           
-        }).catch(function (err) { res.redirect("/500"); });
+        }).catch(errorRedirect);
       } 
-    }).catch(function (err) { res.redirect("/500"); })
+    }).catch(errorRedirect);
   }
 });
 
+
+
 router.post("/:cmid/cls/:clid/convos", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
 
   var cmid = req.body.cmid;
@@ -858,23 +909,26 @@ router.post("/:cmid/cls/:clid/convos", function (req, res) {
                     redirect_loc = redirect_loc + "/convos/" + convid;
                     res.redirect(redirect_loc);
 
-                  }).catch(function (err) { res.redirect("/500"); });
+                  }).catch(errorRedirect);
                 }
               });
 
             } else { res.redirect("/500"); }
-          }).catch(function (err) { res.redirect("/500"); });
+          }).catch(errorRedirect);
 
-        }).catch(function (err) { console.log(err); res.redirect("/500"); });
+        }).catch(errorRedirect);
 
-      }).catch(function (err) { res.redirect("/500"); })
+      }).catch(errorRedirect);
 
-    }).catch(function (err) { res.redirect("/500"); })
+    }).catch(errorRedirect);
 
   }
 });
 
 router.get("/:cmid/cls/:clid/convos/:convid", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
 
   var cmid = req.params.cmid;
@@ -900,9 +954,9 @@ router.get("/:cmid/cls/:clid/convos/:convid", function (req, res) {
         db("clients").where("clid", clid).limit(1).then(function (cls) {
           obj.client = cls[0];
           res.render("msgs", obj);
-        }).catch(function (err) { res.redirect("/500"); })
+        }).catch(errorRedirect);
 
-      }).catch(function (err) { res.redirect("/500"); })
+      }).catch(errorRedirect);
 
     }).catch(function (err) {
       if (err == "404") { res.redirect("/404"); } 
@@ -913,6 +967,9 @@ router.get("/:cmid/cls/:clid/convos/:convid", function (req, res) {
 });
 
 router.post("/:cmid/cls/:clid/convos/:convid", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
 
   var cmid = req.params.cmid;
@@ -971,18 +1028,21 @@ router.post("/:cmid/cls/:clid/convos/:convid", function (req, res) {
                 req.flash("success", "Sent message.");
                 res.redirect(redirect_loc)
 
-              }).catch(function (err) { res.redirect("/500"); });
-            }).catch(function (err) { res.redirect("/500"); });
+              }).catch(errorRedirect);
+            }).catch(errorRedirect);
           }
         });
 
-      } else { res.redirect("/500"); }
-    }).catch(function (err) { res.redirect("/500"); });
+      } else { res.redirect("/404") }
+    }).catch(errorRedirect);
 
   }
 });
 
 router.post("/:cmid/cls/:clid/convos/:convid/close", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
 
   var cmid = req.params.cmid;
@@ -1018,6 +1078,9 @@ router.post("/:cmid/cls/:clid/convos/:convid/close", function (req, res) {
 });
 
 router.post("/:cmid/cls/:clid/convos/:convid/open", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
 
   var cmid = req.params.cmid;
@@ -1060,12 +1123,15 @@ router.post("/:cmid/cls/:clid/convos/:convid/open", function (req, res) {
           }
         });
 
-      }).catch(function (err) { res.redirect("/500"); })
-    }).catch(function (err) { res.redirect("/500"); })
+      }).catch(errorRedirect);
+    }).catch(errorRedirect);
   }
 });
 
 router.post("/:cmid/cls/:clid/convos/:convid/accept", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid + "/convos/" + req.params.convid;
 
   var cmid = req.params.cmid;
@@ -1102,6 +1168,9 @@ router.post("/:cmid/cls/:clid/convos/:convid/accept", function (req, res) {
 
 
 router.post("/:cmid/cls/:clid/convos/:convid/reject", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
 
   var cmid = req.params.cmid;
@@ -1121,9 +1190,9 @@ router.post("/:cmid/cls/:clid/convos/:convid/reject", function (req, res) {
         req.flash("success", "Closed conversation.");
         res.redirect(redirect_loc);
 
-      }).catch(function (err) { res.redirect("/500"); })
+      }).catch(errorRedirect);
 
-    }).catch(function (err) { res.redirect("/500"); })
+    }).catch(errorRedirect);
 
   }
 });
