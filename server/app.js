@@ -110,6 +110,7 @@ module.exports = server;
 
 // SCHEDULER
 // TO DO: Make anything here a CRON job
+//        Get rid of need for these arbitrary env vars
 var EMNOTIF = process.env.EMNOTIF;
 if (EMNOTIF && EMNOTIF == "true") {
 	var timeDelay = 1000 * 60 * 60 * 24; 
