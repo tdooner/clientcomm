@@ -16,15 +16,11 @@
 		<header>
 			<div class="container">
 				<div class="logo-left">
-					<!-- <span class="logo"> -->
-
-						<% if (typeof user == "undefined") { %>
-							<a href="/"><i class="fa fa-comments"></i> ClientComm </a>
-						<% } else { %>
-							<a href="/login"> <%= user.first %> <%= user.middle %> <%= user.last %> </a>
-						<% } %>
-
-					</span>
+					<% if (typeof user == "undefined") { %>
+						<a href="/"><i class="fa fa-comments"></i> ClientComm </a>
+					<% } else { %>
+						<a href="/login"> <%= user.first %> <%= user.middle %> <%= user.last %> </a>
+					<% } %>
 				</div>
 
 				<div class="navigation">
