@@ -2,18 +2,14 @@
   "name": "ClientComm",
   "version": "3.0.2",
   "description": "Client to case manager communications management service.",
-  
   "author": "Kuan Butts",
   "contributors": [
     "Kuan Butts <kuanbutts@gmail.com> (http://kuanbutts.com)"
   ],
-
   "main": "server/app.js",
-  
   "engines": {
     "node": ">=0.10.0"
   },
-
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.3.3",
@@ -25,6 +21,7 @@
     "express-session": "^1.13.0",
     "font-awesome": "^4.6.1",
     "jquery": "~1.12.2",
+    "keen-js": "^3.4.1",
     "knex": "^0.10.0",
     "moment": "^2.13.0",
     "moment-timezone": "^0.5.4",
@@ -36,23 +33,17 @@
     "pg": "^4.4.6",
     "twilio": "^3.3.0-edge"
   },
-
   "scripts": {
     "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/"
   },
-
   "devDependencies": {
     "supertest": "^1.2.0"
   },
-
-
   "repository": {
     "type": "git",
     "url": "https://github.com/slco-2016/clientcomm"
   },
-  
   "license": "Apache-2.0",
-
   "keywords": [
     "node",
     "express",
