@@ -11,7 +11,7 @@
 	<div class="nav-right">
 	<a href="/logout">
 		<small>Logout</small>
-		<i class="fa fa-times"></i>
+		<% include ../public/icons/logout.svg %>
 	</a>
 	</div>
 
@@ -20,7 +20,7 @@
 		<div class="nav-right">
 		<a href="/cms/<%= user.cmid %>">
 			<small>Clients List</small>
-			<i class="fa fa-list-ol"></i>
+			<% include ../public/icons/cllist.svg %>
 		</a>
 		</div>
 
@@ -28,7 +28,7 @@
 			<div class="nav-right">
 			<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
 				<small>Client Page</small>
-				<i class="fa fa-user"></i>
+				<% include ../public/icons/user.svg %>
 			</a>
 			</div>
 		<%} %>
@@ -38,7 +38,7 @@
 	<div class="nav-right">
 	<a href="javascript:window.location.href=window.location.href">
 		<small>Check for Messages</small>
-		<i class="fa fa-refresh"></i>
+		<% include ../public/icons/msgcheck.svg %>
 	</a>
 	</div>
 
