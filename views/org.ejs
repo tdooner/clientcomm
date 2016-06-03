@@ -418,7 +418,7 @@
 
 		// Get the highest performing weeek
 		var highestCount = weeks[Object.keys(weeks).reduce(function(a, b){ return weeks[a].count > weeks[b].count ? a : b })].count;
-		var thisWeeksVal = weeks["week_" + String(new Date().getWeek()-3)].count;
+		var thisWeeksVal = weeks["week_" + String(new Date().getWeek())].count;
 		var prctgeOfPeak = Math.floor(((thisWeeksVal/highestCount)*1000))/10
 
 		c3.generate({
