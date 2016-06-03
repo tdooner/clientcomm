@@ -63,6 +63,7 @@
 		</p>
 		<p><b> Distribution by Day of Week </b></p>
 		<div class="chart2"><div id="chart-overall2"></div></div>
+		<div class="chart2"><div id="recentlogins"></div></div>
 
 
 	<div class="title">
@@ -267,6 +268,46 @@ function findLineByLeastSquares(values_x, values_y) {
 
   return [result_values_x, result_values_y];
 };
+
+
+
+  !function(a,b){a("Keen","https://d26b395fwzu5fz.cloudfront.net/3.4.1/keen.min.js",b)}(function(a,b,c){var d,e,f;c["_"+a]={},c[a]=function(b){c["_"+a].clients=c["_"+a].clients||{},c["_"+a].clients[b.projectId]=this,this._config=b},c[a].ready=function(b){c["_"+a].ready=c["_"+a].ready||[],c["_"+a].ready.push(b)},d=["addEvent","setGlobalProperties","trackExternalLink","on"];for(var g=0;g<d.length;g++){var h=d[g],i=function(a){return function(){return this["_"+a]=this["_"+a]||[],this["_"+a].push(arguments),this}};c[a].prototype[h]=i(h)}e=document.createElement("script"),e.async=!0,e.src=b,f=document.getElementsByTagName("script")[0],f.parentNode.insertBefore(e,f)},this);
+var client = new Keen({
+  projectId: "5750a91433e4063ccd5b6c7e",
+  readKey: "a70db21e3f6527c10ee23f2697714bf883783b6018b8f3fd27d94bf0b0d9eb9cb26a22d69709dff266866c526ad0e9e845c82dd5393b417d99c2ef7712d979a960e9247806dc09231e9ff7880ab2772cfa1b41d9900de385db8d5942d4d337bd"
+
+});
+var query;
+Keen.ready(function(){
+  
+  query = new Keen.Query("select_unique", {
+    eventCollection: "pageviews",
+    filters: [
+    {
+        "operator": "ne",
+        "property_name": "user.cmid",
+        "property_value": null
+    },
+    {
+        "operator": "exists",
+        "property_name": "user.cmid",
+        "property_value": true
+    }
+],
+    groupBy: [
+    "user.first",
+    "user.last"
+],
+    targetProperty: "user.cmid",
+    timeframe: "this_7_days",
+    timezone: "UTC"
+  });
+  
+  client.draw(query, document.getElementById("recentlogins"), {
+    // Custom configuration here
+  });
+  
+});
 
 </script>
 

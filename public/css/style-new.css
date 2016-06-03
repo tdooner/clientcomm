@@ -1,3 +1,83 @@
+/* C3js overall styles */
+
+.c3 {
+	color: #898989;
+}
+.c3 .c3-axis-x path, .c3 .c3-axis-x line {
+  stroke: #898989;
+}
+.c3 .c3-axis-y path, .c3 .c3-axis-y line {
+  stroke: #898989;
+}
+.c3-axis-x .tick, .c3-axis-y .tick {
+	fill: #898989;
+}
+
+
+/* Admin page */
+
+.orgoverview .orgcard {
+	margin-top: 20px;
+	height: 150px;
+	display: block;
+	clear: both;
+	position: relative;
+}
+
+.orgoverview .orgcard .left {
+	width: 415px;
+	height: 130px;
+	max-height: 130px;
+	overflow-y: hidden;
+	padding: 10px;
+	background-color: #CCC;
+	color: #FFF;
+	float: left;
+}
+
+.orgoverview .orgcard .left .bar {
+	width: 415px;
+	margin-top: 6px;
+	height: 6px;
+	border-top: 1px solid #BBB;
+}
+
+.orgoverview .orgcard .right {
+	width: 415px;
+	max-height: 130px;
+	height: 130px;
+	float: left;
+	color: #898989;
+	text-align: center;
+	line-height: 12px;
+	font-size: 12px;
+}
+
+.orgoverview .accounts {
+	margin-top: 20px;
+	color: #898989;
+	display: block;
+	clear: both;
+	position: relative;
+}
+
+.orgoverview .accounts .accountcard {
+	width: 263px;
+	height: 250px;
+	overflow: hidden;
+	padding: 10px;
+	float: left;
+	border-bottom: 1px solid #DDD;
+}
+
+.orgoverview .accounts .accountcard .miniaccountchart {
+	height: 40px;
+}
+
+.orgoverview .accounts .accountcard table {
+	font-size: small;
+}
+
 
 /* CARD OPTS*/
 
