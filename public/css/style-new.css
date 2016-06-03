@@ -352,6 +352,14 @@
 	font-size: 0.9em;
 }
 
+.cl-list svg path, .cl-list svg polygon {
+	fill: #898989;
+}
+
+.cl-list svg:hover path, .cl-list svg:hover polygon {
+	fill: #4887C7;
+}
+
 .msgs {
 	width: 900px;
 	margin: -10px -25px -10px -25px;

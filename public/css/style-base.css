@@ -38,10 +38,6 @@ a, a:hover, a:active {
 	color: #898989;
 }
 
-.icon {
-	height: 100%;
-}
-
 .alerts, .navbar {
 	margin-left: auto;
 	margin-right: auto;
@@ -68,16 +64,6 @@ a, a:hover, a:active {
 	color: #92C9FF;
 }
 
-.navbar .username:hover, .navbar .nav-right:hover {
-	color: #0ADA34;
-	cursor: pointer;
-}
-
-.navbar .username .fa, .navbar .nav-right .fa {
-	/*font-size: 30px;*/
-	/*vertical-align: sub;*/
-}
-
 .navbar .username {
 	float: left;
 	font-size: 18px;
@@ -88,3 +74,28 @@ a, a:hover, a:active {
 	float: right;
 	margin-left: 20px;
 }
+
+.navbar .nav-right svg {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.navbar .nav-right svg path, .navbar .nav-right svg polygon {
+	fill: #92C9FF;
+}
+
+.navbar .username:hover, .navbar .nav-right:hover {
+	color: #0ADA34;
+	cursor: pointer;
+}
+
+.navbar .nav-right:hover path, .navbar .nav-right:hover polygon {
+	fill: #0ADA34;
+	cursor: pointer;
+}
+
+
+
+
+
+
