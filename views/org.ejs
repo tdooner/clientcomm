@@ -105,54 +105,51 @@
 					<!-- Mini chart of activity -->
 					<div class="miniaccountchart"><div id="chart-<%= cms[i].cmid %>"></div></div>
 
-				<table style="width:100%">
-				  <tr>
-				    <td>Email</td>
-				    <td><%= org.email %></td>
-				  </tr>
-				</table>
+					<table style="width:100%">
+					  <tr>
+					    <td>Email</td>
+					    <td><%= cms[i].email %></td>
+					  </tr>
 
-					<div class="themeblock-id">
-						email
-					</div>
-					<%= cms[i].email %>
+					  <tr>
+					    <td>Position</td>
+					    <td><%= cms[i].position %></td>
+					  </tr>
 
-					<div class="themeblock-id">
-						probation
-					</div>
-					<%= cms[i].position %>
+					  <tr>
+					    <td>Department</td>
+					    <td><%= cms[i].department %></td>
+					  </tr>
 
-					<div class="themeblock-id">
-						department
-					</div>
-					<%= cms[i].department %>
+					  <tr>
+					    <td>Last Login</td>
+					    <td>
+								<% try { %>
+									<% var upd = new Date(cms[i].updated) %>
+									<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+								<% } catch (err) { %>
+									Unknown
+								<% } %>
+					    </td>
+					  </tr>
 
-					<div class="themeblock-id">
-						last login
-					</div>
-					<% try { %>
-						<% var upd = new Date(cms[i].updated) %>
-						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
-					<% } catch (err) { %>
-						Unknown
-					<% } %>
-
-					<div class="themeblock-id">
-						created
-					</div>
-					<% try { %>
-						<% var upd = new Date(cms[i].created) %>
-						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
-					<% } catch (err) { %>
-						Unknown
-					<% } %>
+					  <tr>
+					    <td>Created</td>
+					    <td>
+								<% try { %>
+									<% var upd = new Date(cms[i].created) %>
+									<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+								<% } catch (err) { %>
+									Unknown
+								<% } %>
+					    </td>
+					  </tr>
+					</table>
 				</div>
-
 			<% } %>
 		<% } %>
+					
 	</div>
-
-
 
 	<div class="accounts">
 		<div class="title">
@@ -162,10 +159,8 @@
 		<% for (var i = 0; i < cms.length; i++) { %>
 			<% if (!cms[i].admin && cms[i].active) { %>
 
-				<div class="themeblock-row">
-					<div class="themeblock-id">
-						<div id="chart-<%= cms[i].cmid %>"></div>
-					</div>
+				<div class="accountcard">
+
 					<b>
 					<% if (user.cmid !== cms[i].cmid) { %>
 						<a href="/admin/cms/<%= cms[i].cmid %>">
@@ -177,117 +172,135 @@
 						</a>
 					<% } %>
 					</b>
-				</div>
 
-				<div class="themeblock-row">
-					<div class="themeblock-id">
-						email
-					</div>
-					<%= cms[i].email %>
-				</div>
+					<!-- Mini chart of activity -->
+					<div class="miniaccountchart"><div id="chart-<%= cms[i].cmid %>"></div></div>
 
-				<div class="themeblock-row">
-					<div class="themeblock-id">
-						position
-					</div>
-					<%= cms[i].position %>
-				</div>
+					<table style="width:100%">
+					  <tr>
+					    <td>Email</td>
+					    <td><%= cms[i].email %></td>
+					  </tr>
 
-				<div class="themeblock-row">
-					<div class="themeblock-id">
-						department
-					</div>
-					<%= cms[i].department %>
-				</div>
+					  <tr>
+					    <td>Position</td>
+					    <td><%= cms[i].position %></td>
+					  </tr>
 
-				<div class="themeblock-row">
-					<div class="themeblock-id">
-						last login
-					</div>
-					<% try { %>
-						<% var upd = new Date(cms[i].updated) %>
-						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
-					<% } catch (err) { %>
-						Unknown
-					<% } %>
-				</div>
+					  <tr>
+					    <td>Department</td>
+					    <td><%= cms[i].department %></td>
+					  </tr>
 
-				<div class="themeblock-row">
-					<div class="themeblock-id">
-						created
-					</div>
-					<% try { %>
-						<% var upd = new Date(cms[i].created) %>
-						<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") %>
-					<% } catch (err) { %>
-						Unknown
-					<% } %>
-				</div>
+					  <tr>
+					    <td>Last Login</td>
+					    <td>
+								<% try { %>
+									<% var upd = new Date(cms[i].updated) %>
+									<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+								<% } catch (err) { %>
+									Unknown
+								<% } %>
+					    </td>
+					  </tr>
 
+					  <tr>
+					    <td>Created</td>
+					    <td>
+								<% try { %>
+									<% var upd = new Date(cms[i].created) %>
+									<%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+								<% } catch (err) { %>
+									Unknown
+								<% } %>
+					    </td>
+					  </tr>
+					</table>
+				</div>
 			<% } %>
 		<% } %>
+					
 	</div>
 
 
 
 
+	<div class="accounts">
+		<div class="title">
+			Create New Account
+		</div>
+		<table>
+			<form method="post">
 
-<div class="infoblock">
-	<div class="infoblock-label">
-		Create New Account
+				<input type="hidden" name="orgid" value="<%= org.orgid %>">
+
+				<tr>
+					<td>First</td>
+					<td>
+						<input class="infoblock-input" type="text" name="first" placeholder="e.g. Jane" required>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Middle</td>
+					<td>
+						<input class="infoblock-input" type="text" name="middle" placeholder="e.g. M">
+					</td>
+				</tr>
+
+				<tr>
+					<td>Last</td>
+					<td>
+						<input class="infoblock-input" type="text" name="last" placeholder="e.g. Doe" required>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Email</td>
+					<td>
+						<input class="infoblock-input" type="email" name="email" placeholder="e.g. jane@example.com" required>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Password</td>
+					<td>
+						<input class="infoblock-input" type="password" name="password" placeholder="•••••••" required>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Position</td>
+					<td>
+						<input class="infoblock-input" type="text" name="position" placeholder="e.g. Therapist" required>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Department</td>
+					<td>
+						<input class="infoblock-input" type="text" name="department" placeholder="e.g. Pretrial Services" required>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Admin Privelages</td>
+					<td>
+						<label class="infoblock-cblabel"><input type="checkbox" name="admin" value="true"> check for admin privileges </label>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Submit</td>
+					<td>
+						<input type="submit" class="button" value="Submit">
+					</td>
+				</tr>
+				
+			</form>
+		</table>
 	</div>
-	<div class="infoblock-body">
-		<form method="post">
 
-			<input type="hidden" name="orgid" value="<%= org.orgid %>">
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> first </div>
-				<input class="infoblock-input" type="text" name="first" placeholder="e.g. Jane" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> middle </div>
-				<input class="infoblock-input" type="text" name="middle" placeholder="e.g. M">
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> last </div>
-				<input class="infoblock-input" type="text" name="last" placeholder="e.g. Doe" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> email </div>
-				<input class="infoblock-input" type="email" name="email" placeholder="e.g. jane@example.com" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> password </div>
-				<input class="infoblock-input" type="password" name="password" placeholder="•••••••" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> position </div>
-				<input class="infoblock-input" type="text" name="position" placeholder="e.g. Therapist" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> department </div>
-				<input class="infoblock-input" type="text" name="department" placeholder="e.g. Pretrial Services" required>
-			</div>
-
-			<div class="infoblock-row">
-				<div class="infoblock-id"> admin </div>
-				<label class="infoblock-cblabel"><input type="checkbox" name="admin" value="true"> check for admin privileges </label>
-			</div>
-
-			<div class="infoblock-row">
-				<input type="submit" class="button" value="Submit">
-			</div>
-			
-		</form>
-	</div>
-</div>
 
 </div>
 
@@ -335,11 +348,12 @@
 		  	columns: [["x"].concat(dates), ["Messages"].concat(vals)], 
 		  	color: function (color, d) { return "#4BAEFF"; }
 		  },
-		  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" }, show: false }, y: { show: false } },
-		  tooltip: { show: false },
+		  axis: { x: { type: "timeseries", tick: { format: "%Y-%m-%d" }, show: false }, y: { show: false, max: 30, min: 0 } },
+		  tooltip: { show: true },
 		  point: { show: false },
 		  legend: { hide: true },
-		  padding: { top: 0, right: 10, bottom: 0, left: 0, },
+		  grid: { y: { show: false }, x: { show: false } },
+		  padding: { top: 0, right: 0, bottom: -25, left: 0, },
 		  size: { height: 40, width: 260 },
 		  bindto: "#chart-" + id,
 		});	

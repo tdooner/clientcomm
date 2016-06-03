@@ -63,15 +63,21 @@
 
 .orgoverview .accounts .accountcard {
 	width: 263px;
-	height: 250px;
+	height: 175px;
 	overflow: hidden;
 	padding: 10px;
 	float: left;
-	border-bottom: 1px solid #DDD;
+	border-top: 1px solid #DDD;
 }
 
 .orgoverview .accounts .accountcard .miniaccountchart {
 	height: 40px;
+  
+  background: #CCC; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(#F4F4F4, #F7F7F7, #EEE, #D9D9D9); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#F4F4F4, #F7F7F7, #EEE, #D9D9D9); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#F4F4F4, #F7F7F7, #EEE, #D9D9D9); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#F4F4F4, #F7F7F7, #EEE, #D9D9D9); /* Standard syntax */
 }
 
 .orgoverview .accounts .accountcard table {
