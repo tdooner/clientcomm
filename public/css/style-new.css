@@ -232,6 +232,20 @@
 	border-width: 0px 0px 1px 0px;
 }
 
+.contents .title .right-button {
+	float: right; 
+	font-size: 12px; 
+	line-height: 30px; 
+	padding: 5px 15px 5px 15px;
+	background-color: #92C9FF;
+	cursor: pointer;
+}
+
+.contents .title .right-button:hover {
+	background-color: #2F8CE8;
+	color: #FFF;
+}
+
 .contents .newclient {
 	float: right;
 	color: #D2C308;
