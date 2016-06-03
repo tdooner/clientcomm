@@ -150,9 +150,7 @@
 	float: right;
 	color: #D2C308;
 	padding: 10px 10px 10px 10px;
-	font-size: 18px;
-	line-height: 35px;
-	vertical-align: top;
+	font-size: 20px;
 	cursor: pointer;
 }
 
@@ -160,6 +158,20 @@
 	color: #FFF;
 	background-color: #D2C308;
 	border-radius: 10px;
+}
+
+.contents .newclient svg {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.contents .newclient svg path, .contents .newclient svg polygon {
+	fill: #D2C308;
+}
+
+.contents .newclient:hover svg path, .contents .newclient:hover svg polygon {
+	fill: #FFF;
 }
 
 .contents .cl-list, .contents .comm-list, .contents .capture-list {
@@ -193,6 +205,12 @@
 	font-size: 24px;
 	width: 100%;
 	cursor: pointer;
+}
+
+/* SVG align for all within all list options */
+.cl-list svg, .comm-list svg, .capture-list svg {
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .cl-list tr, .comm-list tr, .capture-list tr {
@@ -352,11 +370,27 @@
 	font-size: 0.9em;
 }
 
-.cl-list svg path, .cl-list svg polygon {
+/* SVG styling for icon that is by each client name */
+
+.cl-list .clientid svg path, .cl-list .clientid svg polygon {
+	fill: #0ADA34;
+}
+
+.cl-list .nonew .clientid svg path, .cl-list .nonew .clientid svg polygon {
 	fill: #898989;
 }
 
-.cl-list svg:hover path, .cl-list svg:hover polygon {
+.cl-list .archive .clientid svg path, .cl-list .archive .clientid svg polygon {
+	fill: #FFF;
+}
+
+/* SVG styling for archive/restore column */
+
+.cl-list .archiverestore svg path, .cl-list .archiverestore svg polygon {
+	fill: #898989;
+}
+
+.cl-list .archiverestore svg:hover path, .cl-list .archiverestore svg:hover polygon {
 	fill: #4887C7;
 }
 

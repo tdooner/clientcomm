@@ -14,7 +14,7 @@
 
 	<a href="/cms/<%= user.cmid %>/cls">
 		<div class="newclient"> 
-			<i class="fa fa-user-plus"></i> 
+			<% include ../public/icons/bigplus.svg %> 
 			New Client 
 		</div>
 	</a>
@@ -45,9 +45,9 @@
 
 				<tr class="<%= clients[i].active ? 'current' : 'archive' %> <%= clients[i].active && !clients[i].open ? 'nonew' : '' %>">
 
-					<td>
+					<td class="clientid">
 						<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
-							<i class="fa fa-user"></i>
+							<% include ../public/icons/user.svg %>
 							<%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
 						</a>
 					</td>
@@ -107,7 +107,7 @@
 						</a>
 					</td>
 					
-					<td>
+					<td class="archiverestore">
 						<% if (clients[i].active) { %>
 							<form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
 								<button type="submit">
