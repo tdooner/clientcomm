@@ -447,13 +447,17 @@
 
 	function drawCMActivityChart(cms) {
 		cms = cms.result;
-		console.log(cms);
 		// Convert all times to hours
-		cms.map(function (ea) { 
+		cms = cms.filter(function (ea) {
+			var f = ea["user.first"] !== "" || ea["user.first"] !== "Test Account" || ea["user.first"] !== "Kuan";
+			var l = ea["user.last"] !== "";
+			return (f && l);
+		}).map(function (ea) { 
 			ea["Hours Logged Using ClientComm (Last 24 Hours)"] = Math.ceil((ea.result/(1000*60*60))*100)/100;
 			ea.name = [ea["user.first"], ea["user.last"]].join(" ");
 			return ea;
 		});
+		console.log(cms)
 
 		c3.generate({
 			data: {
@@ -505,32 +509,7 @@
 		  // Create a query instance
 		  var keenQuery = new Keen.Query("sum", {
 		    eventCollection: "pagedurations",
-		    filters: [
-				  {
-			      "operator": "ne",
-			      "property_name": "user.cmid",
-			      "property_value": null
-				  },
-				  {
-			      "operator": "ne",
-			      "property_name": "user.cmid",
-			      "property_value": "null"
-				  },
-				  {
-			      "operator": "exists",
-			      "property_name": "user.cmid",
-			      "property_value": true
-				  },
-				  {
-			      "operator": "gt",
-			      "property_name": "user.cmid",
-			      "property_value": 0
-				  }
-				],
-			  groupBy: [
-				  "user.first",
-				  "user.last"
-				],
+			  groupBy: [ "user.first", "user.last" ],
 		    targetProperty: "duration",
 		    timeframe: "previous_1_days",
 		    timezone: "UTC"
