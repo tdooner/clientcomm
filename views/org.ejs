@@ -162,6 +162,8 @@
 			Staff Accounts (<%= staffCt %> active)
 		</div>
 
+		<div id="cmactivitychart"></div>
+
 		<% for (var i = 0; i < cms.length; i++) { %>
 			<% if (!cms[i].admin && cms[i].active) { %>
 
@@ -314,6 +316,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
 
 <script type="text/javascript">
+
+	// Instantiate Keen.io
 	
 	// Bind to the global
 	window.msgs = "<%= JSON.stringify(msgs) %>";
@@ -439,10 +443,38 @@
 		    size: { height: 138, width: 415 },
 		    bindto: "#gaugechart"
 		});
+	};
+
+	function drawCMActivityChart(cms) {
+		cms = cms.result;
+		console.log(cms);
+		// Convert all times to hours
+		cms.map(function (ea) { 
+			ea["Hours Logged Using ClientComm (Last 24 Hours)"] = Math.ceil((ea.result/(1000*60*60))*100)/100;
+			ea.name = [ea["user.first"], ea["user.last"]].join(" ");
+			return ea;
+		});
+
+		c3.generate({
+			data: {
+			  json: cms,
+			  keys: {
+		      x: "name",
+		      value: ["Hours Logged Using ClientComm (Last 24 Hours)"]
+			  },
+			  type: "bar",
+			  color: function (color, d) { return "#4BAEFF"; }
+			},
+			axis: {
+			  rotated: true,
+			  x: { type: "category" }
+			},
+			bindto: "#cmactivitychart"
+		});
 	}
 
 
-	// PAGE LOAD ACTIONS
+	// PAGE LOAD ACTIONS RELATED TO EJS VAR STRING INCLUSION
 	// Attempt first to parse content
 	try {
 		// Clean up EJS string output
@@ -460,6 +492,58 @@
 
 	// If parse fails, we don't execute any of the chart drawing
 	} catch (e) { console.log(e) }
+
+	// KEEN ANALYTICS
+	// Load Keen.io data only after page loads because Keen.io is loaded in the footer from template
+	$(document).ready(function () {
+		var keenQueryClient = new Keen({
+		  projectId: "5750a91433e4063ccd5b6c7e",
+		  readKey: "a70db21e3f6527c10ee23f2697714bf883783b6018b8f3fd27d94bf0b0d9eb9cb26a22d69709dff266866c526ad0e9e845c82dd5393b417d99c2ef7712d979a960e9247806dc09231e9ff7880ab2772cfa1b41d9900de385db8d5942d4d337bd"
+		});
+
+		Keen.ready(function(){
+		  // Create a query instance
+		  var keenQuery = new Keen.Query("sum", {
+		    eventCollection: "pagedurations",
+		    filters: [
+				  {
+			      "operator": "ne",
+			      "property_name": "user.cmid",
+			      "property_value": null
+				  },
+				  {
+			      "operator": "ne",
+			      "property_name": "user.cmid",
+			      "property_value": "null"
+				  },
+				  {
+			      "operator": "exists",
+			      "property_name": "user.cmid",
+			      "property_value": true
+				  },
+				  {
+			      "operator": "gt",
+			      "property_name": "user.cmid",
+			      "property_value": 0
+				  }
+				],
+			  groupBy: [
+				  "user.first",
+				  "user.last"
+				],
+		    targetProperty: "duration",
+		    timeframe: "previous_1_days",
+		    timezone: "UTC"
+		  });
+
+		  // Send off query
+		  keenQueryClient.run(keenQuery, function (err, res){
+		    if (err) { console.log("Keen error on query run: ", err); }
+		    else { drawCMActivityChart(res); }
+		  });
+
+		});
+	});
 
 </script>
 
