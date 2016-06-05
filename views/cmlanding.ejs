@@ -159,28 +159,38 @@
 	<div style="margin-left: auto; margin-right: auto; width: 590px">
 		<div class="title">
 			Weekly Activity
+			<span class="right-button" onclick="javascript: $('#userstats').toggle()">
+				<i class="fa fa-bar-chart"></i>
+				See how you stack up!
+			</span>
 		</div>
 
-		<div id="progress" class="graph">
-			<div id="bar" style="width: <%= ctRatio*100 %>%">
-				<% var pad = Math.floor(ctRatio*590+10); %>
-				<% if (pad > 450) { pad = Math.floor(ctRatio*590-135); } %>
-				<p style="padding-left: <%= pad + 'px' %>">
-					<%= Math.floor(ctRatio*100) %>% of top user
-				</p>
+		<span id="userstats" style="display:none">
+			<div id="progress" class="graph">
+				<div id="bar" style="width: <%= ctRatio*100 %>%">
+					<% var pad = Math.floor(ctRatio*590+10); %>
+					<% if (pad > 450) { pad = Math.floor(ctRatio*590-135); } %>
+					<p style="padding-left: <%= pad + 'px' %>">
+						<%= Math.floor(ctRatio*100) %>% of top user
+					</p>
+				</div>
 			</div>
+
+			<% if (topUser.cmid == user.cmid) { %>
+				<h3 style="color: #344289">
+					Congrats! You are the top user so far this week!
+				</h3>
+			<% } %>
+
+			<p>
+				<b>See if you can be the top ClientComm user!</b>
+			</p>
+
+			<p>
+				Hello, <%= user.first %> <%= user.last %>! Above is a chart that shows your usage this week compared to the top user so far this week. By adding more clients and holding more conversations your use of ClientComm will rise. At the end of each week, this chart resets itself.
+			</p>
 		</div>
-
-		<% if (topUser.cmid == user.cmid) { %>
-			<h3 style="color: #344289">
-				Congrats! You are the top user so far this week!
-			</h3>
-		<% } %>
-
-		<p>
-			Hello, <%= user.first %> <%= user.last %>! Above is a chart that shows your usage this week compared to the top user so far this week. By adding more clients and holding more conversations your use of ClientComm will rise. At the end of each week, this chart resets itself.
-		</p>
-	</div>
+	</span>
 <% } %>
 
 </div>
