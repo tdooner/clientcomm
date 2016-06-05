@@ -41,9 +41,26 @@ var fivehundred   = errorHandlers.fivehundred;
 
 // LOGIN LANDING PAGE ROUTER
 router.get("/", function (req, res) { 
-  if (req.user.superuser)  { res.redirect("/orgs");   } 
-  else if (req.user.admin) { res.redirect("/admin");  } 
-  else                     { res.render("cmlanding"); }
+  var errorRedirect = fivehundred(res);
+
+  // Redirects for non-regular users
+  if (req.user.superuser)  { res.redirect("/orgs");  } 
+  else if (req.user.admin) { res.redirect("/admin"); } 
+
+  // Else this is a regular user and should see the 3-route splash page
+  else { 
+    var rawQuery =  " SELECT count(msgid) AS count, cms.cmid, cms.first, cms.last, cms.position FROM msgs " + 
+                    " LEFT JOIN convos ON (convos.convid = msgs.convo) " + 
+                    " LEFT JOIN cms ON (cms.cmid = convos.cm) " + 
+                    " WHERE msgs.created < date_trunc('week', CURRENT_DATE) " + 
+                    " GROUP BY cms.cmid, cms.first, cms.last, cms.position " +
+                    " ORDER BY COUNT DESC; ";
+
+    // Get a list of app use for all case managers this week
+    db.raw(rawQuery).then(function (counts) {
+      res.render("cmlanding", { counts: counts.rows });
+    }).catch(errorRedirect);
+  }
 });
 
 

@@ -1,5 +1,23 @@
 <% include header-base %>
 
+<% var thisUsersCount = 0; %>
+<% var topUsersCount = 0; %>
+<% var topUser = null; %>
+
+<% for (var i = 0; i < counts.length; i++) { %>
+<% 	var c = counts[i]; %>
+<% 	var ct = Number(c.count); %>
+<% 	if (ct > topUsersCount) { %>
+<% 		topUsersCount = ct; %>
+<% 		topUser = c; %>
+<% 	}; %>
+<% 	if (Number(c.cmid) == Number(user.cmid)) thisUsersCount = ct; %>
+<% } %>
+
+<% var ctRatio = thisUsersCount/topUsersCount; %>
+
+
+
 <style type="text/css">
 	.bigcircles {
 		border-radius: 50%; 
@@ -30,6 +48,44 @@
 	.yellow:hover svg path {
 		fill: #E5D50A;
 	}
+
+	/* progress bar */
+	.graph {
+	  width: 590px; /* width and height are arbitrary, just make sure the #bar styles are changed accordingly */
+	  height: 30px;
+	  margin-left: auto; 
+	  margin-right: auto;
+	  background: rgb(168,168,168);
+	  background: -moz-linear-gradient(top, rgba(168,168,168,1) 0%, rgba(204,204,204,1) 23%);
+	  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(168,168,168,1)), color-stop(23%,rgba(204,204,204,1)));
+	  background: -webkit-linear-gradient(top, rgba(168,168,168,1) 0%,rgba(204,204,204,1) 23%);
+	  background: -o-linear-gradient(top, rgba(168,168,168,1) 0%,rgba(204,204,204,1) 23%);
+	  background: -ms-linear-gradient(top, rgba(168,168,168,1) 0%,rgba(204,204,204,1) 23%);
+	  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a8a8a8', endColorstr='#cccccc',GradientType=0 );
+	  background: linear-gradient(top, rgba(168,168,168,1) 0%,rgba(204,204,204,1) 23%);
+	  position: relative;
+	  border-radius: 0px 0px 5px 5px;
+	}
+	#bar {
+	  height: 30px; /* Not 30px because the 1px top-border brings it up to 30px to match #graph */
+	  background: #2F8CE8; 
+	  background: -moz-linear-gradient(top, #2F8CE8 0%, #344289 100%); 
+	  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2F8CE8), color-stop(100%,#344289)); 
+	  background: -webkit-linear-gradient(top, #2F8CE8 0%,#344289 100%); 
+	  background: -o-linear-gradient(top, #2F8CE8 0%,#344289 100%); 
+	  background: -ms-linear-gradient(top, #2F8CE8 0%,#344289 100%); 
+	  background: linear-gradient(top, #2F8CE8 0%,#344289 100%); 
+	  border-radius: 0px 0px 5px 5px;
+	}
+	#bar p { 
+		position: absolute; 
+		padding-left: 10px;
+		color: #FFF;
+		font-weight: bold;
+		width: 100%; 
+		margin: 0; 
+		line-height: 30px; 
+	}
 </style>
 
 <div class="contents">
@@ -45,9 +101,6 @@
 	<i class="fa fa-mobile" ></i> 
 	385-206-6352
 </div>
-
-
-
 
 <div style="margin-left: auto; margin-right: auto; margin-top: 100px; width: 590px;">
 
@@ -86,23 +139,49 @@
 
 </div>
 
-
-<div style="margin-left: auto; margin-right: auto; margin-top: 0px; width: 590px; color: #4A4A4A; font-size: 15px; font-weight: 700;">
-	<div style="width: 150px; padding-top: 10px; float: left">
+<div style="margin-left: auto; margin-right: auto; height: 200px; width: 590px; color: #4A4A4A; font-size: 15px; font-weight: 700;">
+	<div style="width: 150px; float: left; padding-top: 15px">
 		<a href="/cms/<%= user.cmid %>/cls">Add a Client</a>
 	</div>
 
-	<div style="width: 150px; padding-top: 10px; float: left; margin-left: 70px;">
+	<div style="width: 150px; float: left; padding-top: 15px; margin-left: 70px;">
 		<a href="/cms/<%= user.cmid %>">View Client List</a>
 	</div>
 
-	<div style="width: 150px; padding-top: 10px; float: left; margin-left: 70px;">
+	<div style="width: 150px; float: left; padding-top: 15px; margin-left: 70px;">
 		<a href="/capture">Capture Board</a>
 	</div>
 </div>
 
-
-
 </center>
+
+<% if (topUser) { %>
+	<div style="margin-left: auto; margin-right: auto; width: 590px">
+		<div class="title">
+			Weekly Activity
+		</div>
+
+		<div id="progress" class="graph">
+			<div id="bar" style="width: <%= ctRatio*100 %>%">
+				<% var pad = Math.floor(ctRatio*590+10); %>
+				<% if (pad > 450) { pad = Math.floor(ctRatio*590-135); } %>
+				<p style="padding-left: <%= pad + 'px' %>">
+					<%= Math.floor(ctRatio*100) %>% of top user
+				</p>
+			</div>
+		</div>
+
+		<% if (topUser.cmid == user.cmid) { %>
+			<h3 style="color: #344289">
+				Congrats! You are the top user so far this week!
+			</h3>
+		<% } %>
+
+		<p>
+			Hello, <%= user.first %> <%= user.last %>! Above is a chart that shows your usage this week compared to the top user so far this week. By adding more clients and holding more conversations your use of ClientComm will rise. At the end of each week, this chart resets itself.
+		</p>
+	</div>
+<% } %>
+
 </div>
 <% include footer %>
