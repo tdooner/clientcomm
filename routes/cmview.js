@@ -374,7 +374,7 @@ router.post("/:cmid/cls/:clid/archive", function (req, res) {
 
   db("clients")
   .where("clid", req.params.clid)
-  .update({active: false})
+  .update({active: false, updated: db.fn.now()})
   .then(function (success) {
     req.flash("success", "Archived client.");
     res.redirect(redirect_loc);
@@ -392,7 +392,7 @@ router.post("/:cmid/cls/:clid/restore", function (req, res) {
 
   db("clients")
   .where("clid", req.params.clid)
-  .update({active: true})
+  .update({active: true, updated: db.fn.now()})
   .then(function (success) {
     req.flash("success", "Restored client.");
     res.redirect(redirect_loc);
