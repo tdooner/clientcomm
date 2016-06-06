@@ -52,7 +52,7 @@ router.get("/", function (req, res) {
     var rawQuery =  " SELECT count(msgid) AS count, cms.cmid, cms.first, cms.last, cms.position FROM msgs " + 
                     " LEFT JOIN convos ON (convos.convid = msgs.convo) " + 
                     " LEFT JOIN cms ON (cms.cmid = convos.cm) " + 
-                    " WHERE msgs.created < date_trunc('week', CURRENT_DATE) " + 
+                    " WHERE msgs.created > date_trunc('week', CURRENT_DATE) " + 
                     " GROUP BY cms.cmid, cms.first, cms.last, cms.position " +
                     " ORDER BY COUNT DESC; ";
 
