@@ -16,7 +16,6 @@
 
 <% var ctRatio = Math.round((thisUsersCount/topUsersCount) * 1000)/10; %>
 
-
 <!-- Additional libraries, loaded via CDN -->
 <!-- TO DO: If we are sticking with C3js, then let's NPM install (or Bower) -->
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
@@ -89,26 +88,28 @@
 	Welcome, <%= user.first %>!
 </div>
 
-<div class="chart">
-	<div class="left">
-		<div id="gaugechart"></div>
-	</div>
+<% if (topUser) { %>}
+	<div class="chart">
+		<div class="left">
+			<div id="gaugechart"></div>
+		</div>
 
-	<div class="right">
-		<% if (topUser.cmid == user.cmid) { %>
-				<b>Congrats!</b>
-				<br> 
-				You are the top user so far this week!
-		<% } else { %>
-			<% if (ctRatio < 50) { %>
-				Keep going!
+		<div class="right">
+			<% if (topUser.cmid == user.cmid) { %>
+					<b>Congrats!</b>
+					<br> 
+					You are the top user so far this week!
 			<% } else { %>
-				Nice work!
+				<% if (ctRatio < 50) { %>
+					Keep going!
+				<% } else { %>
+					Nice work!
+				<% } %>
+				You are <b><%= ctRatio %>%</b> of the way to being the top user this week. 
 			<% } %>
-			You are <b><%= ctRatio %>%</b> of the way to being the top user this week. 
-		<% } %>
+		</div>
 	</div>
-</div>
+<% } %>
 
 
 
