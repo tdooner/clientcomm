@@ -11,6 +11,8 @@
 <%   if (txt) { %>
 <%   	txt = txt.split(" "); %>
 <%   	txt = txt.map(function (ea) { return ea[0].toUpperCase() + ea.substr(1, ea.length); }); %>
+<%   } else { %>
+<%   	txt = "Sent"; %>
 <%   } %>
 <%   return txt; %>
 <% } %>
