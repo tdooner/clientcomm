@@ -75,7 +75,10 @@
 		// Add the time difference since the page loaded
 		keenRef.clientPageVisitEvent.duration += new Date().getTime() - keenRef.startTime;
 		// Make the event call to Keen.io
-		createKeenClient().addEvent("pagedurations", keenRef.clientPageVisitEvent, function (err, res) { return ""; });
+		createKeenClient().addEvent("pagedurations", keenRef.clientPageVisitEvent, function (err, res) { 
+			// In callback reset startTime
+			keenRef.startTime = new Date().getTime();
+		});
 	};
 
 </script>
