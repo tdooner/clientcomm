@@ -1,6 +1,10 @@
 
 
 
+// New Relic monitoring
+require('newrelic');
+
+
 // SECRET STUFF
 var credentials = require("../credentials");
 var SESS_SECRET = credentials.sessionSecret;
