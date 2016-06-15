@@ -16,9 +16,9 @@ While in the root directory of this repo, run `touch credentials.js`. Your crede
 
 ```
 module.exports = {
-  accountSid:    "___________________________",
-  authToken:     "___________________________",
-  twilioNum:     "+__________________________",
+  accountSid:    "__________________________",
+  authToken:     "__________________________",
+  twilioNum:     "+_________________________",
   sessionSecret: "__________________________",
   db: {
     user:        "__________________________",
