@@ -38,6 +38,9 @@
     "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.2",
+    "node-sass": "^3.7.0",
     "supertest": "^1.2.0"
   },
   "repository": {
