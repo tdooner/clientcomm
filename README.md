@@ -37,5 +37,5 @@ You will also need to configure the `knexfile.js` file. It is necessary to use t
 ##### Setting development and production environment defaults
 With those two files set up, you should be good to go. In order to set which environment you are working in, navigate to `server/db.js`. At the top of that file, the variable `env` should be set in the following manner: `var env = "development"`. You can update this variable to whatever object keys you have in you `knexfile.js`. This will allow you to control whether you are working in, for example, a testing environment, a development environment, or a production environment.
 
-#### Styles
+###### Styles
 We use [Gulp](http://gulpjs.com/) for piping Sass into CSS for inclusion in the `public/` directory, included on pages. Make sure to view the `devDependencies` listing to be sure that related dependencies are installed when working with the code base. When developing and modifying Sass stylesheets, make sure to run `gulp sass:watch` to have Gulp automatically pipe changes into the published `public/` directory.
