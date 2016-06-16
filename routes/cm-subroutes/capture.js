@@ -23,7 +23,7 @@ router.get("/", function (req, res) {
   
   db.raw(rawQuery).then(function (floaters) {
 
-  	// Reduce results to just convids, and sort incrementally
+    // Reduce results to just convids, and sort incrementally
     var convos = floaters.rows.map(function (ea) { return ea.convo; }).reduce(function (a,b) { 
       if (a.indexOf(b) < 0) a.push(b);
       return a;
@@ -45,25 +45,25 @@ router.get("/", function (req, res) {
 
 // BRING UP CAPTURE CARD FOR SPECIFIC UNCLAIMED CONVERSATION
 router.get("/:convid", function (req, res) { 
-	var convid = Number(req.params.convid);
+  var convid = Number(req.params.convid);
 
-	// Make sure convid is a number
-	if (isNaN(convid)) { res.redirect("/400"); }
-	else {
-	  var rawQuery = "SELECT * FROM convos WHERE convos.client IS NULL AND convos.convid = " + String(convid) + " LIMIT 1;";
-	  
-	  db.raw(rawQuery).then(function (convos) {
-	    if (convos.rows.length !== 1) { res.redirect("/404"); }
-	    else {
+  // Make sure convid is a number
+  if (isNaN(convid)) { res.redirect("/400"); }
+  else {
+    var rawQuery = "SELECT * FROM convos WHERE convos.client IS NULL AND convos.convid = " + String(convid) + " LIMIT 1;";
+    
+    db.raw(rawQuery).then(function (convos) {
+      if (convos.rows.length !== 1) { res.redirect("/404"); }
+      else {
 
-	      db("clients").where("clients.cm", req.user.cmid).andWhere("clients.active", true)
-	      .then(function (clients) {
-	        res.render("capturecard", {convo: convos.rows[0], clients: clients});
-	      }).catch(function (err) { res.redirect("/500"); });
+        db("clients").where("clients.cm", req.user.cmid).andWhere("clients.active", true)
+        .then(function (clients) {
+          res.render("capturecard", {convo: convos.rows[0], clients: clients});
+        }).catch(function (err) { res.redirect("/500"); });
 
-	    }
-	  }).catch(function (err) { res.redirect("/500"); });
-	}
+      }
+    }).catch(function (err) { res.redirect("/500"); });
+  }
 });
 
 
@@ -80,23 +80,23 @@ router.post("/:convid", function (req, res) {
   var subject    = req.body.subject && typeof req.body.subject == "string" && req.body.subject.length > 0 ? req.body.subject.trim() : null;
   var devicename = req.body.device && typeof req.body.device == "string" && req.body.device.length > 0 ? req.body.device.trim() : null;
 
-	// Default redirect is set to main capture screen  
+  // Default redirect is set to main capture screen  
   var redirect_loc = "/capture";
   var reroute = "/cms/" + String(cmid) + "/cls/" + String(clid) + "/convos/" + String(convid);
 
   // Check to make sure all POST body variables are okay
   var variableAllClear = subject && cmid && clid && convid && devicename;
   if (!variableAllClear) {
-		req.flash("warning", "Incorrectly formatted POST body components from capture card submission.");
-		res.redirect(redirect_loc);
+    req.flash("warning", "Incorrectly formatted POST body components from capture card submission.");
+    res.redirect(redirect_loc);
 
-	// Proceed if they are and run PgSQL queries
-	} else {
+  // Proceed if they are and run PgSQL queries
+  } else {
 
-    var rawQuery = 	" PREPARE convocapture (text, int, int, int) AS " +
-										" 	UPDATE convos SET subject = $1, cm = $2, client = $3, accepted = TRUE, open = TRUE " + 
-    								" 	WHERE convid = $4 AND client IS NULL; " +
-    								" EXECUTE convocapture('" + subject + "', " + cmid + ", " + clid + ", " + convid + ");";
+    var rawQuery =  " PREPARE convocapture (text, int, int, int) AS " +
+                    "   UPDATE convos SET subject = $1, cm = $2, client = $3, accepted = TRUE, open = TRUE " + 
+                    "   WHERE convid = $4 AND client IS NULL; " +
+                    " EXECUTE convocapture('" + subject + "', " + cmid + ", " + clid + ", " + convid + ");";
     
     // Query 1: Update convo with CM and client
     db.raw(rawQuery).then(function (success) {
@@ -136,8 +136,8 @@ router.post("/:convid", function (req, res) {
       var insertList = [];
       comms.forEach(function (comm, i) {
 
-      	// If there is more than one commconn being added, name the second ones automatically
-      	// TO DO: We need them to be able to name all comm methods in POST (if common)
+        // If there is more than one commconn being added, name the second ones automatically
+        // TO DO: We need them to be able to name all comm methods in POST (if common)
         var name = i == 0 ? devicename : devicename + "_num_" + String(i + 1);
         
         insertList.push({
@@ -148,23 +148,23 @@ router.post("/:convid", function (req, res) {
       });
 
       // Run query only if there is stuff to enter
-    	if (insertList.length > 0) {
+      if (insertList.length > 0) {
 
-		    // Query 5: Insert the new commconns
-		    db("commconns").insert(insertList).then(function (success) {
-		      req.flash("success", "Captured conversation and added new communication methods.");
-		      res.redirect(reroute);
-		    }).catch(function (err) { res.redirect("/500"); }); // Query 5
-    	
-    	} else {
-	      req.flash("success", "Captured conversation.");
-	      res.redirect(reroute);
-    	}
+        // Query 5: Insert the new commconns
+        db("commconns").insert(insertList).then(function (success) {
+          req.flash("success", "Captured conversation and added new communication methods.");
+          res.redirect(reroute);
+        }).catch(function (err) { res.redirect("/500"); }); // Query 5
+      
+      } else {
+        req.flash("success", "Captured conversation.");
+        res.redirect(reroute);
+      }
 
-		}).catch(function (err) { res.redirect("/500"); }); // Query 4
-		}).catch(function (err) { res.redirect("/500"); }); // Query 3
-		}).catch(function (err) { res.redirect("/500"); }); // Query 2
-		}).catch(function (err) { res.redirect("/500"); }); // Query 1
+    }).catch(function (err) { res.redirect("/500"); }); // Query 4
+    }).catch(function (err) { res.redirect("/500"); }); // Query 3
+    }).catch(function (err) { res.redirect("/500"); }); // Query 2
+    }).catch(function (err) { res.redirect("/500"); }); // Query 1
 
   }
 });

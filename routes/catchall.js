@@ -20,7 +20,7 @@ module.exports = function (app, db, utils, passport) {
 
 
   app.get("/500", function (req, res) {
-  	res.status(500).send("Internal Error 500 Something happened.")
+    res.status(500).send("Internal Error 500 Something happened.")
   });
 
 

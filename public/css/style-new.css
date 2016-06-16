@@ -1,7 +1,7 @@
 /* C3js overall styles */
 
 .c3 {
-	color: #898989;
+  color: #898989;
 }
 .c3 .c3-axis-x path, .c3 .c3-axis-x line {
   stroke: #898989;
@@ -10,68 +10,68 @@
   stroke: #898989;
 }
 .c3-axis-x .tick, .c3-axis-y .tick {
-	fill: #898989;
+  fill: #898989;
 }
 
 
 /* Admin page */
 
 .orgoverview .orgcard {
-	margin-top: 20px;
-	height: 150px;
-	display: block;
-	clear: both;
-	position: relative;
+  margin-top: 20px;
+  height: 150px;
+  display: block;
+  clear: both;
+  position: relative;
 }
 
 .orgoverview .orgcard .left {
-	width: 415px;
-	height: 130px;
-	max-height: 130px;
-	overflow-y: hidden;
-	padding: 10px;
-	background-color: #CCC;
-	color: #FFF;
-	float: left;
+  width: 415px;
+  height: 130px;
+  max-height: 130px;
+  overflow-y: hidden;
+  padding: 10px;
+  background-color: #CCC;
+  color: #FFF;
+  float: left;
 }
 
 .orgoverview .orgcard .left .bar {
-	width: 415px;
-	margin-top: 6px;
-	height: 6px;
-	border-top: 1px solid #BBB;
+  width: 415px;
+  margin-top: 6px;
+  height: 6px;
+  border-top: 1px solid #BBB;
 }
 
 .orgoverview .orgcard .right {
-	width: 415px;
-	max-height: 130px;
-	height: 130px;
-	float: left;
-	color: #898989;
-	text-align: center;
-	line-height: 12px;
-	font-size: 12px;
+  width: 415px;
+  max-height: 130px;
+  height: 130px;
+  float: left;
+  color: #898989;
+  text-align: center;
+  line-height: 12px;
+  font-size: 12px;
 }
 
 .orgoverview .accounts {
-	margin-top: 20px;
-	color: #898989;
-	display: block;
-	clear: both;
-	position: relative;
+  margin-top: 20px;
+  color: #898989;
+  display: block;
+  clear: both;
+  position: relative;
 }
 
 .orgoverview .accounts .accountcard {
-	width: 263px;
-	height: 175px;
-	overflow: hidden;
-	padding: 10px;
-	float: left;
-	border-top: 1px solid #DDD;
+  width: 263px;
+  height: 175px;
+  overflow: hidden;
+  padding: 10px;
+  float: left;
+  border-top: 1px solid #DDD;
 }
 
 .orgoverview .accounts .accountcard .miniaccountchart {
-	height: 40px;
+  height: 40px;
   
   background: #CCC; /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(#F4F4F4, #F7F7F7, #EEE, #D9D9D9); /* For Safari 5.1 to 6.0 */
@@ -81,112 +81,112 @@
 }
 
 .orgoverview .accounts .accountcard table {
-	font-size: small;
+  font-size: small;
 }
 
 
 /* CARD OPTS*/
 
 .contents .card {
-	position: relative;
-	width: 300px;
-	padding: 110px 150px 80px 150px;
-	background-color: #344289;
-	margin-top: 70px;
-	margin-bottom: 70px;
-	margin-left: auto;
-	margin-right: auto;
-	border-radius: 10px;
+  position: relative;
+  width: 300px;
+  padding: 110px 150px 80px 150px;
+  background-color: #344289;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
 }
 
 .card .exit {
-	position: absolute;
-	right: 20px;
-	top: 15px;
+  position: absolute;
+  right: 20px;
+  top: 15px;
 }
 
 .card .logo {
-	font-size: 35px;
-	font-weight: 900;
-	text-align: center;
-	margin-bottom: 60px;
-	color: #2F8CE8;
+  font-size: 35px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 60px;
+  color: #2F8CE8;
 }
 
 .card .logo .fa {
-	font-size: 60px;
+  font-size: 60px;
 }
 
 .card .card-title {
-	font-size: 30px;
-	text-align: center;
-	font-weight: 100;
-	color: #92C9FF;
-	padding-bottom: 15px;
+  font-size: 30px;
+  text-align: center;
+  font-weight: 100;
+  color: #92C9FF;
+  padding-bottom: 15px;
 }
 
 .card .form-row {
-	padding: 5px 10px 0px 10px;
+  padding: 5px 10px 0px 10px;
 }
 
 .card .form-row .opt {
-	float: right;
-	color: #4A90E2;
+  float: right;
+  color: #4A90E2;
 }
 
 .card .form-row .blue-select, .msgs .form-row .blue-select {
-	height: 35px;
-	border: 2px solid #2F8CE8;
-	border-radius: 7px;
-	background-color: #92C9FF;
-	text-align: center;
-	font-size: 16px;
-	font-weight: 700;
-	color: #344289;
+  height: 35px;
+  border: 2px solid #2F8CE8;
+  border-radius: 7px;
+  background-color: #92C9FF;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #344289;
 }
 
 .card .form-row .blue-select {
-	width: 280px;
+  width: 280px;
 }
 
 .card .form-label {
-	font-size: 12px;
-	padding-bottom: 3px;
+  font-size: 12px;
+  padding-bottom: 3px;
 }
 
 .card .form-input {
-	width: 260px;
-	height: 21px;
-	border: 2px solid #2F8CE8;
-	border-radius: 7px;
-	padding: 5px 8px 5px 8px;
+  width: 260px;
+  height: 21px;
+  border: 2px solid #2F8CE8;
+  border-radius: 7px;
+  padding: 5px 8px 5px 8px;
 }
 
 .card textarea.form-input {
-	height: 110px;
+  height: 110px;
 }
 
 .card .form-submit, .msgs .form-submit {
-	border: 0px;
-	border-radius: 7px;
-	width: 150px;
-	height: 35px;
-	background-color: #4A90E2;
-	color: #FFF;
-	font-size: 14px;
-	font-weight: 700;
-	cursor: pointer;
+  border: 0px;
+  border-radius: 7px;
+  width: 150px;
+  height: 35px;
+  background-color: #4A90E2;
+  color: #FFF;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .card .form-submit {
-	margin-top: 32px;
-	margin-left: 75px;
-	margin-right: 75px;
+  margin-top: 32px;
+  margin-left: 75px;
+  margin-right: 75px;
 }
 
 .card .form-submit:hover {
-	background-color: #92C9FF;
-	color: #344289;
+  background-color: #92C9FF;
+  color: #344289;
 }
 
 
@@ -194,419 +194,419 @@
 /* CLIENTS MGMT */
 
 .contents .sort-opts {
-	line-height: 14px;
-	font-size: 14px;
-	height: 25px;
-	margin-bottom: 10px;
-	color: #2F8CE8;
+  line-height: 14px;
+  font-size: 14px;
+  height: 25px;
+  margin-bottom: 10px;
+  color: #2F8CE8;
 
-	display: block;
-	clear: both;
-	position: relative;
+  display: block;
+  clear: both;
+  position: relative;
 }
 
 .sort-opts .toggle {
-	float: left;
-	margin-right: 4px;
-	padding: 5px 8px 5px 8px;
-	border-radius: 5px;
-	cursor: pointer;
+  float: left;
+  margin-right: 4px;
+  padding: 5px 8px 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .sort-opts .toggle.selected {
-	background-color: #2F8CE8;
-	color: #FFF;
+  background-color: #2F8CE8;
+  color: #FFF;
 }
 
 .sort-opts .toggle:hover {
-	background-color: #92C9FF;
-	color: #FFF;
+  background-color: #92C9FF;
+  color: #FFF;
 }
 
 .contents .title {
-	margin-top: 30px;
-	height: 40px;
-	font-size: 25px;
-	color: #344289;
-	border: 0pc solid #C4C4C4;
-	border-width: 0px 0px 1px 0px;
+  margin-top: 30px;
+  height: 40px;
+  font-size: 25px;
+  color: #344289;
+  border: 0pc solid #C4C4C4;
+  border-width: 0px 0px 1px 0px;
 }
 
 .contents .title .right-button {
-	float: right; 
-	font-size: 12px; 
-	line-height: 30px; 
-	padding: 5px 15px 5px 15px;
-	background-color: #92C9FF;
-	cursor: pointer;
+  float: right; 
+  font-size: 12px; 
+  line-height: 30px; 
+  padding: 5px 15px 5px 15px;
+  background-color: #92C9FF;
+  cursor: pointer;
 }
 
 .contents .title .right-button:hover {
-	background-color: #2F8CE8;
-	color: #FFF;
+  background-color: #2F8CE8;
+  color: #FFF;
 }
 
 .contents .newclient {
-	float: right;
-	color: #D2C308;
-	padding: 10px 10px 10px 10px;
-	font-size: 20px;
-	cursor: pointer;
+  float: right;
+  color: #D2C308;
+  padding: 10px 10px 10px 10px;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .contents .newclient:hover {
-	color: #FFF;
-	background-color: #D2C308;
-	border-radius: 10px;
+  color: #FFF;
+  background-color: #D2C308;
+  border-radius: 10px;
 }
 
 .contents .newclient svg {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
 }
 
 .contents .newclient svg path, .contents .newclient svg polygon {
-	fill: #D2C308;
+  fill: #D2C308;
 }
 
 .contents .newclient:hover svg path, .contents .newclient:hover svg polygon {
-	fill: #FFF;
+  fill: #FFF;
 }
 
 .contents .cl-list, .contents .comm-list, .contents .capture-list {
-	width: 100%;
-	color: #898989;
-	border-collapse: collapse;
-	/*margin-left: -25px;*/
-	/*margin-right: -25px;*/
+  width: 100%;
+  color: #898989;
+  border-collapse: collapse;
+  /*margin-left: -25px;*/
+  /*margin-right: -25px;*/
 }
 
 .contents .conversation {
-	padding: 5px 0px 5px 0px;
-	margin-bottom: 10px;
-	height:auto;
+  padding: 5px 0px 5px 0px;
+  margin-bottom: 10px;
+  height:auto;
 
-	display: block;
-	clear: both;
-	position: relative;
+  display: block;
+  clear: both;
+  position: relative;
 }
 
 .conversation .conversation-claim {
-	text-align: center;
+  text-align: center;
 }
 
 .conversation .conversation-claim:hover {
-	background-color: #D2C308;
-	color: #FFF;
+  background-color: #D2C308;
+  color: #FFF;
 }
 
 .conversation .conversation-claim .fa {
-	font-size: 24px;
-	width: 100%;
-	cursor: pointer;
+  font-size: 24px;
+  width: 100%;
+  cursor: pointer;
 }
 
 /* SVG align for all within all list options */
 .cl-list svg, .comm-list svg, .capture-list svg {
-	display: inline-block;
-	vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .cl-list tr, .comm-list tr, .capture-list tr {
-	border-top: 0px;
-	border-right: 0px;
-	border-bottom: 1px;
-	border-left: 0px;
-	border-style: solid;
-	border-color: #E6E7E8;
-	background-color: #FFF;
+  border-top: 0px;
+  border-right: 0px;
+  border-bottom: 1px;
+  border-left: 0px;
+  border-style: solid;
+  border-color: #E6E7E8;
+  background-color: #FFF;
 }
 
 .cl-list tr:hover, .comm-list tr:hover, .capture-list tr:hover {
-	background-color: #FBFBFB;
+  background-color: #FBFBFB;
 }
 
 .cl-list tr.archive {
-	background-color: #898989;
+  background-color: #898989;
 }
 
 .cl-list tr.archive:hover {
-	background-color: #646464;
+  background-color: #646464;
 }
 
 .cl-list tr.nonew td {
-	color: #898989;
+  color: #898989;
 }
 
 .cl-list tr .badge, .comm-list tr .badge {
-	font-size: 10px;
-	line-height: 18px;
-	vertical-align: middle;
-	background-color: red;
-	color: #FFF;
-	padding: 5px 10px 5px 10px;
-	border-radius: 7px;
-	margin-left: 10px;
+  font-size: 10px;
+  line-height: 18px;
+  vertical-align: middle;
+  background-color: red;
+  color: #FFF;
+  padding: 5px 10px 5px 10px;
+  border-radius: 7px;
+  margin-left: 10px;
 }
 
 .capture-list td {
-	padding-top: 5px;
-	padding-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .cl-list th, .cl-list td, .comm-list th, .comm-list td, .capture-list th, .capture-list td {
-	padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .cl-list th:nth-child(1), .cl-list td:nth-child(1) {
-	width: 250px;
+  width: 250px;
 }
 
 .capture-list th:nth-child(1), .capture-list td:nth-child(1) {
-	width: 550px;
+  width: 550px;
 }
 
 .comm-list th:nth-child(1), .comm-list td:nth-child(1) {
-	width: 30px;
+  width: 30px;
 }
 
 .comm-list td:nth-child(1) {
-	text-align: center;
+  text-align: center;
 }
 
 .comm-list td:nth-child(1) .fa {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .cl-list.convo-list th:nth-child(1), .cl-list.convo-list td:nth-child(1) {
-	width: 375px;
+  width: 375px;
 }
 
 .cl-list th:nth-child(2), .cl-list td:nth-child(2) {
-	width: 400px;
+  width: 400px;
 }
 
 .capture-list th:nth-child(2), .capture-list td:nth-child(2) {
-	width: 100px;
+  width: 100px;
 }
 
 .capture-list td:nth-child(2) {
-	font-size: small;
+  font-size: small;
 }
 
 .cl-list.convo-list th:nth-child(2), .cl-list.convo-list td:nth-child(2) {
-	width: 275px;
+  width: 275px;
 }
 
 .cl-list th:nth-child(3), .cl-list td:nth-child(3) {
-	width: 150px;
+  width: 150px;
 }
 
 .cl-list td:nth-child(3) {
-	font-size: small;
+  font-size: small;
 }
 
 .cl-list th:nth-child(4), .cl-list td:nth-child(4) {
-	width: 30px;
-	text-align: center;
+  width: 30px;
+  text-align: center;
 }
 
 .cl-list th:nth-child(4) button, .cl-list td:nth-child(4) button, .comm-list th:nth-child(7) button, .comm-list td:nth-child(7) button {
-	border: 0px;
-	background-color: rgba(255,255,255,0);
-	font-size: 18px;
-	color: #b3b3b3;
-	cursor: pointer;
+  border: 0px;
+  background-color: rgba(255,255,255,0);
+  font-size: 18px;
+  color: #b3b3b3;
+  cursor: pointer;
 }
 
 .comm-list th:nth-child(5), .comm-list td:nth-child(5) {
-	text-align: center;
+  text-align: center;
 }
 
 .comm-list td:nth-child(5) {
-	font-size: 24px;
-	font-weight: 700;
-	color: #2F8CE8;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2F8CE8;
 }
 
 .comm-list th:nth-child(6), .comm-list td:nth-child(6) {
-	width: 60px;
+  width: 60px;
 }
 
 .comm-list th:nth-child(7), .comm-list td:nth-child(7) {
-	width: 30px;
+  width: 30px;
 }
 .comm-list td:nth-child(7) {
-	text-align: center;
+  text-align: center;
 }
 
 
 .cl-list th, .comm-list th, .capture-list th {
-	height: 17px;
-	font-weight: 300;
-	font-size: 12px;
-	text-align: left;
-	background-color: #F4F4F4;
-	color: #898989;
+  height: 17px;
+  font-weight: 300;
+  font-size: 12px;
+  text-align: left;
+  background-color: #F4F4F4;
+  color: #898989;
 }
 
 .cl-list td, .comm-list td {
-	height: 55px;
-	font-size: 18px;
+  height: 55px;
+  font-size: 18px;
 }
 
 .cl-list td {
-	color: #0ADA34;
+  color: #0ADA34;
 }
 
 
 .cl-list tr.archive td {
-	color: #FFF;
+  color: #FFF;
 }
 
 .cl-list td .fa-stack {
-	font-size: 0.9em;
+  font-size: 0.9em;
 }
 
 /* SVG styling for icon that is by each client name */
 
 .cl-list .clientid svg path, .cl-list .clientid svg polygon {
-	fill: #0ADA34;
+  fill: #0ADA34;
 }
 
 .cl-list .nonew .clientid svg path, .cl-list .nonew .clientid svg polygon {
-	fill: #898989;
+  fill: #898989;
 }
 
 .cl-list .archive .clientid svg path, .cl-list .archive .clientid svg polygon {
-	fill: #FFF;
+  fill: #FFF;
 }
 
 /* SVG styling for archive/restore column */
 
 .cl-list .archiverestore svg path, .cl-list .archiverestore svg polygon {
-	fill: #898989;
+  fill: #898989;
 }
 
 .cl-list .archiverestore svg:hover path, .cl-list .archiverestore svg:hover polygon {
-	fill: #4887C7;
+  fill: #4887C7;
 }
 
 .msgs {
-	width: 900px;
-	margin: -10px -25px -10px -25px;
-	background-color: #FFF;
+  width: 900px;
+  margin: -10px -25px -10px -25px;
+  background-color: #FFF;
 }
 
 .msgs .msg-head {
-	color: #344289;
-	background-color: #FFF;
-	padding: 20px 50px 40px 50px;
+  color: #344289;
+  background-color: #FFF;
+  padding: 20px 50px 40px 50px;
 }
 
 .msgs .msg-head .subject {
-	color: #344289;
-	background-color: #FFF;
-	font-size: 22px;
+  color: #344289;
+  background-color: #FFF;
+  font-size: 22px;
 }
 
 .msgs .msg-head .state-btn {
-	float: right;
+  float: right;
 }
 
 .msgs .state-btn input.button {
-	font-size: 12px;
-	font-weight: 700;
-	color: #D2C308;
-	border: 1px solid #D2C308;
-	border-radius: 7px;
-	padding: 7px 10px 7px 10px;
-	background: #FFF;
-	cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: #D2C308;
+  border: 1px solid #D2C308;
+  border-radius: 7px;
+  padding: 7px 10px 7px 10px;
+  background: #FFF;
+  cursor: pointer;
 }
 
 .msgs .state-btn input.button:hover {
-	background-color: #D2C308;
-	color: #FFF;
+  background-color: #D2C308;
+  color: #FFF;
 }
 
 .msgs .msg-head .state-btn .acceptreject {
-	width: 400px; 
+  width: 400px; 
 }
 .msgs .msg-head .state-btn .acceptreject input.button {
-	float: right;
+  float: right;
 }
 
 .msgs .msg-head .state-btn .acceptreject input.button:nth-child(1) {
-	margin-left: 15px;
+  margin-left: 15px;
 }
 
 .msgs .state-btn input.button.red {
-	color: red;
-	border: 1px solid red;
+  color: red;
+  border: 1px solid red;
 }
 
 .msgs .state-btn input.button:hover.red {
-	background-color: red;
-	color: #FFF;
+  background-color: red;
+  color: #FFF;
 }
 
 .msgs .state-btn input.button.green {
-	color: #00e500;
-	border: 1px solid #00e500;
+  color: #00e500;
+  border: 1px solid #00e500;
 }
 
 .msgs .state-btn input.button:hover.green {
-	background-color: #00e500;
-	color: #FFF;
+  background-color: #00e500;
+  color: #FFF;
 }
 
 
 .msgs .msg-stream {
-	background-color: #E5F0FA;
-	padding: 25px 50px 25px 50px;
+  background-color: #E5F0FA;
+  padding: 25px 50px 25px 50px;
 }
 
 .msgs .msg-stream .msg {
-	width: 420px;
-	word-wrap: break-word;
-	margin-top: 25px;
-	margin-bottom: 25px;
+  width: 420px;
+  word-wrap: break-word;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 
 .msgs .msg-stream .msg .content {
-	border: 3px solid #FFF;
-	border-radius: 7px;
-	padding: 7px 10px 7px 10px;
-	background-color: #FFF;
-	color: #2F8CE8;
+  border: 3px solid #FFF;
+  border-radius: 7px;
+  padding: 7px 10px 7px 10px;
+  background-color: #FFF;
+  color: #2F8CE8;
 
-	margin: 5px 0 5px 0;
+  margin: 5px 0 5px 0;
 }
 
 .msgs .msg-stream .msg .sub {
-	color: #898989;
-	font-size: 12px;
-	padding-left: 10px;
-	padding-right: 10px;
+  color: #898989;
+  font-size: 12px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 
 .msgs .msg-stream .msg .sub .state {
-	float: right;
-	color: #0AA629;
-	font-weight: 700;
+  float: right;
+  color: #0AA629;
+  font-weight: 700;
 }
 
 .msgs .msg-stream .msg.outbound {
-	margin-left: 375px;
+  margin-left: 375px;
 }
 
 .msgs .msg-stream .msg.outbound .content {
-	background-color: rgba(0,0,0,0);
-	color: #444;
+  background-color: rgba(0,0,0,0);
+  color: #444;
 }
 
 .msgs .msg-stream .msg.outbound .sub {
@@ -614,55 +614,55 @@
 
 
 .msgs .msg-stream .msg.outbound .sub .state {
-	color: #FF911E;
+  color: #FF911E;
 }
 
 .msgs .msg-resp {
-	min-height: 300px;
-	background-color: #898989;
-	padding: 25px 50px 25px 50px;
+  min-height: 300px;
+  background-color: #898989;
+  padding: 25px 50px 25px 50px;
 }
 
 .msgs .msg-resp form {
-	margin-left: 375px;
-	width: 420px;
+  margin-left: 375px;
+  width: 420px;
 }
 
 .msgs .msg-resp .closed-msg p {
-	float: right;
+  float: right;
 }
 
 .msgs .msg-resp .state-btn {
-	float: right;
+  float: right;
 }
 
 .msgs .form-row .blue-select {
-	width: 420px;
+  width: 420px;
 }
 
 .msgs .form-row textarea {
-	width: 396px;
-	height: 80px;
-	border: 2px solid #FFF;
-	border-radius: 7px;
-	background-color: #CDE6FF;
-	padding: 15px 10px 15px 10px;
-	font-size: 12px;
-	color: #444;
-	margin-top: 10px;
-	margin-bottom: 15px;
+  width: 396px;
+  height: 80px;
+  border: 2px solid #FFF;
+  border-radius: 7px;
+  background-color: #CDE6FF;
+  padding: 15px 10px 15px 10px;
+  font-size: 12px;
+  color: #444;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .msgs .form-submit {
-	float: right;
-	border: 2px solid #FFF;
-	background-color: #FFF;
-	color: #2F8CE8;
+  float: right;
+  border: 2px solid #FFF;
+  background-color: #FFF;
+  color: #2F8CE8;
 }
 
 .msgs .form-submit:hover {
-	background-color: #2F8CE8;
-	color: #FFF;
+  background-color: #2F8CE8;
+  color: #FFF;
 }
 
 
