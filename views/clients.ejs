@@ -3,145 +3,145 @@
 
 <div class="contents">
 
-	<div class="sort-opts">
-		<div class="toggle selected" id="current_tag" onclick="showCurrent()">
-			Current Clients
-		</div>
-		<div class="toggle" id="archive_tag" onclick="showArchive()">
-			Archived
-		</div>
-	</div>
+  <div class="sort-opts">
+    <div class="toggle selected" id="current_tag" onclick="showCurrent()">
+      Current Clients
+    </div>
+    <div class="toggle" id="archive_tag" onclick="showArchive()">
+      Archived
+    </div>
+  </div>
 
-	<a href="/cms/<%= user.cmid %>/cls">
-		<div class="newclient"> 
-			<% include ../public/icons/bigplus.svg %> 
-			New Client 
-		</div>
-	</a>
+  <a href="/cms/<%= user.cmid %>/cls">
+    <div class="newclient"> 
+      <% include ../public/icons/bigplus.svg %> 
+      New Client 
+    </div>
+  </a>
 
-	<div class="title">
-		All Clients
-	</div>
+  <div class="title">
+    All Clients
+  </div>
 
-	<table class="cl-list">
+  <table class="cl-list">
 
-		<tr class="current">
-			<th>Client</th>
-			<th>Conversation</th>
-			<th>Last Activity</th>
-			<th>Archive</th>
-		</tr>
+    <tr class="current">
+      <th>Client</th>
+      <th>Conversation</th>
+      <th>Last Activity</th>
+      <th>Archive</th>
+    </tr>
 
-		<tr class="archive">
-			<th>Client</th>
-			<th>Last Conversation</th>
-			<th>Last Activity</th>
-			<th>Restore</th>
-		</tr>
+    <tr class="archive">
+      <th>Client</th>
+      <th>Last Conversation</th>
+      <th>Last Activity</th>
+      <th>Restore</th>
+    </tr>
 
 
-		<% if (clients.length > 0) { %>
-			<% for (var i = 0; i < clients.length; i++ ) { %>
+    <% if (clients.length > 0) { %>
+      <% for (var i = 0; i < clients.length; i++ ) { %>
 
-				<tr class="<%= clients[i].active ? 'current' : 'archive' %> <%= clients[i].active && !clients[i].open ? 'nonew' : '' %>">
+        <tr class="<%= clients[i].active ? 'current' : 'archive' %> <%= clients[i].active && !clients[i].open ? 'nonew' : '' %>">
 
-					<td class="clientid">
-						<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
-							<% include ../public/icons/user.svg %>
-							<%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
-						</a>
-					</td>
+          <td class="clientid">
+            <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
+              <% include ../public/icons/user.svg %>
+              <%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
+            </a>
+          </td>
 
-					<td>
-						<% if (clients[i].clid !== null && clients[i].active) { %>
-							<% if (clients[i].open) { %>
-								<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
-							<% } else { %>
-								<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %> %>">
-							<% } %>
-						<% } else { %>
-							<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
-						<% } %>
+          <td>
+            <% if (clients[i].clid !== null && clients[i].active) { %>
+              <% if (clients[i].open) { %>
+                <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+              <% } else { %>
+                <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %> %>">
+              <% } %>
+            <% } else { %>
+              <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
+            <% } %>
 
-							<% if (clients[i].active) { %>
-								<% if (clients[i].open) { %>
-									<span class="fa-stack fa-lg">
-										<i class="fa fa-circle fa-stack-2x"></i>
-										<i class="fa fa-comments fa-stack-1x fa-inverse"></i>
-									</span>
-								<% } else { %>
-									<span class="fa-stack fa-lg">
-										<i class="fa fa-comments fa-stack-1x"></i>
-									</span>
-								<% } %>
-							<% } %>
+              <% if (clients[i].active) { %>
+                <% if (clients[i].open) { %>
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+                  </span>
+                <% } else { %>
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-comments fa-stack-1x"></i>
+                  </span>
+                <% } %>
+              <% } %>
 
-							<% var subj = (clients[i].subject !== null && clients[i].subject.length) < 25 ? clients[i].subject : clients[i].subject.substr(0,25) + "..." %>
-							<% if (!subj) { subj = "No conversations." } %>
-							<%= subj %>
+              <% var subj = (clients[i].subject !== null && clients[i].subject.length) < 25 ? clients[i].subject : clients[i].subject.substr(0,25) + "..." %>
+              <% if (!subj) { subj = "No conversations." } %>
+              <%= subj %>
 
-							<% if (clients[i].msg_ct > 0) { %>
-								<span class="badge">
-									<%= clients[i].msg_ct %> unread
-								</span>
-							<% } %>
+              <% if (clients[i].msg_ct > 0) { %>
+                <span class="badge">
+                  <%= clients[i].msg_ct %> unread
+                </span>
+              <% } %>
 
-						</a>
-					</td>
-					
-					<td>
-						<% if (clients[i].clid !== null && clients[i].active) { %>
-							<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
-						<% } else { %>
-							<a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
-						<% } %>
+            </a>
+          </td>
+          
+          <td>
+            <% if (clients[i].clid !== null && clients[i].active) { %>
+              <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+            <% } else { %>
+              <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
+            <% } %>
 
-							<% try { %>
-								<% var day = moment.tz(clients[i].updated, local_tz).format("MM/DD"); %>
-								<% var hrs = moment.tz(clients[i].updated, local_tz).format("hh:MM A"); %>
-								<%= day + " " + hrs %>
-							<% } catch (e) { %>
-								Unknown
-							<% } %>
+              <% try { %>
+                <% var day = moment.tz(clients[i].updated, local_tz).format("MM/DD"); %>
+                <% var hrs = moment.tz(clients[i].updated, local_tz).format("hh:MM A"); %>
+                <%= day + " " + hrs %>
+              <% } catch (e) { %>
+                Unknown
+              <% } %>
 
-						</a>
-					</td>
-					
-					<td class="archiverestore">
-						<% if (clients[i].active) { %>
-							<form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
-								<button type="submit">
-									<% include ../public/icons/archive.svg %>
-								</button>
-							</form>
-						<% } else { %>
-							<form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/restore">
-								<button type="submit"><i class="fa fa-undo"></i></button>
-							</form>
-						<% } %>
-					</td>
+            </a>
+          </td>
+          
+          <td class="archiverestore">
+            <% if (clients[i].active) { %>
+              <form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
+                <button type="submit">
+                  <% include ../public/icons/archive.svg %>
+                </button>
+              </form>
+            <% } else { %>
+              <form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/restore">
+                <button type="submit"><i class="fa fa-undo"></i></button>
+              </form>
+            <% } %>
+          </td>
 
-				</tr>
+        </tr>
 
-			<% } %>
-		<% } %>
+      <% } %>
+    <% } %>
 
-	</table>
+  </table>
 </div>
 
 <script type="text/javascript">
-	function showCurrent () {
-		$("#current_tag").addClass("selected");
-		$("#archive_tag").removeClass("selected");
-		$(".archive").hide();
-		$(".current").show();
-	};
-	function showArchive () {
-		$("#current_tag").removeClass("selected");
-		$("#archive_tag").addClass("selected");
-		$(".archive").show();
-		$(".current").hide();
-	};
-	showCurrent();
+  function showCurrent () {
+    $("#current_tag").addClass("selected");
+    $("#archive_tag").removeClass("selected");
+    $(".archive").hide();
+    $(".current").show();
+  };
+  function showArchive () {
+    $("#current_tag").removeClass("selected");
+    $("#archive_tag").addClass("selected");
+    $(".archive").show();
+    $(".current").hide();
+  };
+  showCurrent();
 </script>
 <% include footer %>

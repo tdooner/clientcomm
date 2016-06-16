@@ -1,45 +1,45 @@
 
 <div class="navbar">
-	
-	<div class="username">
-		<a href="/cms">
-			<i class="fa fa-home"></i>
-			<%= user.first %> <%= user.middle %> <%= user.last %>
-		</a>
-	</div>
-	
-	<div class="nav-right">
-	<a href="/logout">
-		<small>Logout</small>
-		<% include ../public/icons/logout.svg %>
-	</a>
-	</div>
+  
+  <div class="username">
+    <a href="/cms">
+      <i class="fa fa-home"></i>
+      <%= user.first %> <%= user.middle %> <%= user.last %>
+    </a>
+  </div>
+  
+  <div class="nav-right">
+  <a href="/logout">
+    <small>Logout</small>
+    <% include ../public/icons/logout.svg %>
+  </a>
+  </div>
 
-	<% if (typeof client !== "undefined") { %>
-	
-		<div class="nav-right">
-		<a href="/cms/<%= user.cmid %>">
-			<small>Clients List</small>
-			<% include ../public/icons/cllist.svg %>
-		</a>
-		</div>
+  <% if (typeof client !== "undefined") { %>
+  
+    <div class="nav-right">
+    <a href="/cms/<%= user.cmid %>">
+      <small>Clients List</small>
+      <% include ../public/icons/cllist.svg %>
+    </a>
+    </div>
 
-		<% if (!(typeof msgs == "undefined" && typeof comms == "undefined")) { %>
-			<div class="nav-right">
-			<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
-				<small>Client Page</small>
-				<% include ../public/icons/user.svg %>
-			</a>
-			</div>
-		<%} %>
+    <% if (!(typeof msgs == "undefined" && typeof comms == "undefined")) { %>
+      <div class="nav-right">
+      <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
+        <small>Client Page</small>
+        <% include ../public/icons/user.svg %>
+      </a>
+      </div>
+    <%} %>
 
-	<%} %>
-	
-	<div class="nav-right">
-	<a href="javascript:window.location.href=window.location.href">
-		<small>Check for Messages</small>
-		<% include ../public/icons/msgcheck.svg %>
-	</a>
-	</div>
+  <%} %>
+  
+  <div class="nav-right">
+  <a href="javascript:window.location.href=window.location.href">
+    <small>Check for Messages</small>
+    <% include ../public/icons/msgcheck.svg %>
+  </a>
+  </div>
 
 </div>

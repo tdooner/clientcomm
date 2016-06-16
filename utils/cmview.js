@@ -3,10 +3,10 @@ var Promise = require("bluebird");
 
 module.exports = {
 
-	get_convo: function (cmid, clid, convid) {
+  get_convo: function (cmid, clid, convid) {
     return new Promise (function (fulfill, reject) {
-  		db("clients").where("clid", clid).limit(1)
-  		.then(function (clients) {
+      db("clients").where("clid", clid).limit(1)
+      .then(function (clients) {
         if (clients.length > 0) {
           var client = clients[0];  
 
@@ -52,9 +52,9 @@ module.exports = {
 
           } else { reject("404"); }
         } else { reject("404"); }
-	    }).catch(function (err) { reject(err); });
-		});
-	},
+      }).catch(function (err) { reject(err); });
+    });
+  },
 
 
 

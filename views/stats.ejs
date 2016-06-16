@@ -1,98 +1,98 @@
 <% include header-base %>
 
 <div class="navbar">
-	
-	<div class="username">
-		<a href="/">
-			<b><i class="fa fa-comments"></i> ClientComm</b> Research
-		</a>
-	</div>
-	
-	
-	<div class="nav-right">
-		<% if (typeof user !== "undefined") { %>
-			<a href="/logout">
-				<small>Logout</small>
-				<i class="fa fa-times"></i>
-			</a>
-		<% } else { %>
-			<a href="/">
-				<small>Login</small>
-				<i class="fa fa-sign-in"></i>
-			</a>
-		<% } %>
-	</div>
-	
+  
+  <div class="username">
+    <a href="/">
+      <b><i class="fa fa-comments"></i> ClientComm</b> Research
+    </a>
+  </div>
+  
+  
+  <div class="nav-right">
+    <% if (typeof user !== "undefined") { %>
+      <a href="/logout">
+        <small>Logout</small>
+        <i class="fa fa-times"></i>
+      </a>
+    <% } else { %>
+      <a href="/">
+        <small>Login</small>
+        <i class="fa fa-sign-in"></i>
+      </a>
+    <% } %>
+  </div>
+  
 
 </div>
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
 <style type="text/css">
-	.chart1, .chart2 {
-		color: #888;
-	}
+  .chart1, .chart2 {
+    color: #888;
+  }
 </style>
 
 <div class="contents">
 
-	<div class="title">
-		Introduction
-	</div>
-		<p>
-			The intent of this section of the site is to provide some high level insight and real-time metrics regarding ClientComm use. This content is publicly accessible and does not provide specifics with regards to ClientComm use on a per specific user or per specific case manager basis.
-		</p>
+  <div class="title">
+    Introduction
+  </div>
+    <p>
+      The intent of this section of the site is to provide some high level insight and real-time metrics regarding ClientComm use. This content is publicly accessible and does not provide specifics with regards to ClientComm use on a per specific user or per specific case manager basis.
+    </p>
 
 
-	<div class="title">
-		Application Growth Trajectory
-	</div>
-		<p><b> Week-on-week growth </b></p>
-		<div class="chart0"><div id="chart-weekly"></div></div>
-		<p>
-			Application use as measured by messaging activity by case managers, segmented by week since the application was deployed. A linear regression is performed to demonstrate a best fit model for growth. In the future, this model will be improved through the implementation of a polynomial regression, rather than a linear regression, to produce an improved best fit curve.
-		</p>
+  <div class="title">
+    Application Growth Trajectory
+  </div>
+    <p><b> Week-on-week growth </b></p>
+    <div class="chart0"><div id="chart-weekly"></div></div>
+    <p>
+      Application use as measured by messaging activity by case managers, segmented by week since the application was deployed. A linear regression is performed to demonstrate a best fit model for growth. In the future, this model will be improved through the implementation of a polynomial regression, rather than a linear regression, to produce an improved best fit curve.
+    </p>
 
 
-	<div class="title">
-		Messaging Activity
-	</div>
-		<p><b> Distribution by Hour of Day (MST) </b></p>
-		<div class="chart1"><div id="chart-overall1"></div></div>
-		<p>
-			Messaging activity is shown by time of day, which is shown in MST tomezone format due to the applications main deployment being in Salt Lake County, Utah. Both clients and case managers exhibit early AM peaks, a break around noon, and then a spike in the early hours afternoon hours. Clients also exhibit a late evening peak towards midnight, after business hours.
-		</p>
-		<p><b> Distribution by Day of Week </b></p>
-		<div class="chart2"><div id="chart-overall2"></div></div>
-		<div class="chart2"><div id="recentlogins"></div></div>
+  <div class="title">
+    Messaging Activity
+  </div>
+    <p><b> Distribution by Hour of Day (MST) </b></p>
+    <div class="chart1"><div id="chart-overall1"></div></div>
+    <p>
+      Messaging activity is shown by time of day, which is shown in MST tomezone format due to the applications main deployment being in Salt Lake County, Utah. Both clients and case managers exhibit early AM peaks, a break around noon, and then a spike in the early hours afternoon hours. Clients also exhibit a late evening peak towards midnight, after business hours.
+    </p>
+    <p><b> Distribution by Day of Week </b></p>
+    <div class="chart2"><div id="chart-overall2"></div></div>
+    <div class="chart2"><div id="recentlogins"></div></div>
 
 
-	<div class="title">
-		Current Activity
-	</div>
-		<p><b> Total Counts </b></p>
+  <div class="title">
+    Current Activity
+  </div>
+    <p><b> Total Counts </b></p>
 
-		<div style="display: block; clear: both; position: relative; height: 150px; color: #898989">
-			<div style="width: 33%; float: left; text-align: center;">
-				<span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
-					<%= overall.msgs %>
-				</span>
-				<center>Sent Messages</center>
-			</div>
+    <div style="display: block; clear: both; position: relative; height: 150px; color: #898989">
+      <div style="width: 33%; float: left; text-align: center;">
+        <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+          <%= overall.msgs %>
+        </span>
+        <center>Sent Messages</center>
+      </div>
 
-			<div style="width: 33%; float: left; text-align: center;">
-				<span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
-					<%= overall.convos %>
-				</span>
-				<center>Live Conversations</center>
-			</div>
+      <div style="width: 33%; float: left; text-align: center;">
+        <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+          <%= overall.convos %>
+        </span>
+        <center>Live Conversations</center>
+      </div>
 
-			<div style="width: 33%; float: left; text-align: center;">
-				<span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
-					<%= overall.clients %>
-				</span>
-				<center>Currently Active Clients</center>
-			</div>
-		</div>
+      <div style="width: 33%; float: left; text-align: center;">
+        <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+          <%= overall.clients %>
+        </span>
+        <center>Currently Active Clients</center>
+      </div>
+    </div>
 
 </div>
 
@@ -108,111 +108,111 @@ var days = "<%= JSON.stringify(days) %>";
 var dow = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 
 try {
-	msgs = JSON.parse(msgs.replace(/&#34;/g, '"'));
-	weeks = JSON.parse(weeks.replace(/&#34;/g, '"'));
-	days = JSON.parse(days.replace(/&#34;/g, '"'));
+  msgs = JSON.parse(msgs.replace(/&#34;/g, '"'));
+  weeks = JSON.parse(weeks.replace(/&#34;/g, '"'));
+  days = JSON.parse(days.replace(/&#34;/g, '"'));
 
-	msgs.map(function (ea, i) { 
-		if (ea.date_hr <= 6) ea.date_hr = 17 + ea.date_hr;
-		else ea.date_hr = ea.date_hr - 7;
-		return ea; 
-	});
+  msgs.map(function (ea, i) { 
+    if (ea.date_hr <= 6) ea.date_hr = 17 + ea.date_hr;
+    else ea.date_hr = ea.date_hr - 7;
+    return ea; 
+  });
 
-	makeBigChart();
+  makeBigChart();
 } catch (e) { console.log(e); }
 
 function makeBigChart () {
 
-	// weekly growth graph
-	var weekDates = weeks.map(function (ea) { return ea.week.split("T")[0]; });
-	var weekVals  = weeks.map(function (ea) { return Number(ea.count); });
-	
-	// add first week of null
-	weekDates = ["2016-03-14"].concat(weekDates);
-	weekVals  = [0].concat(weekVals);
+  // weekly growth graph
+  var weekDates = weeks.map(function (ea) { return ea.week.split("T")[0]; });
+  var weekVals  = weeks.map(function (ea) { return Number(ea.count); });
+  
+  // add first week of null
+  weekDates = ["2016-03-14"].concat(weekDates);
+  weekVals  = [0].concat(weekVals);
 
-	try {
-		var wvlen = weekVals.length;
-		if (weekVals[wvlen - 1] < weekVals[wvlen - 2]) {
-			weekDates.pop();
-			weekVals.pop();
-		}
-	} catch (e) { console.log(e); }
+  try {
+    var wvlen = weekVals.length;
+    if (weekVals[wvlen - 1] < weekVals[wvlen - 2]) {
+      weekDates.pop();
+      weekVals.pop();
+    }
+  } catch (e) { console.log(e); }
 
-	var tempX = Array.apply(null, {length: weekVals.length}).map(Number.call, Number);
-	var tempY = [].concat(weekVals);
-	for (var i = 1; i < weekVals.length; i++) {
-		tempY[i] = tempY[i-1] + tempY[i];
-	}
-	console.log(findLineByLeastSquares(tempX, weekVals));
-	var bestFit = findLineByLeastSquares(tempX, weekVals)[1];
+  var tempX = Array.apply(null, {length: weekVals.length}).map(Number.call, Number);
+  var tempY = [].concat(weekVals);
+  for (var i = 1; i < weekVals.length; i++) {
+    tempY[i] = tempY[i-1] + tempY[i];
+  }
+  console.log(findLineByLeastSquares(tempX, weekVals));
+  var bestFit = findLineByLeastSquares(tempX, weekVals)[1];
 
-	c3.generate({
-	  data: { 
-	  	x: "x",
-	  	columns: [
-	  		["x"].concat(weekDates), 
-	  		["Activity"].concat(weekVals),
-	  		["Best Fit (Linear)"].concat(bestFit)
-	  	],
-	  	types: {Activity: "area"},
-	  },
-		axis: {
-			x: {
-				label: "Week",
-				type: 'timeseries',
-				tick: {
-					format: '%Y-%m-%d'
-				}
-			},
-			y: { label: "Messaging Activity" }
-		},
-		padding: { right: 25 },
-	  bindto: "#chart-weekly"
-	});
-
-
-	// msgs by hour graph
-	var inbound = msgs.filter(function (ea) { return ea.inbound; });
-	var outbound = msgs.filter(function (ea) { return !ea.inbound; });
-
-	var keysIn = inbound.map(function (ea) { return (Number(ea.date_hr)) * 100; });
-	var valsIn = inbound.map(function (ea) { return Number(ea.count); });
-
-	var keysOut = outbound.map(function (ea) { return (Number(ea.date_hr)) * 100; });
-	var valsOut = outbound.map(function (ea) { return Number(ea.count); });
-
-	c3.generate({
-	  data: { 
-	  	xs: {
-				"Received": "x1",
-				"Sent": "x2",
-			}, 
-	  	columns: [
-	  		["x1"].concat(keysIn), 
-	  		["x2"].concat(keysOut), 
-	  		["Received"].concat(valsIn),  
-	  		["Sent"].concat(valsOut)
-	  	]
-	  },
-		axis: {
-			x: { label: "Hour of Day" },
-			y: { label: "Message Volume" }
-		},
-		padding: { right: 25 },
-	  bindto: "#chart-overall1"
-	});
+  c3.generate({
+    data: { 
+      x: "x",
+      columns: [
+        ["x"].concat(weekDates), 
+        ["Activity"].concat(weekVals),
+        ["Best Fit (Linear)"].concat(bestFit)
+      ],
+      types: {Activity: "area"},
+    },
+    axis: {
+      x: {
+        label: "Week",
+        type: 'timeseries',
+        tick: {
+          format: '%Y-%m-%d'
+        }
+      },
+      y: { label: "Messaging Activity" }
+    },
+    padding: { right: 25 },
+    bindto: "#chart-weekly"
+  });
 
 
-	// daily distribution
-	var dayVals = days.map(function (ea, i) {  return [dow[i], Number(ea.count)]; });
+  // msgs by hour graph
+  var inbound = msgs.filter(function (ea) { return ea.inbound; });
+  var outbound = msgs.filter(function (ea) { return !ea.inbound; });
 
-	c3.generate({
-		data: { columns: dayVals, type: "bar" },
-		axis: { x: { show: false } },
-		padding: { right: 25 },
-		bindto: "#chart-overall2"
-	});
+  var keysIn = inbound.map(function (ea) { return (Number(ea.date_hr)) * 100; });
+  var valsIn = inbound.map(function (ea) { return Number(ea.count); });
+
+  var keysOut = outbound.map(function (ea) { return (Number(ea.date_hr)) * 100; });
+  var valsOut = outbound.map(function (ea) { return Number(ea.count); });
+
+  c3.generate({
+    data: { 
+      xs: {
+        "Received": "x1",
+        "Sent": "x2",
+      }, 
+      columns: [
+        ["x1"].concat(keysIn), 
+        ["x2"].concat(keysOut), 
+        ["Received"].concat(valsIn),  
+        ["Sent"].concat(valsOut)
+      ]
+    },
+    axis: {
+      x: { label: "Hour of Day" },
+      y: { label: "Message Volume" }
+    },
+    padding: { right: 25 },
+    bindto: "#chart-overall1"
+  });
+
+
+  // daily distribution
+  var dayVals = days.map(function (ea, i) {  return [dow[i], Number(ea.count)]; });
+
+  c3.generate({
+    data: { columns: dayVals, type: "bar" },
+    axis: { x: { show: false } },
+    padding: { right: 25 },
+    bindto: "#chart-overall2"
+  });
 
 };
 
@@ -234,7 +234,7 @@ function findLineByLeastSquares(values_x, values_y) {
     throw new Error('The parameters values_x and values_y need to have same size!');
   }
 
- 	// Nothing to do.
+  // Nothing to do.
   if (values_length === 0) {
     return [ [], [] ];
   }

@@ -47,9 +47,9 @@ app.use(bodyParser.json());
 
 app.use(flash());
 app.use(session({
-	secret: SESS_SECRET,
-	resave: true,
-	saveUninitialized: true
+  secret: SESS_SECRET,
+  resave: true,
+  saveUninitialized: true
 }));
 
 app.use(passport.initialize());
@@ -98,11 +98,11 @@ require("../routes/catchall")(app);
 // START UP CLIENTCOMM
 var port = 4000;
 var server = app.listen(port, function () { 
-	console.log("Listening on port", port);
+  console.log("Listening on port", port);
 
-	// Run super user check (after migrations)
-	// TO DO: This method is hacky, there should be a callback at migrations completion
-	setTimeout(function () { require("../utils/superuser-check.js")(); }, 5000);
+  // Run super user check (after migrations)
+  // TO DO: This method is hacky, there should be a callback at migrations completion
+  setTimeout(function () { require("../utils/superuser-check.js")(); }, 5000);
 });
 
 
@@ -120,12 +120,12 @@ var EMNOTIF = process.env.EMNOTIF;
 
 // EMNOTIF means run email notifications, including regular check up on text messages
 if (EMNOTIF && EMNOTIF == "true") {
-	var dailyTimer = 1000 * 60 * 60 * 24; 
-	var qrtrHrTimer = 1000 * 60 * 15; 
+  var dailyTimer = 1000 * 60 * 60 * 24; 
+  var qrtrHrTimer = 1000 * 60 * 15; 
 
-	// Set activities
-	setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, dailyTimer); 
-	setInterval(function () { require("../utils/sms-status-check").checkSMSstatus(); }, qrtrHrTimer); 
+  // Set activities
+  setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, dailyTimer); 
+  setInterval(function () { require("../utils/sms-status-check").checkSMSstatus(); }, qrtrHrTimer); 
 }
 
 
