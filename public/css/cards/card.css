@@ -1,0 +1,6 @@
+.card svg {
+  height: 120px; }
+
+.card,
+.card path {
+  fill: #2F8CE8; }
