@@ -32,14 +32,14 @@ module.exports = function (app, passport) {
   app.get("/login", function (req, res) {
     // check if the user is already logged in
     if (req.hasOwnProperty("user")) { res.redirect("/cms"); } 
-    else { res.render("login"); }
+    else { res.render("access/login"); }
   });
 
 
 
   // FORGOT LOGIN PAGE RENDER
   app.get("/login/reset", function (req, res) {
-    res.render("loginreset");
+    res.render("access/loginreset");
   });
 
 
@@ -82,7 +82,7 @@ module.exports = function (app, passport) {
           emUtil.sendPassResetEmail(cm, uid, function () {
             // Render direction to check email card
             req.flash("success", "Reset password email was sent to " + cm.email );
-            res.render("loginresetsent", {cm: cm});
+            res.render("access/loginresetsent", {cm: cm});
           });
 
         }).catch(function (err) { res.redirect("/500"); }); // Query 3
@@ -110,7 +110,7 @@ module.exports = function (app, passport) {
         res.redirect("/login/reset");
       } else {
         var reset = rows[0];
-        res.render("loginresetphasetwo", {reset: reset});
+        res.render("access/loginresetphasetwo", {reset: reset});
       }
 
     }).catch(function (err) { res.redirect("/500"); });
@@ -251,7 +251,7 @@ module.exports = function (app, passport) {
     var rawQuery5 = "SELECT count(clid) FROM clients WHERE clients.active = TRUE;";
     db.raw(rawQuery5).then(function (clsct) {
 
-        res.render("stats", {
+        res.render("public/stats", {
           msgs: msgs.rows, 
           days: days.rows, 
           weeks: weeks.rows, 

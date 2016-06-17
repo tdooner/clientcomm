@@ -58,7 +58,7 @@ router.get("/", function (req, res) {
 
     // Get a list of app use for all case managers this week
     db.raw(rawQuery).then(function (counts) {
-      res.render("cmlanding", { counts: counts.rows });
+      res.render("casemanagers/cmlanding", { counts: counts.rows });
     }).catch(errorRedirect);
   }
 });
@@ -105,7 +105,7 @@ router.get("/:cmid", function (req, res) {
     
     db.raw(rawQuery).then(function (clients) {
 
-      res.render("clients", {
+      res.render("casemanagers/clients/clients", {
         clients: clients.rows,
       });
 
@@ -117,7 +117,7 @@ router.get("/:cmid", function (req, res) {
 
 // RENDER NEW CLIENT CARD
 router.get("/:cmid/cls", function (req, res) { 
-  res.render("clientnew");
+  res.render("casemanagers/client/clientnew");
 });
 
 
@@ -243,7 +243,7 @@ router.get("/:cmid/cls/:clid", function (req, res) {
 
           // Standard view
           } else {
-            res.render("client", {
+            res.render("casemanagers/client/client", {
               client: cl,
               comms: comms,
               convos: convos,
@@ -282,7 +282,7 @@ router.get("/:cmid/cls/:clid/edit", function (req, res) {
 
       // Make sure that the client's CM is same as user (or user is superuser)
       if (cmid == Number(cl.cm) || req.user.superuser) {
-        res.render("clientedit", { client: cl });
+        res.render("casemanagers/client/clientedit", { client: cl });
       } else { res.redirect("/401"); }
 
     }).catch(errorRedirect);
@@ -420,7 +420,7 @@ router.get("/:cmid/cls/:clid/comm", function (req, res) {
     .where("cm", req.params.cmid)
     .andWhere("clid", req.params.clid)
     .then(function (clients) {
-      if (clients.length > 0) { res.render("clientcontact", {client: clients[0]}); } 
+      if (clients.length > 0) { res.render("casemanagers/client/clientcontact", {client: clients[0]}); } 
       else { res.redirect("/404"); }
 
     }).catch(errorRedirect);
@@ -576,7 +576,7 @@ router.get("/:cmid/cls/:clid/comms", function (req, res) {
 
         db.raw(rawQuery).then(function (comms) {
 
-          res.render("clientcomms", {
+          res.render("casemanagers/client/clientcomms", {
             client: cl,
             comms: comms.rows
           });
@@ -628,7 +628,7 @@ router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
     db.raw(rawQuery).then(function (commconns) {
       if (commconns.rows && commconns.rows.length == 1) {
         commconn = commconns.rows[0];
-        res.render("clientcontactedit", { commconn: commconn });
+        res.render("casemanagers/client/clientcontactedit", { commconn: commconn });
 
       } else { res.redirect("/404"); }
     }).catch(errorRedirect);
@@ -840,7 +840,7 @@ router.get("/:cmid/cls/:clid/convos", function (req, res) {
         db("comms").innerJoin("commconns", "comms.commid", "commconns.comm").where("commconns.client", clid)
         .then(function (comms) {
 
-          res.render("clientconvo", {client: clients[0], comms: comms});
+          res.render("casemanagers/client/clientconvo", {client: clients[0], comms: comms});
           
         }).catch(errorRedirect);
       } 
@@ -970,7 +970,7 @@ router.get("/:cmid/cls/:clid/convos/:convid", function (req, res) {
 
         db("clients").where("clid", clid).limit(1).then(function (cls) {
           obj.client = cls[0];
-          res.render("msgs", obj);
+          res.render("casemanagers/client/msgs", obj);
         }).catch(errorRedirect);
 
       }).catch(errorRedirect);

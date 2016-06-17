@@ -67,7 +67,7 @@ router.get("/", function (req, res) {
         };
 
         // Render organization page
-        res.render("org", {
+        res.render("admin/org", {
           org: org,
           cms: cms,
           msgs: m2
@@ -193,7 +193,7 @@ router.get("/cms/:cmid", function (req, res) {
 
         // No messages if no conversations
         if (convos.length == 0) { 
-          res.render("clientstats", {
+          res.render("admin/cmstats", {
             cm: cm,
             msgs: [],
           });
@@ -207,7 +207,7 @@ router.get("/cms/:cmid", function (req, res) {
                           " GROUP BY convo, date(msgs.created) ORDER BY DATE DESC; ";
           
           db.raw(rawQuery).then(function (msgs) {
-            res.render("clientstats", {
+            res.render("admin/cmstats", {
               cm: cm,
               msgs: msgs.rows,
             });

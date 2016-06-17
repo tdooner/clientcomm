@@ -10,7 +10,7 @@ router.get("/", function (req, res) {
   db("orgs").orderBy("name")
   .then(function (orgs) {
 
-    res.render("orgs", {
+    res.render("super/orgs", {
       orgs: orgs
     });
   }).catch(function (err) {
@@ -60,7 +60,7 @@ router.get("/:orgid", function (req, res) {
       db("cms").where("org", orgid).orderBy("last")
       .then(function (cms) {
 
-        res.render("org", {
+        res.render("super/org", {
           org: org,
           cms: cms,
           msgs: {}
