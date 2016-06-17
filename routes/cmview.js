@@ -58,7 +58,7 @@ router.get("/", function (req, res) {
 
     // Get a list of app use for all case managers this week
     db.raw(rawQuery).then(function (counts) {
-      res.render("cmlanding", { counts: counts.rows });
+      res.render("casemanagers/cmlanding", { counts: counts.rows });
     }).catch(errorRedirect);
   }
 });
@@ -105,7 +105,7 @@ router.get("/:cmid", function (req, res) {
     
     db.raw(rawQuery).then(function (clients) {
 
-      res.render("clients", {
+      res.render("casemanagers/clients/clients", {
         clients: clients.rows,
       });
 
@@ -117,7 +117,7 @@ router.get("/:cmid", function (req, res) {
 
 // RENDER NEW CLIENT CARD
 router.get("/:cmid/cls", function (req, res) { 
-  res.render("clientnew");
+  res.render("casemanagers/client/clientnew");
 });
 
 
