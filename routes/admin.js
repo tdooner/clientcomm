@@ -193,7 +193,7 @@ router.get("/cms/:cmid", function (req, res) {
 
         // No messages if no conversations
         if (convos.length == 0) { 
-          res.render("clientstats", {
+          res.render("admin/cmstats", {
             cm: cm,
             msgs: [],
           });

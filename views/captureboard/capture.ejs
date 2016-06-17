@@ -1,0 +1,53 @@
+<% include headers/header-base %>
+<% include headers/header-navbar %>
+
+<div class="contents">
+
+  <div class="title">
+    Capture Board
+  </div>
+
+  <% convos.forEach(function (convo) { %>
+    <div class="conversation">
+      <table class="capture-list">
+        <tr>
+          <th>Message</th> 
+          <th>Time</th>
+          <th>Contact Info</th>
+          <th>Capture</th>
+        </tr>
+
+        <% convo.msgs.forEach(function (ea, i) { %>
+          <tr>
+            <td>
+              <%= ea.content %>
+            </td>
+            <td>
+              <% var day = moment.tz(ea.created, local_tz).format("MM/DD");%>
+              <% var hrs = moment.tz(ea.created, local_tz).format("hh:MM A"); %>
+              <%= day + " " + hrs %>
+            </td>
+            <td>
+              <%= ea.value %>
+            </td>
+            <% if (i == 0) { %>
+              <td class="conversation-claim" rowspan="<%= convo.msgs.length %>">
+                <a href="/capture/<%= convo.convo %>"><i class="fa fa-plus"></i></a>
+              </td>
+            <% } %>
+          </tr>
+        <% }); %>
+
+      </table>
+    </div>
+  <% }) %>
+
+  <% if (convos.length == 0) { %>
+    <center style="color:#888">
+      Good news! There are no conversations left in the capture board.
+    </center>
+  <% } %>
+
+</div>
+
+<% include footer %>
