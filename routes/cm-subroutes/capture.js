@@ -36,7 +36,7 @@ router.get("/", function (req, res) {
       }
     });
 
-    res.render("capture", {convos: convos});
+    res.render("captureboard/capture", {convos: convos});
 
   }).catch(function (err) { res.redirect("/500"); });
 });
@@ -58,7 +58,7 @@ router.get("/:convid", function (req, res) {
 
         db("clients").where("clients.cm", req.user.cmid).andWhere("clients.active", true)
         .then(function (clients) {
-          res.render("capturecard", {convo: convos.rows[0], clients: clients});
+          res.render("captureboard/capturecard", {convo: convos.rows[0], clients: clients});
         }).catch(function (err) { res.redirect("/500"); });
 
       }

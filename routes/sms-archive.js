@@ -267,7 +267,7 @@ module.exports = function (app, db, utils, passport) {
 
   app.get("/floaters/",  function (req, res) {
     db("comms").where("client", null).then(function (comms) {
-      res.render("floaters", {comms: comms})
+      res.render("deprecated/floaters", {comms: comms})
     });
   });
 
