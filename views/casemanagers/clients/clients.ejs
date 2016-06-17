@@ -1,5 +1,5 @@
-<% include headers/header-base %>
-<% include headers/header-navbar %>
+<% include ../../partials/headers/header-base %>
+<% include ../../partials/headers/header-navbar %>
 
 <div class="contents">
 
@@ -14,7 +14,7 @@
 
   <a href="/cms/<%= user.cmid %>/cls">
     <div class="newclient"> 
-      <% include ../public/icons/bigplus.svg %> 
+      <% include ../../../public/icons/bigplus.svg %> 
       New Client 
     </div>
   </a>
@@ -47,7 +47,7 @@
 
           <td class="clientid">
             <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
-              <% include ../public/icons/user.svg %>
+              <% include ../../../public/icons/user.svg %>
               <%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
             </a>
           </td>
@@ -111,7 +111,7 @@
             <% if (clients[i].active) { %>
               <form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
                 <button type="submit">
-                  <% include ../public/icons/archive.svg %>
+                  <% include ../../../public/icons/archive.svg %>
                 </button>
               </form>
             <% } else { %>
@@ -144,4 +144,5 @@
   };
   showCurrent();
 </script>
-<% include footer %>
+
+<% include ../../partials/footers/footer %>

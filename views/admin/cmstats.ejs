@@ -1,4 +1,4 @@
-<% include headers/header %>
+<% include ../partials/headers/header %>
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
 
@@ -59,8 +59,8 @@
   <div class="themeblock-body">
 
       <div class="themeblock-row">
-        <% var totCt = 0 %>
-        <%= msgs.forEach(function (ea) { totCt += Number(ea.count); }) %>
+        <% var totCt = 0; %>
+        <%= msgs.forEach(function (ea) { totCt += Number(ea.count); }); %>
         <%= totCt %> total messages sent
       </div>
 
@@ -145,5 +145,4 @@ function makeChart () {
 
 </script>
 
-
-<% include footer %>
+<% include ../partials/footers/footer %>
