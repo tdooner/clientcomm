@@ -1,3 +1,19 @@
+.exit {
+  position: relative;
+  float: right;
+  color: #898989;
+  margin-top: 15px; }
+  .exit:hover {
+    color: #2F8CE8; }
+
+.comms-link {
+  color: #2F8CE8;
+  position: absolute;
+  top: 20px;
+  right: 25px; }
+  .comms-link:hover {
+    color: #92C9FF; }
+
 .card {
   position: relative;
   width: 300px;
@@ -8,10 +24,6 @@
   margin-left: auto;
   margin-right: auto;
   border-radius: 10px; }
-  .card .exit {
-    position: absolute;
-    right: 20px;
-    top: 15px; }
   .card .logo {
     font-size: 35px;
     font-weight: 900;

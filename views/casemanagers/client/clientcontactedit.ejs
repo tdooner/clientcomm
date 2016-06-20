@@ -5,11 +5,12 @@
 
 <div class="contents">
 
-<div class="card">
+<!-- Moved the exit out of the card -->
+<a href="/cms/<%= user.cmid %>/cls/<%= commconn.client %>/comms">
+  <% include ../../partials/card-exit %>
+</a>
 
-  <a href="/cms/<%= user.cmid %>/cls/<%= commconn.client %>/comms">
-    <% include ../../partials/card-exit %>
-  </a>
+<div class="card">
 
   <div class="card-title">
     Create a Contact Method

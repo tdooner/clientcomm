@@ -5,14 +5,24 @@
 
 <div class="contents">
 
-<div class="card">
+<!-- Moved the exit out of the card -->
+<a href="/cms/<%= user.cmid %>">
+  <% include ../../partials/card-exit %>
+</a>
 
-  <a href="/cms/<%= user.cmid %>">
-    <% include ../../partials/card-exit %>
-  </a>
+<div class="card">
 
   <div class="card-title">
     Start Conversation With <%= client.first %>
+  </div>
+
+  <div class="comms-link">
+    <small>
+    <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/comms">
+      Edit Contact Info
+      <i class="fa fa-list-alt"></i>
+    </a>
+    </small>
   </div>
 
   <form method="post">

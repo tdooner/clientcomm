@@ -1,6 +1,28 @@
 $card-text:       #2F8CE8;
 $card-text-light: #92C9FF;
 
+.exit {
+  position: relative;
+  float: right;
+  color: #898989;
+  margin-top: 15px;
+
+  &:hover {
+    color: $card-text;
+  }
+}
+
+.comms-link {
+  color: $card-text;
+  position: absolute;
+  top: 20px;
+  right: 25px;
+
+  &:hover {
+    color: $card-text-light;
+  }
+}
+
 .card {
   position: relative;
   width: 300px;
@@ -11,13 +33,6 @@ $card-text-light: #92C9FF;
   margin-left: auto;
   margin-right: auto;
   border-radius: 10px;
-
-  // TO DO: Move out of the card box
-  .exit {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-  }
 
   .logo {
     font-size: 35px;

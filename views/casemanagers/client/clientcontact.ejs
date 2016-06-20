@@ -1,12 +1,16 @@
 <% include ../../partials/headers/header-base %>
 
+<!-- Include Card View specific styling -->
+<link rel="stylesheet" type="text/css" href="/static/css/card.css">
+
 <div class="contents">
 
-<div class="card">
+<!-- Moved the exit out of the card -->
+<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/comms">
+  <% include ../../partials/card-exit %>
+</a>
 
-  <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/comms">
-    <% include ../../partials/card-exit %>
-  </a>
+<div class="card">
 
   <div class="card-title">
     Create a Contact Method

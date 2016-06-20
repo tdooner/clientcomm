@@ -4,11 +4,13 @@
 <link rel="stylesheet" type="text/css" href="/static/css/card.css">
 
 <div class="contents">
-<div class="card">
 
-  <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
-    <% include ../../partials/card-exit %>
-  </a>
+<!-- Moved the exit out of the card -->
+<a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
+  <% include ../../partials/card-exit %>
+</a>
+
+<div class="card">
 
   <div class="card-title">
     Edit Client Attributes
