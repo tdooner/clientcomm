@@ -4,6 +4,9 @@ var db = require("../server/db");
 var moment = require('moment');
 var moment_tz = require('moment-timezone');
 
+// New Relic Clientside monitoring
+var newrelic = require('newrelic');
+
 module.exports = function (app) {
 
   app.use(function (req, res, next){  
@@ -14,6 +17,9 @@ module.exports = function (app) {
     // Inclusion of momentJS for datetime modifications
     res.locals.moment = moment;
     res.locals.moment_tz = moment_tz;
+
+    // Pass New Relic as local object to invoke on render
+    app.locals.newrelic = newrelic;
 
     // Include user if logged in
     if (req.user) { 
