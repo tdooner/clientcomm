@@ -11,9 +11,73 @@
   </div>
 
   <div class="captureboard">
+    <div class="headers">
+      <div>
+        Unknown Client
+      </div>
+      <div>
+        Response from ClientComm
+      </div>
+      <div>
+        Claim Conversation
+      </div>
+    </div>
 
     <% convos.forEach(function (convo) { %>
       <div class="convoBlock">
+
+        <div class="actionBox">
+
+          <a href="/capture/<%= convo.convo %>">
+            <div class="claimButton">
+              <i class="fa fa-user-plus"></i>
+              Claim Conversation
+            </div>
+          </a>
+
+          <div class="tinyInfo">
+
+            <div class="blurb">
+              <div class="header">
+                Last contact
+              </div>
+              <div class="value">
+                <% var timeSince = moment(convo.msgs[convo.msgs.length - 1].created); %>
+                <% var timeNow = moment(); %>
+                <%= moment.duration(timeNow.diff(timeSince)).humanize() %>
+              </div>
+            </div>
+
+            <div class="blurb">
+              <div class="header">
+                Messages Sent
+              </div>
+              <div class="value">
+                <%= convo.msgs.length %>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="tinyInfoMessages">
+            <div class="header">
+              Messages from
+            </div>
+            <div class="value">
+              <%= convo.msgs[0].value %>
+            </div>
+          </div>
+
+          <div class="suggestButton">
+            <div class="left">
+              Suggest
+            </div>
+            <div class="right">
+              alert another of this conversation thread
+            </div>
+          </div>
+
+        </div>
 
         <div class="convoStream">
           <% convo.msgs.forEach(function (ea, i) { %>
@@ -23,8 +87,6 @@
                 <% if (ea.inbound) { %>
                   <div class="message">
                     <%= ea.content %>
-                    klsdjf lksdjflsdjf lksjflks dlkfjsd flsdkjfklsdjfklsdlfsdlkjsdfjksd fljsdlkf sdlkfjsdlkjf
-                    klsdjf lksdjflsdjf lksjflks dlkfjsd flsdkjfklsdjfklsdlfsdlkjsdfjksd fljsdlkf sdlkfjsdlkjf
                   </div>
                 <% } %>
               </div>
@@ -33,18 +95,12 @@
                 <% if (!ea.inbound) { %>
                   <div class="message">
                     <%= ea.content %>
-                    klsdjf lksdjflsdjf lksjflks dlkfjsd flsdkjfklsdjfklsdlfsdlkjsdfjksd fljsdlkf sdlkfjsdlkjf
                   </div>
                 <% } %>
               </div>
 
             </div>
           <% }) %>
-
-        </div>
-
-        <div class="actionBox">
-          
         </div>
 
       </div>
