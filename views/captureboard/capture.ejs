@@ -11,38 +11,42 @@
   </div>
 
   <div class="captureboard">
+
     <% convos.forEach(function (convo) { %>
-      <div class="conversation">
-        <table class="capture-list">
-          <tr>
-            <th>Message</th> 
-            <th>Time</th>
-            <th>Contact Info</th>
-            <th>Capture</th>
-          </tr>
+      <div class="convoBlock">
 
+        <div class="convoStream">
           <% convo.msgs.forEach(function (ea, i) { %>
-            <tr>
-              <td>
-                <%= ea.content %>
-              </td>
-              <td>
-                <% var day = moment.tz(ea.created, local_tz).format("MM/DD");%>
-                <% var hrs = moment.tz(ea.created, local_tz).format("hh:MM A"); %>
-                <%= day + " " + hrs %>
-              </td>
-              <td>
-                <%= ea.value %>
-              </td>
-              <% if (i == 0) { %>
-                <td class="conversation-claim" rowspan="<%= convo.msgs.length %>">
-                  <a href="/capture/<%= convo.convo %>"><i class="fa fa-plus"></i></a>
-                </td>
-              <% } %>
-            </tr>
-          <% }); %>
+            <div class="convoRow">
+            
+              <div class="msgInbound">
+                <% if (ea.inbound) { %>
+                  <div class="message">
+                    <%= ea.content %>
+                    klsdjf lksdjflsdjf lksjflks dlkfjsd flsdkjfklsdjfklsdlfsdlkjsdfjksd fljsdlkf sdlkfjsdlkjf
+                    klsdjf lksdjflsdjf lksjflks dlkfjsd flsdkjfklsdjfklsdlfsdlkjsdfjksd fljsdlkf sdlkfjsdlkjf
+                  </div>
+                <% } %>
+              </div>
 
-        </table>
+              <div class="msgOutbound">
+                <% if (!ea.inbound) { %>
+                  <div class="message">
+                    <%= ea.content %>
+                    klsdjf lksdjflsdjf lksjflks dlkfjsd flsdkjfklsdjfklsdlfsdlkjsdfjksd fljsdlkf sdlkfjsdlkjf
+                  </div>
+                <% } %>
+              </div>
+
+            </div>
+          <% }) %>
+
+        </div>
+
+        <div class="actionBox">
+          
+        </div>
+
       </div>
     <% }) %>
 

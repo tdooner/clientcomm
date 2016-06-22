@@ -1,6 +1,37 @@
 .contents {
   background-color: #898989; }
-
-.captureboard {
-  margin-left: -25px;
-  margin-right: -25px; }
+  .contents .title {
+    color: #FFF; }
+  .contents .captureboard {
+    margin-left: -25px;
+    margin-right: -25px; }
+    .contents .captureboard .convoBlock {
+      overflow-y: scroll;
+      height: 220px;
+      background-color: #FFF;
+      margin-bottom: 10px; }
+      .contents .captureboard .convoBlock .convoStream {
+        width: 600px; }
+        .contents .captureboard .convoBlock .convoStream .convoRow .msgInbound {
+          width: 280px;
+          float: left;
+          padding: 10px;
+          color: #898989; }
+          .contents .captureboard .convoBlock .convoStream .convoRow .msgInbound .message {
+            width: 100%;
+            border-top: 1px solid #C4C4C4;
+            padding-top: 5px; }
+        .contents .captureboard .convoBlock .convoStream .convoRow .msgOutbound {
+          width: 280px;
+          float: left;
+          padding: 10px;
+          color: #92C9FF; }
+          .contents .captureboard .convoBlock .convoStream .convoRow .msgOutbound .message {
+            width: 100%;
+            border-top: 1px solid #C4C4C4;
+            padding-top: 5px;
+            margin-top: -25px; }
+        .contents .captureboard .convoBlock .convoStream .convoRow::after {
+          content: "";
+          display: block;
+          clear: both; }

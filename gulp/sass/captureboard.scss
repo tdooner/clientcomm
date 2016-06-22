@@ -1,13 +1,74 @@
-$card-text:       #2F8CE8;
-$card-text-light: #92C9FF;
+$color-lightgrey: #898989;
+$color-blue:      #2F8CE8;
+$color-lightblue: #92C9FF;
 
 
 // Modify background color of contents
 .contents {
   background-color: #898989;
+  
+  .title {
+    color: #FFF;
+  }
+
+  .captureboard {
+    margin-left: -25px;
+    margin-right: -25px;
+
+    .captureList {
+
+    }
+
+    .convoBlock {
+      overflow-y: scroll;
+      height: 220px;
+      background-color: #FFF;
+      margin-bottom: 10px;
+
+      .convoStream {
+        width: 600px;
+
+        .convoRow {
+          .msgInbound {
+            width: 280px;
+            float: left;
+            padding: 10px;
+            color: $color-lightgrey;
+
+            .message {
+              width: 100%;
+              border-top: 1px solid #C4C4C4;
+              padding-top: 5px;
+            }
+          }
+          .msgOutbound {
+            width: 280px;
+            float: left;
+            padding: 10px;
+            color: $color-lightblue;
+
+            .message {
+              width: 100%;
+              border-top: 1px solid #C4C4C4;
+              padding-top: 5px;
+              margin-top: -25px;
+            }
+          }
+
+          &::after {
+            content:"";
+            display:block;
+            clear:both;
+
+          }
+        }
+      }
+
+
+      .actionBox {
+
+      }
+    }
+  }
 }
 
-.captureboard {
-  margin-left: -25px;
-  margin-right: -25px;
-}
