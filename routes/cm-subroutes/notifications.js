@@ -40,22 +40,28 @@ router.get("/new", function (req, res) {
 router.post("/new", function (req, res) { 
   var errorRedirect = fivehundred(res);
   var baseRedirect = "/cms/" + req.params.cmid + "/notifications";
-  var q = req.query;
+  var q = req.body;
 
   // See if they are already in process of working through cards
   if (q.hasOwnProperty("notification")) {
     var n = q.notification;
 
+    // Convert potential string values to integers where applicable
+    if (n.sendTimeHour) n.sendTimeHour = Number(n.sendTimeHour);
+    if (n.sendTimeMin)  n.sendTimeMin  = Number(n.sendTimeMin);
+
     // Special request option to show a certain card in series
     var cardRequested = n.showCardExplicit;
 
     // Figure out where in process the user is
-    var sendD = n.sendDate;
-    var sendT = n.sendTime;
-    var sendR = n.recipient;
-    var sendC = n.recipientComm;
+    var sendD =  n.sendDate;
+    var sendTH = n.sendTimeHour;
+    var sendTM = n.sendTimeMin;
+    var sendR =  n.recipient;
+    var sendC =  n.recipientComm;
 
-    var cardOneIncomplete = sendD == null || sendT == null || sendR == null || sendC == null;
+    // See if all variables have been added from this list
+    var cardOneIncomplete = (sendD == null) || (sendTH == null) || (sendTM = null) || (sendR == null) || (sendC == null);
 
     // Show first card if missing required data or if specifically requested
     if (cardRequested == 0 || !cardOneIncomplete) {

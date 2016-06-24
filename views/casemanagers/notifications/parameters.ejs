@@ -20,54 +20,138 @@
   <form method="post">
 
     <input type="hidden" name="cmid" value="<%= user.cmid %>">
+    <input type="hidden" name="cmid" value="<%= notification.cmid %>">
+    <input type="hidden" name="cmid" value="<%= notification.cmid %>">
+    <input type="hidden" name="cmid" value="<%= notification.cmid %>">
 
     <div class="form-row">
       <div class="form-label"> Date to send <small>(YYYY-MM-DD)</small></div>
-      <input class="form-input" type="date" name="dob">
+      <input class="form-input" type="date" name="sendDate" value="<%= notification.sendDate %>">
     </div>
 
     <div class="form-row">
       <div class="form-label"> Time to send </div>
 
       <!-- Options are for military hrs of day -->
-      <select class="blue-select half" name="type">
-        <option value="00"> 00 </option>
-        <option value="01"> 01 </option>
-        <option value="02"> 02 </option>
-        <option value="03"> 03 </option>
-        <option value="04"> 04 </option>
-        <option value="05"> 05 </option>
-        <option value="06"> 06 </option>
-        <option value="07"> 07 </option>
-        <option value="08" selected> 08 </option>
-        <option value="09"> 09 </option>
-        <option value="10"> 10 </option>
-        <option value="11"> 11 </option>
-        <option value="12"> 12 </option>
-        <option value="13"> 13 </option>
-        <option value="14"> 14 </option>
-        <option value="15"> 15 </option>
-        <option value="16"> 16 </option>
-        <option value="17"> 17 </option>
-        <option value="18"> 18 </option>
-        <option value="19"> 19 </option>
-        <option value="20"> 20 </option>
-        <option value="21"> 21 </option>
-        <option value="22"> 22 </option>
-        <option value="23"> 23 </option>
-        <option value="24"> 24 </option>
+      <select class="blue-select half" name="sendTimeHour">
+        <option value="00" 
+          <% if (notification.sendTimeHour == 00) { %> selected <% } %> > 
+            00 
+        </option>
+        <option value="01" 
+          <% if (notification.sendTimeHour == 01) { %> selected <% } %> > 
+            01 
+        </option>
+        <option value="02" 
+          <% if (notification.sendTimeHour == 02) { %> selected <% } %> > 
+            02 
+        </option>
+        <option value="03" 
+          <% if (notification.sendTimeHour == 03) { %> selected <% } %> > 
+            03 
+        </option>
+        <option value="04" 
+          <% if (notification.sendTimeHour == 04) { %> selected <% } %> > 
+            04 
+        </option>
+        <option value="05" 
+          <% if (notification.sendTimeHour == 05) { %> selected <% } %> > 
+            05 
+        </option>
+        <option value="06" 
+          <% if (notification.sendTimeHour == 06) { %> selected <% } %> > 
+            06 
+        </option>
+        <option value="07" 
+          <% if (notification.sendTimeHour == 07) { %> selected <% } %> > 
+            07 
+        </option>
+        <option value="08" 
+          <% if (notification.sendTimeHour == 08) { %> selected <% } %> > 
+            08 
+        </option>
+        <option value="09" 
+          <% if (notification.sendTimeHour == 09) { %> selected <% } %> > 
+            09 
+        </option>
+        <option value="10" 
+          <% if (notification.sendTimeHour == 10) { %> selected <% } %> > 
+            10 
+        </option>
+        <option value="11" 
+          <% if (notification.sendTimeHour == 11) { %> selected <% } %> > 
+            11 
+        </option>
+        <option value="12" 
+          <% if (notification.sendTimeHour == 12) { %> selected <% } %> > 
+            12 
+        </option>
+        <option value="13" 
+          <% if (notification.sendTimeHour == 13) { %> selected <% } %> > 
+            13 
+        </option>
+        <option value="14" 
+          <% if (notification.sendTimeHour == 14) { %> selected <% } %> > 
+            14 
+        </option>
+        <option value="15" 
+          <% if (notification.sendTimeHour == 15) { %> selected <% } %> > 
+            15 
+        </option>
+        <option value="16" 
+          <% if (notification.sendTimeHour == 16) { %> selected <% } %> > 
+            16 
+        </option>
+        <option value="17" 
+          <% if (notification.sendTimeHour == 17) { %> selected <% } %> > 
+            17 
+        </option>
+        <option value="18" 
+          <% if (notification.sendTimeHour == 18) { %> selected <% } %> > 
+            18 
+        </option>
+        <option value="19" 
+          <% if (notification.sendTimeHour == 19) { %> selected <% } %> > 
+            19 
+        </option>
+        <option value="20" 
+          <% if (notification.sendTimeHour == 20) { %> selected <% } %> > 
+            20 
+        </option>
+        <option value="21" 
+          <% if (notification.sendTimeHour == 21) { %> selected <% } %> > 
+            21 
+        </option>
+        <option value="22" 
+          <% if (notification.sendTimeHour == 22) { %> selected <% } %> > 
+            22 
+        </option>
+        <option value="23" 
+          <% if (notification.sendTimeHour == 23) { %> selected <% } %> > 
+            23 
+        </option>
+        <option value="24" 
+          <% if (notification.sendTimeHour == 24) { %> selected <% } %> > 
+            24 
+        </option>
       </select>
 
-      <select class="blue-select half" name="type">
-        <option value="00" selected> :00 </option>
-        <option value="30"> :30 </option>
+      <select class="blue-select half" name="sendTimeMin">
+        <option value="0"
+          <% if (notification.sendTimeMin == 0) { %> selected <% } %> > 
+            :00 
+        </option>
+        <option value="30"
+          <% if (notification.sendTimeMin == 30) { %> selected <% } %> > 
+            :30 
+        </option>
       </select>
 
     </div>
 
     <div class="form-row">
       <div class="form-label"> Which client to notify  </div>
-      <select class="blue-select" id="clientSelect" name="type">
+      <select class="blue-select" id="clientSelect" name="recipient">
         <option value="" disabled selected> Client </option>
         <% clients.forEach(function (client) { %>
           <option value="<%= client.id %>"> <%= client.name %> </option>
@@ -76,8 +160,8 @@
     </div>
 
     <div class="form-row">
-      <div class="form-label"> Which device to send to  </div>
-      <select class="blue-select" id="commOptionsForClient" name="type">
+      <div class="form-label"> Which device to send to </div>
+      <select class="blue-select" id="commOptionsForClient" name="recipientComm">
         <option value="" disabled selected> Contact Info </option>
       </select>
     </div>
