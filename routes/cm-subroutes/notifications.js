@@ -19,6 +19,16 @@ var fivehundred   = errorHandlers.fivehundred;
 
 // GENERATE CAPTURE BOARD
 router.get("/", function (req, res) { 
+  res.send("ddd");
+});
+
+// GENERATE CAPTURE CARD SET
+router.get("/new", function (req, res) {
+  res.render("casemanagers/notifications/parameters", { notification: {} });
+});
+
+// PROCESS CAPTURE CARD PROGRESS
+router.post("/new", function (req, res) { 
   var errorRedirect = fivehundred(res);
   var baseRedirect = "/cms/" + req.params.cmid + "/notifications";
   var q = req.query;
@@ -42,18 +52,13 @@ router.get("/", function (req, res) {
     if (cardRequested == 0 || !cardOneIncomplete) {
 
     } else {
-
+      res.render("casemanagers/notifications/parameters", { notification: n });
     }
 
-  // Otherwise, just start with first notification card
+  // Catchall: just start with first notification card
   } else {
-
+    res.render("casemanagers/notifications/parameters", { notification: {} });
   }
-});
-
-// FOOBAR
-router.get("/new", function (req, res) { 
-  res.send("ddd")
 });
 
 // FOOBAR
@@ -65,6 +70,18 @@ router.get("/other", function (req, res) {
 
 // EXPORT ROUTER OBJECt
 module.exports = router;
+
+
+
+// UTILITY FUNCIONS
+function retrieveClientsAndClientContactMethods (cmid) {
+  var rawQuery =  " SELECT * FROM comms " + 
+                  " LEFT JOIN commconns ON (commconns.comm = comms.commid) " +
+                  " LEFT JOIN clients ON (commconns.client = clients.clid) " +
+                  " LEFT JOIN cms ON (clients.cm = cms.cmid) " +
+                  " WHERE cms.cmid = 59; ";
+}
+
 
 
 

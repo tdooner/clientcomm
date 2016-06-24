@@ -1,0 +1,71 @@
+<% include ../../partials/headers/header-base %>
+
+<!-- Include Card View specific styling -->
+<link rel="stylesheet" type="text/css" href="/static/css/card.css">
+
+<div class="contents">
+
+<!-- Moved the exit out of the card -->
+<a href="/cms/<%= user.cmid %>/notifications">
+  <% include ../../partials/card-exit %>
+</a>
+
+<div class="card">
+
+  <div class="card-title">
+    Start Notification
+  </div>
+
+  <form method="post">
+
+    <input type="hidden" name="cmid" value="<%= user.cmid %>">
+
+    <div class="form-row">
+      <div class="form-label"> Date to send </div>
+      <select class="blue-select" name="type" disabled>
+        <option value="" disabled selected> Date </option>
+        <option value="email">
+          Email
+        </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label"> Time to send </div>
+      <select class="blue-select" name="type" disabled>
+        <option value="" disabled selected> Time </option>
+        <option value="email">
+          Email
+        </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label"> Which client to notify  </div>
+      <select class="blue-select" name="type" disabled>
+        <option value="" disabled selected> Client </option>
+        <option value="email">
+          Email
+        </option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label"> Which device to send to  </div>
+      <select class="blue-select" name="type" disabled>
+        <option value="" disabled selected> Contact Info </option>
+        <option value="email">
+          Email
+        </option>
+      </select>
+    </div>
+
+    <input type="submit" class="form-submit" value="Next">
+
+  </form>
+
+</div>
+
+</div>
+
+<% include ../../partials/footers/footer %>
