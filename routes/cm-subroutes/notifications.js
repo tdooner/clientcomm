@@ -24,7 +24,16 @@ router.get("/", function (req, res) {
 
 // GENERATE CAPTURE CARD SET
 router.get("/new", function (req, res) {
-  res.render("casemanagers/notifications/parameters", { notification: {} });
+  var errorRedirect = fivehundred(res);
+
+  retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
+    if (clients) {
+      res.render("casemanagers/notifications/parameters", { 
+        notification: {},
+        clients: clients
+      });
+    } else { errorRedirect(); }
+  });
 });
 
 // PROCESS CAPTURE CARD PROGRESS
@@ -74,13 +83,76 @@ module.exports = router;
 
 
 // UTILITY FUNCIONS
-function retrieveClientsAndClientContactMethods (cmid) {
-  var rawQuery =  " SELECT * FROM comms " + 
+function retrieveClientsAndClientContactMethods (cmid, cb) {
+  var rawQuery =  " SELECT  commconns.client, clients.first, clients.last, " + 
+                  "         commconns.name, comms.value, comms.commid " + 
+                  "         FROM comms " + 
                   " LEFT JOIN commconns ON (commconns.comm = comms.commid) " +
                   " LEFT JOIN clients ON (commconns.client = clients.clid) " +
                   " LEFT JOIN cms ON (clients.cm = cms.cmid) " +
-                  " WHERE cms.cmid = 59; ";
+                  " WHERE cms.cmid = " + String(cmid) + "; ";
+
+  db.raw(rawQuery).then(function (comms) {
+    var clients = [];
+
+    // Iterate through all results and fill out clients list
+    comms.rows.forEach(function (row) {
+      var name = [row.first, row.last].join(" ");
+      var client = {
+        name: name,
+        id: row.client,
+        comms: []
+      }
+
+      // Check if the client is already in list
+      var alreadyExists = false;
+      for (var i = 0; i < clients.length; i++) {
+        if (row.client == clients[i].id) {
+          alreadyExists = true;
+        }
+      }
+
+      // Only add if that client is not already in
+      if (!alreadyExists) { clients.push(client); }
+    });
+
+    // Now we need to add comms to each client object
+    clients.forEach(function (client) {
+
+      // Check through all rows
+      comms.rows.forEach(function (row) {
+        // If row is a match with client
+        if (client.id == row.client) {
+          // Create a new comm object
+          var newComm = {
+            name: row.name,
+            value: row.value,
+            id: row.commid
+          };
+          // And add it to the client's comms array
+          client.comms.push(newComm);
+        }
+      });
+    });
+
+    // Return the cleaned object
+    cb(clients);
+
+  }).catch(function () { cb(false); });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

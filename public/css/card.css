@@ -53,6 +53,16 @@
       font-size: 16px;
       font-weight: 700;
       color: #344289; }
+      .card .form-row .blue-select.half {
+        width: 130px;
+        float: left;
+        margin-left: 20px; }
+        .card .form-row .blue-select.half:nth-child(2) {
+          margin-left: 0px; }
+    .card .form-row::after {
+      content: "";
+      display: block;
+      clear: both; }
   .card .form-label {
     font-size: 12px;
     padding-bottom: 3px; }
