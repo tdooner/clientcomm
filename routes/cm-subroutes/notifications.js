@@ -29,10 +29,7 @@ router.get("/new", function (req, res) {
   retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
     if (clients) {
       res.render("casemanagers/notifications/parameters", { 
-        notification: {
-          recipient: 154,
-          recipientComm: 174
-        },
+        notification: {},
         clients: clients
       });
     } else { errorRedirect(); }
@@ -43,11 +40,10 @@ router.get("/new", function (req, res) {
 router.post("/new", function (req, res) { 
   var errorRedirect = fivehundred(res);
   var baseRedirect = "/cms/" + req.params.cmid + "/notifications";
-  var q = req.body;
+  var n = req.body; // n for notification object
 
   // See if they are already in process of working through cards
-  if (q.hasOwnProperty("notification")) {
-    var n = q.notification;
+  if (n.hasOwnProperty("sendDate")) {
 
     // Convert potential string values to integers where applicable
     if (n.sendTimeHour) n.sendTimeHour = Number(n.sendTimeHour);
@@ -57,17 +53,23 @@ router.post("/new", function (req, res) {
     var cardRequested = n.showCardExplicit;
 
     // Figure out where in process the user is
+    // Card 1 content
     var sendD =  n.sendDate;
     var sendTH = n.sendTimeHour;
     var sendTM = n.sendTimeMin;
     var sendR =  n.recipient;
     var sendC =  n.recipientComm;
 
+    // End card content
+    var notiSubj = n.notiSubj;
+    var notiCopy = n.notiCopy;
+
     // See if all variables have been added from this list
-    var cardOneIncomplete = (sendD == null) || (sendTH == null) || (sendTM = null) || (sendR == null) || (sendC == null);
+    var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM = null) || (sendR == null) || (sendC == null);
+    var copyCardIncomplete = (notiSubj == "") || (notiCopy == "");
 
     // Show first card if missing required data or if specifically requested
-    if (cardRequested == 0 || !cardOneIncomplete) {
+    if (cardRequested == 0 || cardOneIncomplete) {
       retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
         if (clients) {
           res.render("casemanagers/notifications/parameters", { 
@@ -79,15 +81,14 @@ router.post("/new", function (req, res) {
 
     // Show the notification text entry view
     // TO DO: Add support for selecting from templates in the future
+    } else if (cardRequested == 1 || copyCardIncomplete) {
+      res.render("casemanagers/notifications/copyEntry", { 
+        notification: n,
+      });      
+
+    // Final submission
     } else {
-      retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
-        if (clients) {
-          res.render("casemanagers/notifications/copyEntry", { 
-            notification: n,
-            clients: clients
-          });
-        } else { errorRedirect(); }
-      });
+      
     }
 
   // Catchall: just start with first notification card
