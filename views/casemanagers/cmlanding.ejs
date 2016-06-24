@@ -38,11 +38,17 @@
   .blue {
     background-color:#2F8CE8;
   }
+  .grey {
+    background-color:#898989;
+  }
   .yellow {
     background-color:#E5D50A;
   }
   .green:hover svg path {
     fill: #0AA629;
+  }
+  .grey:hover svg path {
+    fill: #898989;
   }
   .blue:hover svg path {
     fill: #2F8CE8;
@@ -114,7 +120,7 @@
 
 
 
-<div style="margin-left: auto; margin-right: auto; margin-top: 100px; width: 590px;">
+<div style="margin-left: auto; margin-right: auto; margin-top: 100px; width: 696px;">
 
   <a href="/cms/<%= user.cmid %>/cls">
     <div class="bigcircles green">
@@ -125,15 +131,27 @@
   </a>
 
   <a href="/cms/<%= user.cmid %>">
-    <div class="bigcircles blue" style="margin-left: 70px;">
+    <div class="bigcircles blue" style="margin-left: 32px;">
       <svg width="83px" height="102px" viewBox="470 340 83 102" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <path d="M553,425.579796 C550.755511,408.395404 538.45281,394.033259 521.573855,389.769549 C534.471024,384.038139 540.367954,368.736339 534.742734,355.592632 C529.117513,342.447285 514.104299,336.438733 501.207131,342.171784 C488.311608,347.903194 482.414678,363.204994 488.039898,376.348701 C490.61044,382.355613 495.313493,387.150647 501.207131,389.769549 C484.45662,394.092295 472.267544,408.365886 470,425.432206 C480.842053,435.688069 495.479813,442 511.57822,442 C527.59923,442 542.172767,435.748745 553,425.579796" id="Fill-1" stroke="none" fill="#FFFFFF" fill-rule="evenodd"></path>
       </svg>
     </div>
   </a>
 
+  <a href="/cms/<%= user.cmid %>/notifications/new">
+    <div class="bigcircles grey" style="margin-left: 32px;">
+      <svg width="91px" height="98px" viewBox="564 391 91 98" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g id="Group-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(567.000000, 393.000000)">
+              <path d="M28.8782051,1.60344828 L58.3012821,1.60344828" id="Line" stroke="#FFFFFF" stroke-width="3.44862" stroke-linecap="square"></path>
+              <ellipse id="Oval-25-Copy-10" stroke="#FFFFFF" stroke-width="5.7477" cx="42.5" cy="51.3103448" rx="42.5" ry="41.6896552"></ellipse>
+              <path d="M63.75,47.0344828 C63.75,47.0344828 61.5160413,48.3268256 58.7678191,49.9166693 L42.5,59.3275862 L21.25,34.7413793" id="Path-706-Copy" stroke="#FFFFFF" stroke-width="6.89724"></path>
+          </g>
+      </svg>
+    </div>
+  </a>
+
   <a href="/capture">
-    <div class="bigcircles yellow" style="margin-left: 70px;">
+    <div class="bigcircles yellow" style="margin-left: 32px;">
       <svg width="67px" height="86px" viewBox="704 338 67 86" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g id="checklist" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(704.000000, 339.000000)">
           <path d="M8.19745604,16.3945385 C7.43525824,16.3945385 6.67306044,16.1031099 6.0902033,15.5202527 L0.874379121,10.3044286 C-0.291335165,9.13871429 -0.291335165,7.25563736 0.874379121,6.08992308 C2.03262088,4.92420879 3.92317033,4.92420879 5.08141209,6.08992308 L8.19745604,9.20596703 L16.5293242,0.874098901 C17.6875659,-0.291615385 19.5706429,-0.291615385 20.7363571,0.874098901 C21.9020714,2.03234066 21.9020714,3.92289011 20.7363571,5.0886044 L10.2972363,15.5202527 C9.72185165,16.1031099 8.95965385,16.3945385 8.19745604,16.3945385" id="Fill-1" fill="#FEFEFE"></path>
@@ -151,16 +169,20 @@
 
 </div>
 
-<div style="margin-left: auto; margin-right: auto; height: 200px; width: 590px; color: #4A4A4A; font-size: 15px; font-weight: 700;">
+<div style="margin-left: auto; margin-right: auto; height: 200px; width: 696px; color: #4A4A4A; font-size: 15px; font-weight: 700;">
   <div style="width: 150px; float: left; padding-top: 15px">
     <a href="/cms/<%= user.cmid %>/cls">Add a Client</a>
   </div>
 
-  <div style="width: 150px; float: left; padding-top: 15px; margin-left: 70px;">
+  <div style="width: 150px; float: left; padding-top: 15px; margin-left: 32px;">
     <a href="/cms/<%= user.cmid %>">View Client List</a>
   </div>
 
-  <div style="width: 150px; float: left; padding-top: 15px; margin-left: 70px;">
+  <div style="width: 150px; float: left; padding-top: 15px; margin-left: 32px;">
+    <a href="/cms/<%= user.cmid %>/notifications/new">Create Notification</a>
+  </div>
+
+  <div style="width: 150px; float: left; padding-top: 15px; margin-left: 32px;">
     <a href="/capture">Capture Board</a>
   </div>
 </div>
