@@ -38,8 +38,8 @@
   .blue {
     background-color:#2F8CE8;
   }
-  .grey {
-    background-color:#898989;
+  .pink {
+    background-color:#BD1F73;
   }
   .yellow {
     background-color:#E5D50A;
@@ -47,14 +47,19 @@
   .green:hover svg path {
     fill: #0AA629;
   }
-  .grey:hover svg path {
-    fill: #898989;
+  .pink:hover svg path, .pink:hover svg polygon {
+    fill: #BD1F73;
   }
   .blue:hover svg path {
     fill: #2F8CE8;
   }
   .yellow:hover svg path {
     fill: #E5D50A;
+  }
+
+  /* special for handling timer svg */
+  .pink svg {
+    margin-top: -8px;
   }
 
 
@@ -139,12 +144,14 @@
   </a>
 
   <a href="/cms/<%= user.cmid %>/notifications/new">
-    <div class="bigcircles grey" style="margin-left: 32px;">
-      <svg width="91px" height="98px" viewBox="564 391 91 98" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <g id="Group-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(567.000000, 393.000000)">
-              <path d="M28.8782051,1.60344828 L58.3012821,1.60344828" id="Line" stroke="#FFFFFF" stroke-width="3.44862" stroke-linecap="square"></path>
-              <ellipse id="Oval-25-Copy-10" stroke="#FFFFFF" stroke-width="5.7477" cx="42.5" cy="51.3103448" rx="42.5" ry="41.6896552"></ellipse>
-              <path d="M63.75,47.0344828 C63.75,47.0344828 61.5160413,48.3268256 58.7678191,49.9166693 L42.5,59.3275862 L21.25,34.7413793" id="Path-706-Copy" stroke="#FFFFFF" stroke-width="6.89724"></path>
+    <div class="bigcircles pink" style="margin-left: 32px;">
+      <svg width="97px" height="102px" viewBox="561 392 97 102" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(562.000000, 392.000000)">
+              <polygon id="Fill-1" fill="#FEFEFE" points="30.5308029 3.60326207 65.2036204 3.60326207 65.2036204 0 30.5308029 0"></polygon>
+              <polygon id="Fill-5" fill="#FEFEFE" points="47.5497109 66.94078 23.1657109 38.9052697 28.6496234 34.1924007 49.111638 57.7184352 68.939492 46.3200628 72.569273 52.55838"></polygon>
+              <g id="Group-7" transform="translate(0.000000, 6.605400)" fill="#FEFEFE">
+                  <path d="M47.8672117,6.60533034 C24.8040876,6.60533034 6.04134307,24.8689166 6.04134307,47.3173855 C6.04134307,69.7658545 24.8040876,88.0294407 47.8672117,88.0294407 C70.9303358,88.0294407 89.6930803,69.7658545 89.6930803,47.3173855 C89.6930803,24.8689166 70.9303358,6.60533034 47.8672117,6.60533034 M47.8672117,94.0344131 C21.4728175,94.0344131 -0.000350364963,73.0772614 -0.000350364963,47.3173855 C-0.000350364963,21.5575097 21.4728175,0.600357931 47.8672117,0.600357931 C74.2616058,0.600357931 95.7347737,21.5575097 95.7347737,47.3173855 C95.7347737,73.0772614 74.2616058,94.0344131 47.8672117,94.0344131 L48.9257812,3.41413125" id="Fill-2"></path>
+              </g>
           </g>
       </svg>
     </div>

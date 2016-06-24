@@ -9,6 +9,9 @@ var router = express.Router({mergeParams: true});
 // DB via knex.js to run queries
 var db  = require("../../server/db");
 
+// UTILITIES
+var utils = require("../../utils/utils.js");
+
 // Error handling
 var errorHandlers = utils["errorHandlers"];
 var fivehundred   = errorHandlers.fivehundred;
@@ -24,6 +27,9 @@ router.get("/", function (req, res) {
   if (q.hasOwnProperty("notification")) {
     var n = q.notification;
 
+    // Special request option to show a certain card in series
+    var cardRequested = n.showCardExplicit;
+
     // Figure out where in process the user is
     var sendD = n.sendDate;
     var sendT = n.sendTime;
@@ -31,6 +37,13 @@ router.get("/", function (req, res) {
     var sendC = n.recipientComm;
 
     var cardOneIncomplete = sendD == null || sendT == null || sendR == null || sendC == null;
+
+    // Show first card if missing required data or if specifically requested
+    if (cardRequested == 0 || !cardOneIncomplete) {
+
+    } else {
+
+    }
 
   // Otherwise, just start with first notification card
   } else {
