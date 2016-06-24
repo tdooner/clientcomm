@@ -74,6 +74,8 @@ require("../routes/access")(app, passport);
 var cmview = require("../routes/cmview");
 app.use("/cms", auth.isLoggedIn, cmview)
 
+// CM-Subroutes here
+// TO DO: Discuss if these should be rolled in under cmview itself
 // Capture view
 var captureRoutes = require("../routes/cm-subroutes/capture");
 app.use("/capture", auth.isLoggedIn, captureRoutes);

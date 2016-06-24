@@ -1214,6 +1214,9 @@ router.post("/:cmid/cls/:clid/convos/:convid/reject", function (req, res) {
   }
 });
 
+// Notifications view
+var notificationsRoutes = require("./cm-subroutes/notifications");
+router.use("/:cmid/notifications", notificationsRoutes);
 
 
 // EXPORT ROUTER OBJECt
