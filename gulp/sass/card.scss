@@ -62,6 +62,7 @@ $card-text-light: #92C9FF;
       float: right;
       color: #4A90E2;
     }
+
     .blue-select {
       width: 280px;
       height: 35px;
@@ -72,6 +73,22 @@ $card-text-light: #92C9FF;
       font-size: 16px;
       font-weight: 700;
       color: #344289;
+
+      &.half {
+        width: 130px;
+        float: left;
+        margin-left: 20px;
+        
+        &:nth-child(2) {
+          margin-left: 0px;
+        }
+      }
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      clear: both;
     }
   }
 
