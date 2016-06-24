@@ -59,14 +59,38 @@ router.post("/new", function (req, res) {
 
     // Show first card if missing required data or if specifically requested
     if (cardRequested == 0 || !cardOneIncomplete) {
+      retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
+        if (clients) {
+          res.render("casemanagers/notifications/parameters", { 
+            notification: n,
+            clients: clients
+          });
+        } else { errorRedirect(); }
+      });
 
+    // Show the notification text entry view
+    // TO DO: Add support for selecting from templates in the future
     } else {
-      res.render("casemanagers/notifications/parameters", { notification: n });
+      retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
+        if (clients) {
+          res.render("casemanagers/notifications/copyEntry", { 
+            notification: n,
+            clients: clients
+          });
+        } else { errorRedirect(); }
+      });
     }
 
   // Catchall: just start with first notification card
   } else {
-    res.render("casemanagers/notifications/parameters", { notification: {} });
+    retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
+      if (clients) {
+        res.render("casemanagers/notifications/parameters", { 
+          notification: {},
+          clients: clients
+        });
+      } else { errorRedirect(); }
+    });
   }
 });
 
@@ -83,6 +107,7 @@ module.exports = router;
 
 
 // UTILITY FUNCIONS
+// TO DO: Move this stuff to a different file
 function retrieveClientsAndClientContactMethods (cmid, cb) {
   var rawQuery =  " SELECT  commconns.client, clients.first, clients.last, " + 
                   "         commconns.name, comms.value, comms.commid " + 
