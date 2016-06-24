@@ -29,7 +29,10 @@ router.get("/new", function (req, res) {
   retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
     if (clients) {
       res.render("casemanagers/notifications/parameters", { 
-        notification: {},
+        notification: {
+          recipient: 154,
+          recipientComm: 174
+        },
         clients: clients
       });
     } else { errorRedirect(); }

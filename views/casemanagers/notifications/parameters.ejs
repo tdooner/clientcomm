@@ -154,7 +154,10 @@
       <select class="blue-select" id="clientSelect" name="recipient">
         <option value="" disabled selected> Client </option>
         <% clients.forEach(function (client) { %>
-          <option value="<%= client.id %>"> <%= client.name %> </option>
+          <option value="<%= client.id %>"
+            <% if (notification.recipient == client.id) { %> selected <% } %> > 
+              <%= client.name %> 
+          </option>
         <% }); %>
       </select>
     </div>
@@ -181,7 +184,10 @@
   $("#clientSelect").change(function () {
     // Get new client id value
     var v = $(this)[0].value;
-    
+    updateClientsAndComms(v)
+  });
+
+  function updateClientsAndComms (v, id) {
     // Remove all existing children in options
     $("#commOptionsForClient").empty();
 
@@ -190,7 +196,13 @@
       // Only add if client matches
       if (client.id == v) {
         client.comms.forEach(function (comm) {
-          var newOpt =  '<option value="' + comm.id + '">' +
+          var newOpt =  '<option value="' + comm.id;
+
+          if (id && id == comm.id) {
+            newOpt +=  ' selected ';
+          }
+
+          newOpt +=     '">' +
                         comm.name + " (" + comm.value + ")" +
                         '</option>';
           console.log(newOpt);
@@ -198,7 +210,13 @@
         });
       }
     });
-  });
+  }
+
+  // Run once on load to populate defaults
+  <% if (notification.recipient && notification.recipientComm) { %>
+    updateClientsAndComms(<%= notification.recipient %>, <%= notification.recipientComm %>);
+  <% } %>
+
 </script>
 
 <% include ../../partials/footers/footer %>
