@@ -20,11 +20,8 @@ var db  = require("./db");
 
 // APP DEPENDENCIES
 var bodyParser = require('body-parser');
-var session = require("express-session");
 var cookieParser = require("cookie-parser");
 var flash = require("connect-flash");
-
-
 var session = require("cookie-session");
 
 // CONFIGURATION 1
