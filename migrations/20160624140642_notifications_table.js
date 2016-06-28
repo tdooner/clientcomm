@@ -31,11 +31,11 @@ exports.up = function(knex, Promise) {
       table.integer("frequency");
 
       // Book keeping
-      table.boolean("sent").defaultTo(false);
+      table.boolean("completed").defaultTo(false);
     })
 
 
-  ])
+  ]);
 };
 
 exports.down = function(knex, Promise) {
