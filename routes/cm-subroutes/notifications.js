@@ -12,6 +12,10 @@ var db  = require("../../server/db");
 // UTILITIES
 var utils = require("../../utils/utils.js");
 
+// Datetime management
+var moment = require("moment");
+var moment_tz = require("moment-timezone");
+
 // Error handling
 var errorHandlers = utils["errorHandlers"];
 var fivehundred   = errorHandlers.fivehundred;
@@ -55,17 +59,17 @@ router.post("/new", function (req, res) {
     // Figure out where in process the user is
     // Card 1 content
     var sendD =  n.sendDate;
-    var sendTH = n.sendTimeHour;
-    var sendTM = n.sendTimeMin;
-    var sendR =  n.recipient;
-    var sendC =  n.recipientComm;
+    var sendTH = Number(n.sendTimeHour);
+    var sendTM = Number(n.sendTimeMin);
+    var sendR =  Number(n.recipient);
+    var sendC =  Number(n.recipientComm);
 
     // End card content
     var notiSubj = n.notiSubj;
     var notiCopy = n.notiCopy;
 
     // See if all variables have been added from this list
-    var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM = null) || (sendR == null) || (sendC == null);
+    var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (sendR == null) || (sendC == null);
     var copyCardIncomplete = (notiSubj == "") || (notiCopy == "");
 
     // Show first card if missing required data or if specifically requested
@@ -86,9 +90,14 @@ router.post("/new", function (req, res) {
         notification: n,
       });      
 
-    // Final submission
+    // Have everything we need, final submission
     } else {
-      
+      var sendTime = moment(sendD)
+                      .tz(tz[0])
+                      .add("hours",   sendTH)
+                      .add("minutes", sendTM)
+                      .format("YYYY-MM-DD HH:mm:ss");
+      res.send("OK", {sen: sendTime, hr: sendTH, min: sendTM, n: n});
     }
 
   // Catchall: just start with first notification card
