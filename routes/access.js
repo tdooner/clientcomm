@@ -251,10 +251,17 @@ module.exports = function (app, passport) {
     var rawQuery5 = "SELECT count(clid) FROM clients WHERE clients.active = TRUE;";
     db.raw(rawQuery5).then(function (clsct) {
 
+    // Get population of case managers over time
+    // TO DO: We need to control for the fact that cm might have been active in past but not now
+    var rawQuery6 = " SELECT sum(count(cmid)) OVER (ORDER BY date_trunc('week', created)), date_trunc('week', created) AS week " + 
+                    " FROM cms WHERE active = TRUE AND admin = FALSE GROUP BY week ORDER BY week ASC; ";
+    db.raw(rawQuery6).then(function (cmcount) {
+
         res.render("public/stats", {
           msgs: msgs.rows, 
           days: days.rows, 
           weeks: weeks.rows, 
+          caseManagerWeeklyCounts: cmcount.rows,
           overall: { 
             msgs: msgct.rows[0].count, 
             convos: convosct.rows[0].count, 
@@ -262,6 +269,7 @@ module.exports = function (app, passport) {
           } 
         });
 
+    }).catch(function (err) { res.redirect("/500"); }); // Query 6
     }).catch(function (err) { res.redirect("/500"); }); // Query 5
     }).catch(function (err) { res.redirect("/500"); }); // Query 4
     }).catch(function (err) { res.redirect("/500"); }); // Query 3
