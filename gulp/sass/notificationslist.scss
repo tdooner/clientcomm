@@ -1,4 +1,5 @@
 .list {
+  width: auto;
   tr {
     th {
       // This portion should be for all list types
@@ -13,17 +14,15 @@
       text-align: left;
       padding-left: 10px;
       padding-right: 10px;
-
-      &:nth-child(1) {
-
-      }
     }
     td {
       padding-left: 10px;
       padding-right: 10px;
       height: 55px;
+      word-wrap:break-word;
 
       &.fa-icon-holder {
+        text-align: center;
 
         .standard-fa-no-stack {
           font-size: 24px;
@@ -35,6 +34,34 @@
         }
       }
 
+      &:nth-child(1) {
+        width: 50px;
+      }
+      &:nth-child(2) {
+        width: 100px;
+      }
+      &:nth-child(3) {
+        width: 250px;
+      }
+      &:nth-child(4) {
+        font-size: small;
+        width: 50px;
+      }
+      &:nth-child(5) {
+        font-size: small;
+        width: 50px;
+      }
+      &:nth-child(6) {
+        font-size: small;
+        width: 50px;
+      }
+      &:nth-child(7) {
+        font-size: small;
+        width: 100px;
+      }
+      &:nth-child(8) {
+        width: 50px;
+      }
     }
   }
 }

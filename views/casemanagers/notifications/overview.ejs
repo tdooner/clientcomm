@@ -41,7 +41,8 @@
       <th>Edit</th>
       <th>Subject</th>
       <th>Message Body</th>
-      <th>Send Date/Time</th>
+      <th>Send Date</th>
+      <th>Send Time</th>
       <th>Created</th>
       <th>Repeat</th>
       <th>Delete</th>
@@ -53,42 +54,59 @@
 
         <tr>
 
-        <td class="fa-icon-holder">
-          <% if (!archiveView) { %>
-            <a href="/cms/<%= user.cmid %>/notifications/<%= notifications[i].notificationid %>/edit%>">
-              <i class="fa fa-pencil standard-fa-no-stack"></i>
-            </a>
-          <% } else { %>
-            <span class="fa-stack disabled">
-              <i class="fa fa-pencil fa-stack-1x"></i>
-              <i class="fa fa-ban fa-stack-2x fa-rotate-90"></i>
-            </span>
-          <% } %>
-        </td>
+          <td class="fa-icon-holder">
+            <% if (!archiveView) { %>
+              <a href="/cms/<%= user.cmid %>/notifications/<%= notifications[i].notificationid %>/edit%>">
+                <i class="fa fa-pencil standard-fa-no-stack"></i>
+              </a>
+            <% } else { %>
+              <span class="fa-stack disabled">
+                <i class="fa fa-pencil fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x fa-rotate-90"></i>
+              </span>
+            <% } %>
+          </td>
 
-        <td>
-          <%= notifications[i].subject %>
-        </td>
+          <td>
+            <%= notifications[i].subject %>
+          </td>
 
-        <td>
-          <%= notifications[i].message %>
-        </td>
+          <td>
+            <%= notifications[i].message %>
+          </td>
 
-        <td>
-          <%= moment(notifications[i].send).tz(org.tz).format("MMMM Do YYYY, h:mm a"); %>
-        </td>
+          <td>
+            <%= moment(notifications[i].send).tz(org.tz).format("MM/DD/YY"); %>
+          </td>
 
-        <td>
-          <%= moment(notifications[i].created).tz(org.tz).format("MMMM Do YYYY, h:mm a"); %>
-        </td>
+          <td>
+            <%= moment(notifications[i].send).tz(org.tz).format("h:mm A"); %>
+          </td>
 
-        <td>
-          <% if (notifications[i].repeat) { %>
-            Rep
-          <% } else { %>
-            N/A
-          <% } %>
-        </td>
+          <td>
+            <%= moment(notifications[i].created).tz(org.tz).format("MM/DD"); %>
+          </td>
+
+          <td>
+            <% if (notifications[i].repeat) { %>
+              Rep
+            <% } else { %>
+              No repeat set
+            <% } %>
+          </td>
+
+          <td class="fa-icon-holder">
+            <% if (!archiveView) { %>
+              <a href="/cms/<%= user.cmid %>/notifications/<%= notifications[i].notificationid %>/edit%>">
+                <i class="fa fa-trash standard-fa-no-stack"></i>
+              </a>
+            <% } else { %>
+              <span class="fa-stack disabled">
+                <i class="fa fa-trash fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x fa-rotate-90"></i>
+              </span>
+            <% } %>
+          </td>
 
         </tr>
 
