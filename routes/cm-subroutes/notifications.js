@@ -21,10 +21,30 @@ var errorHandlers = utils["errorHandlers"];
 var fivehundred   = errorHandlers.fivehundred;
 
 
-// GENERATE CAPTURE BOARD
+// CAPTURE BOARD OVERVIEW
 router.get("/", function (req, res) { 
-  res.send("ddd");
+  // Reroute to unsent/incomplete notifications route view
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications/overview/incomplete";
+  res.redirect(redirectLoc);
 });
+
+
+// CAPTURE BOARD UNSENT NOTIFICATIONS
+router.get("/overview/incomplete", function (req, res) {
+
+  db("notifications")
+  .where("cm", req.user.cmid)
+  .andWhere("completed", false)
+  .then(function (notifications) {
+    res.render("casemanagers/notifications/overview", {
+      notifications: notifications, 
+      archiveView: false
+    });
+  })
+  .catch(fivehundred);
+
+});
+
 
 // GENERATE CAPTURE CARD SET
 router.get("/new", function (req, res) {
@@ -42,7 +62,7 @@ router.get("/new", function (req, res) {
 
 // PROCESS CAPTURE CARD PROGRESS
 router.post("/new", function (req, res) { 
-  var errorRedirect = fivehundred(res);\
+  var errorRedirect = fivehundred(res);
   var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
   var n = req.body; // n for notification object
 
