@@ -61,7 +61,8 @@ router.get("/overview/complete", function (req, res) {
   var errorRedirect = fivehundred(res);
 
   db("notifications")
-  .where("cm", req.user.cmid)
+  .where("notifications.cm", req.user.cmid)
+  .leftJoin("clients", "clients.clid", "notifications.client")
   .andWhere("sent", true)
   .andWhere("closed", true)
   .then(function (notifications) {
