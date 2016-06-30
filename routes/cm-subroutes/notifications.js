@@ -49,19 +49,19 @@ router.post("/new", function (req, res) {
   // See if they are already in process of working through cards
   if (n.hasOwnProperty("sendDate")) {
 
-    // Convert potential string values to integers where applicable
-    if (n.sendTimeHour) n.sendTimeHour = Number(n.sendTimeHour);
-    if (n.sendTimeMin)  n.sendTimeMin  = Number(n.sendTimeMin);
-
     // Special request option to show a certain card in series
+    // TO DO: Build out front end support for this, will happen w/ progress dots
     var cardRequested = n.showCardExplicit;
 
     // Figure out where in process the user is
+    // Identity
+    var cmid = Number(n.cmid);
+
     // Card 1 content
     var sendD =  n.sendDate;
     var sendTH = Number(n.sendTimeHour);
     var sendTM = Number(n.sendTimeMin);
-    var sendR =  Number(n.recipient);
+    var clid =  Number(n.recipient);
     var sendC =  Number(n.recipientComm);
 
     // End card content
@@ -72,8 +72,14 @@ router.post("/new", function (req, res) {
     var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (sendR == null) || (sendC == null);
     var copyCardIncomplete = (notiSubj == "") || (notiCopy == "");
 
+    // Validate all identity form components
+    if (Number(req.user.cmid) !== cmid) {
+      res.status(404).send("User ID does not match submitted cmid value");
+      // TO DO: Make sure the cm has client actually
+      // TO DO: Make sure that comm method is legal
+
     // Show first card if missing required data or if specifically requested
-    if (cardRequested == 0 || cardOneIncomplete) {
+    } else if (cardRequested == 0 || cardOneIncomplete) {
       retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
         if (clients) {
           res.render("casemanagers/notifications/parameters", { 
@@ -93,11 +99,21 @@ router.post("/new", function (req, res) {
     // Have everything we need, final submission
     } else {
       var sendTime = moment(sendD)
-                      .tz(tz[0])
                       .add("hours",   sendTH)
                       .add("minutes", sendTM)
                       .format("YYYY-MM-DD HH:mm:ss");
-      res.send("OK", {sen: sendTime, hr: sendTH, min: sendTM, n: n});
+
+      // In the future we need to support repeatable notifications
+      // Database schema already supports
+      db("notifications").insert({
+        cm:      cmid,
+        client:  clid,
+        comm:    sendC,
+        subject: notiSubj,
+        message: notiCopy,
+        send:    sendTime
+      })
+      res.send("OK", sendTime);
     }
 
   // Catchall: just start with first notification card
