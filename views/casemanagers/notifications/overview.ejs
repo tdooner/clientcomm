@@ -34,101 +34,43 @@
 
   <table class="cl-list">
 
-    <tr class="current">
-      <th>Client</th>
-      <th>Conversation</th>
-      <th>Last Activity</th>
-      <th>Archive</th>
-    </tr>
-
-    <tr class="archive">
-      <th>Client</th>
-      <th>Last Conversation</th>
-      <th>Last Activity</th>
-      <th>Restore</th>
+    <tr>
+      <th>Subject</th>
+      <th>Message Body</th>
+      <th>Send Date/Time</th>
+      <th>Created</th>
+      <th>Repeat</th>
     </tr>
 
 
     <% if (notifications.length > 0) { %>
       <% for (var i = 0; i < notifications.length; i++ ) { %>
 
-        <tr class="<%= notifications[i].active ? 'current' : 'archive' %> <%= notifications[i].active && !notifications[i].open ? 'nonew' : '' %>">
+        <tr>
 
-          <td class="clientid">
-            <a href="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %>">
-              <% include ../../../public/icons/user.svg %>
-              <%=  notifications[i].last %>, <%= notifications[i].first %> <%= notifications[i].middle %>
-            </a>
-          </td>
+        <td>
+          <%= notifications[i].subject %>
+        </td>
 
-          <td>
-            <% if (notifications[i].clid !== null && notifications[i].active) { %>
-              <% if (notifications[i].open) { %>
-                <a href="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %>/convos/<%= notifications[i].convid %>">
-              <% } else { %>
-                <a href="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %> %>">
-              <% } %>
-            <% } else { %>
-              <a href="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %>">
-            <% } %>
+        <td>
+          <%= notifications[i].message %>
+        </td>
 
-              <% if (notifications[i].active) { %>
-                <% if (notifications[i].open) { %>
-                  <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-comments fa-stack-1x fa-inverse"></i>
-                  </span>
-                <% } else { %>
-                  <span class="fa-stack fa-lg">
-                    <i class="fa fa-comments fa-stack-1x"></i>
-                  </span>
-                <% } %>
-              <% } %>
+        <td>
+          <%= moment(notifications[i].send).tz(org.tz).format("MMMM Do YYYY, h:mm a"); %>
+        </td>
 
-              <% var subj = (notifications[i].subject !== null && notifications[i].subject.length) < 25 ? notifications[i].subject : notifications[i].subject.substr(0,25) + "..." %>
-              <% if (!subj) { subj = "No conversations." } %>
-              <%= subj %>
+        <td>
+          <%= moment(notifications[i].created).tz(org.tz).format("MMMM Do YYYY, h:mm a"); %>
+        </td>
 
-              <% if (notifications[i].msg_ct > 0) { %>
-                <span class="badge">
-                  <%= notifications[i].msg_ct %> unread
-                </span>
-              <% } %>
-
-            </a>
-          </td>
-          
-          <td>
-            <% if (notifications[i].clid !== null && notifications[i].active) { %>
-              <a href="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %>/convos/<%= notifications[i].convid %>">
-            <% } else { %>
-              <a href="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %>">
-            <% } %>
-
-              <% try { %>
-                <% var day = moment.tz(notifications[i].updated, local_tz).format("MM/DD"); %>
-                <% var hrs = moment.tz(notifications[i].updated, local_tz).format("hh:MM A"); %>
-                <%= day + " " + hrs %>
-              <% } catch (e) { %>
-                Unknown
-              <% } %>
-
-            </a>
-          </td>
-          
-          <td class="archiverestore">
-            <% if (notifications[i].active) { %>
-              <form method="post" action="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %>/archive">
-                <button type="submit">
-                  <% include ../../../public/icons/archive.svg %>
-                </button>
-              </form>
-            <% } else { %>
-              <form method="post" action="/cms/<%= user.cmid %>/cls/<%= notifications[i].clid %>/restore">
-                <button type="submit"><i class="fa fa-undo"></i></button>
-              </form>
-            <% } %>
-          </td>
+        <td>
+          <% if (notifications[i].repeat) { %>
+            Rep
+          <% } else { %>
+            N/A
+          <% } %>
+        </td>
 
         </tr>
 
@@ -137,21 +79,5 @@
 
   </table>
 </div>
-
-<script type="text/javascript">
-  function showCurrent () {
-    $("#current_tag").addClass("selected");
-    $("#archive_tag").removeClass("selected");
-    $(".archive").hide();
-    $(".current").show();
-  };
-  function showArchive () {
-    $("#current_tag").removeClass("selected");
-    $("#archive_tag").addClass("selected");
-    $(".archive").show();
-    $(".current").hide();
-  };
-  showCurrent();
-</script>
 
 <% include ../../partials/footers/footer %>

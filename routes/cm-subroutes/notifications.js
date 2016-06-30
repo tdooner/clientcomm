@@ -35,10 +35,18 @@ router.get("/overview/incomplete", function (req, res) {
   .where("cm", req.user.cmid)
   .andWhere("completed", false)
   .then(function (notifications) {
-    res.render("casemanagers/notifications/overview", {
-      notifications: notifications, 
-      archiveView: false
-    });
+
+    db("orgs")
+    .where("orgid", req.user.org)
+    .then(function (org) {
+      res.render("casemanagers/notifications/overview", {
+        notifications: notifications, 
+        org: org[0],
+        archiveView: false
+      });      
+    })
+    .catch(fivehundred);
+
   })
   .catch(fivehundred);
 });
@@ -50,10 +58,18 @@ router.get("/overview/complete", function (req, res) {
   .where("cm", req.user.cmid)
   .andWhere("completed", true)
   .then(function (notifications) {
-    res.render("casemanagers/notifications/overview", {
-      notifications: notifications, 
-      archiveView: true
-    });
+
+    db("orgs")
+    .where("orgid", req.user.org)
+    .then(function (org) {
+      res.render("casemanagers/notifications/overview", {
+        notifications: notifications, 
+        org: org[0],
+        archiveView: true
+      });      
+    })
+    .catch(fivehundred);
+
   })
   .catch(fivehundred);
 });
