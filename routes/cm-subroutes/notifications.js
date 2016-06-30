@@ -31,9 +31,10 @@ router.get("/", function (req, res) {
 
 // CAPTURE BOARD UNSENT NOTIFICATIONS
 router.get("/overview/incomplete", function (req, res) {
-  db("notifications")
+  var c = db("notifications")
   .where("cm", req.user.cmid)
-  .andWhere("completed", false)
+  .andWhere("sent", false)
+  .andWhere("closed", false)
   .then(function (notifications) {
 
     db("orgs")
@@ -56,7 +57,8 @@ router.get("/overview/incomplete", function (req, res) {
 router.get("/overview/complete", function (req, res) {
   db("notifications")
   .where("cm", req.user.cmid)
-  .andWhere("completed", true)
+  .andWhere("sent", true)
+  .andWhere("closed", true)
   .then(function (notifications) {
 
     db("orgs")

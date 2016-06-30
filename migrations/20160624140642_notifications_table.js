@@ -31,7 +31,8 @@ exports.up = function(knex, Promise) {
       table.integer("frequency");
 
       // Book keeping
-      table.boolean("completed").defaultTo(false);
+      table.boolean("sent").defaultTo(false);
+      table.boolean("closed").defaultTo(false);
     })
 
 
