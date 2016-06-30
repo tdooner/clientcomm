@@ -23,8 +23,8 @@ var fivehundred   = errorHandlers.fivehundred;
 
 // CAPTURE BOARD OVERVIEW
 router.get("/", function (req, res) { 
-  // Reroute to unsent/incomplete notifications route view
-  var redirectLoc = "/cms/" + req.params.cmid + "/notifications/overview/incomplete";
+  // Reroute to unsent/open notifications route view
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications/overview/open";
   res.redirect(redirectLoc);
 });
 
