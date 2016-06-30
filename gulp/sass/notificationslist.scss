@@ -1,9 +1,40 @@
 .list {
   tr {
     th {
-        th {
-          text-align: left;
+      // This portion should be for all list types
+      // Repetitive to include in each  
+      height: 17px;
+      font-weight: 300;
+      font-size: 12px;
+      text-align: left;
+      background-color: #F4F4F4;
+      color: #898989;
+
+      text-align: left;
+      padding-left: 10px;
+      padding-right: 10px;
+
+      &:nth-child(1) {
+
+      }
+    }
+    td {
+      padding-left: 10px;
+      padding-right: 10px;
+      height: 55px;
+
+      &.fa-icon-holder {
+
+        .standard-fa-no-stack {
+          font-size: 24px;
+          cursor: pointer;
         }
+        .disabled {
+          opacity: 0.5;
+          font-size: 0.9;
+        }
+      }
+
     }
   }
 }

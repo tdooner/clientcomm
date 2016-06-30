@@ -38,11 +38,13 @@
   <table class="list">
 
     <tr>
+      <th>Edit</th>
       <th>Subject</th>
       <th>Message Body</th>
       <th>Send Date/Time</th>
       <th>Created</th>
       <th>Repeat</th>
+      <th>Delete</th>
     </tr>
 
 
@@ -50,6 +52,19 @@
       <% for (var i = 0; i < notifications.length; i++ ) { %>
 
         <tr>
+
+        <td class="fa-icon-holder">
+          <% if (!archiveView) { %>
+            <a href="/cms/<%= user.cmid %>/notifications/<%= notifications[i].notificationid %>/edit%>">
+              <i class="fa fa-pencil standard-fa-no-stack"></i>
+            </a>
+          <% } else { %>
+            <span class="fa-stack disabled">
+              <i class="fa fa-pencil fa-stack-1x"></i>
+              <i class="fa fa-ban fa-stack-2x fa-rotate-90"></i>
+            </span>
+          <% } %>
+        </td>
 
         <td>
           <%= notifications[i].subject %>
