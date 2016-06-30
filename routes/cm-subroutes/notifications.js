@@ -42,8 +42,8 @@ router.get("/new", function (req, res) {
 
 // PROCESS CAPTURE CARD PROGRESS
 router.post("/new", function (req, res) { 
-  var errorRedirect = fivehundred(res);
-  var baseRedirect = "/cms/" + req.params.cmid + "/notifications";
+  var errorRedirect = fivehundred(res);\
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
   var n = req.body; // n for notification object
 
   // See if they are already in process of working through cards
@@ -69,7 +69,7 @@ router.post("/new", function (req, res) {
     var notiCopy = n.notiCopy;
 
     // See if all variables have been added from this list
-    var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (sendR == null) || (sendC == null);
+    var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (clid == null) || (sendC == null);
     var copyCardIncomplete = (notiSubj == "") || (notiCopy == "");
 
     // Validate all identity form components
@@ -105,7 +105,8 @@ router.post("/new", function (req, res) {
 
       // In the future we need to support repeatable notifications
       // Database schema already supports
-      db("notifications").insert({
+      db("notifications")
+      .insert({
         cm:      cmid,
         client:  clid,
         comm:    sendC,
@@ -113,7 +114,10 @@ router.post("/new", function (req, res) {
         message: notiCopy,
         send:    sendTime
       })
-      res.send("OK", sendTime);
+      .then(function () {
+        res.redirect(redirectLoc);
+      })
+      .catch(errorRedirect);
     }
 
   // Catchall: just start with first notification card
