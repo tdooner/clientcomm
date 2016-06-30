@@ -4,23 +4,32 @@
 <div class="contents">
 
   <div class="sort-opts">
-    <div class="toggle selected" id="current_tag" onclick="showCurrent()">
-      Current Notifications
+    <div class="toggle <% if (!archiveView) { %> selected <% } %>">
+      <a href="/cms/<%= user.cmid %>/notifications/overview/incomplete">
+        Upcoming
+      </a>
     </div>
-    <div class="toggle" id="archive_tag" onclick="showArchive()">
-      Archived
+    <div class="toggle <% if (archiveView)  { %> selected <% } %>">
+      <a href="/cms/<%= user.cmid %>/notifications/overview/complete">
+        Completed
+      </a>
     </div>
   </div>
 
-  <a href="/cms/<%= user.cmid %>/cls">
+  <a href="/cms/<%= user.cmid %>/notifications/new">
     <div class="newclient"> 
       <% include ../../../public/icons/bigplus.svg %> 
-      New Client 
+      New Notification 
     </div>
   </a>
 
   <div class="title">
-    All Notifications
+    Notifications
+    <% if (archiveView) { %> 
+      Already Sent
+    <% } else { %>
+      Waiting to be Sent
+    <% } %>
   </div>
 
   <table class="cl-list">

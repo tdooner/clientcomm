@@ -31,7 +31,6 @@ router.get("/", function (req, res) {
 
 // CAPTURE BOARD UNSENT NOTIFICATIONS
 router.get("/overview/incomplete", function (req, res) {
-
   db("notifications")
   .where("cm", req.user.cmid)
   .andWhere("completed", false)
@@ -42,7 +41,21 @@ router.get("/overview/incomplete", function (req, res) {
     });
   })
   .catch(fivehundred);
+});
 
+
+// CAPTURE BOARD SENT NOTIFICATIONS
+router.get("/overview/complete", function (req, res) {
+  db("notifications")
+  .where("cm", req.user.cmid)
+  .andWhere("completed", true)
+  .then(function (notifications) {
+    res.render("casemanagers/notifications/overview", {
+      notifications: notifications, 
+      archiveView: true
+    });
+  })
+  .catch(fivehundred);
 });
 
 
