@@ -30,7 +30,7 @@ router.get("/", function (req, res) {
 
 
 // CAPTURE BOARD UNSENT NOTIFICATIONS
-router.get("/overview/incomplete", function (req, res) {
+router.get("/overview/open", function (req, res) {
   var errorRedirect = fivehundred(res);
   
   db("notifications")
@@ -57,7 +57,7 @@ router.get("/overview/incomplete", function (req, res) {
 
 
 // CAPTURE BOARD SENT NOTIFICATIONS
-router.get("/overview/complete", function (req, res) {
+router.get("/overview/closed", function (req, res) {
   var errorRedirect = fivehundred(res);
 
   db("notifications")
