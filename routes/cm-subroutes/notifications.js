@@ -31,8 +31,11 @@ router.get("/", function (req, res) {
 
 // CAPTURE BOARD UNSENT NOTIFICATIONS
 router.get("/overview/incomplete", function (req, res) {
-  var c = db("notifications")
-  .where("cm", req.user.cmid)
+  var errorRedirect = fivehundred(res);
+  
+  db("notifications")
+  .where("notifications.cm", req.user.cmid)
+  .leftJoin("clients", "clients.clid", "notifications.client")
   .andWhere("sent", false)
   .andWhere("closed", false)
   .then(function (notifications) {
@@ -46,15 +49,17 @@ router.get("/overview/incomplete", function (req, res) {
         archiveView: false
       });      
     })
-    .catch(fivehundred);
+    .catch(errorRedirect);
 
   })
-  .catch(fivehundred);
+  .catch(errorRedirect);
 });
 
 
 // CAPTURE BOARD SENT NOTIFICATIONS
 router.get("/overview/complete", function (req, res) {
+  var errorRedirect = fivehundred(res);
+
   db("notifications")
   .where("cm", req.user.cmid)
   .andWhere("sent", true)
@@ -70,10 +75,10 @@ router.get("/overview/complete", function (req, res) {
         archiveView: true
       });      
     })
-    .catch(fivehundred);
+    .catch(errorRedirect);
 
   })
-  .catch(fivehundred);
+  .catch(errorRedirect);
 });
 
 

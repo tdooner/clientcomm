@@ -28,13 +28,13 @@
     .list tr td:nth-child(2) {
       width: 100px; }
     .list tr td:nth-child(3) {
-      width: 250px; }
+      width: 300px; }
     .list tr td:nth-child(4) {
       font-size: small;
-      width: 50px; }
+      width: 75px; }
     .list tr td:nth-child(5) {
       font-size: small;
-      width: 50px; }
+      width: 75px; }
     .list tr td:nth-child(6) {
       font-size: small;
       width: 50px; }

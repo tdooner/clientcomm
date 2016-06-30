@@ -39,8 +39,8 @@
 
     <tr>
       <th>Edit</th>
-      <th>Subject</th>
-      <th>Message Body</th>
+      <th>Send To</th>
+      <th>Message</th>
       <th>Send Date</th>
       <th>Send Time</th>
       <th>Created</th>
@@ -68,11 +68,16 @@
           </td>
 
           <td>
-            <%= notifications[i].subject %>
+            <%= notifications[i].first %>
+            <%= notifications[i].last %>
           </td>
 
           <td>
-            <%= notifications[i].message %>
+            <%= notifications[i].subject %>
+            <br>
+            <small>
+              <%= notifications[i].message %>
+            </small>
           </td>
 
           <td>
