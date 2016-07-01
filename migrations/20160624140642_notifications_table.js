@@ -24,6 +24,8 @@ exports.up = function(knex, Promise) {
 
       // Time related content
       table.timestamp("created").defaultTo(knex.fn.now());
+      table.timestamp("updated").defaultTo(knex.fn.now());
+
       table.timestamp("send");
 
       // Repeat options

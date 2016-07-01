@@ -21,8 +21,8 @@ var db  = require("./db");
 // APP DEPENDENCIES
 var bodyParser = require('body-parser');
 var cookieParser = require("cookie-parser");
-var flash = require("connect-flash");
 var session = require("cookie-session");
+var flash = require("connect-flash");
 
 // CONFIGURATION 1
 app.set("view engine", "ejs");

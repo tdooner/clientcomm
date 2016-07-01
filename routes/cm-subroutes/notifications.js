@@ -21,7 +21,7 @@ var errorHandlers = utils["errorHandlers"];
 var fivehundred   = errorHandlers.fivehundred;
 
 
-// CAPTURE BOARD OVERVIEW
+// NOTIFICATION BOARD OVERVIEW
 router.get("/", function (req, res) { 
   // Reroute to unsent/open notifications route view
   var redirectLoc = "/cms/" + req.params.cmid + "/notifications/overview/open";
@@ -29,7 +29,7 @@ router.get("/", function (req, res) {
 });
 
 
-// CAPTURE BOARD UNSENT NOTIFICATIONS
+// NOTIFICATION BOARD UNSENT NOTIFICATIONS
 router.get("/overview/open", function (req, res) {
   var errorRedirect = fivehundred(res);
   
@@ -56,7 +56,7 @@ router.get("/overview/open", function (req, res) {
 });
 
 
-// CAPTURE BOARD SENT NOTIFICATIONS
+// NOTIFICATION BOARD SENT NOTIFICATIONS
 router.get("/overview/closed", function (req, res) {
   var errorRedirect = fivehundred(res);
 
@@ -83,7 +83,7 @@ router.get("/overview/closed", function (req, res) {
 });
 
 
-// GENERATE CAPTURE CARD SET
+// GENERATE NOTIFICATION CARD SET
 router.get("/new", function (req, res) {
   var errorRedirect = fivehundred(res);
 
@@ -98,7 +98,7 @@ router.get("/new", function (req, res) {
 });
 
 
-// PROCESS CAPTURE CARD PROGRESS
+// PROCESS NOTIFICATION CARD PROGRESS
 router.post("/new", function (req, res) { 
   var errorRedirect = fivehundred(res);
   var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
@@ -119,7 +119,7 @@ router.post("/new", function (req, res) {
     var sendD =  n.sendDate;
     var sendTH = Number(n.sendTimeHour);
     var sendTM = Number(n.sendTimeMin);
-    var clid =  Number(n.recipient);
+    var clid =   Number(n.recipient);
     var sendC =  Number(n.recipientComm);
 
     // End card content
@@ -208,6 +208,176 @@ router.post("/new", function (req, res) {
 });
 
 
+// EDIT NOTIFICATION CARD
+router.get("/:notificationid/edit", function (req, res) {
+  var errorRedirect = fivehundred(res);
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+
+  var notificationid = req.params.notificationid;
+
+  retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
+    if (clients) {
+
+      db("notifications")
+      .where("cm", req.user.cmid)
+      .andWhere("notificationid", notificationid)
+      .then(function (notifications) {
+
+        if (notifications.length > 0) {
+
+          var rawN = notifications[0];
+          var time = moment(rawN.send);
+          var n = {
+            cmid: req.user.cmid,
+            sendDate: time.format("YYYY-MM-DD"),
+            sendTimeHour: time.format("HH"),
+            sendTimeMin: time.format("MM"),
+            recipient: rawN.client,
+            recipientComm: rawN.comm,
+            notiSubj: rawN.subject,
+            notiCopy: rawN.message,
+          };
+
+          console.log(n);
+
+          res.render("casemanagers/notifications/parameters", {
+            notification: n,
+            clients: clients,
+            editView: true,
+          });
+
+        } else {
+          res.redirect(redirectLoc);
+        }
+
+      })
+      .catch(errorRedirect);
+
+    } else { errorRedirect(); }
+  });
+});
+
+
+// POST EDITS TO NOTIFICATION
+router.post("/:notificationid/edit", function (req, res) { 
+  var errorRedirect = fivehundred(res);
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+  var notificationid = req.params.notificationid;
+
+  var n = req.body; // n for notification object
+
+  // See if they are already in process of working through cards
+  if (n.hasOwnProperty("sendDate")) {
+
+    // Special request option to show a certain card in series
+    // TO DO: Build out front end support for this, will happen w/ progress dots
+    var cardRequested = n.showCardExplicit;
+
+    if (Object.prototype.toString.call(cardRequested) === "[object Array]") {
+      cardRequested = cardRequested[0];
+    };
+
+    // Figure out where in process the user is
+    // Identity
+    var cmid = Number(n.cmid);
+
+    // Card 1 content
+    var sendD =  n.sendDate;
+    var sendTH = Number(n.sendTimeHour);
+    var sendTM = Number(n.sendTimeMin);
+    var clid =   Number(n.recipient);
+    var sendC =  Number(n.recipientComm);
+
+    // End card content
+    var notiSubj = n.notiSubj;
+    var notiCopy = n.notiCopy;
+
+    // See if all variables have been added from this list
+    var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (clid == null) || (sendC == null);
+    var copyCardIncomplete = (notiSubj == "") || (notiCopy == "");
+
+    // Manage which card to show
+    var showCardOne = false;
+    var showCardTwo = false;
+    if (cardOneIncomplete) {
+      showCardOne = true;
+    } else if (copyCardIncomplete) {
+      showCardTwo = true;
+    }
+    if (cardRequested == 1) {
+      showCardOne = true;
+      showCardTwo = false;
+    } else if (cardRequested == 2) {
+      showCardOne = false;
+      showCardTwo = true;
+    }
+
+    // Validate all identity form components
+    if (Number(req.user.cmid) !== cmid) {
+      res.status(404).send("User ID does not match submitted cmid value");
+      // TO DO: Make sure the cm has client actually
+      // TO DO: Make sure that comm method is legal
+
+    // Show first card if missing required data or if specifically requested
+    } else if (showCardOne) {
+      retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
+        if (clients) {
+          res.render("casemanagers/notifications/parameters", { 
+            notification: n,
+            clients: clients
+          });
+        } else { errorRedirect(); }
+      });
+
+    // Show the notification text entry view
+    // TO DO: Add support for selecting from templates in the future
+    } else if (showCardTwo) {
+      res.render("casemanagers/notifications/copyEntry", { 
+        notification: n,
+      });      
+
+    // Have everything we need, final submission
+    } else {
+      var sendTime = moment(sendD)
+                      .add("hours",   sendTH)
+                      .add("minutes", sendTM)
+                      .format("YYYY-MM-DD HH:mm:ss");
+
+      // In the future we need to support repeatable notifications
+      // Database schema already supports
+      db("notifications")
+      .where("cm", req.user.cmid)
+      .andWhere("notificationid", notificationid)
+      .update({
+        cm:      cmid,
+        client:  clid,
+        comm:    sendC,
+        subject: notiSubj,
+        message: notiCopy,
+        send:    sendTime,
+        updated: db.fn.now()
+      })
+      .then(function () {
+        req.flash("success", "Notification successfully updated.");
+        res.redirect(redirectLoc);
+      })
+      .catch(errorRedirect);
+    }
+
+  // Catchall: just start with first notification card
+  } else {
+    retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
+      if (clients) {
+        res.render("casemanagers/notifications/parameters", { 
+          notification: {},
+          clients: clients
+        });
+      } else { errorRedirect(); }
+    });
+  }
+});
+
+
 // REMOVE A PLANNED NOTIFICATION
 router.post("/:notificationid/delete", function (req, res) {
   var errorRedirect = fivehundred(res);
@@ -222,6 +392,7 @@ router.post("/:notificationid/delete", function (req, res) {
   .update({"closed": true})
   .then(function () {
     // Success, redirect to main notifications page
+    req.flash("success", "Notification successfully removed.");
     res.redirect(redirectLoc);
   })
   .catch(errorRedirect);
