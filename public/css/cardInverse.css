@@ -18,3 +18,10 @@
       background-color: #CDE6FF;
       color: #344289;
       border: 2px solid #344289; }
+  .card .bottom-nav-dots {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 32px; }
+    .card .bottom-nav-dots #showOtherCard {
+      cursor: pointer; }

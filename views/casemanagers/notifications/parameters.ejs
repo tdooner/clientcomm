@@ -17,7 +17,7 @@
     Start Notification
   </div>
 
-  <form method="post">
+  <form method="post" id="newNotification">
 
     <input type="hidden" name="cmid" value="<%= user.cmid %>">
     <input type="hidden" name="notiSubj" value="<%= notification.notiSubj %>">
@@ -172,6 +172,11 @@
 
   </form>
 
+  <div class="bottom-nav-dots">
+    <i class="fa fa-circle"></i>
+    <i class="fa fa-circle-thin" id="showOtherCard"></i>
+  </div>
+
 </div>
 </div>
 
@@ -211,7 +216,14 @@
         });
       }
     });
-  }
+  };
+
+  // Special card toggle option
+  $("#showOtherCard").click(function () {
+    var input = $("<input>", { type: "hidden", name: "showCardExplicit", value: "2" }); 
+    $('#newNotification').append($(input));
+    $('#newNotification').submit();
+  });
 
   // Run once on load to populate defaults
   <% if (notification.recipient && notification.recipientComm) { %>

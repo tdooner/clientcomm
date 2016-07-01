@@ -97,6 +97,7 @@ router.get("/new", function (req, res) {
   });
 });
 
+
 // PROCESS CAPTURE CARD PROGRESS
 router.post("/new", function (req, res) { 
   var errorRedirect = fivehundred(res);
@@ -129,6 +130,22 @@ router.post("/new", function (req, res) {
     var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (clid == null) || (sendC == null);
     var copyCardIncomplete = (notiSubj == "") || (notiCopy == "");
 
+    // Manage which card to show
+    var showCardOne = false;
+    var showCardTwo = false;
+    if (cardOneIncomplete) {
+      showCardOne = true;
+    } else if (copyCardIncomplete) {
+      showCardTwo = true;
+    }
+    if (cardRequested == 1) {
+      showCardOne = true;
+      showCardTwo = false;
+    } else if (cardRequested == 2) {
+      showCardOne = false;
+      showCardTwo = true;
+    }
+
     // Validate all identity form components
     if (Number(req.user.cmid) !== cmid) {
       res.status(404).send("User ID does not match submitted cmid value");
@@ -136,7 +153,7 @@ router.post("/new", function (req, res) {
       // TO DO: Make sure that comm method is legal
 
     // Show first card if missing required data or if specifically requested
-    } else if (cardRequested == 0 || cardOneIncomplete) {
+    } else if (showCardOne) {
       retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
         if (clients) {
           res.render("casemanagers/notifications/parameters", { 
@@ -148,7 +165,7 @@ router.post("/new", function (req, res) {
 
     // Show the notification text entry view
     // TO DO: Add support for selecting from templates in the future
-    } else if (cardRequested == 1 || copyCardIncomplete) {
+    } else if (showCardTwo) {
       res.render("casemanagers/notifications/copyEntry", { 
         notification: n,
       });      
