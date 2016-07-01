@@ -2,6 +2,10 @@
   background-color: #92C9FF; }
   .card .card-title {
     color: #344289; }
+  .card .comms-link {
+    color: #344289; }
+    .card .comms-link:hover {
+      color: #2f8ce8; }
   .card .form-label {
     color: #344289; }
   .card .form-row .opt {

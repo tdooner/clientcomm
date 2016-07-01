@@ -17,6 +17,15 @@
     Start Notification
   </div>
 
+  <div class="comms-link">
+    <small>
+    <a href="/cms/<%= user.cmid %>/notifications">
+      View All Notification
+      <i class="fa fa-list-alt"></i>
+    </a>
+    </small>
+  </div>
+
   <form method="post" id="newNotification">
 
     <input type="hidden" name="cmid" value="<%= user.cmid %>">
