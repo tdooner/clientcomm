@@ -23,6 +23,16 @@
       .list tr td.fa-icon-holder .disabled {
         opacity: 0.5;
         font-size: 0.9; }
+      .list tr td.fa-icon-holder button {
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: inherit;
+        padding: 0;
+        text-decoration: underline;
+        font-family: inherit;
+        font-size: inherit; }
     .list tr td:nth-child(1) {
       width: 50px; }
     .list tr td:nth-child(2) {

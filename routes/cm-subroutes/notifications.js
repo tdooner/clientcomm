@@ -190,9 +190,24 @@ router.post("/new", function (req, res) {
   }
 });
 
-// FOOBAR
-router.get("/other", function (req, res) { 
-  res.send("Goeeod")
+
+// REMOVE A PLANNED NOTIFICATION
+router.post("/:notificationid/delete", function (req, res) {
+  var errorRedirect = fivehundred(res);
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+
+  var notificationid = req.params.notificationid;
+
+  // Closing will only work if held by current case manager/user
+  db("notifications")
+  .where("cm", req.user.cmid)
+  .andWhere("notificationid", notificationid)
+  .update({"closed": true})
+  .then(function () {
+    // Success, redirect to main notifications page
+    res.redirect(redirectLoc);
+  })
+  .catch(errorRedirect);
 });
 
 

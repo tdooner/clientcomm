@@ -32,6 +32,17 @@
           opacity: 0.5;
           font-size: 0.9;
         }
+        button {
+          border: none;
+          outline: none;
+          background: none;
+          cursor: pointer;
+          color: inherit;
+          padding: 0;
+          text-decoration: underline;
+          font-family: inherit;
+          font-size: inherit;
+        }
       }
 
       &:nth-child(1) {
