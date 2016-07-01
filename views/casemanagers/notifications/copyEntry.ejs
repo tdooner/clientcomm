@@ -28,12 +28,16 @@
 
     <div class="form-row">
       <div class="form-label"> Subject (not visible by client) </div>
-      <input class="form-input" type="text" name="notiSubj" maxlength="30" required>
+      <input class="form-input" type="text" name="notiSubj" maxlength="30" 
+        <% if (notification.notiSubj) { %>
+          value="<%= notification.notiSubj %>"
+        <% } %> 
+        required>
     </div>
 
     <div class="form-row">
       <div class="form-label"> Notification Message </div>
-      <textarea class="form-input" name="notiCopy" rows="5" maxlength="160" required></textarea>
+      <textarea class="form-input" name="notiCopy" rows="5" maxlength="160" required><% if (notification.notiCopy) { %><%= notification.notiCopy %><% } %></textarea>
     </div>
 
     <input type="submit" class="form-submit" value="Submit">
@@ -51,9 +55,10 @@
 <script type="text/javascript">
   // Special card toggle option
   $("#showOtherCard").click(function () {
+    console.log("me");
     var input = $("<input>", { type: "hidden", name: "showCardExplicit", value: "1" }); 
-    $('#newNotification').append($(input));
-    $('#newNotification').submit();
+    $("#newNotification").append($(input));
+    $("#newNotification").submit();
   });
 </script>
 

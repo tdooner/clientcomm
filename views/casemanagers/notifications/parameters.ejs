@@ -23,6 +23,10 @@
     <input type="hidden" name="notiSubj" value="<%= notification.notiSubj %>">
     <input type="hidden" name="notiCopy" value="<%= notification.notiCopy %>">
 
+    <% if (typeof editView !== "undefined" && editView) { %>
+      <input type="hidden" name="showCardExplicit" value="2">
+    <% } %>
+
     <div class="form-row">
       <div class="form-label"> Date to send <small>(YYYY-MM-DD)</small></div>
       <input class="form-input" type="date" name="sendDate" value="<%= notification.sendDate %>" required>
@@ -200,7 +204,7 @@
       // Only add if client matches
       if (client.id == v) {
         client.comms.forEach(function (comm) {
-          var newOpt =  '<option value="' + comm.id;
+          var newOpt =  '<option value="' + comm.id + '" ';
 
           // Make selected if it was selected from before
           if (id && id == comm.id) {
@@ -221,8 +225,8 @@
   // Special card toggle option
   $("#showOtherCard").click(function () {
     var input = $("<input>", { type: "hidden", name: "showCardExplicit", value: "2" }); 
-    $('#newNotification').append($(input));
-    $('#newNotification').submit();
+    $("#newNotification").append($(input));
+    $("#newNotification").submit();
   });
 
   // Run once on load to populate defaults
