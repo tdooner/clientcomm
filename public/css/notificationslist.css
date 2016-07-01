@@ -53,3 +53,6 @@
       width: 100px; }
     .list tr td:nth-child(8) {
       width: 50px; }
+  .list tr:hover {
+    background-color: #4A90E2;
+    color: #FFF; }
