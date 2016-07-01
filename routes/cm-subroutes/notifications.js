@@ -237,19 +237,21 @@ module.exports = router;
 // UTILITY FUNCIONS
 // TO DO: Move this stuff to a different file
 function retrieveClientsAndClientContactMethods (cmid, cb) {
-  var rawQuery =  " SELECT  commconns.client, clients.first, clients.last, " + 
-                  "         commconns.name, comms.value, comms.commid " + 
-                  "         FROM comms " + 
-                  " LEFT JOIN commconns ON (commconns.comm = comms.commid) " +
-                  " LEFT JOIN clients ON (commconns.client = clients.clid) " +
-                  " LEFT JOIN cms ON (clients.cm = cms.cmid) " +
-                  " WHERE cms.cmid = " + String(cmid) + "; ";
 
-  db.raw(rawQuery).then(function (comms) {
+  // Note: Modified the query from raw SQL to KNex query
+  // TO DO: Debate if this is "really" preferable
+  db("comms")
+  .select("commconns.client", "clients.first", "clients.last", "commconns.name", "comms.value", "comms.commid")
+  .from("comms")
+  .leftJoin("commconns", "commconns.comm", "comms.commid")
+  .leftJoin("clients", "commconns.client", "clients.clid")
+  .leftJoin("cms", "clients.cm", "cms.cmid")
+  .where("cms.cmid", cmid)
+  .then(function (comms) {
     var clients = [];
 
     // Iterate through all results and fill out clients list
-    comms.rows.forEach(function (row) {
+    comms.forEach(function (row) {
       var name = [row.first, row.last].join(" ");
       var client = {
         name: name,
@@ -273,7 +275,7 @@ function retrieveClientsAndClientContactMethods (cmid, cb) {
     clients.forEach(function (client) {
 
       // Check through all rows
-      comms.rows.forEach(function (row) {
+      comms.forEach(function (row) {
         // If row is a match with client
         if (client.id == row.client) {
           // Create a new comm object
