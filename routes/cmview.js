@@ -829,18 +829,30 @@ router.get("/:cmid/cls/:clid/convos", function (req, res) {
   var cmid = Number(req.params.cmid);
   var cmid2 = Number(req.user.cmid);
 
-  if (cmid !== cmid2) { res.redirect("/400"); } 
-  else { 
-
-    db("clients").where("cm", cmid).andWhere("clid", clid)
+  if (cmid !== cmid2) { 
+    res.redirect("/400"); 
+  
+  } else { 
+    db("clients")
+    .where("cm", cmid)
+    .andWhere("clid", clid)
     .then(function (clients) {
-      if (clients.length == 0) { res.redirect("/404"); }
-      else { 
 
-        db("comms").innerJoin("commconns", "comms.commid", "commconns.comm").where("commconns.client", clid)
+      // Make sure that client with that cm actually exists
+      if (clients.length == 0) { 
+        res.redirect("/404"); 
+
+      // Then proceed to gather current conversations
+      } else { 
+        db("comms")
+        .innerJoin("commconns", "comms.commid", "commconns.comm")
+        .where("commconns.client", clid)
         .then(function (comms) {
 
-          res.render("casemanagers/client/clientconvo", {client: clients[0], comms: comms});
+          res.render("casemanagers/client/clientconvo", {
+            client: clients[0], 
+            comms: comms
+          });
           
         }).catch(errorRedirect);
       } 

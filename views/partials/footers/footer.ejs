@@ -77,10 +77,8 @@
 
   // Tool to notify keen of duration
   function notifyKeenOfPageVisitDuration () {
-    // Establish keenRef for client page visits at 0 if it is not yet defined
-    if (!keenRef.clientPageVisitEvent.duration) keenRef.clientPageVisitEvent.duration = 0;
-    // Add the time difference since the page loaded
-    keenRef.clientPageVisitEvent.duration += new Date().getTime() - keenRef.startTime;
+    // Duration maxes out at 15 minutes
+    keenRef.clientPageVisitEvent.duration = Math.min((new Date().getTime() - keenRef.startTime), 900000);
     // Make the event call to Keen.io
     createKeenClient().addEvent("pagedurations", keenRef.clientPageVisitEvent, function (err, res) { 
       // In callback reset startTime
