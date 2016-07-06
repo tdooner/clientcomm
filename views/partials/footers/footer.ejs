@@ -9,7 +9,7 @@
 
   // Auto checking if there are new messages across any conversation
   <% if (typeof user !== "undefined") { %>
-    var setSecondInterval = 2000 * 10;
+    var setSecondInterval = 2000 * 15;
     // Auto check for if there is new content
     setInterval(function () {
       var cmid =  <%= user.cmid %>;
@@ -29,12 +29,13 @@
 
       <% } else { %>
         var clid =   <%= client.clid %>;
-        var convid = <%= convo.convid %>;
-        checkForNewMessagesInThisConvo(cmid, clid, convid, function (res1) {
+        var convo = <%= convo.convid %>;
+        checkForNewMessagesInThisConvo(cmid, clid, convo, function (res1) {
           if (res1) {
             var newAlert =  '<a href="/cms/' + cmid + '/cls/' + clid + '/convos/' + convo + '">' + 
                             'You received new messages in this conversation, click to view.' + 
                             '</a>';
+            addSuccessAlertBanner(newAlert);
           } else {
             console.log("No new messages in this convo.");
             checkForNewMessagesInAllConvos(cmid, function (res2) {
@@ -97,6 +98,9 @@
                       'style="background-color:#00e500">' +
                       internalHrefContent +
                       '</div>';
+    // Dump all the previous alerts showing
+    $(".alerts").remove();
+    // Now just add the new alert
     $("body").prepend(alertBanner);
   };
 
