@@ -9,26 +9,63 @@
 
   // Auto checking if there are new messages across any conversation
   <% if (typeof user !== "undefined") { %>
-    var coupleSecondInterval = 2000 * 10;
+    var setSecondInterval = 2000 * 10;
     // Auto check for if there is new content
     setInterval(function () {
-      checkForNewMessagesInAllConvos(<%= user.cmid %>);
-    }, coupleSecondInterval);
+      var cmid =  <%= user.cmid %>;
+
+      // We need to pick which function to run, depending on whether on a convo page or not
+      <% if (typeof client == "undefined" && typeof convo == "undefined") { %>
+        checkForNewMessagesInAllConvos(cmid, function (res) {
+          if (res) {
+            var newAlert =  '<a href="/cms/' + cmid + '/">' + 
+                            'You received new messages, click to view.' + 
+                            '</a>';
+            addSuccessAlertBanner(newAlert);
+          } else {
+            console.log("No new messages in all convos.");
+          }
+        });
+
+      <% } else { %>
+        var clid =   <%= client.clid %>;
+        var convid = <%= convo.convid %>;
+        checkForNewMessagesInThisConvo(cmid, clid, convid, function (res1) {
+          if (res1) {
+            var newAlert =  '<a href="/cms/' + cmid + '/cls/' + clid + '/convos/' + convo + '">' + 
+                            'You received new messages in this conversation, click to view.' + 
+                            '</a>';
+          } else {
+            console.log("No new messages in this convo.");
+            checkForNewMessagesInAllConvos(cmid, function (res2) {
+              if (res2) {
+                var newAlert =  '<a href="/cms/' + cmid + '/">' + 
+                                'You received new messages, click to view.' + 
+                                '</a>';
+                addSuccessAlertBanner(newAlert);
+              } else {
+                console.log("No new messages in all convos.");
+              }
+            });
+          }
+        });
+      <% } %>
+
+    }, setSecondInterval);
   <% } %>
 
-  function checkForNewMessagesInThisConvo (cmid, convo) {
+  function checkForNewMessagesInThisConvo (cmid, clid, convo, cb) {
     var url = "/cms/" + cmid + "/alerts/convos/" + convo;
     $.get(url)
     .done(function(res) {
       // Create an alert only if there is a new message
-      if (!res.newMessages) {
-        var alertBanner = '<div class="alerts" ' + 
-                          'style="background-color:#00e500">' +
-                          '<a href="/cms/<%= user.cmid %>/">' + 
-                          'You received new messages, click to view.' + 
-                          '</a>' + 
-                          '</div>';
-        $("body").prepend(alertBanner);
+      if (res.newMessages) {
+        var newAlert =  '<a href="/cms/' + cmid + '/cls/' + clid + '/convos/' + convo + '">' + 
+                        'You received new messages in this conversation, click to view.' + 
+                        '</a>';
+        cb(newAlert);
+      } else {
+        cb(false);
       }
     })
     .fail(function(err) {
@@ -36,24 +73,31 @@
     });
   };
 
-  function checkForNewMessagesInAllConvos (cmid) {
+  function checkForNewMessagesInAllConvos (cmid, cb) {
     var url = "/cms/" + cmid + "/alerts/";
     $.get(url)
     .done(function(res) {
       // Create an alert only if there is a new message
-      if (!res.newMessages) {
-        var alertBanner = '<div class="alerts" ' + 
-                          'style="background-color:#00e500">' +
-                          '<a href="/cms/' + cmid + '/">' + 
-                          'You received new messages, click to view.' + 
-                          '</a>' + 
-                          '</div>';
-        $("body").prepend(alertBanner);
+      if (res.newMessages) {
+        var newAlert =  '<a href="/cms/' + cmid + '/">' + 
+                        'You received new messages, click to view.' + 
+                        '</a>';
+        cb(newAlert);
+      } else {
+        cb(false);
       }
     })
     .fail(function(err) {
       console.log(err);
     });
+  };
+
+  function addSuccessAlertBanner (internalHrefContent) {
+    var alertBanner = '<div class="alerts" ' + 
+                      'style="background-color:#00e500">' +
+                      internalHrefContent +
+                      '</div>';
+    $("body").prepend(alertBanner);
   };
 
 
