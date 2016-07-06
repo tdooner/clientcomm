@@ -18,7 +18,7 @@
       var cmid =  <%= user.cmid %>;
 
       // We need to pick which function to run, depending on whether on a convo page or not
-      <% if (typeof client == "undefined" && typeof convo == "undefined") { %>
+      <% if (typeof client == "undefined" || typeof convo == "undefined") { %>
         checkForNewMessagesInAllConvos(cmid, function (res) {
           if (res) {
             addSuccessAlertBanner(res);
