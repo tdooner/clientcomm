@@ -1,5 +1,8 @@
 
-
+<!-- Loaded audio, only if running the new message check logic -->
+<% if (typeof user !== "undefined") { %>
+  <audio id="newMessageDing" src="/static/sounds/alert.mp3" preload="auto">
+<% } %>
 
 <script type="text/javascript">
 
@@ -18,32 +21,23 @@
       <% if (typeof client == "undefined" && typeof convo == "undefined") { %>
         checkForNewMessagesInAllConvos(cmid, function (res) {
           if (res) {
-            var newAlert =  '<a href="/cms/' + cmid + '/">' + 
-                            'You received new messages, click to view.' + 
-                            '</a>';
-            addSuccessAlertBanner(newAlert);
+            addSuccessAlertBanner(res);
           } else {
             console.log("No new messages in all convos.");
           }
         });
 
       <% } else { %>
-        var clid =   <%= client.clid %>;
+        var clid =  <%= client.clid %>;
         var convo = <%= convo.convid %>;
         checkForNewMessagesInThisConvo(cmid, clid, convo, function (res1) {
           if (res1) {
-            var newAlert =  '<a href="/cms/' + cmid + '/cls/' + clid + '/convos/' + convo + '">' + 
-                            'You received new messages in this conversation, click to view.' + 
-                            '</a>';
-            addSuccessAlertBanner(newAlert);
+            addSuccessAlertBanner(res1);
           } else {
             console.log("No new messages in this convo.");
             checkForNewMessagesInAllConvos(cmid, function (res2) {
               if (res2) {
-                var newAlert =  '<a href="/cms/' + cmid + '/">' + 
-                                'You received new messages, click to view.' + 
-                                '</a>';
-                addSuccessAlertBanner(newAlert);
+                addSuccessAlertBanner(res2);
               } else {
                 console.log("No new messages in all convos.");
               }
@@ -102,6 +96,8 @@
     $(".alerts").remove();
     // Now just add the new alert
     $("body").prepend(alertBanner);
+    // And play a ding sound to alert user
+    document.getElementById("newMessageDing").play()
   };
 
 
