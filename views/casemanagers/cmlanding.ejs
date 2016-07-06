@@ -1,5 +1,8 @@
 <% include ../partials/headers/header-base %>
 
+<!-- Include Case Manager Landing View specific styling -->
+<link rel="stylesheet" type="text/css" href="/static/css/cmlanding.css">
+
 <% var thisUsersCount = 0; %>
 <% var topUsersCount = 0; %>
 <% var topUser = null; %>
@@ -21,75 +24,6 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
 
 <style type="text/css">
-  .bigcircles {
-    border-radius: 50%; 
-    height: 120px; 
-    width: 150px; 
-    float: left; 
-    padding-top: 30px;
-  }
-  .bigcircles:hover {
-    background-color: #FFF;
-    cursor: pointer;
-  }
-  .green {
-    background-color:#0AA629;
-  }
-  .blue {
-    background-color:#2F8CE8;
-  }
-  .pink {
-    background-color:#BD1F73;
-  }
-  .yellow {
-    background-color:#E5D50A;
-  }
-  .green:hover svg path {
-    fill: #0AA629;
-  }
-  .pink:hover svg path, .pink:hover svg polygon {
-    fill: #BD1F73;
-  }
-  .blue:hover svg path {
-    fill: #2F8CE8;
-  }
-  .yellow:hover svg path {
-    fill: #E5D50A;
-  }
-
-  /* special for handling timer svg */
-  .pink svg {
-    margin-top: -8px;
-  }
-
-
-  /* progress bar */
-  .chart {
-    display: block;
-    clear: both;
-    position: relative;
-    width: 830px;
-    height: 120px;
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
-  .chart .left {
-    width: 200px;
-    height: 120px;
-    padding: 15px 10px 15px 90px;
-  }
-  .chart .right {
-    width: 450px;
-    height: 70px;
-    color: #2F8CE8;
-    font-size: 24px;
-    text-align: left;
-    padding: 40px 70px 40px 10px;
-  }
-  .chart .left, .chart .right {
-    float: left;
-    
-  }
 </style>
 
 <div class="contents">
