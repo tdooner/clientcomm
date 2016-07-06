@@ -46,14 +46,25 @@
         <tr class="<%= clients[i].active ? 'current' : 'archive' %> <%= clients[i].active && !clients[i].open ? 'nonew' : '' %>">
 
           <td class="clientid">
-            <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
+
+            <% if (clients[i].active) { %>
+              <% if (clients[i].open) { %>
+                <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
+              <% } else { %>
+                <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %> %>">
+              <% } %>
+            <% } else { %>
+              <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
+            <% } %>
+
               <% include ../../../public/icons/user.svg %>
               <%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
             </a>
           </td>
 
           <td>
-            <% if (clients[i].clid !== null && clients[i].active) { %>
+          
+            <% if (clients[i].active) { %>
               <% if (clients[i].open) { %>
                 <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
               <% } else { %>
