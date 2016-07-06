@@ -969,7 +969,7 @@ router.get("/:cmid/cls/:clid/convos/:convid", function (req, res) {
     res.redirect(redirect_loc);
 
   } else {
-    cmview.get_convo(cmid, clid, convid)
+    cmview.getConvo(cmid, clid, convid)
     .then(function (obj) {
 
       var rawQuery = "UPDATE msgs SET read = TRUE WHERE msgid IN ( ";
@@ -988,12 +988,16 @@ router.get("/:cmid/cls/:clid/convos/:convid", function (req, res) {
       }).catch(errorRedirect);
 
     }).catch(function (err) {
-      if (err == "404") { res.redirect("/404"); } 
-      else { res.redirect("/500"); }
+      if (err == "404") { 
+        res.redirect("/404"); 
+      } else { 
+        res.redirect("/500"); 
+      }
     })
 
   }
 });
+
 
 router.post("/:cmid/cls/:clid/convos/:convid", function (req, res) {
   
@@ -1083,7 +1087,7 @@ router.post("/:cmid/cls/:clid/convos/:convid/close", function (req, res) {
     res.redirect(redirect_loc);
   } else {
 
-    cmview.get_convo(cmid, clid, convid)
+    cmview.getConvo(cmid, clid, convid)
     .then(function (obj) {
       
       db("convos").where("convid", convid).update({open: false, updated: db.fn.now()})
@@ -1132,7 +1136,7 @@ router.post("/:cmid/cls/:clid/convos/:convid/open", function (req, res) {
       .update({ open: false })
       .then(function (success) {
 
-        cmview.get_convo(cmid, clid, convid)
+        cmview.getConvo(cmid, clid, convid)
         .then(function (obj) {
           
           db("convos").where("convid", convid).update({open: true, updated: db.fn.now()})
@@ -1172,7 +1176,7 @@ router.post("/:cmid/cls/:clid/convos/:convid/accept", function (req, res) {
     res.redirect(redirect_loc);
   } else {
 
-    cmview.get_convo(cmid, clid, convid)
+    cmview.getConvo(cmid, clid, convid)
     .then(function (obj) {
       
       db("convos").where("convid", convid).update({accepted: true, updated: db.fn.now()})
@@ -1225,6 +1229,12 @@ router.post("/:cmid/cls/:clid/convos/:convid/reject", function (req, res) {
 
   }
 });
+
+
+// Alerts view
+var alertsRoutes = require("./cm-subroutes/alerts");
+router.use("/:cmid/alerts", alertsRoutes);
+
 
 // Notifications view
 var notificationsRoutes = require("./cm-subroutes/notifications");

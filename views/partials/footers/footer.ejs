@@ -3,11 +3,61 @@
 
 <script type="text/javascript">
 
-  
+  // ALERTS SECTION //
   // Hide alerts after a moment
   setTimeout(function () { $(".alerts").slideUp("slow"); }, 3000);
 
+  // Auto checking if there are new messages across any conversation
+  <% if (typeof user !== "undefined") { %>
+    var coupleSecondInterval = 2000 * 10;
+    // Auto check for if there is new content
+    setInterval(function () {
+      checkForNewMessagesInAllConvos(<%= user.cmid %>);
+    }, coupleSecondInterval);
+  <% } %>
 
+  function checkForNewMessagesInThisConvo (cmid, convo) {
+    var url = "/cms/" + cmid + "/alerts/convos/" + convo;
+    $.get(url)
+    .done(function(res) {
+      // Create an alert only if there is a new message
+      if (!res.newMessages) {
+        var alertBanner = '<div class="alerts" ' + 
+                          'style="background-color:#00e500">' +
+                          '<a href="/cms/<%= user.cmid %>/">' + 
+                          'You received new messages, click to view.' + 
+                          '</a>' + 
+                          '</div>';
+        $("body").prepend(alertBanner);
+      }
+    })
+    .fail(function(err) {
+      console.log(err);
+    });
+  };
+
+  function checkForNewMessagesInAllConvos (cmid) {
+    var url = "/cms/" + cmid + "/alerts/";
+    $.get(url)
+    .done(function(res) {
+      // Create an alert only if there is a new message
+      if (!res.newMessages) {
+        var alertBanner = '<div class="alerts" ' + 
+                          'style="background-color:#00e500">' +
+                          '<a href="/cms/' + cmid + '/">' + 
+                          'You received new messages, click to view.' + 
+                          '</a>' + 
+                          '</div>';
+        $("body").prepend(alertBanner);
+      }
+    })
+    .fail(function(err) {
+      console.log(err);
+    });
+  };
+
+
+  // EMBEDDED TOOLS SECTION //
   // Google analytics
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -17,7 +67,7 @@
   ga('send', 'pageview');
 
 
-  // Render Intercom if user is logged in
+  // Render Crisp.im if user is logged in
   <% if (typeof user !== "undefined") { %>
     CRISP_WEBSITE_ID = "54a27220-22bc-4baa-9756-ce636cd6f3de";
     (function() {
