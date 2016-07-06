@@ -24,7 +24,7 @@
     </a>
     </div>
 
-    <% if (!(typeof msgs == "undefined" && typeof comms == "undefined")) { %>
+    <% if (!(typeof msgs == "undefined" && typeof comms == "undefined") && typeof convos == "undefined") { %>
       <div class="nav-right">
       <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>">
         <small><%= client.first %> <%= client.last %></small>
