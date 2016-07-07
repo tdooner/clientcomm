@@ -121,11 +121,13 @@ var EMNOTIF = process.env.EMNOTIF;
 // EMNOTIF means run email notifications, including regular check up on text messages
 if (EMNOTIF && EMNOTIF == "true") {
   var dailyTimer =     1000 * 60 * 60 * 24; 
+  var thirtyMinTimer = 1000 * 60 * 0.03; 
   var thirtySecTimer = 1000 * 60 * 0.5; 
 
   // Set activities
   setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, dailyTimer); 
   setInterval(function () { require("../utils/sms-status-check").checkSMSstatus(); }, thirtySecTimer); 
+  // setInterval(function () { require("../utils/timed-notification").checkAndSendNotifications(); }, thirtyMinTimer); 
 }
 
 
