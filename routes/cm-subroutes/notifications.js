@@ -64,7 +64,7 @@ router.get("/overview/closed", function (req, res) {
   .where("notifications.cm", req.user.cmid)
   .leftJoin("clients", "clients.clid", "notifications.client")
   .andWhere("sent", true)
-  .andWhere("closed", true)
+  .andWhere("closed", false)
   .then(function (notifications) {
 
     db("orgs")
