@@ -22,6 +22,8 @@ module.exports = {
     .select("notifications.*", "comms.type", "comms.value")
     .leftJoin("comms", "notifications.comm", "comms.commid")
     .where("notifications.send", "<", db.fn.now())
+    .andWhere("notifications.sent", false)
+    .andWhere("notifications.closed", false)
     .then(function (notifications) {
       // console.log(notifications)
 
@@ -120,7 +122,18 @@ function sendTwilioSMS (n) {
           .where("convid", n.convoID)
           .update({updated: db.fn.now()})
           .then(function (success) {
-            console.log("Sent message.")
+
+            // Need to mark notification as sent
+            db("notifications")
+            .where("notificationid", n.notificationid)
+            .update({
+              sent: true
+            }).then(function (success) {
+              console.log("Sent message.");
+
+            }).catch(function (err) {
+              console.error(err);
+            });
 
           }).catch(function (err) {
             console.log(err);
