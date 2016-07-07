@@ -45,6 +45,23 @@ $card-text-light: #92C9FF;
     .fa {
       font-size: 60px;
     }
+
+    // Vector styling
+    .icon {
+      svg {
+        height: 120px;
+      }
+    }
+
+    .text {
+      svg {
+        width: 100%;
+      }
+    }
+
+    path {
+      fill: $card-text;
+    }
   }
 
   .card-title {
@@ -127,15 +144,6 @@ $card-text-light: #92C9FF;
       background-color: #92C9FF;
       color: #344289;
     }
-  }
-
-  // Vector styling
-  svg {
-    height: 120px;
-  }
-
-  path {
-    fill: $card-text;
   }
 }
 

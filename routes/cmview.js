@@ -58,7 +58,19 @@ router.get("/", function (req, res) {
 
     // Get a list of app use for all case managers this week
     db.raw(rawQuery).then(function (counts) {
-      res.render("casemanagers/cmlanding", { counts: counts.rows });
+
+      db("convos")
+      .count("convid")
+      .where("client", null)
+      .andWhere("open", true)
+      .then(function (convos) {
+        var showCaptureBoardBoolean = Number(convos[0].count) > 0;
+        res.render("casemanagers/cmlanding", { 
+          counts: counts.rows,
+          showCaptureBoard: showCaptureBoardBoolean
+        });
+
+      }).catch(errorRedirect);
     }).catch(errorRedirect);
   }
 });
