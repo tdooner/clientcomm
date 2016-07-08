@@ -83,6 +83,9 @@ router.get("/convos/:convid", function (req, res) {
     .andWhere("read", false)
     .then(function (msgsCount) {
       msgsCount = Number(msgsCount.count);
+      if (isNaN(msgsCount)) {
+        msgsCount = 0;
+      }
       res.send({
         newMessages: msgsCount > 0
       });
