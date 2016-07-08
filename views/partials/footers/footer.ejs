@@ -7,6 +7,9 @@
 <script type="text/javascript">
 
   // ALERTS SECTION //
+  // Global to make sure that alert sound only played once per screen
+  window.alertDingSoundPlayedAlready = false;
+
   // Hide alerts after a moment
   setTimeout(function () { $(".alerts").slideUp("slow"); }, 3000);
 
@@ -97,7 +100,10 @@
     // Now just add the new alert
     $("body").prepend(alertBanner);
     // And play a ding sound to alert user
-    document.getElementById("newMessageDing").play()
+    if (!alertDingSoundPlayedAlready) {
+      alertDingSoundPlayedAlready = true;
+      document.getElementById("newMessageDing").play()
+    }
   };
 
 
