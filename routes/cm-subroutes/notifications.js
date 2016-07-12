@@ -173,10 +173,10 @@ router.post("/new", function (req, res) {
 
     // Have everything we need, final submission
     } else {
-      var sendTime = moment(sendD)
+      var sendTime = moment.tz(sendD, "America/Denver")
                       .add("hours",   sendTH)
                       .add("minutes", sendTM)
-                      .format("YYYY-MM-DD HH:mm:ss");
+                      .format();
 
       // In the future we need to support repeatable notifications
       // Database schema already supports
@@ -337,10 +337,10 @@ router.post("/:notificationid/edit", function (req, res) {
 
     // Have everything we need, final submission
     } else {
-      var sendTime = moment(sendD)
+      var sendTime = moment.tz(sendD, "America/Denver")
                       .add("hours",   sendTH)
                       .add("minutes", sendTM)
-                      .format("YYYY-MM-DD HH:mm:ss");
+                      .format();
 
       // In the future we need to support repeatable notifications
       // Database schema already supports
