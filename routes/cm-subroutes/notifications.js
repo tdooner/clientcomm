@@ -227,12 +227,12 @@ router.get("/:notificationid/edit", function (req, res) {
         if (notifications.length > 0) {
 
           var rawN = notifications[0];
-          var time = moment(rawN.send);
+          var time = moment.tz(rawN.send, "America/Denver");
           var n = {
             cmid: req.user.cmid,
             sendDate: time.format("YYYY-MM-DD"),
             sendTimeHour: time.format("HH"),
-            sendTimeMin: time.format("MM"),
+            sendTimeMin: time.format("mm"),
             recipient: rawN.client,
             recipientComm: rawN.comm,
             notiSubj: rawN.subject,
