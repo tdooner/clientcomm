@@ -174,8 +174,8 @@ router.post("/new", function (req, res) {
     // Have everything we need, final submission
     } else {
       var sendTime = moment.tz(sendD, "America/Denver")
-                      .add("hours",   sendTH)
-                      .add("minutes", sendTM)
+                      .add(sendTH, "hours")
+                      .add(sendTM, "minutes")
                       .format();
 
       // In the future we need to support repeatable notifications
@@ -338,8 +338,8 @@ router.post("/:notificationid/edit", function (req, res) {
     // Have everything we need, final submission
     } else {
       var sendTime = moment.tz(sendD, "America/Denver")
-                      .add("hours",   sendTH)
-                      .add("minutes", sendTM)
+                      .add(sendTH, "hours")
+                      .add(sendTM, "minutes")
                       .format();
 
       // In the future we need to support repeatable notifications
