@@ -21,7 +21,7 @@ module.exports = {
     db("notifications")
     .select("notifications.*", "comms.type", "comms.value")
     .leftJoin("comms", "notifications.comm", "comms.commid")
-    .where(db.raw("send < (SELECT now() AT TIME ZONE 'America/Denver')"))
+    .where("send", "<", db.fn.now())
     .andWhere("notifications.sent", false)
     .andWhere("notifications.closed", false)
     .then(function (notifications) {
@@ -29,7 +29,8 @@ module.exports = {
       notifications.forEach(function (n) {
         // Only send out for cell values at the moment
         if (n.type == "cell") {
-          initiateNotificationSend(n);
+          console.log(n.send)
+          // initiateNotificationSend(n);
         }
       });
 
