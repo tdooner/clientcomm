@@ -43,6 +43,7 @@ router.get("/overview/open", function (req, res) {
     db("orgs")
     .where("orgid", req.user.org)
     .then(function (org) {
+
       res.render("casemanagers/notifications/overview", {
         notifications: notifications, 
         org: org[0],
@@ -237,8 +238,6 @@ router.get("/:notificationid/edit", function (req, res) {
             notiSubj: rawN.subject,
             notiCopy: rawN.message,
           };
-
-          console.log(n);
 
           res.render("casemanagers/notifications/parameters", {
             notification: n,
