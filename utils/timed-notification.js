@@ -29,8 +29,7 @@ module.exports = {
       notifications.forEach(function (n) {
         // Only send out for cell values at the moment
         if (n.type == "cell") {
-          console.log(n.send)
-          // initiateNotificationSend(n);
+          initiateNotificationSend(n);
         }
       });
 
