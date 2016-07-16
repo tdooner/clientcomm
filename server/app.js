@@ -83,8 +83,12 @@ require("../routes/sms")(app);
 require("../routes/voice")(app);
 
 // Admin routes
-var adminmgmt = require("../routes/admin");
-app.use("/admin", auth.isAdmin, adminmgmt)
+var adminManagement = require("../routes/admin");
+app.use("/admin", auth.isAdmin, adminManagement)
+
+// Account management GUI routes
+var accountManagement = require("../routes/accountmanagement");
+app.use("/accounts", auth.isAdmin, accountManagement)
 
 // Superuser routes
 var supermgmt = require("../routes/super");
