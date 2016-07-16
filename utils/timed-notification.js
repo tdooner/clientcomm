@@ -30,6 +30,11 @@ module.exports = {
         // Only send out for cell values at the moment
         if (n.type == "cell") {
           initiateNotificationSend(n);
+          try {
+            console.log("Sending message: ", n.notificationid);
+          } catch (e) {
+            console.log(e);
+          }
         }
       });
 
