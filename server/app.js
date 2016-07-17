@@ -88,7 +88,7 @@ app.use("/admin", auth.isAdmin, adminManagement)
 
 // Account management GUI routes
 var accountManagement = require("../routes/accountmanagement");
-app.use("/accounts", auth.isAdmin, accountManagement)
+app.use("/accounts", auth.isSuper, accountManagement)
 
 // Superuser routes
 var supermgmt = require("../routes/super");
