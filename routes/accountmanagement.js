@@ -10,9 +10,10 @@ var router        = express.Router();
 // UTILIITES
 var db            = require("../server/db");
 var utils         = require("../utils/utils.js");
-var sms           = utils["sms"];
+
 var pass          = utils["pass"];
-var orgtools      = utils["orgs"];
+var hashPw        = pass.hashPw;
+
 var errorHandlers = utils["errorHandlers"];
 var fivehundred   = errorHandlers.fivehundred;
 
@@ -45,11 +46,34 @@ router.get("/orgs/:orgid/cms/:cmid", function (req, res) {
   .where("cmid", caseManagerID)
     .then(function (caseManager) {
     res.render("accounts/casemanager", {
+      orgID: orgID,
       caseManager: caseManager[0]
     });
   }).catch(errorRedirect);
-
 });
+
+router.post("/orgs/:orgid/cms/:cmid/setpassword", function (req, res) {
+  var password = req.body.password;
+  var orgID = Number(req.params.orgid);
+  var caseManagerID = Number(req.params.cmid);
+
+
+  if (!password || password.length < 3) {
+    res.send("Password too short, try again.")
+  } else if (isNaN(caseManagerID)) {
+    res.send("Invalid case manager ID.")
+  } else {
+    db("cms")
+    .where("cmid", caseManagerID)
+    .update({pass: hashPw(password)})
+    .then(function (success) {
+      var redirectAddress = "/accounts/orgs/" + orgID + "/cms/" + caseManagerID;
+      req.flash("success", "Case manager password reset.");
+      res.redirect(redirectAddress);
+    }).catch(function (err) { res.redirect("/500"); });
+  }
+});
+
 
 
 // SHOW ORG WITH MESSAGING ACTIVITY FOR EACH ACCOUNT

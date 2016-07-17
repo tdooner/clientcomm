@@ -3,16 +3,25 @@
 <!-- Include Card View specific styling -->
 <link rel="stylesheet" type="text/css" href="/static/css/card.css">
 
-<div class="contents">
-
 <% var caseManagerAttributes = Object.keys(caseManager) %>
 
+<div class="contents" style="color: #2F8CE8">
+
   <% for (var i = 0; i < caseManagerAttributes.length; i++) { %>
-    <div style="color: #2F8CE8">
+    <div>
       <b><%= caseManagerAttributes[i] %>:</b>
       <%= caseManager[caseManagerAttributes[i]] %>
     </div>
   <% } %>
+
+  <hr>
+
+  
+  <form method="post" action="/accounts/orgs/<%= orgID %>/cms/<%= caseManager.cmid %>/setpassword">
+    <b>Set New Password</b>
+    <input class="form-input" type="password" name="password" value="" required>
+    <input type="submit" value="Submits">
+  </form>
 
 </div>
 
