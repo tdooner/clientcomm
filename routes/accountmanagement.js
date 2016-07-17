@@ -19,7 +19,7 @@ var fivehundred   = errorHandlers.fivehundred;
 
 
 // BEGIN DRILL DOWN WITH ORG SELECTION
-router.get("/:orgid", function (req, res) {
+router.get("/orgs/:orgid/cms", function (req, res) {
   var errorRedirect = fivehundred(res);
   var orgID = Number(req.params.orgid);
 
@@ -29,13 +29,27 @@ router.get("/:orgid", function (req, res) {
     db("cms")
     .where("org", orgID)
     .then(function (caseManagers) {
-      res.send(caseManagers);
+      res.render("accounts/org", {
+        caseManagers: caseManagers
+      });
     }).catch(errorRedirect);
   }
-  
-  
 });
 
+router.get("/orgs/:orgid/cms/:cmid", function (req, res) {
+  var errorRedirect = fivehundred(res);
+  var orgID = Number(req.params.orgid);
+  var caseManagerID = Number(req.params.cmid);
+
+  db("cms")
+  .where("cmid", caseManagerID)
+    .then(function (caseManager) {
+    res.render("accounts/casemanager", {
+      caseManager: caseManager[0]
+    });
+  }).catch(errorRedirect);
+
+});
 
 
 // SHOW ORG WITH MESSAGING ACTIVITY FOR EACH ACCOUNT
