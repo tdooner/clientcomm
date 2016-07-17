@@ -19,8 +19,21 @@ var fivehundred   = errorHandlers.fivehundred;
 
 
 // BEGIN DRILL DOWN WITH ORG SELECTION
-router.get("/", function (req, res) {
-  res.send("foo");
+router.get("/:orgid", function (req, res) {
+  var errorRedirect = fivehundred(res);
+  var orgID = Number(req.params.orgid);
+
+  if (isNaN(orgID)) {
+    res.redirect("/404");
+  } else {
+    db("cms")
+    .where("org", orgID)
+    .then(function (caseManagers) {
+      res.send(caseManagers);
+    }).catch(errorRedirect);
+  }
+  
+  
 });
 
 
