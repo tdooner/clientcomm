@@ -86,6 +86,14 @@
 
 
   <!-- Accounts activity overview columns -->
+  <% var departments = [];                  %>
+  <% for (var i = 0; i < cms.length; i++) { %>
+  <%  var d = cms[i].department;            %>
+  <%  if (departments.indexOf(d) < 0) {     %>
+  <%    departments.push(d)                 %>
+  <%  }                                     %>
+  <% }                                      %>
+
   <div class="accounts">
     <div class="title">
       Admin Accounts (<%= adminCt %> active)
@@ -163,72 +171,81 @@
     </div>
 
     <div id="cmactivitychart"></div>
-
-    <% for (var i = 0; i < cms.length; i++) { %>
-      <% if (!cms[i].admin && cms[i].active) { %>
-
-        <div class="accountcard">
-
-          <b>
-          <% if (user.cmid !== cms[i].cmid) { %>
-            <a href="/admin/cms/<%= cms[i].cmid %>">
-              <%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
-            </a>
-          <% } else { %>
-            <a href="/cms/<%= cms[i].cmid %>">
-              <%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
-            </a>
-          <% } %>
-          </b>
-
-          <!-- Mini chart of activity -->
-          <div class="miniaccountchart"><div id="chart-<%= cms[i].cmid %>"></div></div>
-
-          <table style="width:100%">
-            <tr>
-              <td>Email</td>
-              <td><%= cms[i].email %></td>
-            </tr>
-
-            <tr>
-              <td>Position</td>
-              <td><%= cms[i].position %></td>
-            </tr>
-
-            <tr>
-              <td>Department</td>
-              <td><%= cms[i].department %></td>
-            </tr>
-
-            <tr>
-              <td>Last Login</td>
-              <td>
-                <% try { %>
-                  <% var upd = new Date(cms[i].updated) %>
-                  <%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
-                <% } catch (err) { %>
-                  Unknown
-                <% } %>
-              </td>
-            </tr>
-
-            <tr>
-              <td>Created</td>
-              <td>
-                <% try { %>
-                  <% var upd = new Date(cms[i].created) %>
-                  <%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
-                <% } catch (err) { %>
-                  Unknown
-                <% } %>
-              </td>
-            </tr>
-          </table>
-        </div>
-      <% } %>
-    <% } %>
-          
   </div>
+
+  <% for (var d = 0; d < departments.length; d++) { %>
+    <div class="accounts">
+      <div class="title" style="font-size:16px; height:20px;">
+          <%= departments[d] %> Staff Accounts
+      </div>
+
+      <% for (var i = 0; i < cms.length; i++) { %>
+        <% var showDepartment = departments[d] == cms[i].department; %>
+        <% if (!cms[i].admin && cms[i].active && showDepartment) { %>
+
+          <div class="accountcard">
+
+            <b>
+            <% if (user.cmid !== cms[i].cmid) { %>
+              <a href="/admin/cms/<%= cms[i].cmid %>">
+                <%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+              </a>
+            <% } else { %>
+              <a href="/cms/<%= cms[i].cmid %>">
+                <%= cms[i].last %>, <%= cms[i].first %> <%= cms[i].middle %>
+              </a>
+            <% } %>
+            </b>
+
+            <!-- Mini chart of activity -->
+            <div class="miniaccountchart"><div id="chart-<%= cms[i].cmid %>"></div></div>
+
+            <table style="width:100%">
+              <tr>
+                <td>Email</td>
+                <td><%= cms[i].email %></td>
+              </tr>
+
+              <tr>
+                <td>Position</td>
+                <td><%= cms[i].position %></td>
+              </tr>
+
+              <tr>
+                <td>Department</td>
+                <td><%= cms[i].department %></td>
+              </tr>
+
+              <tr>
+                <td>Last Login</td>
+                <td>
+                  <% try { %>
+                    <% var upd = new Date(cms[i].updated) %>
+                    <%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+                  <% } catch (err) { %>
+                    Unknown
+                  <% } %>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Created</td>
+                <td>
+                  <% try { %>
+                    <% var upd = new Date(cms[i].created) %>
+                    <%= [upd.getMonth()+1, upd.getDate(), upd.getFullYear()].join("/") + " at " + [upd.getHours(), upd.getMinutes()].join(':') %>
+                  <% } catch (err) { %>
+                    Unknown
+                  <% } %>
+                </td>
+              </tr>
+            </table>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+  <% } %>
+
 
 
 
