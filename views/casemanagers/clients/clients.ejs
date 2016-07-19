@@ -8,7 +8,7 @@
       Current Clients
     </div>
     <div class="toggle" id="archive_tag" onclick="showArchive()">
-      Closes Cases
+      Closed Cases
     </div>
   </div>
 
@@ -29,7 +29,7 @@
       <th>Client</th>
       <th>Conversation</th>
       <th>Last Activity</th>
-      <th>Close Case</th>
+      <th>Close Out</th>
     </tr>
 
     <tr class="archive">
@@ -120,15 +120,15 @@
           
           <td class="archiverestore">
             <% if (clients[i].active) { %>
-              <form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
+              <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/archive">
                 <button type="submit">
                   <% include ../../../public/icons/archive.svg %>
                 </button>
-              </form>
+              </a>
             <% } else { %>
-              <form method="post" action="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/restore">
+              <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/restore">
                 <button type="submit"><i class="fa fa-undo"></i></button>
-              </form>
+              </a>
             <% } %>
           </td>
 

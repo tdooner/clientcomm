@@ -1,0 +1,43 @@
+<% include ../../partials/headers/header-base %>
+
+<!-- Include Card View specific styling -->
+<link rel="stylesheet" type="text/css" href="/static/css/cardV2.css">
+
+<div class="contents">
+
+<!-- Moved the exit out of the card -->
+
+<div class="card">
+
+  <div class="card-head">
+  
+    <a href="/cms/<%= user.cmid %>/cls/<%= clid %>/comms">
+      <% include ../../partials/card-exitV2 %>
+    </a>
+
+    <div class="card-title">
+      Close Out Client
+    </div>
+
+  </div>
+
+
+
+  <form method="post">
+
+    <input type="hidden" name="cmid" value="<%= user.cmid %>">
+
+    <div class="form-row">
+      <div class="form-label"> Name (ex: "Aunt's Phone") </div>
+      <input class="form-input" type="text" name="description" value="foo" maxlength="30" required>
+    </div>
+
+    <input type="submit" class="form-submit" value="Update">
+
+  </form>
+
+</div>
+
+</div>
+
+<% include ../../partials/footers/footer %>

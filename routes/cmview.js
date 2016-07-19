@@ -377,20 +377,26 @@ router.post("/:cmid/cls/:clid/edit", function (req, res) {
 
 
 
-// ARCHIVE A CLIENT
-router.post("/:cmid/cls/:clid/archive", function (req, res) { 
+// ARCHIVE A CLIENT CARD RENDER
+router.get("/:cmid/cls/:clid/archive", function (req, res) { 
   
   // Reroute
   var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid;
 
-  db("clients")
-  .where("clid", req.params.clid)
-  .update({active: false, updated: db.fn.now()})
-  .then(function (success) {
-    req.flash("success", "Archived client.");
-    res.redirect(redirect_loc);
-  }).catch(errorRedirect)
+  // Attempt at restructuring the close out process
+  res.render("casemanagers/client/cientcloseoutsurvey", {
+    clid: req.params.clid,
+  });
+
+
+  // db("clients")
+  // .where("clid", req.params.clid)
+  // .update({active: false, updated: db.fn.now()})
+  // .then(function (success) {
+  //   req.flash("success", "Archived client.");
+  //   res.redirect(redirect_loc);
+  // }).catch(errorRedirect)
 });
 
 
@@ -738,97 +744,6 @@ router.post("/:cmid/cls/:clid/comms/:commconnid/close", function (req, res) {
 
   }
 });
-
-router.post("/:cmid/cls/:clid/close", function (req, res) { 
-  
-  // Reroute
-  var errorRedirect = fivehundred(res);
-  var redirect_loc = "/cms/" + req.user.cmid;
-
-  var clid = req.params.clid;
-  var cmid = req.params.cmid;
-
-  if (Number(cmid) !== Number(req.user.cmid)) {
-    req.flash("warning", "Case Manager ID does not match user logged-in.");
-    res.redirect(redirect_loc);
-  } else {
-    
-    db("clients").where("clid", clid).limit(1)
-    .then(function (clients) {
-
-      if (clients.length > 0) {
-        var client = clients[0];
-
-        if (client.cm == cmid) {
-
-          db("clients").where("clid", clid)
-          .update({active: false, updated: db.fn.now()})
-          .then(function (success) {
-            req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
-            res.redirect(redirect_loc);
-
-          }).catch(errorRedirect);
-
-        } else {
-          req.flash("warning", "You do not have authority to close that client.");
-          res.redirect(redirect_loc);
-        }
-
-      } else {
-        req.flash("warning", "That user id does not exist.");
-        res.redirect(redirect_loc);
-      }
-
-    }).catch(errorRedirect);
-
-  }
-});
-
-router.post("/:cmid/cls/:clid/open", function (req, res) { 
-  
-  // Reroute
-  var errorRedirect = fivehundred(res);
-  var redirect_loc = "/cms/" + req.user.cmid;
-
-  var clid = req.params.clid;
-  var cmid = req.params.cmid;
-
-  if (Number(cmid) !== Number(req.user.cmid)) {
-    req.flash("warning", "Case Manager ID does not match user logged-in.");
-    res.redirect(redirect_loc);
-  } else {
-    
-    db("clients").where("clid", clid).limit(1)
-    .then(function (clients) {
-
-      if (clients.length > 0) {
-        var client = clients[0];
-
-        if (client.cm == cmid) {
-
-          db("clients").where("clid", clid)
-          .update({active: true, updated: db.fn.now()})
-          .then(function (success) {
-            req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
-            res.redirect(redirect_loc);
-
-          }).catch(errorRedirect);
-
-        } else {
-          req.flash("warning", "You do not have authority to re-activate that client.");
-          res.redirect(redirect_loc);
-        }
-
-      } else {
-        req.flash("warning", "That user id does not exist.");
-        res.redirect(redirect_loc);
-      }
-
-    }).catch(errorRedirect);
-
-  }
-});
-
 
 
 router.get("/:cmid/cls/:clid/convos", function (req, res) {
@@ -1251,6 +1166,98 @@ router.use("/:cmid/alerts", alertsRoutes);
 // Notifications view
 var notificationsRoutes = require("./cm-subroutes/notifications");
 router.use("/:cmid/notifications", notificationsRoutes);
+
+
+// POTENTIALLY DEPERECATED ENDPOINTS... NEED TO MAKE SURE THEY ARE ABSOLUTELY NOT USED ANYMORE
+router.post("/:cmid/cls/:clid/close", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
+  var redirect_loc = "/cms/" + req.user.cmid;
+
+  var clid = req.params.clid;
+  var cmid = req.params.cmid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(redirect_loc);
+  } else {
+    
+    db("clients").where("clid", clid).limit(1)
+    .then(function (clients) {
+
+      if (clients.length > 0) {
+        var client = clients[0];
+
+        if (client.cm == cmid) {
+
+          db("clients").where("clid", clid)
+          .update({active: false, updated: db.fn.now()})
+          .then(function (success) {
+            req.flash("success", "Closed out client" + client.first + " " + client.last + ".");
+            res.redirect(redirect_loc);
+
+          }).catch(errorRedirect);
+
+        } else {
+          req.flash("warning", "You do not have authority to close that client.");
+          res.redirect(redirect_loc);
+        }
+
+      } else {
+        req.flash("warning", "That user id does not exist.");
+        res.redirect(redirect_loc);
+      }
+
+    }).catch(errorRedirect);
+
+  }
+});
+
+router.post("/:cmid/cls/:clid/open", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
+  var redirect_loc = "/cms/" + req.user.cmid;
+
+  var clid = req.params.clid;
+  var cmid = req.params.cmid;
+
+  if (Number(cmid) !== Number(req.user.cmid)) {
+    req.flash("warning", "Case Manager ID does not match user logged-in.");
+    res.redirect(redirect_loc);
+  } else {
+    
+    db("clients").where("clid", clid).limit(1)
+    .then(function (clients) {
+
+      if (clients.length > 0) {
+        var client = clients[0];
+
+        if (client.cm == cmid) {
+
+          db("clients").where("clid", clid)
+          .update({active: true, updated: db.fn.now()})
+          .then(function (success) {
+            req.flash("success", "Re-activated client" + client.first + " " + client.last + ".");
+            res.redirect(redirect_loc);
+
+          }).catch(errorRedirect);
+
+        } else {
+          req.flash("warning", "You do not have authority to re-activate that client.");
+          res.redirect(redirect_loc);
+        }
+
+      } else {
+        req.flash("warning", "That user id does not exist.");
+        res.redirect(redirect_loc);
+      }
+
+    }).catch(errorRedirect);
+
+  }
+});
 
 
 // EXPORT ROUTER OBJECt
