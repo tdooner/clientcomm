@@ -10,31 +10,35 @@
 <div class="card">
 
   <div class="card-head">
-  
+
     <a href="/cms/<%= user.cmid %>/cls/<%= clid %>/comms">
       <% include ../../partials/card-exitV2 %>
     </a>
 
     <div class="card-title">
-      Close Out Client
+      Close Client Case
+    </div>
+
+    <div class="card-subtitle">
+      Closing a client removes them from your active caseload. 
     </div>
 
   </div>
 
+  <div class="card-body">
+    <form method="post">
 
+      <input type="hidden" name="cmid" value="<%= user.cmid %>">
 
-  <form method="post">
+      <div class="form-row">
+        <div class="form-label"> Name (ex: "Aunt's Phone") </div>
+        <input class="form-input" type="text" name="description" value="foo" maxlength="30" required>
+      </div>
 
-    <input type="hidden" name="cmid" value="<%= user.cmid %>">
+      <input type="submit" class="form-submit" value="Update">
 
-    <div class="form-row">
-      <div class="form-label"> Name (ex: "Aunt's Phone") </div>
-      <input class="form-input" type="text" name="description" value="foo" maxlength="30" required>
-    </div>
-
-    <input type="submit" class="form-submit" value="Update">
-
-  </form>
+    </form>
+  </div>
 
 </div>
 

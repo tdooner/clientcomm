@@ -22,28 +22,36 @@ body, .contents {
   margin-left: auto;
   margin-right: auto;
   border-radius: 10px; }
-  .card .card-head {
-    height: 35px;
-    padding: 10px;
-    border-bottom: 1px solid #C5C4C4; }
-    .card .card-head .exit-btn {
-      float: right; }
-      .card .card-head .exit-btn svg polygon {
-        fill: #C5C4C4; }
-      .card .card-head .exit-btn svg:hover polygon {
-        fill: #898989; }
-  .card .card-title {
+  .card .card-head .exit-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px; }
+    .card .card-head .exit-btn svg polygon {
+      fill: #C5C4C4; }
+    .card .card-head .exit-btn svg:hover polygon {
+      fill: #898989; }
+  .card .card-head .card-title {
     font-size: 30px;
     text-align: center;
     font-weight: 100;
-    color: #92C9FF;
-    padding-bottom: 15px; }
-  .card .form-row {
-    padding: 5px 10px 0px 10px; }
-    .card .form-row .opt {
+    color: #344289;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 1px solid #C5C4C4;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.075); }
+  .card .card-head .card-subtitle {
+    color: #898989;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center; }
+  .card .card-head .form-row {
+    padding: 5px 10px 5px 10px; }
+    .card .card-head .form-row .opt {
       float: right;
       color: #4A90E2; }
-    .card .form-row .blue-select {
+    .card .card-head .form-row .blue-select {
       width: 280px;
       height: 35px;
       border: 2px solid #2F8CE8;
@@ -53,13 +61,13 @@ body, .contents {
       font-size: 16px;
       font-weight: 700;
       color: #344289; }
-      .card .form-row .blue-select.half {
+      .card .card-head .form-row .blue-select.half {
         width: 130px;
         float: left;
         margin-left: 20px; }
-        .card .form-row .blue-select.half:nth-child(2) {
+        .card .card-head .form-row .blue-select.half:nth-child(2) {
           margin-left: 0px; }
-    .card .form-row::after {
+    .card .card-head .form-row::after {
       content: "";
       display: block;
       clear: both; }

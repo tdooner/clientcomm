@@ -3,6 +3,8 @@ $card-text-light: #92C9FF;
 $dark-blue:       #344289;
 $white:           #FFF;
 $light-grey:      #C5C4C4;
+$dark-grey:       #898989;
+
 
 // Body is going to same color as contents, all blue full bleed
 // Contents to be same color so both appear to be same area
@@ -44,12 +46,11 @@ body, .contents {
   border-radius: 10px;
 
   .card-head {
-    height: 35px;
-    padding: 10px;
-    border-bottom: 1px solid $light-grey;
 
     .exit-btn {
-      float: right;
+      position: absolute;
+      right: 10px;
+      top: 10px;
 
       svg {
         polygon {
@@ -60,52 +61,69 @@ body, .contents {
         }
       }
     }
-  }
 
-  .card-title {
-    font-size: 30px;
-    text-align: center;
-    font-weight: 100;
-    color: #92C9FF;
-    padding-bottom: 15px;
-  }
+    .card-title {
+      font-size: 30px;
+      text-align: center;
+      font-weight: 100;
+      color: $dark-blue;
+      padding-top: 15px;
+      padding-bottom: 15px;
 
-  .form-row {
-    padding: 5px 10px 0px 10px;
+      // Float center
+      margin-left: auto;
+      margin-right: auto;
 
-    .opt {
-      float: right;
-      color: #4A90E2;
+      border-bottom: 1px solid $light-grey;
+      box-shadow: 0px 3px 5px rgba(0,0,0,0.075);
     }
 
-    .blue-select {
-      width: 280px;
-      height: 35px;
-      border: 2px solid #2F8CE8;
-      border-radius: 7px;
-      background-color: #92C9FF;
-      text-align: center;
+    .card-subtitle {
+      color: $dark-grey;
       font-size: 16px;
-      font-weight: 700;
-      color: #344289;
+      padding: 10px;
+      text-align: center;
+    }
 
-      &.half {
-        width: 130px;
-        float: left;
-        margin-left: 20px;
-        
-        &:nth-child(2) {
-          margin-left: 0px;
+    .form-row {
+      padding: 5px 10px 5px 10px;
+
+      .opt {
+        float: right;
+        color: #4A90E2;
+      }
+
+      .blue-select {
+        width: 280px;
+        height: 35px;
+        border: 2px solid #2F8CE8;
+        border-radius: 7px;
+        background-color: #92C9FF;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        color: #344289;
+
+        &.half {
+          width: 130px;
+          float: left;
+          margin-left: 20px;
+          
+          &:nth-child(2) {
+            margin-left: 0px;
+          }
         }
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        clear: both;
       }
     }
 
-    &::after {
-      content: "";
-      display: block;
-      clear: both;
-    }
   }
+
 
   .form-label {
     font-size: 12px;
