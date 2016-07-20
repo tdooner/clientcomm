@@ -384,27 +384,53 @@ router.get("/:cmid/cls/:clid/archive", function (req, res) {
   var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid;
 
-  var clid = req.params.clid;
+  // Determine the client ID in question
+  var clid = Number(req.params.clid);
+  if (isNaN(clid)) {
+    clid = null;
+  }
 
-  // Get client
-  db("clients")
-  .where("clid", clid)
-  .then(function (clients) {
-    res.render("casemanagers/client/cientcloseoutsurvey", {
-      client: clients[0],
-    });
-  }).catch(errorRedirect);
+  var clientSurveyAlreadySubmitted = false;
+
+  if (clid) {
+
+    // Check if this client has already submitted a survey for it
+    db("client_closeout_surveys")
+    .where("client", clid)
+    .then(function (clients) {
+
+      // If it has, turn on option to not submit
+      if (clients.length > 0) {
+        clientSurveyAlreadySubmitted = true;
+      }
+
+      // Get client
+      db("clients")
+      .where("clid", clid)
+      .then(function (clients) {
+        res.render("casemanagers/client/cientcloseoutsurvey", {
+          client: clients[0],
+          clientSurveyAlreadySubmitted: clientSurveyAlreadySubmitted
+        });
+      }).catch(errorRedirect);
+
+    }).catch(errorRedirect);
+
+  // If no good client ID, then 404
+  } else {
+    res.redirect("/404");
+  }
+
+
 });
 
 
-// ARCHIVE A CLIENT CARD CONFIRMED SUBMIT
-router.post("/:cmid/cls/:clid/archive", function (req, res) { 
+// SUBMIT SURVEY AND ARCHIVE A CLIENT CARD CONFIRMED SUBMIT
+router.post("/:cmid/cls/:clid/submit_survey_and_archive", function (req, res) { 
 
   // Reroute
   var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid;
-
-  console.log(req.body)
 
   // Convert likelihoodSuccessWithoutCC to number value
   var likelihoodSuccessWithoutCC = Number(req.body.likelihoodSuccessWithoutCC);
@@ -437,6 +463,26 @@ router.post("/:cmid/cls/:clid/archive", function (req, res) {
       res.redirect(redirect_loc);
 
     }).catch(errorRedirect);
+
+  }).catch(errorRedirect);
+
+});
+
+// ONLY ARCHVIE THE CLIENT
+router.post("/:cmid/cls/:clid/archive", function (req, res) { 
+
+  // Reroute
+  var errorRedirect = fivehundred(res);
+  var redirect_loc = "/cms/" + req.params.cmid;
+
+  // Then we submit the closure of the client
+  db("clients")
+  .where("clid", req.params.clid)
+  .update({active: false, updated: db.fn.now()})
+  .then(function (success) {
+
+    req.flash("success", "Archived client.");
+    res.redirect(redirect_loc);
 
   }).catch(errorRedirect);
 

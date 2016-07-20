@@ -26,7 +26,8 @@
   </div>
 
   <div class="card-body">
-    <form method="post">
+    <form method="post" 
+          action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/submit_survey_and_archive">
 
       <input type="hidden" name="clientID" value="<%= client.clid %>">
 
@@ -150,6 +151,19 @@
       </center>
 
     </form>
+
+    <% if (clientSurveyAlreadySubmitted) { %>
+      <form method="post" 
+        action="/cms/<%= user.cmid %>/cls/<%= client.clid %>/archive">
+        <center>
+          <input  type="submit" 
+                  class="form-submit" 
+                  value="Or... Skip Survey">
+        </center>
+
+      </form>
+    <% } %>
+
   </div>
 
 </div>
