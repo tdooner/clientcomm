@@ -384,10 +384,17 @@ router.get("/:cmid/cls/:clid/archive", function (req, res) {
   var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.params.cmid;
 
-  // Attempt at restructuring the close out process
-  res.render("casemanagers/client/cientcloseoutsurvey", {
-    clid: req.params.clid,
-  });
+  var clid = req.params.clid;
+
+  // Get client
+  db("clients")
+  .where("clid", clid)
+  .then(function (clients) {
+    res.render("casemanagers/client/cientcloseoutsurvey", {
+      client: clients[0],
+    });
+  }).catch(errorRedirect)
+
 
 
   // db("clients")

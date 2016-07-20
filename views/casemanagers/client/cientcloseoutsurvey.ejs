@@ -11,7 +11,7 @@
 
   <div class="card-head">
 
-    <a href="/cms/<%= user.cmid %>/cls/<%= clid %>/comms">
+    <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/comms">
       <% include ../../partials/card-exitV2 %>
     </a>
 
@@ -32,7 +32,7 @@
 
       <div class="form-row">
         <div class="form-label"> 
-          Is this a successful or unsuccessful close out? 
+          Is <%= client.first %> a successful or unsuccessful close out? 
         </div>
         <div class="form-input">
           <div class="input-option">
@@ -52,7 +52,7 @@
 
       <div class="form-row">
         <div class="form-label"> 
-          How did you most often communicate with them? 
+          How did you most often communicate with <%= client.first %>? 
         </div>
         <div class="form-input">
           <div class="input-option">
@@ -76,7 +76,7 @@
 
       <div class="form-row">
         <div class="form-label"> 
-          How likely would they have been to succeed without ClientComm?
+          How likely would <%= client.first %> have been to succeed without ClientComm?
           <small>
             Scale: 1 = very unlikely, 3 = neutral, 5 = very likey
           </small>
@@ -111,7 +111,7 @@
 
       <div class="form-row">
         <div class="form-label"> 
-          How helpful was ClientComm for this client?
+          How helpful was ClientComm for <%= client.first %>?
         </div>
         <div class="form-input">
           <div class="input-option">
@@ -144,7 +144,9 @@
       </div>
 
       <center>
-      <input type="submit" class="form-submit" value="Submit Closed Case">
+      <input  type="submit" 
+              class="form-submit" 
+              value="Submit Closed <%= client.first %> <%= client.last %> Case">
       </center>
 
     </form>
