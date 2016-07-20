@@ -393,9 +393,13 @@ router.get("/:cmid/cls/:clid/archive", function (req, res) {
     res.render("casemanagers/client/cientcloseoutsurvey", {
       client: clients[0],
     });
-  }).catch(errorRedirect)
+  }).catch(errorRedirect);
+});
 
 
+// ARCHIVE A CLIENT CARD CONFIRMED SUBMIT
+router.get("/:cmid/cls/:clid/archive", function (req, res) { 
+  res.send(req.body);
 
   // db("clients")
   // .where("clid", req.params.clid)
