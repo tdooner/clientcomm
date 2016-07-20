@@ -398,22 +398,54 @@ router.get("/:cmid/cls/:clid/archive", function (req, res) {
 
 
 // ARCHIVE A CLIENT CARD CONFIRMED SUBMIT
-router.get("/:cmid/cls/:clid/archive", function (req, res) { 
-  res.send(req.body);
+router.post("/:cmid/cls/:clid/archive", function (req, res) { 
 
-  // db("clients")
-  // .where("clid", req.params.clid)
-  // .update({active: false, updated: db.fn.now()})
-  // .then(function (success) {
-  //   req.flash("success", "Archived client.");
-  //   res.redirect(redirect_loc);
-  // }).catch(errorRedirect)
+  // Reroute
+  var errorRedirect = fivehundred(res);
+  var redirect_loc = "/cms/" + req.params.cmid;
+
+  console.log(req.body)
+
+  // Convert likelihoodSuccessWithoutCC to number value
+  var likelihoodSuccessWithoutCC = Number(req.body.likelihoodSuccessWithoutCC);
+  if (isNaN(likelihoodSuccessWithoutCC)) {
+    likelihoodSuccessWithoutCC = null;
+  }
+
+  // First we need to clean the req.body for insert
+  var insertObj = {
+    client: req.body.clientID,
+    closeout_status: req.body.closeOutStatus, 
+    most_common_method: req.body.mostCommonMethod,
+    likelihood_success_without_cc: likelihoodSuccessWithoutCC,
+    helpfulness_of_cc: req.body.helpfulnessCC,
+    most_often_discussed: req.body.mostOftenDiscussed,
+  };
+
+  // Then we insert the cleaned object into client_closeout_surveys
+  db("client_closeout_surveys")
+  .insert(insertObj)
+  .then(function (success) {
+
+    // Then we submit the closure of the client
+    db("clients")
+    .where("clid", req.params.clid)
+    .update({active: false, updated: db.fn.now()})
+    .then(function (success) {
+
+      req.flash("success", "Archived client.");
+      res.redirect(redirect_loc);
+
+    }).catch(errorRedirect);
+
+  }).catch(errorRedirect);
+
 });
 
 
 
 // RESTORE AN ARCHIVED CLIENT
-router.post("/:cmid/cls/:clid/restore", function (req, res) { 
+router.get("/:cmid/cls/:clid/restore", function (req, res) { 
   
   // Reroute
   var errorRedirect = fivehundred(res);
