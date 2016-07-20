@@ -29,7 +29,7 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
   return Promise.all([
 
-    knex.schema.dropTable("client_closeout_surveys")
+    knex.schema.dropTable("templates")
 
   ]);
 };
