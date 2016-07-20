@@ -9,11 +9,11 @@ exports.up = function(knex, Promise) {
            .references("orgid")
            .inTable("orgs");
 
-      table.integer("cm")
+      table.integer("casemanager")
            .references("cmid")
            .inTable("cms");
 
-      table.integer("cl")
+      table.integer("client")
            .references("clid")
            .inTable("clients");
 
