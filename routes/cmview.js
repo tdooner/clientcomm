@@ -509,7 +509,7 @@ router.get("/:cmid/cls/:clid/restore", function (req, res) {
 
 
 
-// GET A CLIENT'S COMMCONN
+// VIEW TO CREATE A NEW CLIENT COMM CONN
 router.get("/:cmid/cls/:clid/comm", function (req, res) { 
   
   // Reroute
@@ -1219,6 +1219,11 @@ router.use("/:cmid/notifications", notificationsRoutes);
 // Templates view
 var templatesRoutes = require("./cm-subroutes/templates");
 router.use("/:cmid/templates", templatesRoutes);
+
+
+// Colors view
+var clientColorTagRoutes = require("./cm-subroutes/colortag");
+router.use("/:cmid/cls/:clid/colortag", clientColorTagRoutes);
 
 
 // POTENTIALLY DEPERECATED ENDPOINTS... NEED TO MAKE SURE THEY ARE ABSOLUTELY NOT USED ANYMORE
