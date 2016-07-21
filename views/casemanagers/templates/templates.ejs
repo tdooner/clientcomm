@@ -23,6 +23,7 @@
       <th>Edit</th>
       <th>Content</th>
       <th>Specific Client</th>
+      <th>Updated</th>
       <th>Created</th>
       <th>Delete</th>
     </tr>
@@ -50,8 +51,8 @@
 
           <td>
             
-            <% if (templates[i].content.length > 20) { %>
-              <%= templates[i].content.substring(0,115) %>...
+            <% if (templates[i].content.length >    80) { %>
+              <%= templates[i].content.substring(0, 80) %>...
             <% } else { %>
               <%= templates[i].content %>
             <% } %>
@@ -63,6 +64,10 @@
             <% } else { %>
               <%= templates[i].first %> <%= templates[i].last %>
             <% } %>
+          </td>
+
+          <td>
+            <%= moment.tz(templates[i].updated, local_tz).format("MM/DD/YY"); %>
           </td>
 
           <td>
@@ -86,7 +91,7 @@
                 <i class="fa fa-ban fa-stack-2x fa-rotate-90"></i>
               </span>
             <% } %>
-            
+
           </td>
 
         </tr>
