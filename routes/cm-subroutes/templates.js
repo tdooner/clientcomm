@@ -33,7 +33,7 @@ router.get("/", function (req, res) {
   .leftJoin("clients", "templates.client", "clients.clid")
   .where("org", req.user.org)
   .orWhere("casemanager", req.user.cmid)
-  .orderBy("casemanager", "asc")
+  .orderByRaw("casemanager ASC, updated DESC")
   .then(function (templates) {
 
     res.render("casemanagers/templates/templates", {
@@ -171,7 +171,8 @@ router.post("/:templateID/edit", function (req, res) {
       org: orgid,
       casemanager: cmid,
       client: clid,
-      content: content
+      content: content,
+      updated: db.fn.now()
     };
 
     // Run insert of modified template
