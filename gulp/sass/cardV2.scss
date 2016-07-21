@@ -138,6 +138,27 @@ body, .contents {
         }
       }
 
+      .form-select {
+        width: 450px;
+        height: 35px;
+        border: 2px solid #2F8CE8;
+        border-radius: 7px;
+        background-color: #92C9FF;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        color: #344289;
+
+        &.half {
+          width: 215px;
+          float: left;
+          
+          &:nth-child(2) {
+            margin-right: 20px;
+          }
+        }
+      }
+
     }
 
     .form-submit {
