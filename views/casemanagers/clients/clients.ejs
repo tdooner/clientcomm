@@ -47,6 +47,10 @@
 
           <td class="clientid">
 
+            <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/colortag %>">
+              <% include ../../../public/icons/user.svg %>
+            </a>
+
             <% if (clients[i].active) { %>
               <% if (clients[i].open) { %>
                 <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>/convos/<%= clients[i].convid %>">
@@ -57,7 +61,6 @@
               <a href="/cms/<%= user.cmid %>/cls/<%= clients[i].clid %>">
             <% } %>
 
-              <% include ../../../public/icons/user.svg %>
               <%=  clients[i].last %>, <%= clients[i].first %> <%= clients[i].middle %>
             </a>
           </td>
