@@ -1,0 +1,81 @@
+<% include ../../partials/headers/header-base %>
+<% include ../../partials/headers/header-navbar %>
+
+<!-- Include notification view-specific styling -->
+<link rel="stylesheet" type="text/css" href="/static/css/notificationslist.css">
+
+<div class="contents">
+
+  <a href="/cms/<%= user.cmid %>/templates/create">
+    <div class="newclient"> 
+      <% include ../../../public/icons/bigplus.svg %> 
+      New Template
+    </div>
+  </a>
+
+  <div class="title">
+    Templates
+  </div>
+
+  <table class="list">
+
+    <tr>
+      <th>Edit</th>
+      <th>Content</th>
+      <th>Specific Client</th>
+      <th>Created</th>
+      <th>Delete</th>
+    </tr>
+
+
+    <% if (templates.length > 0) { %>
+      <% for (var i = 0; i < templates.length; i++ ) { %>
+
+        <tr>
+
+          <td class="fa-icon-holder">
+            <a href="/cms/<%= user.cmid %>/templates/<%= templates[i].template_id %>/edit %>">
+              <i class="fa fa-pencil standard-fa-no-stack"></i>
+            </a>
+          </td>
+
+          <td>
+            
+            <% if (templates[i].content.length > 20) { %>
+              <%= templates[i].content.substring(0,20) %>...
+            <% } else { %>
+              <%= templates[i].content %>
+            <% } %>
+          </td>
+
+          <td>
+            <% if (templates[i].client == null) { %>
+              All clients
+            <% } else { %>
+              <%= templates[i].client %>
+            <% } %>
+          </td>
+
+          <td>
+            <%= moment.tz(templates[i].created, local_tz).format("MM/DD/YY"); %>
+          </td>
+
+          <td class="fa-icon-holder">
+            <form 
+              action="/cms/<%= user.cmid %>/templates/<%= templates[i].notificationid %>/delete %>"" 
+              method="post">
+                <button type="submit">
+                  <i class="fa fa-trash standard-fa-no-stack"></i>
+                </button>
+            </form>
+          </td>
+
+        </tr>
+
+      <% } %>
+    <% } %>
+
+  </table>
+</div>
+
+<% include ../../partials/footers/footer %>
