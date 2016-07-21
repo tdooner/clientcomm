@@ -81,6 +81,21 @@ body, .contents {
         content: "";
         display: block;
         clear: both; }
+    .card .card-body .form-row .form-select {
+      width: 450px;
+      height: 35px;
+      border: 2px solid #2F8CE8;
+      border-radius: 7px;
+      background-color: #92C9FF;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #344289; }
+      .card .card-body .form-row .form-select.half {
+        width: 215px;
+        float: left; }
+        .card .card-body .form-row .form-select.half:nth-child(2) {
+          margin-right: 20px; }
   .card .card-body .form-submit {
     border: 0px;
     border-radius: 17px;

@@ -408,7 +408,7 @@ router.get("/:cmid/cls/:clid/archive", function (req, res) {
       db("clients")
       .where("clid", clid)
       .then(function (clients) {
-        res.render("casemanagers/client/cientcloseoutsurvey", {
+        res.render("casemanagers/client/client_closeout_survey", {
           client: clients[0],
           clientSurveyAlreadySubmitted: clientSurveyAlreadySubmitted
         });
@@ -1255,6 +1255,11 @@ router.use("/:cmid/alerts", alertsRoutes);
 // Notifications view
 var notificationsRoutes = require("./cm-subroutes/notifications");
 router.use("/:cmid/notifications", notificationsRoutes);
+
+
+// Templates view
+var templatesRoutes = require("./cm-subroutes/templates");
+router.use("/:cmid/templates", templatesRoutes);
 
 
 // POTENTIALLY DEPERECATED ENDPOINTS... NEED TO MAKE SURE THEY ARE ABSOLUTELY NOT USED ANYMORE
