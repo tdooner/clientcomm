@@ -70,13 +70,23 @@
           </td>
 
           <td class="fa-icon-holder">
-            <form 
-              action="/cms/<%= user.cmid %>/templates/<%= templates[i].notificationid %>/delete %>"" 
-              method="post">
-                <button type="submit">
-                  <i class="fa fa-trash standard-fa-no-stack"></i>
-                </button>
-            </form>
+
+
+            <% if (templates[i].casemanager == user.cmid) { %>
+              <form 
+                action="/cms/<%= user.cmid %>/templates/<%= templates[i].notificationid %>/delete %>"" 
+                method="post">
+                  <button type="submit">
+                    <i class="fa fa-trash standard-fa-no-stack"></i>
+                  </button>
+              </form>
+            <% } else { %>
+              <span class="fa-stack disabled">
+                <i class="fa fa-trash fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x fa-rotate-90"></i>
+              </span>
+            <% } %>
+            
           </td>
 
         </tr>

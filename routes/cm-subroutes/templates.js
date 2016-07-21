@@ -33,6 +33,7 @@ router.get("/", function (req, res) {
   .leftJoin("clients", "templates.client", "clients.clid")
   .where("org", req.user.org)
   .orWhere("casemanager", req.user.cmid)
+  .orderBy("casemanager", "asc")
   .then(function (templates) {
 
     res.render("casemanagers/templates/templates", {
