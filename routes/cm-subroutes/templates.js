@@ -29,6 +29,8 @@ router.get("/", function (req, res) {
   var redirectLoc = "/cms/" + req.params.cmid + "/templates";
   
   db("templates")
+  .select(db.raw("templates.*, clients.first, clients.last"))
+  .leftJoin("clients", "templates.client", "clients.clid")
   .where("org", req.user.org)
   .orWhere("casemanager", req.user.cmid)
   .then(function (templates) {
@@ -100,6 +102,31 @@ router.post("/create", function (req, res) {
   }
 });
 
+
+// EDIT A SINGLE TEMPLATE
+router.get("/:templateID/edit", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res); 
+  var redirectLoc = "/cms/" + req.params.cmid + "/templates";
+
+  // Paramters to variables
+  var templateID = req.params.templateID;
+  
+  db("templates")
+  .leftJoin("clients", "templates.client", "clients.clid")
+  .where("casemanager", req.user.cmid)
+  .andWhere("template_id", templateID)
+  .then(function (templates) {
+
+    res.send(templates)
+
+    // res.render("casemanagers/templates/templates", {
+    //   templates: templates
+    // });
+
+  }).catch(errorRedirect);
+});
 
 
 
