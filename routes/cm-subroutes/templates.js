@@ -104,7 +104,7 @@ router.post("/create", function (req, res) {
 });
 
 
-// EDIT A SINGLE TEMPLATE
+// EDIT VIEW FOR A SINGLE TEMPLATE
 router.get("/:templateID/edit", function (req, res) {
   
   // Reroute
@@ -113,22 +113,77 @@ router.get("/:templateID/edit", function (req, res) {
 
   // Paramters to variables
   var templateID = req.params.templateID;
+  var cmid =  Number(req.user.cmid);
   
   db("templates")
+  .select(db.raw("templates.*, clients.first, clients.last"))
   .leftJoin("clients", "templates.client", "clients.clid")
   .where("casemanager", req.user.cmid)
   .andWhere("template_id", templateID)
   .then(function (templates) {
 
-    res.send(templates)
+    if (templates.length == 0) {
+      res.redirect("/404");
+    } else {
 
-    // res.render("casemanagers/templates/templates", {
-    //   templates: templates
-    // });
+      db("clients")
+      .where("cm", cmid)
+      .andWhere("active", true)
+      .then(function (clients) {
+
+        res.render("casemanagers/templates/template_edit_card", {
+          template: templates[0],
+          clients: clients
+        });
+      }).catch(errorRedirect);
+    }
 
   }).catch(errorRedirect);
 });
 
+
+// MODIFY A TEMPLATE ROW SUBMISSION
+router.post("/:templateID/edit", function (req, res) {
+  
+  var errorRedirect = fivehundred(res); 
+  var redirectLoc = "/cms/" + req.params.cmid + "/templates";
+
+  var orgid = Number(req.user.org);
+  var cmid =  Number(req.user.cmid);
+  var templateID = req.params.templateID;
+
+  var clid = Number(req.body.client);
+  if (isNaN(clid)) {
+    clid = null;
+  }
+
+  var content = req.body.content;
+
+  // Make sure that there is enough content
+  if (!content || content.length < 1) {
+    req.flash("warning", "Template content is too short.");
+    res.redirect(redirectLoc + "/" + req.params.templateID + "/edit");
+
+  // Only continue if content has length
+  } else {
+
+    var insertObj = {
+      org: orgid,
+      casemanager: cmid,
+      client: clid,
+      content: content
+    };
+
+    // Run insert of modified template
+    db("templates")
+    .where("casemanager", req.user.cmid)
+    .andWhere("template_id", templateID)
+    .update(insertObj)
+    .then(function (success) {
+      res.redirect(redirectLoc);
+    }).catch(errorRedirect);
+  }
+});
 
 
 
