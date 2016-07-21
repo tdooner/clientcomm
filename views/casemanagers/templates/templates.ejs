@@ -2,7 +2,7 @@
 <% include ../../partials/headers/header-navbar %>
 
 <!-- Include notification view-specific styling -->
-<link rel="stylesheet" type="text/css" href="/static/css/notificationslist.css">
+<link rel="stylesheet" type="text/css" href="/static/css/templatesList.css">
 
 <div class="contents">
 
@@ -34,15 +34,24 @@
         <tr>
 
           <td class="fa-icon-holder">
-            <a href="/cms/<%= user.cmid %>/templates/<%= templates[i].template_id %>/edit %>">
-              <i class="fa fa-pencil standard-fa-no-stack"></i>
-            </a>
+
+            <% if (templates[i].casemanager == user.cmid) { %>
+              <a href="/cms/<%= user.cmid %>/templates/<%= templates[i].template_id %>/edit %>">
+                <i class="fa fa-pencil standard-fa-no-stack"></i>
+              </a>
+            <% } else { %>
+              <span class="fa-stack disabled">
+                <i class="fa fa-pencil fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x fa-rotate-90"></i>
+              </span>
+            <% } %>
+
           </td>
 
           <td>
             
             <% if (templates[i].content.length > 20) { %>
-              <%= templates[i].content.substring(0,20) %>...
+              <%= templates[i].content.substring(0,115) %>...
             <% } else { %>
               <%= templates[i].content %>
             <% } %>
@@ -52,7 +61,7 @@
             <% if (templates[i].client == null) { %>
               All clients
             <% } else { %>
-              <%= templates[i].client %>
+              <%= templates[i].first %> <%= templates[i].last %>
             <% } %>
           </td>
 
