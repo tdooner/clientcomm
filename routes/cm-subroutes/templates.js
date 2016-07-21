@@ -31,8 +31,15 @@ router.get("/", function (req, res) {
   db("templates")
   .select(db.raw("templates.*, clients.first, clients.last"))
   .leftJoin("clients", "templates.client", "clients.clid")
+  
+  // Either this is an active org template
   .where("org", req.user.org)
+  .andWhere("templates.active", true)
+  
+  // ... or an active case manager template
   .orWhere("casemanager", req.user.cmid)
+  .andWhere("templates.active", true)
+  
   .orderByRaw("casemanager ASC, updated DESC")
   .then(function (templates) {
 
@@ -186,6 +193,35 @@ router.post("/:templateID/edit", function (req, res) {
   }
 });
 
+
+// DELETE A TEMPLATE ROW 
+router.post("/:templateID/delete", function (req, res) {
+  
+  var errorRedirect = fivehundred(res); 
+  var redirectLoc = "/cms/" + req.params.cmid + "/templates";
+
+  var orgid = Number(req.user.org);
+  var cmid =  Number(req.user.cmid);
+  var templateID = req.params.templateID;
+
+  var clid = Number(req.body.client);
+  if (isNaN(clid)) {
+    clid = null;
+  }
+
+  // Run insert of modified template
+  db("templates")
+  .where("casemanager", req.user.cmid)
+  .andWhere("template_id", templateID)
+  .update({ active: false })
+  .then(function (success) {
+
+    req.flash("success", "Removed a custom template.");
+    res.redirect(redirectLoc);
+
+  }).catch(errorRedirect);
+
+});
 
 
 
