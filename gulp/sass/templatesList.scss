@@ -20,7 +20,7 @@
       padding-left: 10px;
       padding-right: 10px;
       height: 55px;
-      word-wrap:break-word;
+      word-wrap: break-word;
 
       &.fa-icon-holder {
         text-align: center;
@@ -48,31 +48,27 @@
 
       &:nth-child(1) {
         width: 50px;
+        max-width: 50px;
       }
       &:nth-child(2) {
-        width: 100px;
+        width: 375px;
+        max-width: 375px;
+        max-width: 375px;
       }
       &:nth-child(3) {
-        width: 300px;
+        width: 250px;
+        max-width: 250px;
+        word-wrap: break-word;
       }
       &:nth-child(4) {
         font-size: small;
         width: 75px;
+        max-width: 75px;
       }
       &:nth-child(5) {
         font-size: small;
-        width: 75px;
-      }
-      &:nth-child(6) {
-        font-size: small;
         width: 50px;
-      }
-      &:nth-child(7) {
-        font-size: small;
-        width: 100px;
-      }
-      &:nth-child(8) {
-        width: 50px;
+        max-width: 50px;
       }
     }
 
