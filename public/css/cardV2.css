@@ -98,7 +98,8 @@ body, .contents {
           margin-right: 20px; }
   .card .card-body .color-selector {
     text-align: center;
-    margin-top: 50px; }
+    margin-top: 50px;
+    margin-bottom: 50px; }
     .card .card-body .color-selector .color-option {
       display: inline-block;
       margin-left: 5px;
@@ -133,6 +134,16 @@ body, .contents {
         border-color: #D44343; }
       .card .card-body .color-selector .color-option.red input[type="radio"]:checked + label span {
         background-color: #D44343; }
+    .card .card-body .color-selector .client-name-box {
+      width: 350px;
+      height: 50px;
+      background-color: #898989;
+      margin-top: 30px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 50px;
+      font-size: 24px;
+      overflow: hidden; }
   .card .card-body .form-submit {
     border: 0px;
     border-radius: 17px;

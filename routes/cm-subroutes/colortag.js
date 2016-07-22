@@ -26,7 +26,7 @@ router.get("/", function (req, res) {
   
   // Reroute
   var errorRedirect = fivehundred(res); 
-  var redirectLoc = "/cms/" + req.params.cmid + "/templates";
+  var redirectLoc = "/cms/" + req.params.cmid;
 
   var cmid = Number(req.user.cmid);
   var clid = Number(req.params.clid);
@@ -53,6 +53,32 @@ router.get("/", function (req, res) {
 
 });
 
+
+// SUMIT CHAGED COLOR
+router.post("/", function (req, res) {
+  
+  // Reroute
+  var errorRedirect = fivehundred(res); 
+  var redirectLoc = "/cms/" + req.params.cmid;
+
+  var cmid = Number(req.user.cmid);
+  var clid = Number(req.params.clid);
+
+  
+  db("clients")
+  .where("clid", clid)
+  .andWhere("cm", cmid)
+  .update({
+    color_tag: req.body.colorTagValue
+  })
+  .then(function (success) {
+
+    req.flash("success", "Updated client color.");
+    res.redirect(redirectLoc);
+
+  }).catch(errorRedirect);
+
+});
 
 
 // EXPORT ROUTER OBJECt
