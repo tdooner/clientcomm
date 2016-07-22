@@ -96,6 +96,43 @@ body, .contents {
         float: left; }
         .card .card-body .form-row .form-select.half:nth-child(2) {
           margin-right: 20px; }
+  .card .card-body .color-selector {
+    text-align: center;
+    margin-top: 50px; }
+    .card .card-body .color-selector .color-option {
+      display: inline-block;
+      margin-left: 5px;
+      margin-right: 5px; }
+      .card .card-body .color-selector .color-option input[type="radio"] {
+        display: none; }
+      .card .card-body .color-selector .color-option input[type="radio"] + label {
+        color: #898989;
+        font-size: 14px; }
+      .card .card-body .color-selector .color-option input[type="radio"] + label span {
+        display: inline-block;
+        width: 25px;
+        height: 50px;
+        border: 3px solid #898989;
+        border-radius: 40px;
+        cursor: pointer; }
+      .card .card-body .color-selector .color-option input[type="radio"] + label span {
+        background-color: none; }
+      .card .card-body .color-selector .color-option.default input[type="radio"] + label span {
+        border-color: #898989; }
+      .card .card-body .color-selector .color-option.default input[type="radio"]:checked + label span {
+        background-color: #898989; }
+      .card .card-body .color-selector .color-option.green input[type="radio"] + label span {
+        border-color: #43D45B; }
+      .card .card-body .color-selector .color-option.green input[type="radio"]:checked + label span {
+        background-color: #43D45B; }
+      .card .card-body .color-selector .color-option.yellow input[type="radio"] + label span {
+        border-color: #C5D11C; }
+      .card .card-body .color-selector .color-option.yellow input[type="radio"]:checked + label span {
+        background-color: #C5D11C; }
+      .card .card-body .color-selector .color-option.red input[type="radio"] + label span {
+        border-color: #D44343; }
+      .card .card-body .color-selector .color-option.red input[type="radio"]:checked + label span {
+        background-color: #D44343; }
   .card .card-body .form-submit {
     border: 0px;
     border-radius: 17px;

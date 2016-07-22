@@ -161,6 +161,88 @@ body, .contents {
 
     }
 
+    .color-selector {
+      text-align: center;
+      margin-top: 50px;
+
+      // color rules
+      $default: #898989;
+      $green: #43D45B;
+      $yellow: #C5D11C;
+      $red: #D44343;
+
+      .color-option {
+        display: inline-block;
+        margin-left: 5px;
+        margin-right: 5px;
+
+        // Hide the normal radio button displayed
+        input[type="radio"] {
+          display:none;
+        }
+
+        // Style the subtitle content
+        input[type="radio"] + label {
+          color: $dark-grey;
+          font-size:14px;
+        }
+
+        // The "Replacement" radio icon
+        input[type="radio"] + label span {
+          display:inline-block;
+          width: 25px;
+          height: 50px;
+          border: 3px solid $default;
+          border-radius: 40px;
+          cursor:pointer;
+        }
+
+        input[type="radio"] + label span {
+          background-color: none;
+        }
+
+        &.default {
+          input[type="radio"] + label span {
+            border-color: $default;
+          }
+          input[type="radio"]:checked + label span{
+            background-color: $default;
+          }
+        }
+
+        // Custom actions for non-default button colors
+        // TO DO: There has to be a better way of generating this information
+        &.green {
+          input[type="radio"] + label span {
+            border-color: $green;
+          }
+          input[type="radio"]:checked + label span{
+            background-color: $green;
+          }
+        }
+
+        &.yellow {
+          input[type="radio"] + label span {
+            border-color: $yellow;
+          }
+          input[type="radio"]:checked + label span{
+            background-color: $yellow;
+          }
+        }
+
+        &.red {
+          input[type="radio"] + label span {
+            border-color: $red;
+          }
+          input[type="radio"]:checked + label span{
+            background-color: $red;
+          }
+        }
+
+      }
+
+    }
+
     .form-submit {
       border: 0px;
       border-radius: 17px;
