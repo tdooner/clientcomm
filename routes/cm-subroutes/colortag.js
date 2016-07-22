@@ -27,8 +27,29 @@ router.get("/", function (req, res) {
   // Reroute
   var errorRedirect = fivehundred(res); 
   var redirectLoc = "/cms/" + req.params.cmid + "/templates";
+
+  var cmid = Number(req.user.cmid);
+  var clid = Number(req.params.clid);
+
   
-  res.send("hi");
+  db("clients")
+  .where("clid", clid)
+  .andWhere("cm", cmid)
+  .limit(1)
+  .then(function (clients) {
+
+    // Only show card if there is a client returned
+    if (clients.length > 0) {
+      res.render("casemanagers/client/color_tag_select", {
+        client: clients[0]
+      });
+
+    // Otherwise 404
+    } else {
+      res.redirect("/404");
+    }
+
+  }).catch(errorRedirect);
 
 });
 
