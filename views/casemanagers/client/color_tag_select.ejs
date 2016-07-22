@@ -40,6 +40,7 @@
                   id="colorRadio01" 
                   value="#898989" 
                   <% if (client.color_tag == "#898989") { %> checked <% } %>
+                  onclick="updateColor('#898989')"
                   name="colorTagRadio" />
           <label for="colorRadio01"><span></span></label>
         </div>
@@ -49,6 +50,7 @@
                   id="colorRadio02" 
                   value="#43D45B" 
                   <% if (client.color_tag == "#43D45B") { %> checked <% } %>
+                  onclick="updateColor('#43D45B')"
                   name="colorTagRadio" />
           <label for="colorRadio02"><span></span></label>
         </div>
@@ -58,6 +60,7 @@
                   id="colorRadio03" 
                   value="#C5D11C" 
                   <% if (client.color_tag == "#C5D11C") { %> checked <% } %>
+                  onclick="updateColor('#C5D11C')"
                   name="colorTagRadio" />
           <label for="colorRadio03"><span></span></label>
         </div>
@@ -67,11 +70,12 @@
                   id="colorRadio04" 
                   value="#D44343" 
                   <% if (client.color_tag == "#D44343") { %> checked <% } %>
+                  onclick="updateColor('#D44343')"
                   name="colorTagRadio" />
           <label for="colorRadio04"><span></span></label>
         </div>
 
-        <div class="client-name-box">
+        <div class="client-name-box" style="background-color: <%= client.color_tag %>">
           <%= client.first %> <%= client.last %>
         </div>
 
@@ -90,5 +94,12 @@
 </div>
 
 </div>
+
+<script type="text/javascript">
+  function updateColor (color) {
+    console.log(color);
+    $(".client-name-box").css("background-color", color);
+  };
+</script>
 
 <% include ../../partials/footers/footer %>
