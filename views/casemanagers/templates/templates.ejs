@@ -6,6 +6,20 @@
 
 <div class="contents">
 
+  <!-- Temp solution to deal with tempalte and notification access -->
+  <div class="sort-opts">
+    <a href="/cms/<%= user.cmid %>">
+      <div class="toggle"> Client Directory </div>
+    </a>
+    <a href="/cms/<%= user.cmid %>/notifications">
+      <div class="toggle"> Notifications </div>
+    </a>
+    <a href="/cms/<%= user.cmid %>/templates">
+      <div class="toggle selected"> Templates </div>
+    </a>
+  </div>
+  <hr>
+
   <a href="/cms/<%= user.cmid %>/templates/create">
     <div class="newclient"> 
       <% include ../../../public/icons/bigplus.svg %> 

@@ -6,6 +6,20 @@
 
 <div class="contents">
 
+  <!-- Temp solution to deal with tempalte and notification access -->
+  <div class="sort-opts">
+    <a href="/cms/<%= user.cmid %>">
+      <div class="toggle"> Client Directory </div>
+    </a>
+    <a href="/cms/<%= user.cmid %>/notifications">
+      <div class="toggle selected"> Notifications </div>
+    </a>
+    <a href="/cms/<%= user.cmid %>/templates">
+      <div class="toggle"> Templates </div>
+    </a>
+  </div>
+  <hr>
+
   <div class="sort-opts">
     <div class="toggle <% if (!archiveView) { %> selected <% } %>">
       <a href="/cms/<%= user.cmid %>/notifications/overview/open">
