@@ -97,6 +97,10 @@ app.use("/orgs", auth.isSuper, supermgmt)
 // Catch-alls
 require("../routes/catchall")(app);
 
+app.get("/*", function (req, res) {
+  res.redirect("/404");
+});
+
 
 
 // START UP CLIENTCOMM
