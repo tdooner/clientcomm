@@ -1206,22 +1206,32 @@ router.post("/:cmid/cls/:clid/convos/:convid/reject", function (req, res) {
 });
 
 
-// Alerts view
+// Sending group messages logic
+var groupManagementRoutes = require("./cm-subroutes/groupmessages");
+router.use("/:cmid/groups", groupManagementRoutes);
+
+
+// Sending group messages logic
+var groupManagementRoutes = require("./cm-subroutes/groupmessages");
+router.use("/:cmid/groups", groupManagementRoutes);
+
+
+// Alerts logic
 var alertsRoutes = require("./cm-subroutes/alerts");
 router.use("/:cmid/alerts", alertsRoutes);
 
 
-// Notifications view
+// Notifications logic
 var notificationsRoutes = require("./cm-subroutes/notifications");
 router.use("/:cmid/notifications", notificationsRoutes);
 
 
-// Templates view
+// Templates logic
 var templatesRoutes = require("./cm-subroutes/templates");
 router.use("/:cmid/templates", templatesRoutes);
 
 
-// Colors view
+// Colors logic
 var clientColorTagRoutes = require("./cm-subroutes/colortag");
 router.use("/:cmid/cls/:clid/colortag", clientColorTagRoutes);
 
