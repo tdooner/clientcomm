@@ -148,8 +148,6 @@ body, .contents {
     border: 0px;
     border-radius: 17px;
     height: 35px;
-    background-color: #4A90E2;
-    color: #FFF;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
@@ -157,8 +155,10 @@ body, .contents {
     padding-right: 20px;
     margin-bottom: 20px;
     margin-left: auto;
-    margin-right: auto; }
+    margin-right: auto;
+    border: 2px solid #4A90E2;
+    background-color: #FFF;
+    color: #4A90E2; }
     .card .card-body .form-submit:hover {
-      border: 2px solid #4A90E2;
-      background-color: #FFF;
-      color: #4A90E2; }
+      background-color: #4A90E2;
+      color: #FFF; }
