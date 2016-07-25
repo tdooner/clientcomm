@@ -40,8 +40,32 @@ var fivehundred   = errorHandlers.fivehundred;
 
 
 
+// START LOGIC FOR CREATING A NEW CONVERSATION
+router.get("/", function (req, res) { 
 
-router.get("/", function (req, res) {
+  var cmid = Number(req.params.cmid);
+  var clid = Number(req.params.clid);
+
+  // Reroute to first step of creating new conversation
+  var redirectLoc = "/cms/" + cmid + "/cls/" + clid + "/convos/new/selectpath";
+  res.redirect(redirectLoc);
+});
+
+
+router.get("/new/selectpath", function (req, res) { 
+
+  var cmid = Number(req.params.cmid);
+  var clid = Number(req.params.clid);
+
+  // Reroute to first step of creating new conversation
+  var redirectLoc = "/cms/" + cmid + "/cls/" + clid + "/convos/new/selectpath";
+  
+  res.render("casemanagers/client/clientconvo");
+});
+
+
+
+router.get("/foo", function (req, res) {
   
   // Reroute
   var errorRedirect = fivehundred(res);
