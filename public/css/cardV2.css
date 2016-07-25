@@ -111,9 +111,10 @@ body, .contents {
     .card .card-body .template-box .template-row {
       height: 100px;
       overflow: hidden;
-      border-bottom: 1px solid #C5C4C4; }
+      border-bottom: 1px solid #C5C4C4;
+      cursor: pointer; }
       .card .card-body .template-box .template-row .use-count {
-        float: left;
+        float: right;
         width: 45px;
         text-align: center;
         line-height: 100px;
@@ -121,7 +122,7 @@ body, .contents {
         font-weight: 700;
         color: #4A90E2; }
       .card .card-body .template-box .template-row .template-content {
-        float: left;
+        float: right;
         padding: 10px;
         width: 385px; }
         .card .card-body .template-box .template-row .template-content .title-text {
@@ -131,17 +132,20 @@ body, .contents {
           word-wrap: break-word;
           height: 14px;
           margin-bottom: 5px;
-          overflow: hidden; }
+          overflow: hidden;
+          color: #4A90E2;
+          text-decoration: underline; }
         .card .card-body .template-box .template-row .template-content .content {
           word-wrap: break-word;
           overflow: hidden;
           font-size: 14px;
           line-height: 14px;
           height: 42px;
+          color: #898989;
           margin-top: 5px;
           margin-bottom: 5px; }
         .card .card-body .template-box .template-row .template-content .tags {
-          color: #50E3C2;
+          color: #C5C4C4;
           font-size: 12px;
           font-weight: bold;
           line-height: 14px;
@@ -150,10 +154,16 @@ body, .contents {
           content: "";
           display: block;
           clear: both; }
-      .card .card-body .template-box .template-row.selected {
+      .card .card-body .template-box .template-row:hover, .card .card-body .template-box .template-row.selected {
         background-color: #4A90E2;
         color: #FFF; }
-        .card .card-body .template-box .template-row.selected .use-count {
+        .card .card-body .template-box .template-row:hover .title-text, .card .card-body .template-box .template-row.selected .title-text {
+          color: #FFF; }
+        .card .card-body .template-box .template-row:hover .use-count, .card .card-body .template-box .template-row.selected .use-count {
+          color: #FFF; }
+        .card .card-body .template-box .template-row:hover .content, .card .card-body .template-box .template-row.selected .content {
+          color: #FFF; }
+        .card .card-body .template-box .template-row:hover .tags, .card .card-body .template-box .template-row.selected .tags {
           color: #FFF; }
       .card .card-body .template-box .template-row::after {
         content: "";

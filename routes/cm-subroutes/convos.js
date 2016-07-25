@@ -164,6 +164,19 @@ router.get("/new/selecttemplate", function (req, res) {
   }).catch(errorRedirect);
 });
 
+// Submit template selection to use in new convo message
+router.post("/new/selecttemplate", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
+
+  // Param variables
+  var cmid = Number(req.params.cmid);
+  var clid = Number(req.params.clid);
+
+  res.send(req.body);
+});
+
 
 
 router.get("/foo", function (req, res) {

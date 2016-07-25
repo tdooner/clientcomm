@@ -180,9 +180,10 @@ body, .contents {
         height: 100px;
         overflow: hidden;
         border-bottom: 1px solid $light-grey;
+        cursor: pointer;
 
         .use-count {
-          float: left;
+          float: right;
           width: 45px;
           text-align: center;
           line-height: 100px;
@@ -192,7 +193,7 @@ body, .contents {
         }
 
         .template-content {
-          float: left;
+          float: right;
           padding: 10px;
           width: 385px;
 
@@ -204,6 +205,8 @@ body, .contents {
             height: 14px;
             margin-bottom: 5px;
             overflow: hidden;
+            color: $light-blue;
+            text-decoration: underline;
           }
 
           .content {
@@ -212,13 +215,14 @@ body, .contents {
             font-size: 14px;
             line-height: 14px;
             height: 42px;
+            color: $dark-grey;
 
             margin-top: 5px;
             margin-bottom: 5px;
           }
 
           .tags {
-            color: $lime-green;
+            color: $light-grey;
             font-size: 12px;
             font-weight: bold;
             line-height: 14px;
@@ -232,11 +236,20 @@ body, .contents {
           }
         }
 
-        &.selected {
+        &:hover, &.selected {
           background-color: $light-blue;
           color: $white;
 
+          .title-text {
+            color: $white;
+          }
           .use-count {
+            color: $white;            
+          }
+          .content {
+            color: $white;            
+          }
+          .tags {
             color: $white;            
           }
         }

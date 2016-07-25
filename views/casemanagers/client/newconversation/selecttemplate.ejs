@@ -29,7 +29,7 @@
 
     <div class="template-box">
       <% for (var i=0; i < templates.length; i++) { %>
-        <div class="template-row <% if (i == 2) { %> selected <% } %>">
+        <div class="template-row" template_id="<%= templates[i].template_id %>">
           
           <div class="use-count">
             <%= templates[i].times_used %>
@@ -37,29 +37,41 @@
 
           <div class="template-content">
             <div class="title-text">
-              <%= templates[i].title %>
+              <% if (templates[i].title) { %>
+                <%= templates[i].title %>
+              <% } else { %>
+                No title available.
+              <% } %>
             </div>
             <div class="content">
               <%= templates[i].content %>
             </div>
             <div class="tags">
-              Fellow | Work | Reminder | Friendly
+              No tags associated with this template.
             </div>
           </div>
         </div>
       <% } %>
     </div>
 
-    <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/convos/new/craftmessage">
-      <button class="form-submit fixed-width">
-        Select Template
-      </button>
-    </a>
+
+    <form method="post">
+      <input type="hidden" name="templateID" id="templateID" value="">
+      <input type="submit" class="form-submit" value="Select Template">
+    </form>
 
   </div>
 
 </div>
 
 </div>
+
+<script type="text/javascript">
+  $(".template-row").click(function () {
+    $(".template-row").removeClass("selected");
+    $(this).addClass("selected");
+    $("#templateID").val($(this).attr("template_id"));
+  });
+</script>
 
 <% include ../../../partials/footers/footer %>
