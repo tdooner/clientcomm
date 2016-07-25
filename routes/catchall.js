@@ -4,6 +4,7 @@ module.exports = function (app, db, utils, passport) {
 
 
   app.get("/400", function (req, res) {
+    res.status(404).render("errors/404");
     res.status(404).send("400 Malformed request.")
   });
 
