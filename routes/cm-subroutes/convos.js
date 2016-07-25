@@ -40,27 +40,100 @@ var fivehundred   = errorHandlers.fivehundred;
 
 
 
-// START LOGIC FOR CREATING A NEW CONVERSATION
-router.get("/", function (req, res) { 
+// Set elements we will always check for in these routes, such as client
+router.use(function (req, res, next){  
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
 
+  // Param variables
   var cmid = Number(req.params.cmid);
   var clid = Number(req.params.clid);
 
+  // Error if either id is not an integer
+  if (isNaN(cmid) || isNaN(clid)) {
+    res.redirect("/404"); 
+
+  // Search away
+  } else {
+    db("clients")
+    .where("cm", cmid)
+    .andWhere("clid", clid)
+    .then(function (clients) {
+
+      // Make sure that client with that cm actually exists
+      if (clients.length == 0) { 
+        res.redirect("/404"); 
+
+      // Then proceed to gather current conversations
+      } else { 
+        res.locals.client = clients[0]; 
+        next();
+      }
+    }).catch(errorRedirect);
+  }
+});
+
+
+// START LOGIC FOR CREATING A NEW CONVERSATION
+// Send to /new endpoint
+router.get("/", function (req, res) {
+  // Param variables
+  var cmid = Number(req.params.cmid);
+  var clid = Number(req.params.clid);
+  // Reroute to first step of creating new conversation
+  var redirectLoc = "/cms/" + cmid + "/cls/" + clid + "/convos/new";
+  res.redirect(redirectLoc);
+});
+
+
+// Route to first step in /new process
+router.get("/new", function (req, res) {
+  // Param variables
+  var cmid = Number(req.params.cmid);
+  var clid = Number(req.params.clid);
   // Reroute to first step of creating new conversation
   var redirectLoc = "/cms/" + cmid + "/cls/" + clid + "/convos/new/selectpath";
   res.redirect(redirectLoc);
 });
 
 
+// First step in making new convo message
 router.get("/new/selectpath", function (req, res) { 
+  res.render("casemanagers/client/newconversation/selectpath");
+});
 
+
+// Optional step in making new convo message
+// Choose a template to use
+router.get("/new/selecttemplate", function (req, res) { 
+  
+  // Reroute
+  var errorRedirect = fivehundred(res);
+
+  // Param variables
   var cmid = Number(req.params.cmid);
   var clid = Number(req.params.clid);
 
-  // Reroute to first step of creating new conversation
-  var redirectLoc = "/cms/" + cmid + "/cls/" + clid + "/convos/new/selectpath";
+  db("templates")
+  // Either this is an active org template
+  .where("org", req.user.org)
+  .andWhere("templates.active", true)
+  .andWhere("client", null)
   
-  res.render("casemanagers/client/clientconvo");
+  // ... or an active case manager template
+  .orWhere("casemanager", req.user.cmid)
+  .andWhere("templates.active", true)
+  .andWhere("client", clid)
+  
+  .orderByRaw("updated DESC")
+  .then(function (templates) {
+
+    res.render("casemanagers/client/newconversation/selecttemplate", {
+      templates: templates
+    });
+  
+  }).catch(errorRedirect);
 });
 
 
