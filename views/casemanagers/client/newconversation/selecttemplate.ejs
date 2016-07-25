@@ -16,7 +16,7 @@
     </a>
 
     <div class="card-title">
-      Contact <%= client.first %>sss
+      Select a Templated Message
     </div>
 
     <div class="card-subtitle">
@@ -27,12 +27,34 @@
 
   <div class="card-body">
 
-    <% for (var i=0; i < templates.length; i++) { %>
+    <div class="template-box">
+      <% for (var i=0; i < templates.length; i++) { %>
+        <div class="template-row <% if (i == 2) { %> selected <% } %>">
+          
+          <div class="use-count">
+            <%= templates[i].times_used %>
+          </div>
 
-      <%= JSON.stringify(templates[i]) %>
-      <br>
+          <div class="template-content">
+            <div class="title-text">
+              <%= templates[i].title %>
+            </div>
+            <div class="content">
+              <%= templates[i].content %>
+            </div>
+            <div class="tags">
+              Fellow | Work | Reminder | Friendly
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
 
-    <% } %>
+    <a href="/cms/<%= user.cmid %>/cls/<%= client.clid %>/convos/new/craftmessage">
+      <button class="form-submit fixed-width">
+        Select Template
+      </button>
+    </a>
 
   </div>
 

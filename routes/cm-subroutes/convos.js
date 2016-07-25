@@ -129,10 +129,38 @@ router.get("/new/selecttemplate", function (req, res) {
   .orderByRaw("updated DESC")
   .then(function (templates) {
 
-    res.render("casemanagers/client/newconversation/selecttemplate", {
-      templates: templates
+    var templateIDs = templates.map(function (ea) {
+      return ea.template_id;
     });
-  
+
+    // TO DO: Combine with above DB query
+    // This should really be part of the above database query, not a second operation
+    db("template_use")
+    .count("template_use_id")
+    .whereIn("template", templateIDs)
+    .groupBy("template")
+    .then(function (template_use) {
+
+      // Add counts to each template
+      templates = templates.map(function (eaTemp) {
+        // Minimum count would be zero
+        var totalUse = 0;
+        // Iterate through used template counts and update
+        template_use.forEach(function (eaUse) {
+          if (eaUse.template == eaTemp.template_id) {
+            totalUse = eaUse.count;
+          }
+        });
+        // Figure out how to handle difference in camelcase v. Postgres data
+        eaTemp.times_used = totalUse;
+        return eaTemp;
+      });
+
+      res.render("casemanagers/client/newconversation/selecttemplate", {
+        templates: templates
+      });
+
+    }).catch(errorRedirect);  
   }).catch(errorRedirect);
 });
 
