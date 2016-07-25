@@ -2,7 +2,8 @@ body, .contents {
   background-color: #344289;
   background-image: none;
   box-shadow: none;
-  border: 0; }
+  border: 0;
+  color: #344289; }
 
 .comms-link {
   color: #2F8CE8;
@@ -145,14 +146,18 @@ body, .contents {
       font-size: 24px;
       overflow: hidden; }
   .card .card-body .form-submit {
+    display: block;
     border: 0px;
     border-radius: 17px;
     height: 35px;
     font-size: 14px;
     font-weight: 700;
+    line-height: 27px;
     cursor: pointer;
     padding-left: 20px;
     padding-right: 20px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     margin-bottom: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -162,3 +167,24 @@ body, .contents {
     .card .card-body .form-submit:hover {
       background-color: #4A90E2;
       color: #FFF; }
+    .card .card-body .form-submit.fixed-width {
+      width: 250px;
+      overflow: hidden; }
+  .card .card-body .or-break {
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 20px; }
+    .card .card-body .or-break .dash {
+      padding-left: 10px;
+      padding-right: 10px;
+      display: inline-block;
+      -webkit-transform: scale(5, 1);
+      /* Safari and Chrome */
+      -moz-transform: scale(5, 1);
+      /* Firefox */
+      -ms-transform: scale(5, 1);
+      /* IE 9 */
+      -o-transform: scale(5, 1);
+      /* Opera */
+      transform: scale(5, 1);
+      /* W3C */ }
