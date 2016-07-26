@@ -51,6 +51,17 @@ router.get("/", function (req, res) {
 });
 
 
+router.get("/send/:templateID", function (req, res) {
+  // need to ask who to send the message to and via what comms
+
+});
+
+
+router.get("/send/:templateID/to/:clientID", function (req, res) {
+  // same as above but default to the comm and client that is specified
+});
+
+
 // SHOW CARD FOR CREATING A NEW TEMPLATE
 router.get("/create", function (req, res) {
   

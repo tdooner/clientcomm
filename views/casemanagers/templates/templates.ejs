@@ -65,7 +65,12 @@
 
           <td>
 
-            <a href="">
+            <% if (templates[i].client == null) { %>
+              <a href="/cms/<%= user.cmid %>/templates/send/<%= templates[i].template_id %>">
+            <% } else { %>
+              <a href="/cms/<%= user.cmid %>/templates/send/<%= templates[i].template_id %>/to/<%= templates[i].client %>">
+            <% } %>
+
               <% if (templates[i].title && templates[i].title !== "") { %>
                 <%= templates[i].title %>
               <% } else { %>
