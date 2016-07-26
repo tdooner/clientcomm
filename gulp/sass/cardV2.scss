@@ -119,18 +119,99 @@ body, .contents {
           float: left;
           margin-right: 20px;
         }
+.tgl {
+  display: none;
+  
+  // add default box-sizing for this scope
+  &,
+  &:after,
+  &:before,
+  & *,
+  & *:after,
+  & *:before,
+  & + .tgl-btn {
+    box-sizing: border-box;
+    &::selection {
+      background: none;
+    }
+  }
+  
+  + .tgl-btn {
+    outline: 0;
+    display: block;
+    width: 4em;
+    height: 2em;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    &:after,
+    &:before {
+      position: relative;
+      display: block;
+      content: "";
+      width: 50%;
+      height: 100%;
+    }
+    
+    &:after {
+      left: 0;
+    }
+    
+    &:before {
+      display: none;
+    }
+  }
+  
+  &:checked + .tgl-btn:after {
+    left: 50%;
+  }
+}
+
+        .tgl-light {
+          + .tgl-btn {
+            background: #f0f0f0;
+            border-radius: 2em;
+            padding: 2px;
+            transition: all .4s ease;
+            &:after {
+              border-radius: 50%;
+              background: #fff;
+              transition: all .2s ease;
+            }
+          }
+          
+          &:checked + .tgl-btn {
+            background: #9FD6AE;
+          }
+        }
+
+        input[type=text] {
+          background: $white;
+          width: 420px;
+          font-size: 12px;
+          line-height: 18px;
+          height: 18px;
+          max-width: 420px;
+          border: 2px solid $light-blue;
+          border-radius: 4px;
+          outline: none;
+          resize: none;
+          overflow: auto;
+          padding: 5px 10px 5px 10px;
+        }
 
         textarea {
           background: $white;
-          width: 100%;
+          width: 420px;
           height: 50px;
-          max-width: 100%;
+          max-width: 420px;
           max-height: 50px;
           border: 2px solid $light-blue;
           border-radius: 4px;
           outline: none;
           resize: none;
           overflow: auto;
+          padding: 5px 10px 5px 10px;
         }
 
         &::after {
@@ -141,7 +222,7 @@ body, .contents {
       }
 
       .form-select {
-        width: 450px;
+        width: 440px;
         height: 35px;
         border: 2px solid $card-text;
         border-radius: 7px;

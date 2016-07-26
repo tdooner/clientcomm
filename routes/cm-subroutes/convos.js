@@ -174,56 +174,68 @@ router.post("/new/selecttemplate", function (req, res) {
   var cmid = Number(req.params.cmid);
   var clid = Number(req.params.clid);
 
-  res.send(req.body);
-});
+  var templateID = Number(req.body.templateID);
 
+  // Make sure a valid template has been submitted
+  if (isNaN(templateID)) {
+    res.redirect("/404"); 
 
+  // If it has, re-query for its contents
+  } else {
+    db("templates")
+    .where("template_id", templateID)
+    .limit(1)
+    .then(function (templates) {
 
-router.get("/foo", function (req, res) {
-  
-  // Reroute
-  var errorRedirect = fivehundred(res);
-  
-  // Parameters
-  var clid = Number(req.params.clid);
-  var cmid = Number(req.params.cmid);
-  var cmid2 = Number(req.user.cmid);
-
-  if (cmid !== cmid2) { 
-    res.redirect("/400"); 
-  
-  } else { 
-    db("clients")
-    .where("cm", cmid)
-    .andWhere("clid", clid)
-    .then(function (clients) {
-
-      // Make sure that client with that cm actually exists
-      if (clients.length == 0) { 
+      // Make sure there is a valid response
+      if (templates.length == 0) {
         res.redirect("/404"); 
 
-      // Then proceed to gather current conversations
-      } else { 
+      } else {
         db("comms")
         .innerJoin("commconns", "comms.commid", "commconns.comm")
         .where("commconns.client", clid)
         .then(function (comms) {
 
-          res.render("casemanagers/client/clientconvo", {
-            client: clients[0], 
+          res.render("casemanagers/client/newconversation/createmessage", {
+            template: templates[0],
             comms: comms
           });
           
         }).catch(errorRedirect);
-      } 
-    }).catch(errorRedirect);
+      }
+
+    }).catch(errorRedirect); 
   }
 });
 
 
-
-router.post("/", function (req, res) {
+// Alternative straight to free text box option
+router.get("/new/craftmessage", function (req, res) { 
   
+  // Reroute
+  var errorRedirect = fivehundred(res);
+
+  // Param variables
+  var cmid = Number(req.params.cmid);
+  var clid = Number(req.params.clid);
+
+  db("comms")
+  .innerJoin("commconns", "comms.commid", "commconns.comm")
+  .where("commconns.client", clid)
+  .then(function (comms) {
+
+    res.render("casemanagers/client/newconversation/createmessage", {
+      template: null,
+      comms: comms
+    });
+    
+  }).catch(errorRedirect);
+});
+
+
+
+router.post("/new/craftmessage", function (req, res) {  
   // Reroute
   var errorRedirect = fivehundred(res);
   var redirect_loc = "/cms/" + req.user.cmid + "/cls/" + req.params.clid;
@@ -249,7 +261,7 @@ router.post("/", function (req, res) {
       return Communication.findById(commid)
     }).then((communication) => {
       twClient.sendSms({
-        to: communication.value,
+        to: "+18588694735", //communication.value,
         from: TWILIO_NUM,
         body: content,
       }, (err, msg) => {
@@ -354,7 +366,7 @@ router.post("/:convid", function (req, res) {
     .then((communication) => {
       if (communication) {
         twClient.sendSms({
-          to: communication.value,
+          to: "+18588694735", //communication.value,
           from: TWILIO_NUM,
           body: content,
         }, function (err, msg) {

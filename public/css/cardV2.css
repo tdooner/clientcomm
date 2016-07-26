@@ -67,23 +67,82 @@ body, .contents {
       .card .card-body .form-row .form-input .input-option {
         float: left;
         margin-right: 20px; }
+      .card .card-body .form-row .form-input .tgl {
+        display: none; }
+        .card .card-body .form-row .form-input .tgl, .card .card-body .form-row .form-input .tgl:after, .card .card-body .form-row .form-input .tgl:before,
+        .card .card-body .form-row .form-input .tgl *,
+        .card .card-body .form-row .form-input .tgl *:after,
+        .card .card-body .form-row .form-input .tgl *:before,
+        .card .card-body .form-row .form-input .tgl + .tgl-btn {
+          box-sizing: border-box; }
+          .card .card-body .form-row .form-input .tgl::selection, .card .card-body .form-row .form-input .tgl:after::selection, .card .card-body .form-row .form-input .tgl:before::selection,
+          .card .card-body .form-row .form-input .tgl *::selection,
+          .card .card-body .form-row .form-input .tgl *:after::selection,
+          .card .card-body .form-row .form-input .tgl *:before::selection,
+          .card .card-body .form-row .form-input .tgl + .tgl-btn::selection {
+            background: none; }
+        .card .card-body .form-row .form-input .tgl + .tgl-btn {
+          outline: 0;
+          display: block;
+          width: 4em;
+          height: 2em;
+          position: relative;
+          cursor: pointer;
+          user-select: none; }
+          .card .card-body .form-row .form-input .tgl + .tgl-btn:after, .card .card-body .form-row .form-input .tgl + .tgl-btn:before {
+            position: relative;
+            display: block;
+            content: "";
+            width: 50%;
+            height: 100%; }
+          .card .card-body .form-row .form-input .tgl + .tgl-btn:after {
+            left: 0; }
+          .card .card-body .form-row .form-input .tgl + .tgl-btn:before {
+            display: none; }
+        .card .card-body .form-row .form-input .tgl:checked + .tgl-btn:after {
+          left: 50%; }
+      .card .card-body .form-row .form-input .tgl-light + .tgl-btn {
+        background: #f0f0f0;
+        border-radius: 2em;
+        padding: 2px;
+        transition: all .4s ease; }
+        .card .card-body .form-row .form-input .tgl-light + .tgl-btn:after {
+          border-radius: 50%;
+          background: #fff;
+          transition: all .2s ease; }
+      .card .card-body .form-row .form-input .tgl-light:checked + .tgl-btn {
+        background: #9FD6AE; }
+      .card .card-body .form-row .form-input input[type=text] {
+        background: #FFF;
+        width: 420px;
+        font-size: 12px;
+        line-height: 18px;
+        height: 18px;
+        max-width: 420px;
+        border: 2px solid #4A90E2;
+        border-radius: 4px;
+        outline: none;
+        resize: none;
+        overflow: auto;
+        padding: 5px 10px 5px 10px; }
       .card .card-body .form-row .form-input textarea {
         background: #FFF;
-        width: 100%;
+        width: 420px;
         height: 50px;
-        max-width: 100%;
+        max-width: 420px;
         max-height: 50px;
         border: 2px solid #4A90E2;
         border-radius: 4px;
         outline: none;
         resize: none;
-        overflow: auto; }
+        overflow: auto;
+        padding: 5px 10px 5px 10px; }
       .card .card-body .form-row .form-input::after {
         content: "";
         display: block;
         clear: both; }
     .card .card-body .form-row .form-select {
-      width: 450px;
+      width: 440px;
       height: 35px;
       border: 2px solid #2F8CE8;
       border-radius: 7px;

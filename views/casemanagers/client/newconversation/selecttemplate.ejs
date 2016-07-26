@@ -57,7 +57,7 @@
 
     <form method="post">
       <input type="hidden" name="templateID" id="templateID" value="">
-      <input type="submit" class="form-submit" value="Select Template">
+      <input type="submit" class="form-submit" style="display: none;" value="Select Template">
     </form>
 
   </div>
@@ -71,6 +71,7 @@
     $(".template-row").removeClass("selected");
     $(this).addClass("selected");
     $("#templateID").val($(this).attr("template_id"));
+    $(".form-submit").show();
   });
 </script>
 
