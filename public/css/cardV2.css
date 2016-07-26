@@ -67,51 +67,6 @@ body, .contents {
       .card .card-body .form-row .form-input .input-option {
         float: left;
         margin-right: 20px; }
-      .card .card-body .form-row .form-input .tgl {
-        display: none; }
-        .card .card-body .form-row .form-input .tgl, .card .card-body .form-row .form-input .tgl:after, .card .card-body .form-row .form-input .tgl:before,
-        .card .card-body .form-row .form-input .tgl *,
-        .card .card-body .form-row .form-input .tgl *:after,
-        .card .card-body .form-row .form-input .tgl *:before,
-        .card .card-body .form-row .form-input .tgl + .tgl-btn {
-          box-sizing: border-box; }
-          .card .card-body .form-row .form-input .tgl::selection, .card .card-body .form-row .form-input .tgl:after::selection, .card .card-body .form-row .form-input .tgl:before::selection,
-          .card .card-body .form-row .form-input .tgl *::selection,
-          .card .card-body .form-row .form-input .tgl *:after::selection,
-          .card .card-body .form-row .form-input .tgl *:before::selection,
-          .card .card-body .form-row .form-input .tgl + .tgl-btn::selection {
-            background: none; }
-        .card .card-body .form-row .form-input .tgl + .tgl-btn {
-          outline: 0;
-          display: block;
-          width: 4em;
-          height: 2em;
-          position: relative;
-          cursor: pointer;
-          user-select: none; }
-          .card .card-body .form-row .form-input .tgl + .tgl-btn:after, .card .card-body .form-row .form-input .tgl + .tgl-btn:before {
-            position: relative;
-            display: block;
-            content: "";
-            width: 50%;
-            height: 100%; }
-          .card .card-body .form-row .form-input .tgl + .tgl-btn:after {
-            left: 0; }
-          .card .card-body .form-row .form-input .tgl + .tgl-btn:before {
-            display: none; }
-        .card .card-body .form-row .form-input .tgl:checked + .tgl-btn:after {
-          left: 50%; }
-      .card .card-body .form-row .form-input .tgl-light + .tgl-btn {
-        background: #f0f0f0;
-        border-radius: 2em;
-        padding: 2px;
-        transition: all .4s ease; }
-        .card .card-body .form-row .form-input .tgl-light + .tgl-btn:after {
-          border-radius: 50%;
-          background: #fff;
-          transition: all .2s ease; }
-      .card .card-body .form-row .form-input .tgl-light:checked + .tgl-btn {
-        background: #9FD6AE; }
       .card .card-body .form-row .form-input input[type=text] {
         background: #FFF;
         width: 420px;
@@ -168,7 +123,7 @@ body, .contents {
     margin-left: auto;
     margin-bottom: 20px; }
     .card .card-body .template-box .template-row {
-      height: 100px;
+      max-height: 100px;
       overflow: hidden;
       border-bottom: 1px solid #C5C4C4;
       cursor: pointer; }
@@ -176,7 +131,7 @@ body, .contents {
         float: right;
         width: 45px;
         text-align: center;
-        line-height: 100px;
+        line-height: 70px;
         font-size: 18px;
         font-weight: 700;
         color: #4A90E2; }
@@ -199,7 +154,7 @@ body, .contents {
           overflow: hidden;
           font-size: 14px;
           line-height: 14px;
-          height: 42px;
+          max-height: 42px;
           color: #898989;
           margin-top: 5px;
           margin-bottom: 5px; }
