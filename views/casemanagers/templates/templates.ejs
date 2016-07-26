@@ -64,12 +64,23 @@
           </td>
 
           <td>
-            
-            <% if (templates[i].content.length >    80) { %>
-              <%= templates[i].content.substring(0, 80) %>...
-            <% } else { %>
-              <%= templates[i].content %>
-            <% } %>
+
+            <a href="">
+              <% if (templates[i].title && templates[i].title !== "") { %>
+                <%= templates[i].title %>
+              <% } else { %>
+                Template missing title
+              <% } %>
+              <br>
+              <small>
+                <% if (templates[i].content.length >    95) { %>
+                  <%= templates[i].content.substring(0, 95) %>...
+                <% } else { %>
+                  <%= templates[i].content %>
+                <% } %>
+              </small>
+            </a>
+
           </td>
 
           <td>
