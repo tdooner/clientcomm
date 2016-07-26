@@ -93,13 +93,23 @@ router.post("/:convid", function (req, res) {
   // Proceed if they are and run PgSQL queries
   } else {
 
-    var rawQuery =  " PREPARE convocapture (text, int, int, int) AS " +
+    var rawQuery =  " PREPARE convo_capture (text, int, int, int) AS " +
                     "   UPDATE convos SET subject = $1, cm = $2, client = $3, accepted = TRUE, open = TRUE " + 
                     "   WHERE convid = $4 AND client IS NULL; " +
-                    " EXECUTE convocapture('" + subject + "', " + cmid + ", " + clid + ", " + convid + ");";
+                    " EXECUTE convo_capture('" + subject + "', " + cmid + ", " + clid + ", " + convid + ");";
     
     // Query 1: Update convo with CM and client
-    db.raw(rawQuery).then(function (success) {
+
+    db("convos")
+    .where("convid", convid)
+    .andWhere("client", null)
+    .update({
+      subject: subject,
+      cm: cmid,
+      accepted: true,
+      open: true
+    })
+    .then(function (success) {
 
     // Query 2: Close all other conversation that client has open
     db("convos")
