@@ -366,7 +366,7 @@ router.post("/:convid", function (req, res) {
     .then((communication) => {
       if (communication) {
         twClient.sendSms({
-          to: "+18588694735", //communication.value,
+          to: communication.value,
           from: TWILIO_NUM,
           body: content,
         }, function (err, msg) {
