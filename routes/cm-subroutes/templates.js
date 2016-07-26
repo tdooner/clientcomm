@@ -52,48 +52,111 @@ router.get("/", function (req, res) {
 
 
 router.get("/send/:templateID", function (req, res) {
+
+  var errorRedirect = fivehundred(res); 
+
   var cmid = req.params.cmid;
-  var templateid = req.params.templateid;
-
-  var redirectLocation = "/cms/" + cmid + "/templates/send/" + templateid + "/to/null";
-  res.redirect("casemanagers/templates/send_options");
-
-});
-
-
-router.get("/send/:templateID/to/:clientID", function (req, res) {
-  // same as above but default to the comm and client that is specified
-  
-  var cmid = req.params.cmid;
-  var clientID = req.params.clientID;
-  var templateid = req.params.templateid;
+  var templateID = req.params.templateID;
 
   db("templates")
-  .select(db.raw("templates.*, clients.first, clients.last"))
-  .leftJoin("clients", "templates.client", "clients.clid")
-  .where("casemanager", req.user.cmid)
-  .andWhere("template_id", templateID)
+  .where("template_id", templateID)
+  .limit(1)
   .then(function (templates) {
 
+    // Make sure that there is indeed a result
     if (templates.length == 0) {
       res.redirect("/404");
-    } else {
 
+    // Continue if returned one
+    } else {
       db("clients")
       .where("cm", cmid)
       .andWhere("active", true)
       .then(function (clients) {
-
-        res.render("casemanagers/templates/template_edit_card", {
-          template: templates[0],
-          clients: clients
+        res.render("casemanagers/templates/select_recipient", {
+          clients: clients,
+          template: templates[0]
         });
       }).catch(errorRedirect);
     }
 
   }).catch(errorRedirect);
+});
 
-  res.render("casemanagers/templates/send_options");
+
+router.post("/send/:templateID", function (req, res) {
+  var clid = Number(req.body.client);
+  var templateID = Number(req.params.templateID);
+  var cmid = req.params.cmid;
+
+  if (isNaN(clid) || isNaN(templateID)) {
+    var redirectLocation = "/cms/" + cmid + "/templates";
+    res.redirect(redirectLocation);
+  } else {
+    var redirectLocation = "/cms/" + cmid + "/templates/send/" + templateID + "/to/" + clid;
+    res.redirect(redirectLocation);
+  }
+  
+});
+
+
+router.get("/send/:templateID/to/:clientID", function (req, res) {
+  // Reroute
+  var errorRedirect = fivehundred(res);
+  
+  var cmid = req.params.cmid;
+  var clientID = req.params.clientID;
+  var templateID = req.params.templateID;
+
+  if (isNaN(templateID)) {
+    var redirectLocation = "/cms/" + cmid + "/templates/send/" + templateID;
+    res.redirect(redirectLocation);
+  
+  } else {
+
+    db("templates")
+    .where("template_id", templateID)
+    .limit(1)
+    .then(function (templates) {
+
+      // Make sure that there is indeed a result
+      if (templates.length == 0) {
+        res.redirect("/404");
+
+      // Continue if returned one
+      } else {
+
+        db("clients")
+        .where("cm", cmid)
+        .andWhere("clid", clientID)
+        .then(function (clients) {
+
+          // Make sure that client with that cm actually exists
+          if (clients.length == 0) { 
+            res.redirect("/404"); 
+
+          // Then proceed to gather current conversations
+          } else { 
+            db("comms")
+            .innerJoin("commconns", "comms.commid", "commconns.comm")
+            .where("commconns.client", clientID)
+            .then(function (comms) {
+
+              res.render("casemanagers/client/newconversation/createmessage", {
+                template: templates[0],
+                client: clients[0],
+                comms: comms
+              });
+              
+            }).catch(errorRedirect);
+          }
+        }).catch(errorRedirect);
+
+      }
+
+    }).catch(errorRedirect);
+  }
+
 });
 
 

@@ -93,6 +93,7 @@ router.post("/:convid", function (req, res) {
   // Proceed if they are and run PgSQL queries
   } else {
 
+    // TO DO: Is it okay to remove raw query?
     var rawQuery =  " PREPARE convo_capture (text, int, int, int) AS " +
                     "   UPDATE convos SET subject = $1, cm = $2, client = $3, accepted = TRUE, open = TRUE " + 
                     "   WHERE convid = $4 AND client IS NULL; " +
