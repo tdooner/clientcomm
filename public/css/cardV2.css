@@ -185,8 +185,8 @@ body, .contents {
         clear: both; }
   .card .card-body .color-selector {
     text-align: center;
-    margin-top: 50px;
-    margin-bottom: 50px; }
+    margin-top: 100px;
+    margin-bottom: 100px; }
     .card .card-body .color-selector .color-option {
       display: inline-block;
       margin-left: 5px;
@@ -199,7 +199,7 @@ body, .contents {
       .card .card-body .color-selector .color-option input[type="radio"] + label span {
         display: inline-block;
         width: 25px;
-        height: 50px;
+        height: 65px;
         border: 3px solid #898989;
         border-radius: 40px;
         cursor: pointer; }
@@ -225,7 +225,8 @@ body, .contents {
       width: 350px;
       height: 50px;
       background-color: #898989;
-      margin-top: 30px;
+      color: #FFF;
+      margin-top: 75px;
       margin-left: auto;
       margin-right: auto;
       line-height: 50px;
