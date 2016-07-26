@@ -52,13 +52,48 @@ router.get("/", function (req, res) {
 
 
 router.get("/send/:templateID", function (req, res) {
-  // need to ask who to send the message to and via what comms
+  var cmid = req.params.cmid;
+  var templateid = req.params.templateid;
+
+  var redirectLocation = "/cms/" + cmid + "/templates/send/" + templateid + "/to/null";
+  res.redirect("casemanagers/templates/send_options");
 
 });
 
 
 router.get("/send/:templateID/to/:clientID", function (req, res) {
   // same as above but default to the comm and client that is specified
+  
+  var cmid = req.params.cmid;
+  var clientID = req.params.clientID;
+  var templateid = req.params.templateid;
+
+  db("templates")
+  .select(db.raw("templates.*, clients.first, clients.last"))
+  .leftJoin("clients", "templates.client", "clients.clid")
+  .where("casemanager", req.user.cmid)
+  .andWhere("template_id", templateID)
+  .then(function (templates) {
+
+    if (templates.length == 0) {
+      res.redirect("/404");
+    } else {
+
+      db("clients")
+      .where("cm", cmid)
+      .andWhere("active", true)
+      .then(function (clients) {
+
+        res.render("casemanagers/templates/template_edit_card", {
+          template: templates[0],
+          clients: clients
+        });
+      }).catch(errorRedirect);
+    }
+
+  }).catch(errorRedirect);
+
+  res.render("casemanagers/templates/send_options");
 });
 
 

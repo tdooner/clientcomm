@@ -161,10 +161,10 @@ router.post("/:convid", function (req, res) {
         res.redirect(reroute);
       }
 
-    }).catch(function (err) { res.redirect("/500"); }); // Query 4
-    }).catch(function (err) { res.redirect("/500"); }); // Query 3
-    }).catch(function (err) { res.redirect("/500"); }); // Query 2
-    }).catch(function (err) { res.redirect("/500"); }); // Query 1
+    }).catch(function (err) { console.log("Query 4 Error: ", err); res.redirect("/500"); }); // Query 4
+    }).catch(function (err) { console.log("Query 3 Error: ", err); res.redirect("/500"); }); // Query 3
+    }).catch(function (err) { console.log("Query 2 Error: ", err); res.redirect("/500"); }); // Query 2
+    }).catch(function (err) { console.log("Query 1 Error: ", err); res.redirect("/500"); }); // Query 1
 
   }
 });
