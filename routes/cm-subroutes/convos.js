@@ -118,13 +118,12 @@ router.get("/new/selecttemplate", function (req, res) {
   db("templates")
   // Either this is an active org template
   .where("org", req.user.org)
+  .andWhere("casemanager", null)
   .andWhere("templates.active", true)
-  .andWhere("client", null)
   
   // ... or an active case manager template
   .orWhere("casemanager", req.user.cmid)
   .andWhere("templates.active", true)
-  .andWhere("client", clid)
   
   .orderByRaw("updated DESC")
   .then(function (templates) {
