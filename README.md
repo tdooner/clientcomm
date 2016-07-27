@@ -34,6 +34,9 @@ module.exports = {
 }
 ```
 
+##### Which version(s) should I run?
+I'm using NodeJS v4.4.7 as suggested on Node's organization website as the recommended general use version at present (as of August of 2016). `npm` depnedencies are all locked at their recommended versions as well.
+
 ##### Modifying knexfile.js connection settings
 You will also need to configure the `knexfile.js` file. It is necessary to use the PostgreSQL as indicated in the example `development`, `testing`, and `production` objects. The reason for this is that ClientComm utilizes a number of raw SQL queries which include notation that is specific to PostgreSQL. In particular, it will be necessary to update the `connection.user` and `connection.database` values to whatever your configuration is.
 
