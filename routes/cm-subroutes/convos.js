@@ -261,7 +261,7 @@ router.post("/new/craftmessage", function (req, res) {
       return Communication.findById(commid)
     }).then((communication) => {
       twClient.sendSms({
-        to: "+18588694735", //communication.value,
+        to: communication.value,
         from: TWILIO_NUM,
         body: content,
       }, (err, msg) => {
