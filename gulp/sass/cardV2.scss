@@ -195,8 +195,13 @@ body, .contents {
       .template-row {
         max-height: 100px;
         overflow: hidden;
-        border-bottom: 1px solid $light-grey;
         cursor: pointer;
+        
+        // border on bottom except for last
+        border-bottom: 1px solid $light-grey;
+        &:nth-last-child(1) {
+          border-bottom: 0px;
+        }
 
         .use-count {
           float: right;

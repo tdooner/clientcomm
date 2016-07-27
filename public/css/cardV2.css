@@ -125,8 +125,10 @@ body, .contents {
     .card .card-body .template-box .template-row {
       max-height: 100px;
       overflow: hidden;
-      border-bottom: 1px solid #C5C4C4;
-      cursor: pointer; }
+      cursor: pointer;
+      border-bottom: 1px solid #C5C4C4; }
+      .card .card-body .template-box .template-row:nth-last-child(1) {
+        border-bottom: 0px; }
       .card .card-body .template-box .template-row .use-count {
         float: right;
         width: 45px;
