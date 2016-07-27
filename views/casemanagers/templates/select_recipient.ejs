@@ -42,10 +42,9 @@
           Choose which client with which to communicate
         </div>
         <select class="form-select" name="client" id="clientSelector" required>
-          <option value="null" selected>All Clients</option>
+          <option value="null" disabled selected>Select Client</option>
           <% for (var i = 0; i < clients.length; i++) { %>
-            <option value="<%= clients[i].clid %>"
-              <% if (clients[i].clid == template.client) { %> selected <% } %> >
+            <option value="<%= clients[i].clid %>">
               <%= clients[i].first %> <%= clients[i].last %>
             </option>
           <% } %>
