@@ -5,6 +5,10 @@ body, .contents {
   border: 0;
   color: #344289; }
 
+.alerts {
+  color: #FFF;
+  width: 100%; }
+
 .comms-link {
   color: #2F8CE8;
   position: absolute;

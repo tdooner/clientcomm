@@ -192,6 +192,7 @@ router.post("/create", function (req, res) {
     clid = null;
   }
 
+  var title   = req.body.title;
   var content = req.body.content;
 
   // Make sure that there is enough content
@@ -206,6 +207,7 @@ router.post("/create", function (req, res) {
       org: orgid,
       casemanager: cmid,
       client: clid,
+      title: title,
       content: content
     };
 
