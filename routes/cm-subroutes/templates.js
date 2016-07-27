@@ -275,11 +275,12 @@ router.post("/:templateID/edit", function (req, res) {
     clid = null;
   }
 
+  var title = req.body.title;
   var content = req.body.content;
 
   // Make sure that there is enough content
-  if (!content || content.length < 1) {
-    req.flash("warning", "Template content is too short.");
+  if ((!content || content.length < 1) || (!title || title.length < 1)) {
+    req.flash("warning", "Template content or title is too short.");
     res.redirect(redirectLoc + "/" + req.params.templateID + "/edit");
 
   // Only continue if content has length
@@ -289,6 +290,7 @@ router.post("/:templateID/edit", function (req, res) {
       org: orgid,
       casemanager: cmid,
       client: clid,
+      title: title,
       content: content,
       updated: db.fn.now()
     };

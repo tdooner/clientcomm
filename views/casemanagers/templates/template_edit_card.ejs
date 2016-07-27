@@ -32,8 +32,20 @@
       <input type="hidden" name="casemanager" value="<%= user.cmid %>">
 
       <div class="form-row">
+        <div class="form-label" style="line-height: 28px;">
+          Update title
+        </div>
+        <div class="form-input">
+          <input  type="text"
+                  name="title" maxlength="30" 
+                  value="<%= template.title %>"
+                  required>
+        </div>
+      </div>
+
+      <div class="form-row">
         <div class="form-label"> 
-          Modify template below
+          Modify body below
         </div>
         <div class="form-input">
           <textarea name="content"
@@ -41,7 +53,7 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" style="display: none;">
         <div class="form-label"> 
           Limit template to specific client (or all clients)
         </div>
