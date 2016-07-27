@@ -34,6 +34,7 @@ router.get("/", function (req, res) {
   
   // Either this is an active org template
   .where("org", req.user.org)
+  .andWhere("casemanager", null)
   .andWhere("templates.active", true)
   
   // ... or an active case manager template
