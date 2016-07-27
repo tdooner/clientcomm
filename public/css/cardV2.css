@@ -144,7 +144,7 @@ body, .contents {
       .card .card-body .template-box .template-row .template-content {
         float: right;
         padding: 10px;
-        width: 385px; }
+        width: 365px; }
         .card .card-body .template-box .template-row .template-content .title-text {
           font-size: 14px;
           line-height: 14px;
@@ -155,7 +155,7 @@ body, .contents {
           overflow: hidden;
           color: #4A90E2;
           text-decoration: underline; }
-        .card .card-body .template-box .template-row .template-content .content {
+        .card .card-body .template-box .template-row .template-content .body-text {
           word-wrap: break-word;
           overflow: hidden;
           font-size: 14px;
@@ -181,7 +181,7 @@ body, .contents {
           color: #FFF; }
         .card .card-body .template-box .template-row:hover .use-count, .card .card-body .template-box .template-row.selected .use-count {
           color: #FFF; }
-        .card .card-body .template-box .template-row:hover .content, .card .card-body .template-box .template-row.selected .content {
+        .card .card-body .template-box .template-row:hover .body-text, .card .card-body .template-box .template-row.selected .body-text {
           color: #FFF; }
         .card .card-body .template-box .template-row:hover .tags, .card .card-body .template-box .template-row.selected .tags {
           color: #FFF; }

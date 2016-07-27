@@ -220,7 +220,7 @@ body, .contents {
         .template-content {
           float: right;
           padding: 10px;
-          width: 385px;
+          width: 365px;
 
           .title-text {
             font-size: 14px;
@@ -234,7 +234,7 @@ body, .contents {
             text-decoration: underline;
           }
 
-          .content {
+          .body-text {
             word-wrap: break-word;
             overflow: hidden;
             font-size: 14px;
@@ -271,7 +271,7 @@ body, .contents {
           .use-count {
             color: $white;            
           }
-          .content {
+          .body-text {
             color: $white;            
           }
           .tags {
