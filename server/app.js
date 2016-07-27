@@ -138,7 +138,3 @@ if (EMNOTIF && EMNOTIF == "true") {
   setInterval(function () { require("../utils/timed-notification").checkAndSendNotifications(); }, fifteenMinTimer); 
 }
 
-
-
-
-
