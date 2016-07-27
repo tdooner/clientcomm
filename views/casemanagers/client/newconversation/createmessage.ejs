@@ -92,9 +92,36 @@
 </div>
 
 <script type="text/javascript">
+  function notifyKeenOfSubjectToggleSwitchClick () {
+    try {
+      var toggleSwitchClickEvent = {
+        user: {
+          first:  "<%= user.first %>",
+          last:   "<%= user.last %>",
+          email:  "<%= user.email %>",
+          cmid:   "<%= user.cmid %>"
+        },
+        keen: {
+          timestamp: new Date().toISOString()
+        }
+      };
+
+      console.log(toggleSwitchClickEvent);
+
+      createKeenClient()
+      .addEvent("subject_toggle_monitor", toggleSwitchClickEvent, function (err, res) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   $(".switch-input").click(function () {
-    console.log("dd");
     $("#subjectInputBox").fadeToggle();
+    notifyKeenOfSubjectToggleSwitchClick();
   });
 </script>
 
