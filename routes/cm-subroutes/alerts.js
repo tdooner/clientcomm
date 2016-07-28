@@ -40,7 +40,6 @@ router.get("/", function (req, res) {
     .andWhere("convos.cm", cmid)
     .then(function (clients) {
       var totalNewMessages = 0;
-      console.log("clients", clients)
 
       // See if there are any new messages in any of the conversations
       clients.forEach(function (ea) {
