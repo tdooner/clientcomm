@@ -248,6 +248,9 @@ router.post("/new/craftmessage", function (req, res) {
   if (Number(cmid) !== Number(req.user.cmid)) {
     req.flash("warning", "Mixmatched user cmid and request user cmid insert.");
     res.redirect(redirect_loc);
+  } else if (!content || content.length < 1 || !subject || subject.length < 1) {
+    req.flash("warning", "Subject of message length missing or too short.");
+    res.redirect(redirect_loc + "/convos/new/selectpath");
   } else {
 
     var newConvoId;
@@ -265,12 +268,13 @@ router.post("/new/craftmessage", function (req, res) {
         body: content,
       }, (err, msg) => {
         if (err) {
-          console.log("Twilio send error: ", err);
+
           if (err.hasOwnProperty("code") && err.code == 21211) {
             res.status(500).send("That number is not a valid phone number.")
           } else {
             res.redirect("/500");
           }
+
         } else {
           Message.create({
             convo: newConvoId,
