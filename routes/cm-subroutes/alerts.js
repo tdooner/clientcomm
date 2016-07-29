@@ -38,6 +38,7 @@ router.get("/", function (req, res) {
     .leftJoin("convos", "msgs.convo", "convos.convid")
     .where("msgs.read", false)
     .andWhere("convos.cm", cmid)
+    .andWhere("convos.accepted", true)
     .then(function (clients) {
       var totalNewMessages = 0;
 
