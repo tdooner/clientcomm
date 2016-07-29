@@ -74,6 +74,7 @@ router.post("/:convid", function (req, res) {
   // Make sure all vars that are supposed to be numbers are indeed numbers
   var cmid   = req.body.cmid && !isNaN(req.body.cmid) ? Number(req.body.cmid) : null;
   var clid   = req.body.clid && !isNaN(req.body.clid) ? Number(req.body.clid) : null;
+
   var convid = req.body.convid && !isNaN(req.body.convid) ? Number(req.body.convid) : null;
 
   // Check that text strings are sufficient
@@ -106,6 +107,7 @@ router.post("/:convid", function (req, res) {
     .andWhere("client", null)
     .update({
       subject: subject,
+      client: clid,
       cm: cmid,
       accepted: true,
       open: true
