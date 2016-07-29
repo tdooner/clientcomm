@@ -29,7 +29,7 @@ router.get("/", function (req, res) {
   var cmid = Number(req.user.cmid);
 
   // Makes sure necessary values are integers
-  if (isNaN(cmid)) {
+  if (!isNaN(cmid)) {
     res.redirect("/404");
 
   } else {
