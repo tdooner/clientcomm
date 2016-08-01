@@ -1,8 +1,14 @@
 
 
 
-// New Relic monitoring
-require('newrelic');
+// New Relic monitoring ONLY if not test environ
+var process.env.TESTENV;
+if (TESTENV && TESTENV == "true") {
+  console.log("Testing env. No monitoring.");
+} else { 
+  console.log("Production env. New Relic running.");
+  require("newrelic");
+}
 
 
 // SECRET STUFF
