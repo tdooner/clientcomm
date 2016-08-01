@@ -124,7 +124,6 @@ module.exports = {
       db.raw(rawQuery).then(function (res) {
         var clients = res.rows.map(function (ea) { return {clid: ea.clid, cmid: ea.cm}; });
         if (clients.length == 0) { clients = [{clid: null, cmid: null}]; }
-        console.log("Cient", clients, commid);
         fulfill(clients);
 
       }).catch(function (err) { reject(err); });
@@ -217,8 +216,6 @@ module.exports = {
   },
 
   register_message: function (text, commid, convos, tw_status, tw_sid) {
-    console.log("commid: ", commid);
-    console.log("convos: ", convos);
 
     return new Promise (function (fulfill, reject) {
       var insertList = [];
@@ -235,7 +232,6 @@ module.exports = {
             "read":      false,
             "tw_sid":    tw_sid,
             "tw_status": tw_status
-            // "created":   foobar
           }
           insertList.push(insertObj);         
         }
