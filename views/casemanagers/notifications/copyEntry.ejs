@@ -28,11 +28,11 @@
 
   <form method="post" id="newNotification">
 
-    <input type="hidden" name="cmid" value="<%= user.cmid %>">
-    <input type="hidden" name="sendDate" value="<%= notification.sendDate %>">
-    <input type="hidden" name="sendTimeHour" value="<%= notification.sendTimeHour %>">
-    <input type="hidden" name="sendTimeMin" value="<%= notification.sendTimeMin %>">
-    <input type="hidden" name="recipient" value="<%= notification.recipient %>">
+    <input type="hidden" name="cmid"          value="<%= user.cmid %>">
+    <input type="hidden" name="sendDate"      value="<%= notification.sendDate %>">
+    <input type="hidden" name="sendTimeHour"  value="<%= notification.sendTimeHour %>">
+    <input type="hidden" name="sendTimeMin"   value="<%= notification.sendTimeMin %>">
+    <input type="hidden" name="recipient"     value="<%= notification.recipient %>">
     <input type="hidden" name="recipientComm" value="<%= notification.recipientComm %>">
 
     <div class="form-row">
@@ -64,7 +64,6 @@
 <script type="text/javascript">
   // Special card toggle option
   $("#showOtherCard").click(function () {
-    console.log("me");
     var input = $("<input>", { type: "hidden", name: "showCardExplicit", value: "1" }); 
     $("#newNotification").append($(input));
     $("#newNotification").submit();
