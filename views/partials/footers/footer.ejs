@@ -203,10 +203,10 @@
     try {
       var cmReceivedAlert = {
         user: {
-          first:    "<%= user.first %>",
-          last:     "<%= user.last %>",
-          email:    "<%= user.email %>",
-          cmid:     "<%= user.cmid %>",
+          first:    "<%= typeof user == 'undefined' ? null : user.first %>",
+          last:     "<%= typeof user == 'undefined' ? null : user.last %>",
+          email:    "<%= typeof user == 'undefined' ? null : user.email %>",
+          cmid:     "<%= typeof user == 'undefined' ? null : user.cmid %>",
           response: JSON.stringify(response)
         },
         keen: {
