@@ -6,7 +6,7 @@ var moment_tz = require('moment-timezone');
 
 
 // New Relic Clientside monitoring
-var process.env.TESTENV;
+var TESTENV = process.env.TESTENV;
 if (TESTENV && TESTENV == "true") {
   var newrelic = null;
 } else {

@@ -2,7 +2,7 @@
 
 
 // New Relic monitoring ONLY if not test environ
-var process.env.TESTENV;
+var TESTENV = process.env.TESTENV;
 if (TESTENV && TESTENV == "true") {
   console.log("Testing env. No monitoring.");
 } else { 
