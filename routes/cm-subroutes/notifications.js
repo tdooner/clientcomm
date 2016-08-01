@@ -84,8 +84,13 @@ router.get("/overview/closed", function (req, res) {
 });
 
 
-// GENERATE NOTIFICATION CARD SET
+// GENERATE NOTIFICATION CARD SET: ENTER WORKFLOW
 router.get("/new", function (req, res) {
+  res.redirect("/cms/" + req.params.cmid + "/notifications/new/paramters")
+});
+
+
+router.get("/new/paramters", function (req, res) {
   var errorRedirect = fivehundred(res);
 
   retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
@@ -96,6 +101,43 @@ router.get("/new", function (req, res) {
       });
     } else { errorRedirect(); }
   });
+});
+
+
+router.post("/new/paramters", function (req, res) {
+  var errorRedirect = fivehundred(res);
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+  var n = req.body; // n for notification object
+
+  var cardRequested = n.hasOwnProperty("showCardExplicit") ? n.showCardExplicit : null;
+  if (isNaN(cardRequested)) { 
+    cardRequested = null; 
+  } else {
+    cardRequested = Number(cardRequested);
+  }
+
+  if (cardRequested) {
+    newNotificationRequestSpecificCard(res, cardRequested);
+    // Render Parameters Page
+    if (cardRequested == 1) {
+      res.render("casemanagers/notifications/parameters", { 
+        notification: n,
+        clients: clients
+      });
+    }
+    
+
+  // check if a special proceed has been requested
+  } else if (checkComplete_cardOne(n)) {
+    
+
+  } else { 
+    req.flash("warning", "Missing required notification paramters.");
+    res.render("casemanagers/notifications/parameters", { 
+      notification: n,
+      clients: clients
+    });
+  }
 });
 
 
@@ -123,7 +165,7 @@ router.post("/new", function (req, res) {
     var clid =   Number(n.recipient);
     var sendC =  Number(n.recipientComm);
 
-    // End card content
+    // Card 2 content
     var notiSubj = n.notiSubj;
     var notiCopy = n.notiCopy;
 
@@ -464,9 +506,32 @@ function retrieveClientsAndClientContactMethods (cmid, cb) {
     cb(clients);
 
   }).catch(function () { cb(false); });
+};
+
+
+
+function checkComplete_cardOne (n) {
+  var sendD  = n.sendDate;
+  var sendTH = Number(n.sendTimeHour);
+  var sendTM = Number(n.sendTimeMin);
+  var clid   = Number(n.recipient);
+  var sendC  = Number(n.recipientComm);
+
+  var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (clid == null) || (sendC == null);
+  return cardOneIncomplete;
+};
+
+function checkComplete_cardTwo (n) {
+  var notiSubj = n.notiSubj;
+  var notiCopy = n.notiCopy;
+
+  var cardTwoIncomplete = (notiSubj == "") || (notiCopy == "");
+  return cardTwoIncomplete;
+};
+
+function newNotificationRequestSpecificCard (res, cardNumber) {
+  // body...
 }
-
-
 
 
 

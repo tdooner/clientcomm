@@ -254,6 +254,55 @@ module.exports = {
         reject(err);
       });
     });
+  },
+
+  logIBMSensitivityAnalysis: function (m) {
+    console.log("----------------------");
+    console.log("msgs response received and ibm process");
+    var ibm = null;
+
+    // Check if we have IBM sentiment analysis
+    if (m.hasOwnProperty("AddOns")) {
+      try {
+        m.AddOns = JSON.parse(m.AddOns);
+      } catch (e) {
+        m.AddOns = {status: null};
+      }
+      
+      var s = m.AddOns.status;
+      if (s && s=="successful") {
+        var r = m.AddOns.results;
+        if (r && r.hasOwnProperty("ibm_watson_sentiment")) {
+          ibm = r.ibm_watson_sentiment;
+        }
+      }
+    }
+
+    if (ibm && ibm.status=="successful") {
+      var requestSID = null;
+      var docSentiment = null;
+
+      try { 
+        var type = ibm.result.docSentiment.type;
+        var requestSID = ibm.request_sid;
+        var tw_sid = m.MessageSid;
+
+        var insertObj = {
+          sentiment: type,
+          ibm_request_sid: requestSID,
+          tw_sid: tw_sid
+        };
+
+        db("ibm_sentiment_analysis")
+        .insert(insertObj)
+        .then(function (success) {
+          console.log("Successfully logged sentiment analysis.");
+        }).catch(function (err) {
+          console.log("Error when isnerting on ibm_sentiment_analysis: ", err);
+        })
+        
+      } catch (e) { console.log(e); }
+    }
   }
 
 }

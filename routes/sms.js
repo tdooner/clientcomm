@@ -13,8 +13,6 @@ module.exports = function (app) {
       var tw_status = req.body.SmsStatus;
       var tw_sid = req.body.MessageSid;
 
-      console.log("Received a message: ", req.body);
-
       // just leaving this in for now while we use free service for testing
       text = text.replace("-Sent free from TextNow.com", "");
 
@@ -24,6 +22,9 @@ module.exports = function (app) {
       // we used to break up the text into a list of 160 char each but now we can support longer ones
       // still need to submit as a list
       text = [text];
+
+      // Log IBM Sensitivity measures
+      sms.logIBMSensitivityAnalysis(req.body);
       
       sms.process_incoming_msg(from, text, tw_status, tw_sid)
       .then(function (msgs) {
