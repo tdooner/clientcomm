@@ -15,7 +15,7 @@
 
   // Auto checking if there are new messages across any conversation
   <% if (typeof user !== "undefined") { %>
-    var setSecondInterval = 2000 * 10;
+    var setSecondInterval = 2000 * 1;
     // Auto check for if there is new content
     setInterval(function () {
       var cmid =  <%= user.cmid %>;
@@ -81,6 +81,12 @@
                         'You received new messages, click to view.' + 
                         '</a>';
         cb(newAlert);
+
+        // Logging to see what is going on with CMID70 account 
+        if (cmid == 70) {
+          
+        }
+        
       } else {
         cb(false);
       }
@@ -102,7 +108,7 @@
     // And play a ding sound to alert user
     if (!alertDingSoundPlayedAlready) {
       alertDingSoundPlayedAlready = true;
-      document.getElementById("newMessageDing").play()
+      document.getElementById("newMessageDing").play();
     }
   };
 

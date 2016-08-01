@@ -107,8 +107,6 @@
         }
       };
 
-      console.log(toggleSwitchClickEvent);
-
       createKeenClient()
       .addEvent("subject_toggle_monitor", toggleSwitchClickEvent, function (err, res) {
         if (err) {
