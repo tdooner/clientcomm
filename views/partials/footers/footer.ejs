@@ -15,7 +15,7 @@
 
   // Auto checking if there are new messages across any conversation
   <% if (typeof user !== "undefined") { %>
-    var setSecondInterval = 2000 * 1;
+    var setSecondInterval = 2000 * 10;
     // Auto check for if there is new content
     setInterval(function () {
       var cmid =  <%= user.cmid %>;
