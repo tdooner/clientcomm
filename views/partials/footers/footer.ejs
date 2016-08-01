@@ -75,6 +75,9 @@
     var url = "/cms/" + cmid + "/alerts/";
     $.get(url)
     .done(function(res) {
+      // Logging to see what is going on with CMID70 account 
+      logAlertReceived(res);
+
       // Create an alert only if there is a new message
       if (res.newMessages) {
         var newAlert =  '<a href="/cms/' + cmid + '/">' + 
@@ -82,16 +85,14 @@
                         '</a>';
         cb(newAlert);
 
-        // Logging to see what is going on with CMID70 account 
-        if (cmid == 70) {
-          
-        }
-        
+
+
       } else {
         cb(false);
       }
     })
     .fail(function(err) {
+      logAlertReceived(err);
       console.log("Alerts check error: ", err);
     });
   };
@@ -196,6 +197,32 @@
     createKeenClient().addEvent(name, keenRef.clientPageVisitEvent, function (err, res) { 
       if (err) { console.log(err); }
     });
+  };
+
+  function logAlertReceived (response) {
+    try {
+      var cmReceivedAlert = {
+        user: {
+          first:    "<%= user.first %>",
+          last:     "<%= user.last %>",
+          email:    "<%= user.email %>",
+          cmid:     "<%= user.cmid %>",
+          response: JSON.stringify(response)
+        },
+        keen: {
+          timestamp: new Date().toISOString()
+        }
+      };
+
+      createKeenClient()
+      .addEvent("alerts_received", cmReceivedAlert, function (err, res) {
+        if (err) {
+          console.log(err);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
 </script>
