@@ -126,6 +126,8 @@ body, .contents {
     margin-right: auto;
     margin-left: auto;
     margin-bottom: 20px; }
+    .card .card-body .template-box::-webkit-scrollbar {
+      display: none; }
     .card .card-body .template-box .template-row {
       max-height: 100px;
       overflow: hidden;

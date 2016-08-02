@@ -86,11 +86,11 @@ router.get("/overview/closed", function (req, res) {
 
 // GENERATE NOTIFICATION CARD SET: ENTER WORKFLOW
 router.get("/new", function (req, res) {
-  res.redirect("/cms/" + req.params.cmid + "/notifications/new/paramters")
+  res.redirect("/cms/" + req.params.cmid + "/notifications/new/parameters")
 });
 
 
-router.get("/new/paramters", function (req, res) {
+router.get("/new/parameters", function (req, res) {
   var errorRedirect = fivehundred(res);
 
   retrieveClientsAndClientContactMethods(req.user.cmid, function (clients) {
@@ -104,9 +104,11 @@ router.get("/new/paramters", function (req, res) {
 });
 
 
-router.post("/new/paramters", function (req, res) {
+router.post("/new/selecttemplate", function (req, res) {
   var errorRedirect = fivehundred(res);
   var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+  var cmid = Number(req.user.cmid);
+  var org = Number(req.user.org);
   var n = req.body; // n for notification object
 
   var cardRequested = n.hasOwnProperty("showCardExplicit") ? n.showCardExplicit : null;
@@ -114,35 +116,137 @@ router.post("/new/paramters", function (req, res) {
     cardRequested = null; 
   } else {
     cardRequested = Number(cardRequested);
-  }
+  }  
 
-  if (cardRequested) {
-    newNotificationRequestSpecificCard(res, cardRequested);
-    // Render Parameters Page
-    if (cardRequested == 1) {
-      res.render("casemanagers/notifications/parameters", { 
-        notification: n,
-        clients: clients
-      });
+  if (checkComplete_cardOne(n)) {
+    if (cardRequested) {
+      newNotificationRequestSpecificCard(res, org, cmid, cardRequested, n);
+    } else {
+      newNotificationRequestSpecificCard(res, org, cmid, 2, n);
     }
-    
-
-  // check if a special proceed has been requested
-  } else if (checkComplete_cardOne(n)) {
-    
-
+  
   } else { 
-    req.flash("warning", "Missing required notification paramters.");
-    res.render("casemanagers/notifications/parameters", { 
-      notification: n,
-      clients: clients
-    });
+    req.flash("warning", "Missing required notification parameters.");
+    newNotificationRequestSpecificCard(res, org, cmid, 1, n);
   }
 });
 
 
+router.post("/new/craftmessage", function (req, res) {
+  var errorRedirect = fivehundred(res);
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+  var cmid = Number(req.user.cmid);
+  var org = Number(req.user.org);
+  var n = req.body; // n for notification object
+
+  var cardRequested = n.hasOwnProperty("showCardExplicit") ? n.showCardExplicit : null;
+  if (isNaN(cardRequested)) { 
+    cardRequested = null; 
+  } else {
+    cardRequested = Number(cardRequested);
+  }  
+
+  if (checkComplete_cardOne(n)) {
+    if (cardRequested) {
+      newNotificationRequestSpecificCard(res, org, cmid, cardRequested, n);
+    } else {
+
+      // If there is a template, get it and load it
+      if (n.hasOwnProperty("templateID")) {
+        db("templates")
+        .where("template_id", n.templateID)
+        .limit(1)
+        .then(function (templates) {
+
+          // Make sure there is a valid response
+          if (templates.length == 0) {
+            res.redirect("/404"); 
+
+          } else {
+            n.notiSubj = templates[0].title;
+            n.notiCopy = templates[0].content;
+            newNotificationRequestSpecificCard(res, org, cmid, 3, n);
+          }
+
+        }).catch(errorRedirect); 
+
+
+      // Just proceed with no body or subject
+      } else {
+        newNotificationRequestSpecificCard(res, org, cmid, 3, n);
+      }
+    }
+  
+  } else { 
+    req.flash("warning", "Missing required notification parameters.");
+    newNotificationRequestSpecificCard(res, org, cmid, 1, n);
+  }
+});
+
+
+router.post("/new/submit", function (req, res) {
+  var errorRedirect = fivehundred(res);
+  var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+  var cmid = Number(req.user.cmid);
+  var org = Number(req.user.org);
+  var n = req.body; // n for notification object
+
+  var cardRequested = n.hasOwnProperty("showCardExplicit") ? n.showCardExplicit : null;
+  if (isNaN(cardRequested)) { 
+    cardRequested = null; 
+  } else {
+    cardRequested = Number(cardRequested);
+  }  
+
+  if (!checkComplete_cardOne(n)) {
+    req.flash("warning", "Missing required notification parameters.");
+    newNotificationRequestSpecificCard(res, org, cmid, 1, n);
+  } else if (!checkComplete_cardTwo(n)) {
+    req.flash("warning", "Missing notification subject or body.");
+    newNotificationRequestSpecificCard(res, org, cmid, 3, n);
+  
+  // Ok good to go on submit
+  } else { 
+    // Card 1 content
+    var sendD =  n.sendDate;
+    var sendTH = Number(n.sendTimeHour);
+    var sendTM = Number(n.sendTimeMin);
+    var clid =   Number(n.recipient);
+    var sendC =  Number(n.recipientComm);
+
+    // Card 2 content
+    var notiSubj = n.notiSubj;
+    var notiCopy = n.notiCopy;
+    
+    var sendTime = moment.tz(sendD, "America/Denver")
+                    .add(sendTH, "hours")
+                    .add(sendTM, "minutes")
+                    .format();
+
+    // In the future we need to support repeatable notifications
+    // Database schema already supports
+    db("notifications")
+    .insert({
+      cm:      cmid,
+      client:  clid,
+      comm:    sendC,
+      subject: notiSubj,
+      message: notiCopy,
+      send:    sendTime
+    })
+    .then(function () {
+      res.redirect(redirectLoc);
+    })
+    .catch(errorRedirect);
+  }
+});
+
+
+
+
 // PROCESS NOTIFICATION CARD PROGRESS
-router.post("/new", function (req, res) { 
+// DEPRECATED
+router.post("/newxxxxxxx", function (req, res) { 
   var errorRedirect = fivehundred(res);
   var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
   var n = req.body; // n for notification object
@@ -505,7 +609,8 @@ function retrieveClientsAndClientContactMethods (cmid, cb) {
     // Return the cleaned object
     cb(clients);
 
-  }).catch(function () { cb(false); });
+
+  }).catch(function (err) { console.log("err", err); cb(false); });
 };
 
 
@@ -517,8 +622,11 @@ function checkComplete_cardOne (n) {
   var clid   = Number(n.recipient);
   var sendC  = Number(n.recipientComm);
 
-  var cardOneIncomplete  = (sendD == null) || (sendTH == null) || (sendTM == null) || (clid == null) || (sendC == null);
-  return cardOneIncomplete;
+  var cardOneIncomplete = (sendD == null) || (sendTH == null) || (sendTM == null) || (clid == null) || (sendC == null);
+  if (!cardOneIncomplete) {
+    cardOneIncomplete = isNaN(sendTH) || isNaN(sendTM) || isNaN(clid) || isNaN(sendC);
+  }
+  return !cardOneIncomplete;
 };
 
 function checkComplete_cardTwo (n) {
@@ -526,12 +634,87 @@ function checkComplete_cardTwo (n) {
   var notiCopy = n.notiCopy;
 
   var cardTwoIncomplete = (notiSubj == "") || (notiCopy == "");
-  return cardTwoIncomplete;
+  return !cardTwoIncomplete;
 };
 
-function newNotificationRequestSpecificCard (res, cardNumber) {
-  // body...
-}
+function newNotificationRequestSpecificCard (res, org, cmid, cardNumber, notificationBody) {
+  var errorRedirect = fivehundred(res);
+  retrieveClientsAndClientContactMethods(cmid, function (clients) {
+    if (clients) {
+      var included = { 
+        notification: notificationBody,
+        clients: clients
+      };
+
+      if (cardNumber == 1) {
+        res.render("casemanagers/notifications/parameters", included);
+      } else if (cardNumber == 2) {
+        // Query for all templates you have
+        getTemplates(org, cmid, function (templates) {
+          if (templates) {
+            included.templates = templates;
+            res.render("casemanagers/notifications/selecttemplate", included);
+
+          } else {
+            var redirectLoc = "/cms/" + req.params.cmid + "/notifications";
+            res.redirect(redirectLoc);
+          }
+        });
+
+      } else if (cardNumber == 3) {
+        res.render("casemanagers/notifications/craftmessage", included);
+
+      } else { res.redirect("/404"); }
+    } else { res.redirect("/404"); }
+  });
+};
+
+function getTemplates (org, cmid, cb) {
+  db("templates")
+  // Either this is an active org template
+  .where("org", org)
+  .andWhere("casemanager", null)
+  .andWhere("templates.active", true)
+  
+  // ... or an active case manager template
+  .orWhere("casemanager", cmid)
+  .andWhere("templates.active", true)
+  
+  .orderByRaw("updated DESC")
+  .then(function (templates) {
+
+    var templateIDs = templates.map(function (ea) {
+      return ea.template_id;
+    });
+
+    // TO DO: Combine with above DB query
+    // This should really be part of the above database query, not a second operation
+    db("template_use")
+    .count("template_use_id")
+    .whereIn("template", templateIDs)
+    .groupBy("template")
+    .then(function (template_use) {
+
+      // Add counts to each template
+      templates = templates.map(function (eaTemp) {
+        // Minimum count would be zero
+        var totalUse = 0;
+        // Iterate through used template counts and update
+        template_use.forEach(function (eaUse) {
+          if (eaUse.template == eaTemp.template_id) {
+            totalUse = eaUse.count;
+          }
+        });
+        // Figure out how to handle difference in camelcase v. Postgres data
+        eaTemp.times_used = totalUse;
+        return eaTemp;
+      });
+
+      cb(templates);      
+
+    }).catch(function () { cb(null); });
+  }).catch(function () { cb(null); });
+};
 
 
 

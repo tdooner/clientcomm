@@ -196,6 +196,10 @@ body, .contents {
       margin-left: auto;
       margin-bottom: 20px;
 
+      &::-webkit-scrollbar { 
+        display: none; 
+      }
+      
       .template-row {
         max-height: 100px;
         overflow: hidden;
