@@ -27,15 +27,14 @@
   </div>
 
   <form method="post" id="newNotification" 
-        action="/cms/<%= user.cmid %>/notifications/new/craftmessage">
+        <% if (typeof editView == "undefined") { %> 
+          action="/cms/<%= user.cmid %>/notifications/new/craftmessage"
+        <% } %> >
 
     <input type="hidden" name="cmid" value="<%= user.cmid %>">
     <input type="hidden" name="notiSubj" value="<%= notification.notiSubj %>">
     <input type="hidden" name="notiCopy" value="<%= notification.notiCopy %>">
 
-    <% if (typeof editView !== "undefined" && editView) { %>
-      <input type="hidden" name="showCardExplicit" value="2">
-    <% } %>
 
     <div class="form-row">
       <div class="form-label"> Date to send <small>(YYYY-MM-DD)</small></div>
@@ -170,14 +169,17 @@
       </select>
     </div>
 
-    <input  type="button" 
-            class="form-submit" 
-            id="useTemplate"
-            value="Use a Template">
+    <% if (typeof editView == "undefined") { %> 
+      <input  type="button" 
+              class="form-submit" 
+              id="useTemplate"
+              value="Use a Template">
 
-    <div class="or-break" style="text-align: center">
-      <span class="dash">-</span> or <span class="dash">-</span>
-    </div>
+      <div class="or-break" style="text-align: center">
+        <span class="dash">-</span> or <span class="dash">-</span>
+      </div>
+    <% } %>
+    
     <input  type="submit" 
             class="form-submit" 
             style="margin-top: 0px" 
