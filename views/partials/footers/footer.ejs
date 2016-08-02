@@ -75,8 +75,6 @@
     var url = "/cms/" + cmid + "/alerts/";
     $.get(url)
     .done(function(res) {
-      // Logging to see what is going on with CMID70 account 
-      logAlertReceived(res);
 
       // Create an alert only if there is a new message
       if (res.newMessages) {
@@ -84,8 +82,6 @@
                         'You received new messages, click to view.' + 
                         '</a>';
         cb(newAlert);
-
-
 
       } else {
         cb(false);
@@ -110,6 +106,10 @@
     if (!alertDingSoundPlayedAlready) {
       alertDingSoundPlayedAlready = true;
       document.getElementById("newMessageDing").play();
+      
+      // Logging to see what is going on with CMID70 account 
+      // Only once per page
+      logAlertReceived("new_message");
     }
   };
 
@@ -199,7 +199,7 @@
     });
   };
 
-  function logAlertReceived (response) {
+  function logAlertReceived () {
     try {
       var cmReceivedAlert = {
         user: {
