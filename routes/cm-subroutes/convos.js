@@ -262,36 +262,67 @@ router.post("/new/craftmessage", function (req, res) {
       newConvoId = convoId
       return Communication.findById(commid)
     }).then((communication) => {
-      twClient.sendSms({
-        to: communication.value,
-        from: TWILIO_NUM,
-        body: content,
-      }, (err, msg) => {
-        if (err) {
+      var contentArray = content.match(/.{1,159}/g);
+      var twilioOperations = {
+        error: false,
+        explanation: null
+      };
 
-          if (err.hasOwnProperty("code") && err.code == 21211) {
-            res.status(500).send("That number is not a valid phone number.")
+      contentArray.forEach(function (contentPortion, contentIndex) {
+        var lastPortion = contentIndex == (contentArray.length - 1);
+
+        twClient.sendSms({
+          to: communication.value,
+          from: TWILIO_NUM,
+          body: contentPortion,
+        }, (err, msg) => {
+          if (err) {
+
+            if (err.hasOwnProperty("code") && err.code == 21211) {
+              twilioOperations.error = true;
+              twilioOperations.explanation = "That number is not a valid phone number.";
+            } else {
+              twilioOperations.error = true;
+            }
+
+            // Run only if error during last portion
+            if (lastPortion) {
+              if (twilioOperations.explanation) {
+                res.status(500).send(twilioOperations.explanation);
+              } else {
+                res.redirect("/500");
+              }
+            }
+
           } else {
-            res.redirect("/500");
-          }
+            Message.create({
+              convo: newConvoId,
+              comm: commid,
+              content: contentPortion,
+              inbound: false,
+              read: true,
+              tw_sid: msg.sid,
+              tw_status: msg.status,
+            })
+            .then((messageId) => {
 
-        } else {
-          Message.create({
-            convo: newConvoId,
-            comm: commid,
-            content: content,
-            inbound: false,
-            read: true,
-            tw_sid: msg.sid,
-            tw_status: msg.status,
-          })
-          .then((messageId) => {
-            req.flash("success", "New conversation created.");
-            redirect_loc = redirect_loc + "/convos/" + newConvoId;
-            res.redirect(redirect_loc);
-          }).catch(errorRedirect);
-        }
-      })
+              // Run only if error during last portion
+              if (lastPortion) {
+                if (twilioOperations.error) {
+                  res.redirect("/500");
+                } else {
+                  req.flash("success", "New conversation created.");
+                  redirect_loc = redirect_loc + "/convos/" + newConvoId;
+                  res.redirect(redirect_loc);                  
+                }
+              }
+
+            }).catch(errorRedirect);
+          }
+        })
+
+      });
+
     }).catch(errorRedirect);
   }
 });
