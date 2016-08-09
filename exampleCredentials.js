@@ -47,7 +47,8 @@ if (TESTENV && TESTENV == "true") {
   baseProductionReadyCredentials.testEnvironment = true;
 
   // Update to the test number that we use (so as to not use production Twilio phone number)
-  baseProductionReadyCredentials.twilioNum = "+18581234567";
+  baseProductionReadyCredentials.twilioNum = "+15671234567";
+  baseProductionReadyCredentials.testRecipientNumber = "+13459057365";
   console.log("Credentials have been modified with test environment values.");
 }
 
