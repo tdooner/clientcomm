@@ -262,7 +262,7 @@ router.post("/new/craftmessage", function (req, res) {
       newConvoId = convoId
       return Communication.findById(commid)
     }).then((communication) => {
-      var contentArray = content.match(/.{1,159}/g);
+      var contentArray = content.match(/.{1,1599}/g);
       var twilioOperations = {
         error: false,
         explanation: null
@@ -271,12 +271,13 @@ router.post("/new/craftmessage", function (req, res) {
       contentArray.forEach(function (contentPortion, contentIndex) {
         var lastPortion = contentIndex == (contentArray.length - 1);
 
-        twClient.sendSms({
+        twClient.sendMessage({
           to: communication.value,
           from: TWILIO_NUM,
-          body: contentPortion,
+          body: contentPortion
         }, (err, msg) => {
           if (err) {
+            res.send(err)
 
             if (err.hasOwnProperty("code") && err.code == 21211) {
               twilioOperations.error = true;
