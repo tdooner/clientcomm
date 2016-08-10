@@ -19,6 +19,8 @@ exports.up = function(knex, Promise) {
       table.integer("created_by")
            .references("cmid")
            .inTable("cms");
+
+      table.boolean("active").defaultTo(true);
       
       table.timestamp("created").defaultTo(knex.fn.now());
     }),
