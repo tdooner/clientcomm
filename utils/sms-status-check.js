@@ -49,6 +49,8 @@ module.exports = {
 
 };
 
+
+// UTILITY
 function checkMsgAgainstTwilio (msg) {
 
   // Hit up Twilio API for the 
@@ -60,7 +62,7 @@ function checkMsgAgainstTwilio (msg) {
       console.log(err);
       console.log("-- \n");
 
-    // Handling for messages sent to Twilio
+    // Handling for messages sent from client to Twilio
     } else if (sms.direction == "inbound") {
       
       // If no change occured over msg prior status
@@ -88,13 +90,13 @@ function checkMsgAgainstTwilio (msg) {
         }
       }
 
-    // Handling for messages received by Twilio
+    // Handling for messages sent from case manager to Twilio
     } else {
 
       // If no change occured over msg prior status
       if (msg.tw_status == sms.status) {
         // We can close out cleared messages
-        if (sms.status == "sent" || sms.status == "failed") {
+        if (sms.status == "sent" || sms.status == "delivered" || sms.status == "failed") {
           db("msgs")
           .where("msgid", msg.msgid)
           .update({status_cleared: true})
