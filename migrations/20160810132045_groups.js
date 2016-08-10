@@ -24,7 +24,11 @@ exports.up = function(knex, Promise) {
     }),
 
     knex.schema.createTable("group_members", function(table) {
-      table.increments("member_id").primary();
+      table.increments("group_member_id").primary();
+
+      table.integer("client")
+           .references("clid")
+           .inTable("clients");
 
       table.integer("group")
            .references("group_id")

@@ -1,8 +1,11 @@
 'use strict';
 
-const db  = require("../server/db");
+// Libraries
+const db      = require("../server/db");
 const Promise = require("bluebird");
 
+
+// Classes
 class Communication {
   static findById(id) {
     return new Promise((fulfill, reject) => {
@@ -73,8 +76,10 @@ class Convo {
   }
 }
 
+
 module.exports = {
   Convo: Convo,
   Communication: Communication,
   Message: Message,
+  Group: require("./classes/group")
 }
