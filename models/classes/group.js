@@ -87,7 +87,7 @@ class Group {
           var clientID = clientsArray[i];
 
           inserArray.push({
-            client:   clientID
+            client:   clientID,
             group:    groupID,
             added_by: userID
           });
