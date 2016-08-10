@@ -9,6 +9,10 @@ const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 
+// TO DOS
+// Check if arrays are indeed arrays and that they have length > 0
+
+
 // Classes
 class Group {
 
@@ -39,6 +43,27 @@ class Group {
         .then((groupIDs) => {
           fulfill(groupIDs[0]);
 
+        }).catch(reject);
+      }
+    });
+  }
+
+  static remove (groupID) {
+    // clientsArray variable is an array of clientIDs
+    return new Promise((fulfill, reject) => {
+      const someValsMissing = undefinedValuesCheck([groupID]);
+
+      // Reject if not all values are present
+      if (someValsMissing) {
+        reject("Missing required variables.")
+
+      // Run UPDATE if someValsMissing clears
+      } else {
+        db("groups")
+        .update({active: false})
+        .where("group_id", groupID)
+        .then((success) => {
+          fulfill();
         }).catch(reject);
       }
     });
@@ -98,7 +123,28 @@ class Group {
         .returning("group_member_id")
         .then((memberIDs) => {
           fulfill(memberIDs);
+        }).catch(reject);
+      }
+    });
+  }
 
+  static removeClients (groupMemberIDArray) {
+    // clientsArray variable is an array of clientIDs
+    return new Promise((fulfill, reject) => {
+      const someValsMissing = undefinedValuesCheck([groupMemberIDArray]);
+
+      // Reject if not all values are present
+      if (someValsMissing) {
+        reject("Missing required variables.")
+
+      // Run INSERT if someValsMissing clears
+      } else {
+
+        db("groups")
+        .whereIn("group_member_id", groupMemberIDArray)
+        .del()
+        .then((success) => {
+          fulfill(success);
         }).catch(reject);
       }
     });
