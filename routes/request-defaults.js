@@ -13,9 +13,19 @@ if (TESTENV && TESTENV == "true") {
   var newrelic = require('newrelic');
 }
 
+
+// Metadata about application
+var APP_VERSION = require("../package.json").version;
+
+
 module.exports = function (app) {
 
-  app.use(function (req, res, next){  
+  app.use(function (req, res, next){
+    // Load in general information specific to ClientComm session that may need to be generated
+    app.locals.CLIENTCOMM_APPLICATION = {
+      VERSION: APP_VERSION
+    };
+
     // Flash messages
     res.locals.warning = req.flash("warning");
     res.locals.success = req.flash("success");
