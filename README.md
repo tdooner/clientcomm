@@ -59,6 +59,12 @@ With those two files set up, you should be good to go. In order to set which env
 ##### Styles
 We use [Gulp](http://gulpjs.com/) for piping Sass into CSS for inclusion in the `public/` directory, included on pages. Make sure to view the `devDependencies` listing to be sure that related dependencies are installed when working with the code base. When developing and modifying Sass stylesheets, make sure to run `gulp sass:watch` to have Gulp automatically pipe changes into the published `public/` directory.
 
+## Style guide goals
+There's no order and everything is a mess. Goal for version 4.0.0 will be the following:
+- Camel case throughout (caveat: database will use underscores)
+- Spaces over tabs (2 spaces for insets)
+- "Class" -esque structure for databases which enable interaction and querying (all ORM functions are wrapped by class functions)
+
 
 ## Features coming soon
 ##### Email integration
