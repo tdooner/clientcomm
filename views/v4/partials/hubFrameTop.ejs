@@ -1,4 +1,4 @@
-<% include ./partials/headerBase %>
+<% include ./headerBase %>
 
 <!-- Load in addition CSS -->
 <link rel="stylesheet" type="text/css" href="/static/css/v4_hub.css">
@@ -8,7 +8,7 @@
 
   <div class="navHeader">
     <div class="leftLogo">
-      <% include ../../public/icons/logo.svg %>
+      <% include ../../../public/icons/logo.svg %>
       <span class="button">
         <%= user.first %>
         <%= user.last %>
@@ -31,20 +31,20 @@
   </div>
 
   <div class="navSub">
-    <div class="leftTab <%= hubTab == 'clients' ? 'open' : 'closed' %>">
+    <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
       <div class="title">Client</div>
-      <div class="option selected">Open</div>
-      <div class="option">Closed</div>
+      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>">Open</div>
+      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>">Closed</div>
     </div>
 
-    <div class="leftTab <%= hubTab == 'templates' ? 'open' : 'closed' %>">
+    <div class="leftTab <%= hub.tab == 'templates' ? 'open' : 'closed' %>">
       <div class="title">Templates</div>
     </div>
 
-    <div class="leftTab <%= hubTab == 'notifications' ? 'open' : 'closed' %>">
+    <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
       <div class="title">Notifications</div>
-      <div class="option selected">Pending</div>
-      <div class="option">Sent</div>
+      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>">Pending</div>
+      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>">Sent</div>
     </div>
 
     <div class="rightActions">
@@ -63,8 +63,3 @@
       New Messsage
     </div>
   </div>
-
-
-
-</div>
-<% include ./partials/footerBase %>
