@@ -66,6 +66,7 @@ router.get("/users/:userID", function (req, res) {
   .findByManager(managerID, active)
   .then((clients) => {
     res.render("v4/hub", {
+      hubTab: "clients",
       clients: clients
     });
   }).catch(error_500(res));
