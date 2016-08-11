@@ -204,10 +204,17 @@ $darkblue:    #344289;
         color: $lightblue;
       }
 
+      .text {
+        display: none;
+      }
+
       &:hover {
         background-color: $blue;
         .fa.fa-inverse {
           color: $blue;
+        }
+        .text {
+          display: inline;
         }
       }
     }
