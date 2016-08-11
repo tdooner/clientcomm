@@ -1,0 +1,26 @@
+
+
+// Variables
+$white:       #FFF;
+$lightgrey:   #898989;
+$darkgrey:    #2F4F4F;
+
+$darkblue:    #344289;
+
+
+// Mixins
+@mixin float-center() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// SCSS
+
+.applicationFrame {
+
+  // Mixins
+  @include float-center();
+
+  // General
+  width: 1024px;
+}

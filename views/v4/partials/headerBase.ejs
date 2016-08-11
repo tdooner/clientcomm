@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+  <head>
+
+    <!-- Invoke New Relic monitoring before all else -->
+    <% if (newrelic !== null) { %>
+      <%- newrelic.getBrowserTimingHeader() %>
+    <% } %>
+
+    <meta charset="utf-8">
+    <meta name="viewport" 
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>ClientComm</title>
+
+    <% include ./favicon %>
+
+  </head>
+
+
+  <script src="/modules/jquery/dist/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/modules/font-awesome/css/font-awesome.min.css">
+
+  <!-- Loading all of styles (broken down by section) -->
+  <!-- TO DO: Consolidate these, perhaps via web pack? -->
+  <link rel="stylesheet" type="text/css" href="/static/css/v4_base.css">
+
+  <body>
