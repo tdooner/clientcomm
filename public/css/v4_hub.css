@@ -2,3 +2,21 @@
   margin-left: auto;
   margin-right: auto;
   width: 1024px; }
+  .applicationFrame .navHeader {
+    height: 45px;
+    width: inherit;
+    color: #FFF;
+    background-color: #344289;
+    overflow: hidden; }
+    .applicationFrame .navHeader .leftLogo {
+      height: 25px;
+      padding: 10px;
+      padding-left: 15px;
+      color: #FFF;
+      line-height: 25px; }
+      .applicationFrame .navHeader .leftLogo svg {
+        height: inherit;
+        margin-right: 10px;
+        float: left; }
+        .applicationFrame .navHeader .leftLogo svg path {
+          fill: #FFF; }

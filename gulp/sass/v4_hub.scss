@@ -2,9 +2,8 @@
 
 // Variables
 $white:       #FFF;
-$lightgrey:   #898989;
-$darkgrey:    #2F4F4F;
-
+$lightgrey:   #D3D3D3;
+$grey:        #898989;
 $darkblue:    #344289;
 
 
@@ -23,4 +22,35 @@ $darkblue:    #344289;
 
   // General
   width: 1024px;
+
+  .navHeader {
+    height: 45px;
+    width: inherit;
+
+    color: $white;
+    background-color: $darkblue;
+
+    overflow: hidden;
+
+    .leftLogo {
+      height: 25px;
+      padding: 10px;
+      padding-left: 15px;
+
+      color: $white;
+      line-height: 25px;
+
+      svg {
+        height: inherit;
+        margin-right: 10px;
+
+        float: left;
+
+        path {
+          fill: $white;
+        }
+      }
+    }
+  }
+
 }

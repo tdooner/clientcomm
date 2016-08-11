@@ -6,6 +6,14 @@
 <!-- Structure -->
 <div class="applicationFrame">
 
+  <div class="navHeader">
+    <div class="leftLogo">
+      <% include ../../public/icons/logo.svg %>
+      <%= user.first %>
+      <%= user.last %>
+    </div>
+  </div>
+
 <% clients.forEach(function (client) { %>
   <%= client %>
 <% }) %>

@@ -2,9 +2,8 @@
 
 // Variables
 $white:       #FFF;
-$lightgrey:   #898989;
-$darkgrey:    #2F4F4F;
-
+$lightgrey:   #D3D3D3;
+$grey:        #898989;
 $darkblue:    #344289;
 
 
@@ -25,7 +24,7 @@ body {
   // Default font
   font-family: Arial, sans-serif;
   -webkit-font-smoothing: antialiased;  
-  color: $darkgrey;
+  color: $grey;
 
   // Repeated background graphic
   background-color: $lightgrey;
