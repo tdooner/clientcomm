@@ -72,6 +72,7 @@
     width: inherit;
     height: 45px;
     background-color: #4A90E2;
+    border-bottom: 1px solid #FFF;
     overflow: hidden; }
     .applicationFrame .navSub .leftTab {
       height: inherit;
@@ -113,6 +114,7 @@
     .applicationFrame .navSub .rightActions {
       float: right;
       line-height: 45px;
+      font-size: 0.75em;
       color: #FFF;
       padding-left: 10px;
       padding-right: 15px;
@@ -125,3 +127,6 @@
         background-color: #3F69B6; }
         .applicationFrame .navSub .rightActions:hover .fa.fa-inverse {
           color: #3F69B6; }
+  .applicationFrame .coreContent {
+    padding-top: 92px;
+    background-color: #FFF; }

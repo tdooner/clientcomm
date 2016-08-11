@@ -127,6 +127,7 @@ $darkblue:    #344289;
     width: inherit;
     height: 45px;
     background-color: $lightblue;
+    border-bottom: 1px solid $white;
     overflow: hidden;
 
     .leftTab {
@@ -189,6 +190,7 @@ $darkblue:    #344289;
     .rightActions {
       float: right;
       line-height: 45px;
+      font-size: 0.75em;
       color: $white;
       padding-left: 10px;
       padding-right: 15px;
@@ -209,6 +211,11 @@ $darkblue:    #344289;
         }
       }
     }
+  }
+
+  .coreContent {
+    padding-top: 92px;
+    background-color: $white;
   }
 
 }
