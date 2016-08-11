@@ -648,28 +648,8 @@ router.post("/:convid/reject", function (req, res) {
   }
 });
 
-router.use(function (req, res, next) {
-  console.log("hee", req.params);
-  next();
-});
 
 // EXPORT ROUTER OBJECt
 module.exports = router;
-
-
-
-// UTILITY FUNCIONS
-
-
-
-
-
-
-
-
-
-
-
-
 
 
