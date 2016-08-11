@@ -103,6 +103,11 @@ app.use("/orgs", auth.isSuper, supermgmt)
 // Catch-alls
 require("../routes/catchall")(app);
 
+
+// V4 Route Structure
+var versionFourApp = require("../routes/versionFour/hub");
+app.use("/v4", auth.isLoggedIn, versionFourApp)
+
 // Redundant catch all
 app.get("/*", function (req, res) {
   res.redirect("/404");
