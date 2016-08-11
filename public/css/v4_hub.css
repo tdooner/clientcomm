@@ -108,3 +108,20 @@
         cursor: pointer; }
       .applicationFrame .navSub .leftTab.closed .option {
         display: none; }
+      .applicationFrame .navSub .leftTab.closed:hover {
+        background-color: #4E60BC; }
+    .applicationFrame .navSub .rightActions {
+      float: right;
+      line-height: 45px;
+      color: #FFF;
+      padding-left: 10px;
+      padding-right: 15px;
+      cursor: pointer; }
+      .applicationFrame .navSub .rightActions .fa-stack.fa-lg {
+        font-size: 1em; }
+      .applicationFrame .navSub .rightActions .fa.fa-inverse {
+        color: #4A90E2; }
+      .applicationFrame .navSub .rightActions:hover {
+        background-color: #4E60BC; }
+        .applicationFrame .navSub .rightActions:hover .fa.fa-inverse {
+          color: #4E60BC; }

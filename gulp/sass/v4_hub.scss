@@ -179,6 +179,34 @@ $darkblue:    #344289;
         .option {
           display: none;
         }
+
+        &:hover {
+          background-color: $blue;
+        }
+      }
+    }
+
+    .rightActions {
+      float: right;
+      line-height: 45px;
+      color: $white;
+      padding-left: 10px;
+      padding-right: 15px;
+      cursor: pointer;
+
+      .fa-stack.fa-lg {
+        font-size: 1em;
+      }
+
+      .fa.fa-inverse {
+        color: $lightblue;
+      }
+
+      &:hover {
+        background-color: $blue;
+        .fa.fa-inverse {
+          color: $blue;
+        }
       }
     }
   }

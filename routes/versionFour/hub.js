@@ -46,8 +46,6 @@ router.get("/", function (req, res) {
 router.get("/users/:userID", function (req, res, next) {
   const userID0 = Number(req.params.userID);
   const userID1 = Number(req.user.cmid);
-  console.log("Params2: ", req.params);
-  console.log([userID0, userID1])
   if (confirmMatch("number", [userID0, userID1])) {
     next();
   } else {

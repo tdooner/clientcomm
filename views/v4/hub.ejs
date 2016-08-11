@@ -9,14 +9,61 @@
   <div class="navHeader">
     <div class="leftLogo">
       <% include ../../public/icons/logo.svg %>
-      <%= user.first %>
-      <%= user.last %>
+      <span class="button">
+        <%= user.first %>
+        <%= user.last %>
+      </span>
+    </div>
+
+    <div class="alerts">
+      <div class="exclamationCircle">
+        <i class="fa fa-exclamation" aria-hidden="true"></i>
+      </div>
+      2 Alerts
+    </div>
+
+    <div class="rightLogout">
+      <span class="button">
+        <i class="fa fa-times" aria-hidden="true"></i>
+        Logout
+      </span>
     </div>
   </div>
 
-<% clients.forEach(function (client) { %>
-  <%= client %>
-<% }) %>
+  <div class="navSub">
+    <div class="leftTab <%= hubTab == 'clients' ? 'open' : 'closed' %>">
+      <div class="title">Client</div>
+      <div class="option selected">Open</div>
+      <div class="option">Closed</div>
+    </div>
+
+    <div class="leftTab <%= hubTab == 'templates' ? 'open' : 'closed' %>">
+      <div class="title">Templates</div>
+    </div>
+
+    <div class="leftTab <%= hubTab == 'notifications' ? 'open' : 'closed' %>">
+      <div class="title">Notifications</div>
+      <div class="option selected">Pending</div>
+      <div class="option">Sent</div>
+    </div>
+
+    <div class="rightActions">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+      </span>
+      New Client
+    </div>
+
+    <div class="rightActions">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-comment fa-stack-1x fa-inverse"></i>
+      </span>
+      New Messsage
+    </div>
+  </div>
+
 
 
 </div>
