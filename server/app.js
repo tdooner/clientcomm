@@ -103,6 +103,7 @@ app.use("/orgs", auth.isSuper, supermgmt)
 // Catch-alls
 require("../routes/catchall")(app);
 
+// Redundant catch all
 app.get("/*", function (req, res) {
   res.redirect("/404");
 });
