@@ -30,7 +30,8 @@
   background-color: #FFF;
   cursor: pointer; }
   .clientRow:hover {
-    color: #FFF; }
+    color: #FFF;
+    font-weight: 700; }
   .clientRow .column {
     float: left;
     text-align: left; }
@@ -43,6 +44,14 @@
       margin-right: auto;
       border: 1px solid #FFF;
       border-radius: 75px; }
+    .clientRow .column .unreadsAlert {
+      font-size: 0.75em;
+      color: #FFF;
+      background-color: #E50000;
+      padding: 2px;
+      padding-left: 7px;
+      padding-right: 7px;
+      border-radius: 10px; }
     .clientRow .column:nth-child(1) {
       width: 5%; }
     .clientRow .column:nth-child(2) {

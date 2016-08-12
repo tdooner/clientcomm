@@ -18,6 +18,9 @@
     </div>
     <div class="column">
       <span class="clientName"><%= client.first + ' ' + client.last %></span>
+      <% if (client.unread > 0) { %>
+        <span class="unreadsAlert"><%= client.unread %> new</span>
+      <% } %>
     </div>
     <div class="column">
       <small>

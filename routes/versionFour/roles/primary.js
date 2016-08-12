@@ -30,7 +30,6 @@ var error_500       = errorHandling.error_500;
 
 // Primary hub view, loads in active clients by default
 router.get("/", function (req, res) {
-  console.log("suc");
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
                 "/primary/clients/open"

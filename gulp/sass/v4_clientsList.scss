@@ -8,6 +8,7 @@ $grey:        #898989;
 $black:       #000;
 $lightorange: #FFA500;
 $orange:      #E96100;
+$red:         #E50000;
 $lightblue:   #4A90E2;
 $blue:        #3F69B6;
 $darkblue:    #344289;
@@ -70,6 +71,7 @@ $width_row5:  5%;
 
   &:hover {
     color: $white;
+    font-weight: 700;
   }
 
   .column {
@@ -85,6 +87,16 @@ $width_row5:  5%;
       margin-right: auto;
       border: 1px solid $white;
       border-radius: 75px;
+    }
+
+    .unreadsAlert {
+      font-size: 0.75em;
+      color: $white;
+      background-color: $red;
+      padding: 2px;
+      padding-left: 7px;
+      padding-right: 7px;
+      border-radius: 10px;
     }
 
     &:nth-child(1) {
