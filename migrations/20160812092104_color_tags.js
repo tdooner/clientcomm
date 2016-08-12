@@ -3,11 +3,7 @@ exports.up = function(knex, Promise) {
   return Promise.all([
 
     knex.schema.createTable("color_tags", function(table) {
-      table.increments("color_tag_id").primary();
-
-      table.integer("client")
-           .references("clid")
-           .inTable("clients");
+      table.increments("color_tag_id").primary();;
 
       table.string("name");
       table.string("color");
