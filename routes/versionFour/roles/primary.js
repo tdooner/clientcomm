@@ -8,6 +8,7 @@ var router          = express.Router({mergeParams: true});
 // Models
 const modelsImport  = require("../../../models/models");
 const Client        = modelsImport.Client;
+const Clients       = modelsImport.Clients;
 const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Communication = modelsImport.Communication;
@@ -41,7 +42,7 @@ router.get("/clients/open", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = true;
 
-  Client
+  Clients
   .findByManager(managerID, active)
   .then((clients) => {
     res.render("v4/primaryUser/clients", {
@@ -59,7 +60,7 @@ router.get("/clients/closed", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = false;
 
-  Client
+  Clients
   .findByManager(managerID, active)
   .then((clients) => {
     res.render("v4/primaryUser/clients", {
@@ -71,6 +72,11 @@ router.get("/clients/closed", function (req, res) {
     });
   }).catch(error_500(res));
 });
+
+
+// Client-specific operations
+var specificClient = require("./primary/specificClient");
+router.use("/clients/client/:clientID", specificClient);
 
 
 // EXPORT ROUTER OBJECt

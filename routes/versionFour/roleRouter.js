@@ -8,6 +8,7 @@ var router          = express.Router({mergeParams: true});
 // Models
 const modelsImport  = require("../../models/models");
 const Client        = modelsImport.Client;
+const Clients       = modelsImport.Clients;
 const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Communication = modelsImport.Communication;

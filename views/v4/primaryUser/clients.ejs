@@ -34,7 +34,15 @@
       <i class="fa fa-pencil" aria-hidden="true"></i>
     </div>
     <div class="column">
-      <i class="fa fa-book" aria-hidden="true"></i>
+      <% if (hub.sel === "open") { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/closecase">
+          <i class="fa fa-book" aria-hidden="true"></i>
+        </a>
+      <% } else { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/opencase">
+          <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
+      <% } %>
     </div>
   </div>
 <% }) %>
