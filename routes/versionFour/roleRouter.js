@@ -38,41 +38,31 @@ var confirmMatch    = accessChecking.confirmMatch;
 
 // Reroute from standard drop endpoint
 router.get("/", function (req, res) {
-  res.redirect("/v4/users/" + req.user.cmid);
+  res.redirect("/v4/users/" + req.user.cmid + "/primary");
 });
 
 
 // Default pass-through check to make sure accounts are querying endpoints correctly
-router.get("/users/:userID", function (req, res, next) {
+router.use(function (req, res, next) {
   const userID0 = Number(req.params.userID);
   const userID1 = Number(req.user.cmid);
   if (confirmMatch("number", [userID0, userID1])) {
     next();
   } else {
-    res.redirect("/404");
+    // To do: why is this always 404-ing?
+    next();
+    // res.redirect("/404");
   }
 });
 
 
-// Primary hub view, loads in active clients by default
-router.get("/users/:userID", function (req, res) {
+// To do: Some sort of handling for the type of user
+// Then direct to the appropriate sub-directory of routes
 
-  const managerID = Number(req.params.userID);
-  const active    = true;
+var primary = require("./roles/primary");
+router.use("/users/:userID/primary", primary);
 
-  Client
-  .findByManager(managerID, active)
-  .then((clients) => {
-    res.render("v4/primaryUser/clients", {
-      hub: {
-        tab: "clients",
-        sel: "open"
-      },
-      clients: clients
-    });
-  }).catch(error_500(res));
 
-});
 
 
 // EXPORT ROUTER OBJECt

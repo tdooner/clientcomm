@@ -1,0 +1,59 @@
+.header {
+  height: 20px;
+  overflow: hidden;
+  color: #898989;
+  background-color: #D3D3D3;
+  line-height: 20px;
+  font-size: 0.65em; }
+  .header .column {
+    float: left;
+    text-align: left; }
+    .header .column:nth-child(1) {
+      width: 5%;
+      text-align: center; }
+    .header .column:nth-child(2) {
+      width: 60%; }
+    .header .column:nth-child(3) {
+      width: 25%; }
+    .header .column:nth-child(4) {
+      width: 5%;
+      text-align: center; }
+    .header .column:nth-child(5) {
+      width: 5%;
+      text-align: center; }
+
+.clientRow {
+  height: 50px;
+  line-height: 50px;
+  overflow: hidden;
+  color: #898989;
+  background-color: #FFF;
+  cursor: pointer; }
+  .clientRow:hover {
+    color: #FFF; }
+  .clientRow .column {
+    float: left;
+    text-align: left; }
+    .clientRow .column .colorTag {
+      width: 15px;
+      height: 28px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid #FFF;
+      border-radius: 75px; }
+    .clientRow .column:nth-child(1) {
+      width: 5%; }
+    .clientRow .column:nth-child(2) {
+      width: 60%; }
+    .clientRow .column:nth-child(3) {
+      width: 25%; }
+    .clientRow .column:nth-child(4) {
+      width: 5%;
+      text-align: center; }
+    .clientRow .column:nth-child(5) {
+      width: 5%;
+      text-align: center; }
+  .clientRow:nth-child(even) {
+    background-color: #E8ECEF; }

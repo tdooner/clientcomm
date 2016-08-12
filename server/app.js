@@ -105,7 +105,7 @@ require("../routes/catchall")(app);
 
 
 // V4 Route Structure
-var versionFourApp = require("../routes/versionFour/hub");
+var versionFourApp = require("../routes/versionFour/roleRouter");
 app.use("/v4", auth.isLoggedIn, versionFourApp)
 
 // Redundant catch all

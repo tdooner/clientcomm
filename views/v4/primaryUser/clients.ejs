@@ -1,10 +1,55 @@
 <% include ../partials/hubFrameTop %>
 
+<!-- Load in addition CSS -->
+<link rel="stylesheet" type="text/css" href="/static/css/v4_clientsList.css">
 
-coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>
-coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>
-coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>
-coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>
-coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>coreContent<br>
+<div class="header">
+  <div class="column">color</div>
+  <div class="column">client name</div>
+  <div class="column">last activity</div>
+  <div class="column">edit</div>
+  <div class="column">close</div>
+</div>
+
+<% clients.forEach( function (client) { %>
+  <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
+    <div class="column">
+      <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
+    </div>
+    <div class="column">
+      <span class="clientName"><%= client.first + ' ' + client.last %></span>
+    </div>
+    <div class="column">
+      <small>
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
+        <% var day = moment.tz(client.updated, local_tz).format("MM/DD"); %>
+        <% var hrs = moment.tz(client.updated, local_tz).format("hh:MM A"); %>
+        <%= day + " " + hrs %>
+      </small>
+    </div>
+    <div class="column">
+      <i class="fa fa-pencil" aria-hidden="true"></i>
+    </div>
+    <div class="column">
+      <i class="fa fa-book" aria-hidden="true"></i>
+    </div>
+  </div>
+<% }) %>
+
+<script>
+  // Manage hover color change for rows
+  // To do: Find better solution than a global variable
+  var originalBackgroundColor = null;
+  $(".clientRow")
+    .hover(
+      function () {
+        var color = $(this).attr("clientHighlightColor");
+        originalBackgroundColor = $(this).css("background-color");
+        $(this).css("background-color", color);
+      }, function () {
+        $(this).css("background-color", originalBackgroundColor);
+      }
+    );
+</script>
 
 <% include ../partials/hubFrameBottom %>
