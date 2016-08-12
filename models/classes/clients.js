@@ -47,8 +47,8 @@ class Clients {
         .then((unreads) => {
           
           clients.map(function (client) {
+            client.unread = 0;
             unreads.forEach(function (unread) {
-              if (!client.unread) client.unread = 0;
               if (unread.client == client.clid) client.unread = Number(unread.unread);
             });
             return client;

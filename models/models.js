@@ -4,6 +4,7 @@
 module.exports = {
   Client: require("./classes/client"), 
   Clients: require("./classes/clients"), 
+  ColorTags: require("./classes/colorTags"), 
   Convo: require("./classes/conversation"),
   Communication: require("./classes/communication"),
   Message: require("./classes/communication"),
