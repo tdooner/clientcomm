@@ -36,8 +36,8 @@ router.get("/", function (req, res) {
               );
 });
 
-router.get("/clients/open", function (req, res) {
 
+router.get("/clients/open", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = true;
 
@@ -52,7 +52,24 @@ router.get("/clients/open", function (req, res) {
       clients: clients
     });
   }).catch(error_500(res));
+});
 
+
+router.get("/clients/closed", function (req, res) {
+  const managerID = Number(req.params.userID);
+  const active    = false;
+
+  Client
+  .findByManager(managerID, active)
+  .then((clients) => {
+    res.render("v4/primaryUser/clients", {
+      hub: {
+        tab: "clients",
+        sel: "closed"
+      },
+      clients: clients
+    });
+  }).catch(error_500(res));
 });
 
 

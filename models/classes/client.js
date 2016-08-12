@@ -18,7 +18,7 @@ class Client {
 
   static findByManager (managerID, active) {
     // Default to an assuming viewing active clients
-    if (!active) active = true;
+    if (typeof active == "undefined") active = true;
 
     return new Promise((fulfill, reject) => {
       db("clients")
