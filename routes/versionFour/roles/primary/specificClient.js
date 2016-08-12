@@ -55,6 +55,11 @@ router.get("/opencase", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/editcolortag", function (req, res) {
+  res.render("v4/primaryUser/clients", {
+  });
+});
+
 
 // EXPORT ROUTER OBJECt
 module.exports = router;

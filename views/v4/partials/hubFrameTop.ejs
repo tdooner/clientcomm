@@ -9,10 +9,12 @@
   <div class="navHeader">
     <div class="leftLogo">
       <% include ../../../public/icons/logo.svg %>
-      <span class="button">
-        <%= user.first %>
-        <%= user.last %>
-      </span>
+      <a href="/v4">
+        <span class="button">
+          <%= user.first %>
+          <%= user.last %>
+        </span>
+      </a>
     </div>
 
     <div class="alerts">
@@ -23,10 +25,12 @@
     </div>
 
     <div class="rightLogout">
-      <span class="button">
-        <i class="fa fa-times" aria-hidden="true"></i>
-        Logout
-      </span>
+      <a href="/logout">
+        <span class="button">
+          <i class="fa fa-times" aria-hidden="true"></i>
+          Logout
+        </span>
+      </a>
     </div>
   </div>
 
