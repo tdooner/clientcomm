@@ -81,7 +81,9 @@ router.get("/editcolortag", function (req, res) {
 
 
 router.post("/editcolortag", function (req, res) {
-  Client.udpateColorTag(req.params.clientID, req.body.colorTagID)
+  var colorTagID = req.body.colorTagID;
+  if (colorTagID == "") colorTagID = null
+  Client.udpateColorTag(req.params.clientID, colorTagID)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
