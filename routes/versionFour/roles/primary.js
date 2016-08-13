@@ -43,8 +43,7 @@ router.get("/clients/open", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = true;
 
-  Clients
-  .findByManager(managerID, active)
+  Clients.findByManager(managerID, active)
   .then((clients) => {
     res.render("v4/primaryUser/clients", {
       hub: {
@@ -61,8 +60,7 @@ router.get("/clients/closed", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = false;
 
-  Clients
-  .findByManager(managerID, active)
+  Clients.findByManager(managerID, active)
   .then((clients) => {
     res.render("v4/primaryUser/clients", {
       hub: {
@@ -77,18 +75,16 @@ router.get("/clients/closed", function (req, res) {
 
 
 router.get("/colortags", function (req, res) {
-  ColorTags
-  .selectAllByUser(req.user.cmid)
+  ColorTags.selectAllByUser(req.user.cmid)
   .then((colorTags) => {
-    res.render("v4/primaryUser/selectcolor", {
+    res.render("v4/primaryUser/colormanager", {
       colorTags: colorTags,
     });
   }).catch(error_500(res));
 });
 
 router.post("/colortags/new", function (req, res) {
-  ColorTags
-  .addNewColorTag(req.user.cmid, req.body.color, req.body.name)
+  ColorTags.addNewColorTag(req.user.cmid, req.body.color, req.body.name)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 

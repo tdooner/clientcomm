@@ -24,16 +24,29 @@ var errorHandling   = require("../../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
 
-// ROUTES
+// MUST PASS THROUGH
+router.use(function (req, res, next) {
+  Client.findByID(req.params.clientID)
+  .then((client) => {
+    if (client) {
+      res.locals.client = client;
+      next();
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+  next();
+});
 
+
+// ROUTES
 router.get("/", function (req, res) {
   res.send("Page not made yet.")
 });
 
 
 router.get("/closecase", function (req, res) {
-  Client
-  .alterCase(req.params.clientID, false)
+  Client.alterCase(req.params.clientID, false)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -43,8 +56,7 @@ router.get("/closecase", function (req, res) {
 
 
 router.get("/opencase", function (req, res) {
-  Client
-  .alterCase(req.params.clientID, true)
+  Client.alterCase(req.params.clientID, true)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -53,15 +65,12 @@ router.get("/opencase", function (req, res) {
 });
 
 router.get("/editcolortag", function (req, res) {
-  ColorTags
-  .selectAllByUser(req.user.cmid)
+  ColorTags.selectAllByUser(req.user.cmid)
   .then((colorTags) => {
-    console.log("colorTags.length", colorTags.length)
     if (colorTags.length > 0) {
-      res.send("ok need to show all colors")
-      // res.render("v4/primaryUser/clients", {
-      //   colorTags: colorTags,
-      // });
+      res.render("v4/primaryUser/selectcolor", {
+        colorTags: colorTags,
+      });
     } else {
       res.redirect( "/v4/users/" + 
                     req.user.cmid + 
