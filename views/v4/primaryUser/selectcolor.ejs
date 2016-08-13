@@ -10,7 +10,7 @@
     <% include ../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Manage Color Tags
+    Apply Client Color Tag
   </div>
   <div class="cardSubtitle">
     Use color tags to help organize clients on the main clients view page.
@@ -19,51 +19,40 @@
 
 <div class="cardBody">
 
+  <div class="coloredClientFrame">
+    <div  class="clientNameBox" 
+          style="background-color:<%=client.color_tag%>">
+      <%= client.first + ' ' + client.last %>
+    </div>
+    <div class="clientColorNameSelected">
+      Father
+    </div>
+  </div>
 
   <% colorTags.forEach(function (tag) { %>
-    <div class="formRow">
-      <%= tag.color %>
-      <%= tag.name %>
+    <div class="colorList">
+      <div  class="colorTag" 
+            colorTagID="<%= tag.color_tag_id %>"
+            style="background-color:<%= tag.color %>"></div>
+      <div class="colorName">
+        <%= tag.name %>
+      </div>
     </div>
   <% }) %>
 
-  <div class="formRow">
-    <form id="addNewColorTagForm"
-          method="post" 
-          action="/v4/users/<%=user.cmid%>/primary/colortags/new">
-      <div class="colorTagAdd">
-        <i class="fa fa-plus-square" aria-hidden="true"></i>
-      </div>
-
-      <button class="jscolor {valueElement:'chosen-value'}">
-        Pick Color
-      </button>
-
-      <div class="formInput">
-        <input  type="text" 
-                class="colorTagName" 
-                name="name" 
-                value=""
-                placeholder="Color tag name"
-                required>
-        </input>
-      </div>
-    </form>
-  </div>
+  <center>
+  <input  type="submit" 
+          class="formSubmit" 
+          value="Update Client Color">
+  </center>
 
 </div>
 
 
 <script type="text/javascript">
-  $(".colorTagAdd").click(function () {
-    if ($(".colorTagName").val() !== "") {
-      var i = document.createElement("input");
-      i.type = "text";
-      i.name = "color";
-      i.value = $(".jscolor").css("background-color");
-      document.getElementById("addNewColorTagForm").appendChild(i);
-      $("#addNewColorTagForm").submit();
-    }
+  $(".colorList").click(function () {
+    var colorTag = $(this).find(".colorTag");
+    console.log(colorTag.attr("colorTagID"))
   });
 </script>
 

@@ -1,0 +1,72 @@
+<% include ../partials/cardFrameTop %>
+
+<!-- color picker -->
+<script src="/static/js/jscolor.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/v4_colorSelector.css">
+
+<div class="card-head">
+  <!-- exit button -->
+  <a href="/v4/users/<%=user.cmid%>/primary/clients/open">
+    <% include ../partials/cardExit %>
+  </a>
+  <div class="cardTitle">
+    Manage Color Tags
+  </div>
+  <div class="cardSubtitle">
+    Use color tags to help organize clients on the main clients view page.
+  </div>
+</div>
+
+<div class="cardBody">
+
+
+  <% colorTags.forEach(function (tag) { %>
+    <div class="formRow">
+      <%= tag.color %>
+      <%= tag.name %>
+    </div>
+  <% }) %>
+
+  <div class="formRow createNewColor">
+    <form id="addNewColorTagForm"
+          method="post" 
+          action="/v4/users/<%=user.cmid%>/primary/colortags/new">
+      <div class="colorTagAdd">
+        <i class="fa fa-plus-square" aria-hidden="true"></i>
+      </div>
+
+      <button class="jscolor {valueElement:'chosen-value'}">
+        Pick Color
+      </button>
+
+      <div class="formInput">
+        <input  type="text" 
+                class="colorTagName" 
+                name="name" 
+                value=""
+                placeholder="Color tag name"
+                required>
+        </input>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+
+<script type="text/javascript">
+  $(".colorTagAdd").click(function () {
+    if ($(".colorTagName").val() !== "") {
+      var i = document.createElement("input");
+      i.type = "text";
+      i.name = "color";
+      i.value = $(".jscolor").css("background-color");
+      document.getElementById("addNewColorTagForm").appendChild(i);
+      $("#addNewColorTagForm").submit();
+    }
+  });
+</script>
+
+
+
+<% include ../partials/cardFrameBottom %>
