@@ -22,7 +22,7 @@ module.exports = function (app) {
 
   app.use(function (req, res, next){
     // Load in general information specific to ClientComm session that may need to be generated
-    app.locals.CLIENTCOMM_APPLICATION = {
+    res.locals.CLIENTCOMM_APPLICATION = {
       VERSION: APP_VERSION
     };
 
