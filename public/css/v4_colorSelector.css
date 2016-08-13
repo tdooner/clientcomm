@@ -1,4 +1,4 @@
-.jscolor {
+.createNewColor .jscolor {
   float: left;
   border: 2px solid #4A90E2;
   border-radius: 4px;
@@ -8,15 +8,63 @@
   max-width: 100px;
   padding: 5px 10px 5px 10px; }
 
-.colorTagName {
+.createNewColor .colorTagName {
   float: left;
   width: 265px !important;
   margin-left: 15px; }
 
-.colorTagAdd {
+.createNewColor .colorTagAdd {
   float: right;
   font-size: 28px;
   cursor: pointer;
   color: #4A90E2; }
-  .colorTagAdd:hover {
+  .createNewColor .colorTagAdd:hover {
     color: #3F69B6; }
+
+.coloredClientFrame {
+  margin-top: 10px;
+  margin-bottom: 20px; }
+  .coloredClientFrame .clientNameBox {
+    margin-left: auto;
+    margin-right: auto;
+    height: 40px;
+    width: 400px;
+    background-color: red;
+    text-align: center;
+    line-height: 40px;
+    font-size: 24px;
+    overflow: hidden;
+    color: #FFF; }
+  .coloredClientFrame .clientColorNameSelected {
+    text-align: center;
+    font-size: 12px;
+    line-height: 22px;
+    color: #898989; }
+
+.colorList {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  cursor: pointer; }
+  .colorList .colorTag {
+    float: left;
+    width: 15px;
+    height: 28px;
+    margin-left: 180px;
+    border: 1px solid #FFF;
+    border-radius: 10px;
+    content: " "; }
+  .colorList .colorName {
+    float: left;
+    line-height: 30px;
+    margin-left: 15px;
+    color: #898989; }
+  .colorList:hover {
+    background-color: #E8ECEF;
+    font-weight: 700; }
+  .colorList::after {
+    content: "";
+    display: block;
+    clear: both; }
+
+.formSubmit {
+  margin-top: 20px; }

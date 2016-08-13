@@ -22,30 +22,97 @@ $darkblue:    #344289;
 
 
 
-.jscolor {
-  float: left;
-  border: 2px solid $lightblue;
-  border-radius: 4px;
-  cursor: pointer;
-  height: 32px;
-  width: 100px;
-  max-width: 100px;
-  padding: 5px 10px 5px 10px;
-}
+.createNewColor {
+  .jscolor {
+    float: left;
+    border: 2px solid $lightblue;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 32px;
+    width: 100px;
+    max-width: 100px;
+    padding: 5px 10px 5px 10px;
+  }
 
-.colorTagName {
-  float: left;
-  width: 265px !important;
-  margin-left: 15px;
-}
+  .colorTagName {
+    float: left;
+    width: 265px !important;
+    margin-left: 15px;
+  }
 
-.colorTagAdd {
-  float: right;
-  font-size: 28px;
-  cursor: pointer;
-  color: $lightblue;
+  .colorTagAdd {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+    color: $lightblue;
 
-  &:hover {
-    color: $blue;
+    &:hover {
+      color: $blue;
+    }
   }
 }
+
+.coloredClientFrame {
+  margin-top: 10px;
+  margin-bottom: 20px;
+
+  .clientNameBox {
+    margin-left: auto;
+    margin-right: auto;
+    height: 40px;
+    width: 400px;
+    background-color: red;
+    text-align: center;
+    line-height: 40px;
+    font-size: 24px;
+    overflow: hidden;
+    color: $white;
+  }
+  .clientColorNameSelected {
+    text-align: center;
+    font-size: 12px;
+    line-height: 22px;
+    color: $grey;
+  }
+}
+
+.colorList {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  cursor: pointer;
+
+  .colorTag {
+    float: left;
+    width: 15px;
+    height: 28px;
+    margin-left: 180px;
+    border: 1px solid $white;
+    border-radius: 10px;
+    content: " ";
+  }
+
+  .colorName {
+    float: left;
+    line-height: 30px;
+    margin-left: 15px;
+    color: $grey;
+  }
+
+  &:hover {
+    background-color: $offwhite;
+    font-weight: 700;
+  }
+
+  &::after {
+    content: "";
+    display:block;
+    clear:both;
+  }
+}
+
+.formSubmit {
+  margin-top: 20px;
+}
+
+
+
