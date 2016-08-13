@@ -21,24 +21,38 @@
   .createNewColor .colorTagAdd:hover {
     color: #3F69B6; }
 
-.coloredClientFrame {
-  margin-top: 10px;
-  margin-bottom: 20px; }
-  .coloredClientFrame .clientNameBox {
-    margin-left: 35px;
-    margin-right: 35px;
-    height: 40px;
-    background-color: red;
-    text-align: center;
-    line-height: 40px;
-    font-size: 24px;
-    overflow: hidden;
+.manageColorsLink {
+  width: 100px;
+  margin-left: 35px;
+  margin-bottom: 1px;
+  z-index: 10;
+  text-align: center;
+  background-color: #FFF;
+  color: #4A90E2;
+  padding: 5px 10px 5px 10px;
+  border: 1px solid #4A90E2;
+  font-size: 12px;
+  cursor: pointer; }
+  .manageColorsLink:hover {
+    background-color: #4A90E2;
     color: #FFF; }
-  .coloredClientFrame .clientColorNameSelected {
-    text-align: center;
-    font-size: 12px;
-    line-height: 22px;
-    color: #898989; }
+
+.coloredClientFrame .clientNameBox {
+  margin-left: 35px;
+  margin-right: 35px;
+  height: 40px;
+  background-color: red;
+  text-align: center;
+  line-height: 40px;
+  font-size: 24px;
+  overflow: hidden;
+  color: #FFF; }
+
+.coloredClientFrame .clientColorNameSelected {
+  text-align: center;
+  font-size: 12px;
+  line-height: 22px;
+  color: #898989; }
 
 .colorList {
   padding-top: 10px;
