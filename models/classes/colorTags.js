@@ -42,6 +42,17 @@ class ColorTags {
       }).catch(reject);
     })
   }
+
+  static removeColorTag (colorTagID) {
+    return new Promise((fulfill, reject) => {
+      db("color_tags")
+        .update({ active: false })
+        .where("color_tag_id", colorTagID)
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    })
+  }
   
 }
 

@@ -32,6 +32,7 @@ $darkblue:    #344289;
     width: 100px;
     max-width: 100px;
     padding: 5px 10px 5px 10px;
+    color: $grey;
   }
 
   .colorTagName {
@@ -50,17 +51,45 @@ $darkblue:    #344289;
       color: $blue;
     }
   }
+
+  &::after {
+    content: "";
+    display:block;
+    clear:both;
+  }
 }
 
 .listedColor {
   .colorBox {
     float: left;
-    border: 2px solid $lightblue;
+    border: 2px solid $lightgrey;
     border-radius: 4px;
-    cursor: pointer;
-    height: 32px;
-    width: 100px;
+    height: 28px;
+    width: 96px;
     max-width: 100px;
+  }
+  .colorName {
+    float: left;
+    line-height: 32px;
+    width: 265px;
+    margin-left: 15px;
+    border-bottom: 1px dashed $lightblue;
+  }
+  .colorTagRemove {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+    color: $lightblue;
+
+    &:hover {
+      color: $blue;
+    }
+  }
+
+  &::after {
+    content: "";
+    display:block;
+    clear:both;
   }
 }
 

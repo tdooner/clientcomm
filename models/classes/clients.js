@@ -24,10 +24,14 @@ class Clients {
       db("clients")
         .select("clients.*", 
                 "color_tags.color as color_tag", 
-                "color_tags.name")
+                "color_tags.name as color_name")
 
         // Join with color tag table
-        .leftJoin("color_tags", "color_tags.color_tag_id", "clients.color_tag")
+        .leftJoin(
+          db("color_tags")
+            .where("active", true)
+            .as("color_tags"),
+          "color_tags.color_tag_id", "clients.color_tag")
 
         // Only where active T/F and case manager matches
         .where("clients.cm", managerID)
@@ -39,6 +43,7 @@ class Clients {
         // Need to make sure there is a default color_tag color
         clients.map(function (client) {
           if (!client.color_tag) client.color_tag = "#898989";
+          if (!client.color_tag) client.color_name = "None";
           return client;
         });
 

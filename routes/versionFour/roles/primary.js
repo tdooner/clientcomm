@@ -110,6 +110,15 @@ router.post("/colortags/new", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/colortags/:colorTagID/remove", function (req, res) {
+  ColorTags.removeColorTag(req.params.colorTagID)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/colortags");
+  }).catch(error_500(res));
+});
+
 
 // Client-specific operations
 var specificClient = require("./primary/specificClient");

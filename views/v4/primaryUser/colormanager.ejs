@@ -23,11 +23,12 @@
   <% colorTags.forEach(function (tag) { %>
     <div class="formRow listedColor">
       <div class="colorBox" style="background-color:<%=tag.color%>"></div>
-      <div class="colorName""></div>
-      <div class="colorTagRemove">
-        <i class="fa fa-minus-square" aria-hidden="true"></i>
-      </div>
-      <%= tag.name %>
+      <div class="colorName""><%=tag.name%></div>
+      <a href="/v4/users/<%=user.cmid%>/primary/colortags/<%=tag.color_tag_id%>/remove">
+        <div class="colorTagRemove">
+          <i class="fa fa-minus-square" aria-hidden="true"></i>
+        </div>
+      </a>
     </div>
   <% }) %>
 
