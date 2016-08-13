@@ -28,6 +28,24 @@ var errorHandling   = require("../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
 
+// Access utilities
+var accessChecking  = require("../utilities/accessChecking");
+var confirmMatch    = accessChecking.confirmMatch;
+
+
+// GENERAL CHECK
+// Default pass-through check to make sure accounts are querying endpoints correctly
+router.use(function (req, res, next) {
+  const userID0 = Number(req.params.userID);
+  const userID1 = Number(req.user.cmid);
+  if (confirmMatch("number", [userID0, userID1])) {
+    next();
+  } else {
+    res.redirect("/404");
+  }
+});
+
+
 // ROUTES
 
 // Primary hub view, loads in active clients by default

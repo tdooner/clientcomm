@@ -27,11 +27,6 @@ var errorHandling   = require("./utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
 
-// Access utilities
-var accessChecking  = require("./utilities/accessChecking");
-var confirmMatch    = accessChecking.confirmMatch;
-
-
 // ROUTES
 // General style notes:
 // 1. camelCase throughout
@@ -40,20 +35,6 @@ var confirmMatch    = accessChecking.confirmMatch;
 // Reroute from standard drop endpoint
 router.get("/", function (req, res) {
   res.redirect("/v4/users/" + req.user.cmid + "/primary");
-});
-
-
-// Default pass-through check to make sure accounts are querying endpoints correctly
-router.use(function (req, res, next) {
-  const userID0 = Number(req.params.userID);
-  const userID1 = Number(req.user.cmid);
-  if (confirmMatch("number", [userID0, userID1])) {
-    next();
-  } else {
-    // To do: why is this always 404-ing?
-    next();
-    // res.redirect("/404");
-  }
 });
 
 

@@ -35,7 +35,6 @@ router.use(function (req, res, next) {
       res.redirect("/404");
     }
   }).catch(error_500(res));
-  next();
 });
 
 
@@ -64,6 +63,7 @@ router.get("/opencase", function (req, res) {
   }).catch(error_500(res));
 });
 
+
 router.get("/editcolortag", function (req, res) {
   ColorTags.selectAllByUser(req.user.cmid)
   .then((colorTags) => {
@@ -76,7 +76,16 @@ router.get("/editcolortag", function (req, res) {
                     req.user.cmid + 
                     "/primary/colortags");
     }
+  }).catch(error_500(res));
+});
 
+
+router.post("/editcolortag", function (req, res) {
+  Client.udpateColorTag(req.params.clientID, req.body.colorTagID)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/clients/open");
   }).catch(error_500(res));
 });
 
