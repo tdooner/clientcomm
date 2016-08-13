@@ -21,6 +21,7 @@ class ColorTags {
       db("color_tags")
         .where("created_by", userID)
         .andWhere("active", true)
+        .orderBy("name", "asc")
       .then((colorTags) => {
         fulfill(colorTags)
       }).catch(reject);
