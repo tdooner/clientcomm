@@ -21,8 +21,12 @@
 
 
   <% colorTags.forEach(function (tag) { %>
-    <div class="formRow">
-      <%= tag.color %>
+    <div class="formRow listedColor">
+      <div class="colorBox" style="background-color:<%=tag.color%>"></div>
+      <div class="colorName""></div>
+      <div class="colorTagRemove">
+        <i class="fa fa-minus-square" aria-hidden="true"></i>
+      </div>
       <%= tag.name %>
     </div>
   <% }) %>
@@ -58,7 +62,7 @@
   $(".colorTagAdd").click(function () {
     if ($(".colorTagName").val() !== "") {
       var i = document.createElement("input");
-      i.type = "text";
+      i.type = "hidden";
       i.name = "color";
       i.value = $(".jscolor").css("background-color");
       document.getElementById("addNewColorTagForm").appendChild(i);
