@@ -54,12 +54,14 @@ router.get("/opencase", function (req, res) {
 
 router.get("/editcolortag", function (req, res) {
   ColorTags
-  .selectAllByUser(req.params.clientID)
+  .selectAllByUser(req.user.cmid)
   .then((colorTags) => {
+    console.log("colorTags.length", colorTags.length)
     if (colorTags.length > 0) {
-      res.render("v4/primaryUser/clients", {
-        colorTags: colorTags,
-      });
+      res.send("ok need to show all colors")
+      // res.render("v4/primaryUser/clients", {
+      //   colorTags: colorTags,
+      // });
     } else {
       res.redirect( "/v4/users/" + 
                     req.user.cmid + 
