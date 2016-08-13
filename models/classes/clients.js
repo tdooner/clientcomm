@@ -27,7 +27,7 @@ class Clients {
                 "color_tags.name")
 
         // Join with color tag table
-        .leftJoin("color_tags", "color_tags.client", "clients.clid")
+        .leftJoin("color_tags", "color_tags.color_tag_id", "clients.color_tag")
 
         // Only where active T/F and case manager matches
         .where("clients.cm", managerID)

@@ -8,10 +8,7 @@ var router          = express.Router({mergeParams: true});
 // Models
 const modelsImport  = require("../../../../models/models");
 const Client        = modelsImport.Client;
-const Clients       = modelsImport.Clients;
-const Convo         = modelsImport.Convo;
-const Message       = modelsImport.Message;
-const Communication = modelsImport.Communication;
+const ColorTags       = modelsImport.ColorTags;
 
 
 // Twilio library tools and secrets
@@ -56,8 +53,20 @@ router.get("/opencase", function (req, res) {
 });
 
 router.get("/editcolortag", function (req, res) {
-  res.render("v4/primaryUser/clients", {
-  });
+  ColorTags
+  .selectAllByUser(req.params.clientID)
+  .then((colorTags) => {
+    if (colorTags.length > 0) {
+      res.render("v4/primaryUser/clients", {
+        colorTags: colorTags,
+      });
+    } else {
+      res.redirect( "/v4/users/" + 
+                    req.user.cmid + 
+                    "/primary/colortags");
+    }
+
+  }).catch(error_500(res));
 });
 
 

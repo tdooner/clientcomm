@@ -9,6 +9,7 @@ var router          = express.Router({mergeParams: true});
 const modelsImport  = require("../../../models/models");
 const Client        = modelsImport.Client;
 const Clients       = modelsImport.Clients;
+const ColorTags       = modelsImport.ColorTags;
 const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Communication = modelsImport.Communication;
@@ -70,6 +71,28 @@ router.get("/clients/closed", function (req, res) {
       },
       clients: clients
     });
+  }).catch(error_500(res));
+});
+
+
+
+router.get("/colortags", function (req, res) {
+  ColorTags
+  .selectAllByUser(req.user.cmid)
+  .then((colorTags) => {
+    res.render("v4/primaryUser/selectcolor", {
+      colorTags: colorTags,
+    });
+  }).catch(error_500(res));
+});
+
+router.post("/colortags/new", function (req, res) {
+  ColorTags
+  .addNewColorTag(req.user.cmid, req.body.color, req.body.name)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/colortags");
   }).catch(error_500(res));
 });
 
