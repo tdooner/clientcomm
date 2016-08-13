@@ -65,16 +65,14 @@ $darkblue:    #344289;
 }
 
 .manageColorsLink {
-  width: 100px;
   margin-left: 35px;
-  margin-bottom: 1px;
+  margin-right: 35px;
   z-index: 10;
   text-align: center;
   background-color: $white;
   color: $lightblue;
   padding: 5px 10px 5px 10px;
-  border: 1px solid $lightblue;
-  // border-radius: 20px;
+  border-radius: 5px 5px 0px 0px;
   font-size: 12px;
   cursor: pointer;
 
