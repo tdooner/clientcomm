@@ -33,6 +33,7 @@
     <div class="colorList">
       <div  class="colorTag" 
             colorTagID="<%= tag.color_tag_id %>"
+            colorTagName="<%= tag.name %>"
             style="background-color:<%= tag.color %>"></div>
       <div class="colorName">
         <%= tag.name %>
@@ -41,9 +42,16 @@
   <% }) %>
 
   <center>
-  <input  type="submit" 
-          class="formSubmit" 
-          value="Update Client Color">
+    <form method="POST" 
+          action="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/editcolortag">
+      <input  type="hidden" 
+              id="chosenColorTagID"
+              name="colorTagID"
+              value="">
+      <input  type="submit" 
+              class="formSubmit" 
+              value="Update Client Color">
+    </form>
   </center>
 
 </div>
@@ -52,7 +60,16 @@
 <script type="text/javascript">
   $(".colorList").click(function () {
     var colorTag = $(this).find(".colorTag");
-    console.log(colorTag.attr("colorTagID"))
+    var colorTagID = colorTag.attr("colorTagID");
+    var colorTagColor = colorTag.css("background-color");
+    var colorTagName = colorTag.attr("colorTagName");
+
+    // update selected value
+    $("#chosenColorTagID").val(colorTagID);
+
+    // update color and name on the block
+    $(".clientNameBox").css("background-color", colorTagColor);
+    $(".clientColorNameSelected").text(colorTagName)
   });
 </script>
 

@@ -32,6 +32,7 @@ class Clients {
         // Only where active T/F and case manager matches
         .where("clients.cm", managerID)
         .andWhere("clients.active", active)
+        .orderBy("clients.last", "asc")
 
       .then(function (clients) {
 

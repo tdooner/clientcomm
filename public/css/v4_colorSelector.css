@@ -25,10 +25,9 @@
   margin-top: 10px;
   margin-bottom: 20px; }
   .coloredClientFrame .clientNameBox {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 35px;
+    margin-right: 35px;
     height: 40px;
-    width: 400px;
     background-color: red;
     text-align: center;
     line-height: 40px;
@@ -44,7 +43,9 @@
 .colorList {
   padding-top: 10px;
   padding-bottom: 10px;
-  cursor: pointer; }
+  cursor: pointer;
+  margin-left: 35px;
+  margin-right: 35px; }
   .colorList .colorTag {
     float: left;
     width: 15px;

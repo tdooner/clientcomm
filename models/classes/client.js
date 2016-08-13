@@ -55,6 +55,18 @@ class Client {
       }).catch(reject);
     })
   }
+
+  static udpateColorTag (clientID, colorTagID) {
+    return new Promise((fulfill, reject) => {
+      db("clients")
+        .update({ color_tag: colorTagID })
+        .where("clid", clientID)
+      .then(() => {
+        fulfill()
+      }).catch(reject);
+    })
+
+  }
   
 }
 
