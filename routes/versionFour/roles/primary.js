@@ -91,38 +91,13 @@ router.get("/clients/closed", function (req, res) {
 });
 
 
-
-router.get("/colortags", function (req, res) {
-  ColorTags.selectAllByUser(req.user.cmid)
-  .then((colorTags) => {
-    res.render("v4/primaryUser/colormanager", {
-      colorTags: colorTags,
-    });
-  }).catch(error_500(res));
-});
-
-router.post("/colortags/new", function (req, res) {
-  ColorTags.addNewColorTag(req.user.cmid, req.body.color, req.body.name)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/colortags");
-  }).catch(error_500(res));
-});
-
-router.get("/colortags/:colorTagID/remove", function (req, res) {
-  ColorTags.removeColorTag(req.params.colorTagID)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/colortags");
-  }).catch(error_500(res));
-});
-
-
 // Client-specific operations
 var specificClient = require("./primary/specificClient");
 router.use("/clients/client/:clientID", specificClient);
+
+// Client-specific operations
+var colorTags = require("./primary/colorTags");
+router.use("/colortags", colorTags);
 
 
 // EXPORT ROUTER OBJECt

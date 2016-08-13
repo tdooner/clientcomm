@@ -36,7 +36,7 @@
 
   <div class="navSub">
     <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-      <div class="title">Client</div>
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Clients</a></div>
       <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Open</a></div>
       <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/closed">Closed</a></div>
     </div>
@@ -49,6 +49,10 @@
       <div class="title">Notifications</div>
       <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>">Pending</div>
       <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>">Sent</div>
+    </div>
+
+    <div class="leftTab <%= hub.tab == 'groups' ? 'open' : 'closed' %>">
+      <div class="title">Groups</div>
     </div>
 
     <div class="rightActions">
