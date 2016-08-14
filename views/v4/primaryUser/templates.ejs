@@ -15,13 +15,13 @@
 <% templates.forEach(function (template) { %>
   <div class="templateRow">
     <div class="column">
-      <%= template.times_used %>
+      <span class="bigNumber"><%= template.times_used %></span>
     </div>
     <div class="column">
-      <%= template.title %>
+      <%= template.title.substr(0,25) %>
     </div>
     <div class="column">
-      <%= template.content %>
+      <%= template.content.length > 210 ? template.content.substr(0,210) + '...' : template.content %>
     </div>
     <div class="column">
       <i class="fa highlight fa-pencil" aria-hidden="true"></i>

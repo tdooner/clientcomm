@@ -28,21 +28,9 @@
   overflow: hidden;
   color: #898989;
   background-color: #FFF; }
-  .templateRow:hover {
-    color: #FFF;
-    font-weight: 700; }
   .templateRow .column {
     float: left;
     text-align: left; }
-    .templateRow .column .colorTag {
-      width: 15px;
-      height: 28px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      margin-left: auto;
-      margin-right: auto;
-      border: 1px solid #FFF;
-      border-radius: 75px; }
     .templateRow .column .bigNumber {
       font-size: 1.5em;
       font-weight: 700;
@@ -58,11 +46,16 @@
         color: #898989;
         background-color: #FFF; }
     .templateRow .column:nth-child(1) {
-      width: 8%; }
+      width: 8%;
+      text-align: center; }
     .templateRow .column:nth-child(2) {
-      width: 22%; }
+      width: 22%;
+      font-weight: 700; }
     .templateRow .column:nth-child(3) {
-      width: 60%; }
+      width: 60%;
+      padding-top: 5px;
+      line-height: 20px;
+      font-size: 12px; }
     .templateRow .column:nth-child(4) {
       width: 5%;
       text-align: center; }

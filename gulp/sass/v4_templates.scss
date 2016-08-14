@@ -68,25 +68,9 @@ $width_row5:  5%;
   color: $grey;
   background-color: $white;
 
-  &:hover {
-    color: $white;
-    font-weight: 700;
-  }
-
   .column {
     float: left;
     text-align: left;
-
-    .colorTag {
-      width: 15px;
-      height: 28px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      margin-left: auto;
-      margin-right: auto;
-      border: 1px solid $white;
-      border-radius: 75px;
-    }
 
     .bigNumber {
       font-size: 1.5em;
@@ -110,12 +94,17 @@ $width_row5:  5%;
 
     &:nth-child(1) {
       width: $width_row1;
+      text-align: center;
     }
     &:nth-child(2) {
       width: $width_row2;
+      font-weight: 700;
     }
     &:nth-child(3) {
       width: $width_row3;
+      padding-top: 5px;
+      line-height: 20px;
+      font-size: 12px;
     }
     &:nth-child(4) {
       width: $width_row4;
