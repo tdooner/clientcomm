@@ -92,13 +92,18 @@ router.get("/clients/closed", function (req, res) {
 
 
 // Client-specific operations
-var specificClient = require("./primary/specificClient");
-router.use("/clients/client/:clientID", specificClient);
-
-// Client-specific operations
 var colorTags = require("./primary/colorTags");
 router.use("/colortags", colorTags);
 
+
+// Client-specific operations
+var templates = require("./primary/templates");
+router.use("/templates", templates);
+
+
+// Client-specific operations
+var specificClient = require("./primary/specificClient");
+router.use("/clients/client/:clientID", specificClient);
 
 // EXPORT ROUTER OBJECt
 module.exports = router;
