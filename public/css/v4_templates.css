@@ -9,38 +9,32 @@
     float: left;
     text-align: left; }
     .header .column:nth-child(1) {
-      width: 5%;
+      width: 8%;
       text-align: center; }
     .header .column:nth-child(2) {
-      width: 50%; }
+      width: 22%; }
     .header .column:nth-child(3) {
-      width: 10%;
-      text-align: center; }
+      width: 60%; }
     .header .column:nth-child(4) {
-      width: 20%; }
+      width: 5%;
+      text-align: center; }
     .header .column:nth-child(5) {
       width: 5%;
       text-align: center; }
-    .header .column:nth-child(6) {
-      width: 5%;
-      text-align: center; }
-    .header .column:nth-child(7) {
-      width: 5%;
-      text-align: center; }
 
-.clientRow {
+.templateRow {
   height: 50px;
   line-height: 50px;
   overflow: hidden;
   color: #898989;
   background-color: #FFF; }
-  .clientRow:hover {
+  .templateRow:hover {
     color: #FFF;
     font-weight: 700; }
-  .clientRow .column {
+  .templateRow .column {
     float: left;
     text-align: left; }
-    .clientRow .column .colorTag {
+    .templateRow .column .colorTag {
       width: 15px;
       height: 28px;
       margin-top: 10px;
@@ -49,37 +43,31 @@
       margin-right: auto;
       border: 1px solid #FFF;
       border-radius: 75px; }
-    .clientRow .column .bigNumber {
+    .templateRow .column .bigNumber {
       font-size: 1.5em;
       font-weight: 700;
       color: #4A90E2; }
-    .clientRow .column .fa.highlight {
+    .templateRow .column .fa.highlight {
       padding: 5px;
       width: 16px;
       max-width: 16px;
       height: 16px;
       max-height: 16px;
       border-radius: 50%; }
-      .clientRow .column .fa.highlight:hover {
+      .templateRow .column .fa.highlight:hover {
         color: #898989;
         background-color: #FFF; }
-    .clientRow .column:nth-child(1) {
-      width: 5%; }
-    .clientRow .column:nth-child(2) {
-      width: 50%; }
-    .clientRow .column:nth-child(3) {
-      width: 10%;
-      text-align: center; }
-    .clientRow .column:nth-child(4) {
-      width: 20%; }
-    .clientRow .column:nth-child(5) {
+    .templateRow .column:nth-child(1) {
+      width: 8%; }
+    .templateRow .column:nth-child(2) {
+      width: 22%; }
+    .templateRow .column:nth-child(3) {
+      width: 60%; }
+    .templateRow .column:nth-child(4) {
       width: 5%;
       text-align: center; }
-    .clientRow .column:nth-child(6) {
+    .templateRow .column:nth-child(5) {
       width: 5%;
       text-align: center; }
-    .clientRow .column:nth-child(7) {
-      width: 5%;
-      text-align: center; }
-  .clientRow:nth-child(even) {
+  .templateRow:nth-child(even) {
     background-color: #E8ECEF; }

@@ -61,7 +61,7 @@ router.get("/clients/open", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = true;
 
-  Clients.findByManager(managerID, active)
+  Clients.findByUser(managerID, active)
   .then((clients) => {
     res.render("v4/primaryUser/clients", {
       hub: {

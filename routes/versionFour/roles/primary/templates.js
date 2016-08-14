@@ -22,17 +22,14 @@ var confirmMatch    = accessChecking.confirmMatch;
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
-  const managerID = Number(req.params.userID);
-  const active    = true;
-
-  Clients.findByManager(managerID)
-  .then((clients) => {
-    res.render("v4/primaryUser/clients", {
+  Templates.findByUser(Number(req.params.userID))
+  .then((templates) => {
+    res.render("v4/primaryUser/templates", {
       hub: {
-        tab: "clients",
-        sel: "open"
+        tab: "templates",
+        sel: null
       },
-      clients: clients
+      templates: templates
     });
   }).catch(error_500(res));
 });

@@ -15,8 +15,23 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 // Class
 class Templates {
-
-  
+  static findByUser (userID) {
+    return new Promise((fulfill, reject) => {
+      db("templates")
+        .leftJoin(
+          db("template_use")
+            .select(db.raw("COUNT(template_use_id) as times_used, used_by"))
+            .groupBy("template_use.used_by")
+            .as("template_use"),
+          "templates.casemanager", "template_use.used_by")
+        .where("casemanager", userID)
+        .andWhere("active", true)
+      .then((templates) => {
+        console.log(templates)
+        fulfill(templates)
+      }).catch(reject);
+    })
+  }
 }
 
 module.exports = Templates
