@@ -68,7 +68,7 @@ router.get("/editcolortag", function (req, res) {
   ColorTags.selectAllByUser(req.user.cmid)
   .then((colorTags) => {
     if (colorTags.length > 0) {
-      res.render("v4/primaryUser/selectcolor", {
+      res.render("v4/primaryUser/client/selectcolor", {
         colorTags: colorTags,
       });
     } else {
