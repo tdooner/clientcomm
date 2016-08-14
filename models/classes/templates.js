@@ -38,11 +38,35 @@ class Templates {
       }).catch(reject);
     })
   }
+  
+  static findByID (templateID) {
+    return new Promise((fulfill, reject) => {
+      db("templates")
+        .where("template_id", templateID)
+      .then((templates) => {
+        fulfill(templates[0])
+      }).catch(reject);
+    })
+  }
 
   static removeOne (templateID) {
     return new Promise((fulfill, reject) => {
       db("templates")
         .update({ active: false })
+        .where("template_id", templateID)
+      .then(() => {
+        fulfill()
+      }).catch(reject);
+    })
+  }
+
+  static editOne (templateID, title, content) {
+    return new Promise((fulfill, reject) => {
+      db("templates")
+        .update({
+          title: title,
+          content: content
+        })
         .where("template_id", templateID)
       .then(() => {
         fulfill()
