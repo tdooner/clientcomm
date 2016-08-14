@@ -27,6 +27,7 @@ class Templates {
           "templates.template_id", "template_use.template")
         .where("casemanager", userID)
         .andWhere("active", true)
+        .orderBy("title", "asc")
       .then((templates) => {
         
         templates.forEach(function (template) {
