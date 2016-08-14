@@ -101,6 +101,11 @@ router.use("/templates", templates);
 
 
 // Client-specific operations
+var notifications = require("./primary/notifications");
+router.use("/notifications", notifications);
+
+
+// Client-specific operations
 var specificClient = require("./primary/specificClient");
 router.use("/clients/client/:clientID", specificClient);
 
