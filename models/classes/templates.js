@@ -15,6 +15,7 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 // Class
 class Templates {
+  
   static findByUser (userID) {
     return new Promise((fulfill, reject) => {
       db("templates")
@@ -36,6 +37,18 @@ class Templates {
       }).catch(reject);
     })
   }
+
+  static removeOne (templateID) {
+    return new Promise((fulfill, reject) => {
+      db("templates")
+        .update({ active: false })
+        .where("template_id", templateID)
+      .then(() => {
+        fulfill()
+      }).catch(reject);
+    })
+  }
+
 }
 
 module.exports = Templates

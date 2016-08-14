@@ -34,6 +34,15 @@ router.get("/", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/remove/:templateID", function (req, res) {
+  Templates.removeOne(req.params.templateID)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/templates");
+  }).catch(error_500(res));
+});
+
 
 // EXPORT ROUTER OBJECt
 module.exports = router;

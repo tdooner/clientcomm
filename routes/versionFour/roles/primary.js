@@ -52,8 +52,7 @@ router.use(function (req, res, next) {
 router.get("/", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/primary/clients/open"
-              );
+                "/primary/clients/open");
 });
 
 
