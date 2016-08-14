@@ -17,6 +17,19 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 class Clients {
 
   static findByManager (managerID, active) {
+    // findByManager deprecated, use findByUser
+    console.log("Warning! Clients method findByManager() deprecated, use findByUser()");
+
+    return new Promise((fulfill, reject) => {
+      Clients
+      .findByUser(managerID, active)
+      .then((clients) => {
+        fulfill(clients)
+      }).catch(reject);
+    });
+  }
+
+  static findByUser (managerID, active) {
     // Default to an assuming viewing active clients
     if (typeof active == "undefined") active = true;
 
