@@ -15,16 +15,19 @@
 <% templates.forEach(function (template) { %>
   <div class="templateRow">
     <div class="column">
-      dddd
+      <%= template.times_used %>
     </div>
     <div class="column">
-      fffff
+      <%= template.title %>
     </div>
     <div class="column">
-      fffff
+      <%= template.content %>
     </div>
     <div class="column">
-      fffff
+      <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+    </div>
+    <div class="column">
+      <i class="fa highlight fa-trash" aria-hidden="true"></i>
     </div>
   </div>
 <% }) %>

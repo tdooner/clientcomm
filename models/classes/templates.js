@@ -20,14 +20,18 @@ class Templates {
       db("templates")
         .leftJoin(
           db("template_use")
-            .select(db.raw("COUNT(template_use_id) as times_used, used_by"))
-            .groupBy("template_use.used_by")
+            .select(db.raw("COUNT(*) as times_used, template"))
+            .groupBy("template_use.template")
             .as("template_use"),
-          "templates.casemanager", "template_use.used_by")
+          "templates.template_id", "template_use.template")
         .where("casemanager", userID)
         .andWhere("active", true)
       .then((templates) => {
-        console.log(templates)
+        
+        templates.forEach(function (template) {
+          if (!template.times_used) template.times_used = 0;
+        });
+
         fulfill(templates)
       }).catch(reject);
     })
