@@ -28,6 +28,11 @@
   overflow: hidden;
   color: #898989;
   background-color: #FFF; }
+  .templateRow:hover {
+    color: #FFF;
+    background-color: #4A90E2 !important; }
+    .templateRow:hover .bigNumber {
+      color: #FFF !important; }
   .templateRow .column {
     float: left;
     text-align: left; }
