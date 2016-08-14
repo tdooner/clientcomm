@@ -48,6 +48,24 @@ class Client {
     })
   }
 
+  static editOne (clientID, first, middle, last, dob, uniqueID1, uniqueID2) {
+    return new Promise((fulfill, reject) => {
+      db("clients")
+        .update({
+          first: first,
+          middle: middle,
+          last: last,
+          dob: dob,
+          so: uniqueID1,
+          otn: uniqueID2
+        })
+        .where("clid", clientID)
+      .then(() => {
+        fulfill()
+      }).catch(reject);
+    })
+  }
+
   static alterCase (clientID, active) {
     if (typeof active == "undefined") active = true;
 

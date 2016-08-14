@@ -8,7 +8,7 @@ var router          = express.Router({mergeParams: true});
 // Models
 const modelsImport  = require("../../../../models/models");
 const Client        = modelsImport.Client;
-const ColorTags       = modelsImport.ColorTags;
+const ColorTags     = modelsImport.ColorTags;
 
 
 // Twilio library tools and secrets
@@ -56,6 +56,28 @@ router.get("/closecase", function (req, res) {
 
 router.get("/opencase", function (req, res) {
   Client.alterCase(req.params.clientID, true)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/clients/open");
+  }).catch(error_500(res));
+});
+
+
+router.get("/edit", function (req, res) {
+  res.render("v4/primaryUser/client/edit");
+});
+
+
+router.post("/edit", function (req, res) {
+  const clientID = req.params.clientID;
+  const first = req.body.first;
+  const middle = req.body.middle;
+  const last = req.body.last;
+  const dob = req.body.dob;
+  const uniqueID1 = req.body.uniqueID1;
+  const uniqueID2 = req.body.uniqueID2;
+  Client.editOne(clientID, first, middle, last, dob, uniqueID1, uniqueID2)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 

@@ -1,6 +1,6 @@
 <% include ../../partials/cardFrameTop %>
 
-<div class="card-head">
+<div class="cardHead">
   <!-- exit button -->
   <a href="/v4/users/<%=user.cmid%>/primary/templates">
     <% include ../../partials/cardExit %>
@@ -17,10 +17,6 @@
 
     <form method="post" 
           action="/v4/users/<%=user.cmid%>/primary/templates/edit/<%=template.template_id%>">
-
-      <input type="hidden" name="org" value="<%= user.org %>">
-      <input type="hidden" name="casemanager" value="<%= user.cmid %>">
-
 
       <div class="formRow">
         <div class="formLabel">
