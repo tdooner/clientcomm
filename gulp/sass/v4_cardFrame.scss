@@ -385,7 +385,8 @@ body {
     .formSubmit {
       display: block;
       border: 0px;
-      border-radius: 17px;
+      border-radius: 10px;
+      float: right;
       
       height: 35px;
       font-size: 14px;
@@ -399,8 +400,7 @@ body {
       padding-bottom: 2px;
 
       margin-bottom: 20px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-right: 30px;
 
       border: 2px solid $lightblue;
       background-color: $white;

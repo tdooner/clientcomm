@@ -49,6 +49,21 @@ class Templates {
     })
   }
 
+  static insertNew (orgID, userID, title, content) {
+    return new Promise((fulfill, reject) => {
+      db("templates")
+        .insert({
+          org: orgID,
+          casemanager: userID,
+          title: title,
+          content: content
+        })
+      .then(() => {
+        fulfill()
+      }).catch(reject);
+    })
+  }
+
 }
 
 module.exports = Templates

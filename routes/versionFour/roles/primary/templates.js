@@ -24,7 +24,7 @@ var confirmMatch    = accessChecking.confirmMatch;
 router.get("/", function (req, res) {
   Templates.findByUser(Number(req.params.userID))
   .then((templates) => {
-    res.render("v4/primaryUser/templates", {
+    res.render("v4/primaryUser/templates/templates", {
       hub: {
         tab: "templates",
         sel: null
@@ -36,6 +36,23 @@ router.get("/", function (req, res) {
 
 router.get("/remove/:templateID", function (req, res) {
   Templates.removeOne(req.params.templateID)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/templates");
+  }).catch(error_500(res));
+});
+
+router.get("/create", function (req, res) {
+  res.render("v4/primaryUser/templates/createtemplate", {});
+});
+
+router.post("/create", function (req, res) {
+  const orgID   = req.user.org;
+  const userID  = req.user.cmid;
+  const title   = req.body.title;
+  const content = req.body.content;
+  Templates.insertNew(orgID, userID, title, content)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
