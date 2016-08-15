@@ -3,7 +3,8 @@
 
 module.exports = {
   Client: require("./classes/client"), 
-  Templates: require("./classes/templates"), 
+  Templates: require("./classes/templates"),
+  Notifications: require("./classes/notifications"), 
   Clients: require("./classes/clients"), 
   ColorTags: require("./classes/colorTags"), 
   Convo: require("./classes/conversation"),

@@ -1,35 +1,46 @@
 <% include ../../partials/hubFrameTop %>
 
 <!-- Load in addition CSS -->
-<link rel="stylesheet" type="text/css" href="/static/css/v4_templates.css">
+<link rel="stylesheet" type="text/css" href="/static/css/v4_notifications.css">
 
 <div class="header">
-  <div class="column">use count</div>
-  <div class="column">subject</div>
+  <div class="column">client name</div>
+  <div class="column">send at</div>
   <div class="column">message</div>
   <div class="column">edit</div>
   <div class="column">delete</div>
 </div>
 
 
-<% templates.forEach(function (template) { %>
-  <div class="templateRow">
+<% notifications.forEach(function (notification) { %>
+  <div class="notificationRow">
     <div class="column">
-      <span class="bigNumber"><%= template.times_used %></span>
+      <span class="clientName">
+        <%= notification.last + ', ' + notification.first + ' ' + notification.middle %>
+      </span>
     </div>
     <div class="column">
-      <%= template.title.substr(0,25) %>
+      <span class="time">
+        <%= moment.tz(notification.send, local_tz).format('MMM. Do, hh:mmA') %>
+      </span>
     </div>
     <div class="column">
-      <%= template.content.length > 210 ? template.content.substr(0,210) + '...' : template.content %>
+      <span class="subject">
+        <%= notification.subject %>
+      </span>
+      <span class="message">
+        <%= notification.message.length > 210 ? notification.message.substr(0,210) + '...' : notification.message %>
+      </span>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/templates/edit/<%=template.template_id%>">
-        <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+      <a href="/v4/users/<%=user.cmid%>/primary/notifications/edit/<%=notification.notification_id%>">
+        <% if (hub.sel == "pending") { %>
+          <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+        <% } else { %>-<% } %>
       </a>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/templates/remove/<%=template.template_id%>">
+      <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=notification.notificationid%>">
         <i class="fa highlight fa-trash" aria-hidden="true"></i>
       </a>
     </div>

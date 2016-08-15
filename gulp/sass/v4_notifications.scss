@@ -13,9 +13,9 @@ $lightblue:   #4A90E2;
 $blue:        #3F69B6;
 $darkblue:    #344289;
 
-$width_row1:  8%;
-$width_row2:  22%;
-$width_row3:  60%;
+$width_row1:  20%;
+$width_row2:  15%;
+$width_row3:  55%;
 $width_row4:  5%;
 $width_row5:  5%;
 
@@ -42,7 +42,6 @@ $width_row5:  5%;
 
     &:nth-child(1) {
       width: $width_row1;
-      text-align: center;
     }
     &:nth-child(2) {
       width: $width_row2;
@@ -61,7 +60,7 @@ $width_row5:  5%;
   }
 }
 
-.templateRow {
+.notificationRow {
   height: 50px;
   line-height: 50px;
   overflow: hidden;
@@ -87,6 +86,22 @@ $width_row5:  5%;
       color: $lightblue;
     }
 
+    .clientName {
+      padding-left: 15px;
+    }
+
+    .time {
+      font-size: 12px;
+    }
+
+    .subject {
+      font-weight: 700;
+    }
+
+    .subject, .message {
+      font-size: 12px;
+    }
+
     .fa.highlight {
       padding: 5px;
       width: 16px;
@@ -103,11 +118,9 @@ $width_row5:  5%;
 
     &:nth-child(1) {
       width: $width_row1;
-      text-align: center;
     }
     &:nth-child(2) {
       width: $width_row2;
-      font-weight: 700;
     }
     &:nth-child(3) {
       width: $width_row3;

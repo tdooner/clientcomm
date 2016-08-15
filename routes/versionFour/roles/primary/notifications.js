@@ -7,7 +7,7 @@ var router          = express.Router({mergeParams: true});
 
 // Models
 const modelsImport  = require("../../../../models/models");
-const Templates     = modelsImport.Templates;
+const Notifications = modelsImport.Notifications;
 
 
 // General error handling
@@ -22,68 +22,43 @@ var confirmMatch    = accessChecking.confirmMatch;
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
-  Templates.findByUser(Number(req.params.userID))
-  .then((templates) => {
-    res.render("v4/primaryUser/templates/templates", {
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/primary/notifications/pending");
+});
+
+router.get("/pending", function (req, res) {
+  Notifications.findByUser(req.user.cmid, false)
+  .then((notifications) => {
+    res.render("v4/primaryUser/notifications/notifications", {
       hub: {
-        tab: "templates",
-        sel: null
+        tab: "notifications",
+        sel: "pending"
       },
-      templates: templates
+      notifications: notifications
     });
   }).catch(error_500(res));
 });
 
-router.get("/remove/:templateID", function (req, res) {
-  Templates.removeOne(req.params.templateID)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
+router.get("/sent", function (req, res) {
+  Notifications.findByUser(req.user.cmid, true)
+  .then((notifications) => {
+    res.render("v4/primaryUser/notifications/notifications", {
+      hub: {
+        tab: "notifications",
+        sel: "sent"
+      },
+      notifications: notifications
+    });
   }).catch(error_500(res));
 });
 
-router.get("/create", function (req, res) {
-  res.render("v4/primaryUser/templates/create");
-});
-
-router.post("/create", function (req, res) {
-  const orgID   = req.user.org;
-  const userID  = req.user.cmid;
-  const title   = req.body.title;
-  const content = req.body.content;
-  Templates.insertNew(orgID, userID, title, content)
+router.get("/remove/:notificationID", function (req, res) {
+  Notifications.removeOne(req.params.notificationID)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/primary/templates");
-  }).catch(error_500(res));
-});
-
-
-router.get("/edit/:templateID", function (req, res) {
-  Templates.findByID(req.params.templateID)
-  .then((template) => {
-    if (template) {
-      res.render("v4/primaryUser/templates/edit", {
-        template: template
-      });
-    } else {
-      res.redirect("/404")
-    }
-  }).catch(error_500(res));
-});
-
-
-router.post("/edit/:templateID", function (req, res) {
-  const templateID = req.params.templateID;
-  const title   = req.body.title;
-  const content = req.body.content;
-  Templates.editOne(templateID, title, content)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
+                  "/primary/notifications/pending");
   }).catch(error_500(res));
 });
 
