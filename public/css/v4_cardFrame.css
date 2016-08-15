@@ -71,6 +71,19 @@ body {
         resize: none;
         overflow: auto;
         padding: 5px 10px 5px 10px; }
+      .card .cardBody .formRow .formInput input[type=date] {
+        background: #FFF;
+        width: 420px;
+        font-size: 12px;
+        line-height: 18px;
+        height: 18px;
+        max-width: 420px;
+        border: 2px solid #4A90E2;
+        border-radius: 4px;
+        outline: none;
+        resize: none;
+        overflow: auto;
+        padding: 5px 10px 5px 10px; }
       .card .cardBody .formRow .formInput textarea {
         background: #FFF;
         width: 420px;
@@ -103,7 +116,7 @@ body {
         .card .cardBody .formRow .formSelect.half:nth-child(2) {
           margin-right: 20px; }
     .card .cardBody .formRow .blueSelect {
-      width: 280px;
+      width: 440px;
       height: 35px;
       border: 2px solid #2F8CE8;
       border-radius: 7px;

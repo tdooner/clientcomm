@@ -1,21 +1,93 @@
 <% include ../../partials/cardFrameTop %>
 
+<!-- use moment.js library -->
+<script type="text/javascript" src="/modules/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="/modules/moment-timezone/moment-timezone.js"></script>
+
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/templates">
+  <a href="/v4/users/<%=user.cmid%>/primary/notifications">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Create Notification
+    Notification Parameters
   </div>
   <div class="cardSubtitle">
-    Use templates to save time typing by saving common messages.
+    Use notifications to schedule messages to be sent in the future.
   </div>
 </div>
 
 <div class="cardBody">
 
+  <div class="formRow">
+    <div class="formLabel"> Which client to notify  </div>
+    <select class="blueSelect" 
+            id="clientID" 
+            required>
+      <option value="" disabled selected> Client </option>
+      <% clients.forEach(function (client) { %>
+        <option value="<%= client.clid %>">
+          <%= client.last + ', ' + client.last + ' ' + client.middle %> 
+        </option>
+      <% }); %>
+    </select>
+  </div>
 
+  <div class="formRow">
+    <div class="formLabel"> Which device to send to </div>
+    <select class="blueSelect" 
+            id="commConn" 
+            required>
+      <option value="" disabled selected> Contact Options </option>
+    </select>
+  </div>
+
+  <div class="formRow">
+    <div class="formLabel"> Date to send <small>(YYYY-MM-DD)</small></div>
+    <div class="formInput">
+      <input  type="date" 
+              id="sendDate" 
+              value="<%= moment().add(1, 'weeks').format('YYYY-MM-DD') %>" 
+              required>
+      </div>
+  </div>
+
+  <div class="formRow">
+    <div class="formLabel"> Time to send <small>(Organization timezone: <%= local_tz %>)</small></div>
+
+    <div class="formInput">
+      <select class="blueSelect" id="sendHour" required>
+        <option value="00"> 12:00 AM (Midnight) </option>
+        <option value="01"> 01:00 AM </option>
+        <option value="02"> 02:00 AM </option>
+        <option value="03"> 03:00 AM </option>
+        <option value="04"> 04:00 AM </option>
+        <option value="05"> 05:00 AM </option>
+        <option value="06" selected> 06:00 AM </option>
+        <option value="07"> 07:00 AM </option>
+        <option value="08"> 08:00 AM </option>
+        <option value="09"> 09:00 AM </option>
+        <option value="10"> 10:00 AM </option>
+        <option value="11"> 11:00 AM </option>
+        <option value="12"> 12:00 PM (Noon) </option>
+        <option value="13"> 01:00 PM </option>
+        <option value="14"> 02:00 PM </option>
+        <option value="15"> 03:00 PM  </option>
+        <option value="16"> 04:00 PM  </option>
+        <option value="17"> 05:00 PM  </option>
+        <option value="18"> 06:00 PM  </option>
+        <option value="19"> 07:00 PM  </option>
+        <option value="20"> 08:00 PM  </option>
+        <option value="21"> 09:00 PM  </option>
+        <option value="22"> 10:00 PM  </option>
+        <option value="23"> 11:00 PM  </option>
+      </select>
+    </div>
+  </div>
+
+  <input  type="submit" 
+          class="formSubmit" 
+          value="Update Client Color">
 </div>
 
 
@@ -23,40 +95,51 @@
 <script type="text/javascript">
   // Set global variable of all clients information
   window.clients = <%- JSON.stringify(clients) %>;
+  window.local_tz = "<%= local_tz %>";
 
   // Bind clients to update of comm list
-  $("#clientSelect").change(function () {
-    // Get new client id value
-    var v = $(this)[0].value;
+  $("#clientID").change(function () {
+    var v = $(this).val();
     updateClientsAndComms(v)
   });
 
-  function updateClientsAndComms (v, id) {
+  function updateClientsAndComms (v) {
     // Remove all existing children in options
-    $("#commOptionsForClient").empty();
+    $("#commConn").empty();
 
     // Now add all client comms associated with that client
     clients.forEach(function (client) {
       // Only add if client matches
-      if (client.id == v) {
-        client.communicationMethods.forEach(function (comm) {
-          var newOpt =  '<option value="' + comm.id + '" ';
-
-          // Make selected if it was selected from before
-          if (id && id == comm.id) {
-            newOpt +=  ' selected ';
-          }
-
-          // Append the end content
-          newOpt +=     '">' +
-                        comm.name + " (" + comm.value + ")" +
-                        '</option>';
-
-          $("#commOptionsForClient").append(newOpt);
+      if (client.clid == v) {
+        client.communications.forEach(function (comm) {
+          var newOpt = '<option value="' + comm.commid + '">' + 
+                        comm.name + " (" + comm.value + ")" + '</option>';
+          $("#commConn").append(newOpt);
         });
+        var smartSelect = '<option value="" ' + '">Smart Select</option>';
+        $("#commConn").append(smartSelect);
       }
     });
   };
+
+  $(".formSubmit").click(function () {
+    var clientID = $("#clientID").val();
+    var commID = $("#commConn").val();
+    var sendDate = $("#sendDate").val();
+    var sendHour = Number($("#sendHour").val());
+
+    // only continue if client supplied
+    if (clientID !== null) {
+      if (commConn == null) commConn = "null";
+      var redirectURL = "/v4/users/" + encodeURIComponent("<%= user.cmid %>") + 
+                        "/primary/notifications/create/sendto/" + encodeURIComponent(clientID) +
+                        "/via/" + encodeURIComponent(commID) + 
+                        "/on/" + encodeURIComponent(sendDate) + 
+                        "/at/" + encodeURIComponent(sendHour);
+      console.log(redirectURL);
+      window.location.replace(redirectURL);
+    }
+  });
 </script>
 
 <% include ../../partials/cardFrameBottom %>

@@ -130,6 +130,21 @@ body {
           padding: 5px 10px 5px 10px;
         }
 
+        input[type=date] {
+          background: $white;
+          width: 420px;
+          font-size: 12px;
+          line-height: 18px;
+          height: 18px;
+          max-width: 420px;
+          border: 2px solid $lightblue;
+          border-radius: 4px;
+          outline: none;
+          resize: none;
+          overflow: auto;
+          padding: 5px 10px 5px 10px;
+        }
+
         textarea {
           background: $white;
           width: 420px;
@@ -174,7 +189,7 @@ body {
 
 
       .blueSelect {
-        width: 280px;
+        width: 440px;
         height: 35px;
         border: 2px solid #2F8CE8;
         border-radius: 7px;

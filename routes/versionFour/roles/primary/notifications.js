@@ -8,6 +8,7 @@ var router          = express.Router({mergeParams: true});
 // Models
 const modelsImport  = require("../../../../models/models");
 const Notifications = modelsImport.Notifications;
+const Clients       = modelsImport.Clients;
 
 
 // General error handling
@@ -60,7 +61,16 @@ router.get("/create", function (req, res) {
 });
 
 router.get("/create/sendto", function (req, res) {
-  res.render("v4/primaryUser/notifications/create")
+  Clients.findByUser(req.user.cmid)
+  .then((clients) => {
+    res.render("v4/primaryUser/notifications/sendto", {
+      clients: clients
+    })
+  }).catch(error_500(res));
+});
+
+router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", function (req, res) {
+  res.send("req.params", req.params);
 });
 
 router.get("/remove/:notificationID", function (req, res) {
