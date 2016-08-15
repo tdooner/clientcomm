@@ -24,24 +24,7 @@ class Clients {
       Clients
       .findByUser(managerID, active)
       .then((clients) => {
-
-        var clientIDs = clients.reduce(function (client) {
-          return client.clid
-        });
-
-        db("commconns")
-          .whereIn("client", clientIDs)
-          .and.whereNot("retired", true)
-        .then((commconns) => {
-
-          // commconns.forEach(function (commconn) {
-          //   clients.forEach(function (client) {
-          //     if (client.clid == client)
-          //   }
-          // });
-
-          fulfill(clients)
-        }).catch(reject);
+        fulfill(clients);
       }).catch(reject);
     });
   }
@@ -51,6 +34,8 @@ class Clients {
     if (typeof active == "undefined") active = true;
 
     return new Promise((fulfill, reject) => {
+      var finalClientsObject;
+
       db("clients")
         .select("clients.*", 
                 "color_tags.color as color_tag", 
@@ -67,33 +52,49 @@ class Clients {
         .where("clients.cm", managerID)
         .andWhere("clients.active", active)
         .orderBy("clients.last", "asc")
-
       .then(function (clients) {
 
         // Need to make sure there is a default color_tag color
-        clients.map(function (client) {
+        finalClientsObject = clients.map(function (client) {
           if (!client.color_tag) client.color_tag = "#898989";
           if (!client.color_tag) client.color_name = "None";
           return client;
         });
 
         // Get unread messages and add them to client list
-        Clients
-        .getUnreadMessages(managerID)
-        .then((unreads) => {
-          
-          clients.map(function (client) {
-            client.unread = 0;
-            unreads.forEach(function (unread) {
-              if (unread.client == client.clid) client.unread = Number(unread.unread);
-            });
-            return client;
+        return Clients.getUnreadMessages(managerID)
+      }).then((unreads) => {
+        finalClientsObject = finalClientsObject.map(function (client) {
+          client.unread = 0;
+          unreads.forEach(function (unread) {
+            if (unread.client == client.clid) client.unread = Number(unread.unread);
           });
-          fulfill(clients)
+          return client;
+        });
 
-        }).catch(reject);
+        // Now get all clientIDs to get Comm. Connections
+        var clientIDs = finalClientsObject.map(function (client) {
+          return client.clid
+        });
+
+        // Load in and use CommConns class
+        const modelsImport  = require("../models");
+        const CommConns = modelsImport.CommConns;
+        return CommConns.findByIDs(clientIDs)
+      }).then((commconns) => {
+        // Add each communication method to relevant client
+        finalClientsObject = finalClientsObject.map(function (client) {
+          client.communications = [];
+          commconns.forEach(function (commconn) {
+            if (client.clid == commconn.client) {
+             client.communications.push(commconn) 
+            }
+          });
+          return client;
+        });
+        fulfill(finalClientsObject);
       }).catch(reject);
-    })
+    });
   }
 
   static getUnreadMessages (managerID) {

@@ -4,6 +4,10 @@
 const db      = require("../../server/db");
 const Promise = require("bluebird");
 
+// Using other models
+const modelsImport  = require("../models");
+const CommConns = modelsImport.CommConns;
+
 // Utilities
 const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
