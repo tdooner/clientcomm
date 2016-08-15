@@ -102,6 +102,16 @@ body {
         float: left; }
         .card .cardBody .formRow .formSelect.half:nth-child(2) {
           margin-right: 20px; }
+    .card .cardBody .formRow .blueSelect {
+      width: 280px;
+      height: 35px;
+      border: 2px solid #2F8CE8;
+      border-radius: 7px;
+      background-color: #92C9FF;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: #344289; }
   .card .cardBody .templateBox {
     width: 450px;
     max-height: 400px;

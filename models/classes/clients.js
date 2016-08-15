@@ -24,7 +24,24 @@ class Clients {
       Clients
       .findByUser(managerID, active)
       .then((clients) => {
-        fulfill(clients)
+
+        var clientIDs = clients.reduce(function (client) {
+          return client.clid
+        });
+
+        db("commconns")
+          .whereIn("client", clientIDs)
+          .and.whereNot("retired", true)
+        .then((commconns) => {
+
+          // commconns.forEach(function (commconn) {
+          //   clients.forEach(function (client) {
+          //     if (client.clid == client)
+          //   }
+          // });
+
+          fulfill(clients)
+        }).catch(reject);
       }).catch(reject);
     });
   }

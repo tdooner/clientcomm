@@ -53,6 +53,16 @@ router.get("/sent", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/create", function (req, res) {
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/primary/notifications/create/sendto");
+});
+
+router.get("/create/sendto", function (req, res) {
+  res.render("v4/primaryUser/notifications/create")
+});
+
 router.get("/remove/:notificationID", function (req, res) {
   Notifications.removeOne(req.params.notificationID)
   .then(() => {

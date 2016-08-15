@@ -1,0 +1,62 @@
+<% include ../../partials/cardFrameTop %>
+
+<div class="cardHead">
+  <!-- exit button -->
+  <a href="/v4/users/<%=user.cmid%>/primary/templates">
+    <% include ../../partials/cardExit %>
+  </a>
+  <div class="cardTitle">
+    Create Notification
+  </div>
+  <div class="cardSubtitle">
+    Use templates to save time typing by saving common messages.
+  </div>
+</div>
+
+<div class="cardBody">
+
+
+</div>
+
+
+
+<script type="text/javascript">
+  // Set global variable of all clients information
+  window.clients = <%- JSON.stringify(clients) %>;
+
+  // Bind clients to update of comm list
+  $("#clientSelect").change(function () {
+    // Get new client id value
+    var v = $(this)[0].value;
+    updateClientsAndComms(v)
+  });
+
+  function updateClientsAndComms (v, id) {
+    // Remove all existing children in options
+    $("#commOptionsForClient").empty();
+
+    // Now add all client comms associated with that client
+    clients.forEach(function (client) {
+      // Only add if client matches
+      if (client.id == v) {
+        client.communicationMethods.forEach(function (comm) {
+          var newOpt =  '<option value="' + comm.id + '" ';
+
+          // Make selected if it was selected from before
+          if (id && id == comm.id) {
+            newOpt +=  ' selected ';
+          }
+
+          // Append the end content
+          newOpt +=     '">' +
+                        comm.name + " (" + comm.value + ")" +
+                        '</option>';
+
+          $("#commOptionsForClient").append(newOpt);
+        });
+      }
+    });
+  };
+</script>
+
+<% include ../../partials/cardFrameBottom %>
