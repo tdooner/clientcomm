@@ -89,6 +89,20 @@ class Templates {
     })
   }
 
+  static logUse (templateID, userID, clientID) {
+    return new Promise((fulfill, reject) => {
+      db("template_use")
+        .insert({
+          template: templateID,
+          used_by: userID,
+          sent_to: clientID
+        })
+      .then(() => {
+        fulfill()
+      }).catch(reject);
+    })
+  }
+
 }
 
 module.exports = Templates

@@ -122,15 +122,26 @@ router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selec
 });
 
 router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selecttemplate/:templateID", function (req, res) {
-  Templates.findByID(Number(req.params.templateID))
+  const templateID = Number(req.params.templateID);
+  const userID = req.user.cmid;
+  const clientID = Number(req.params.clientID);
+
+  Templates.findByID(templateID)
   .then((template) => {
     if (template) {
-      req.params.subject = template.title;
-      req.params.message = template.content;
+      Templates.logUse(templateID, userID, clientID)
+      .then(() => {
+        req.params.subject = template.title;
+        req.params.message = template.content;
+        res.render("v4/primaryUser/notifications/create", {
+          parameters: req.params
+        });
+      }).catch(error_500(res));
+    } else {
+      res.render("v4/primaryUser/notifications/create", {
+        parameters: req.params
+      });
     }
-    res.render("v4/primaryUser/notifications/create", {
-      parameters: req.params
-    });
   }).catch(error_500(res));
 });
 
