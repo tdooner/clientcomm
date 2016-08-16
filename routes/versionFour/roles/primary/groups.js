@@ -60,7 +60,7 @@ router.get("/remove/:groupID", function (req, res) {
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/primary/groups");
+                  "/primary/groups/current");
   }).catch(error_500(res));
 });
 
@@ -69,7 +69,7 @@ router.get("/activate/:groupID", function (req, res) {
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/primary/groups");
+                  "/primary/groups/deleted");
   }).catch(error_500(res));
 });
 
