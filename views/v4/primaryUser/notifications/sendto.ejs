@@ -27,7 +27,7 @@
       <option value="" disabled selected> Client </option>
       <% clients.forEach(function (client) { %>
         <option value="<%= client.clid %>">
-          <%= client.last + ', ' + client.last + ' ' + client.middle %> 
+          <%= client.last + ', ' + client.first + ' ' + client.middle %> 
         </option>
       <% }); %>
     </select>
