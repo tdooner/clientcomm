@@ -106,6 +106,21 @@ body {
         }
       }
 
+      &.subdued {
+        opacity: 0.5;
+
+        .formLabel {
+          color: $grey;
+        }
+
+        .formInput {
+          input[type=text] {
+            border: 2px solid $grey;
+            background-color: $lightgrey;
+          }
+        }
+      }
+
       .formInput {
         color: $darkblue;
         font-size: 12;
@@ -312,8 +327,7 @@ body {
     .formSubmit {
       display: block;
       border: 0px;
-      border-radius: 10px;
-      float: right;
+      border-radius: 20px;
       
       height: 35px;
       font-size: 14px;
@@ -327,7 +341,8 @@ body {
       padding-bottom: 2px;
 
       margin-bottom: 20px;
-      margin-right: 30px;
+      margin-right: auto;
+      margin-left: auto;
 
       border: 2px solid $lightblue;
       background-color: $white;

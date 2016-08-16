@@ -52,6 +52,13 @@ body {
       .card .cardBody .formRow .formLabel small {
         font-weight: 300;
         font-size: 12px; }
+    .card .cardBody .formRow.subdued {
+      opacity: 0.5; }
+      .card .cardBody .formRow.subdued .formLabel {
+        color: #898989; }
+      .card .cardBody .formRow.subdued .formInput input[type=text] {
+        border: 2px solid #898989;
+        background-color: #D3D3D3; }
     .card .cardBody .formRow .formInput {
       color: #344289;
       font-size: 12; }
@@ -204,8 +211,7 @@ body {
   .card .cardBody .formSubmit {
     display: block;
     border: 0px;
-    border-radius: 10px;
-    float: right;
+    border-radius: 20px;
     height: 35px;
     font-size: 14px;
     font-weight: 700;
@@ -216,7 +222,8 @@ body {
     padding-top: 2px;
     padding-bottom: 2px;
     margin-bottom: 20px;
-    margin-right: 30px;
+    margin-right: auto;
+    margin-left: auto;
     border: 2px solid #4A90E2;
     background-color: #FFF;
     color: #4A90E2; }

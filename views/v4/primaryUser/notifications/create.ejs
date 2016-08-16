@@ -2,169 +2,39 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/templates">
+  <a href="/v4/users/<%=user.cmid%>/primary/notifications">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Create Notification
+    Notification Message
   </div>
   <div class="cardSubtitle">
-    Use templates to save time typing by saving common messages.
+    Use notifications to schedule messages to be sent in the future.
   </div>
 </div>
 
 <div class="cardBody">
 
-    <form method="post" 
-          action="/v4/users/<%=user.cmid%>/primary/notifications/create">
-
-    <div class="formRow">
-      <div class="formLabel"> Date to send <small>(YYYY-MM-DD)</small></div>
-      <input  class="formInput" 
-              type="date" 
-              name="sendDate" 
-              value="" required>
+  <div class="formRow subdued">
+    <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
+    <div class="formInput">
+      <input type="text" name="subject" value="" maxlength="100" required>
     </div>
+  </div>
 
-    <div class="formRow">
-      <div class="formLabel"> Time to send </div>
-
-      <!-- Options are for military hrs of day -->
-      <select class="blueSelect" name="sendTimeHour" required>
-        <option value="00" 
-          <% if (notification.sendTimeHour == 00) { %> selected <% } %> > 
-            12:00 AM (Midnight)
-        </option>
-        <option value="01" 
-          <% if (notification.sendTimeHour == 01) { %> selected <% } %> > 
-            01:00 AM
-        </option>
-        <option value="02" 
-          <% if (notification.sendTimeHour == 02) { %> selected <% } %> > 
-            02:00 AM
-        </option>
-        <option value="03" 
-          <% if (notification.sendTimeHour == 03) { %> selected <% } %> > 
-            03:00 AM
-        </option>
-        <option value="04" 
-          <% if (notification.sendTimeHour == 04) { %> selected <% } %> > 
-            04:00 AM
-        </option>
-        <option value="05" 
-          <% if (notification.sendTimeHour == 05) { %> selected <% } %> > 
-            05:00 AM
-        </option>
-        <option value="06" 
-          <% if (notification.sendTimeHour == 06) { %> selected <% } %> > 
-            06:00 AM
-        </option>
-        <option value="07" 
-          <% if (notification.sendTimeHour == 07) { %> selected <% } %> > 
-            07:00 AM
-        </option>
-        <option value="08" 
-          <% if (notification.sendTimeHour == 08) { %> selected <% } %> > 
-            08:00 AM
-        </option>
-        <option value="09" 
-          <% if (notification.sendTimeHour == 09) { %> selected <% } %> > 
-            09:00 AM
-        </option>
-        <option value="10" 
-          <% if (notification.sendTimeHour == 10) { %> selected <% } %> > 
-            10:00 AM
-        </option>
-        <option value="11" 
-          <% if (notification.sendTimeHour == 11) { %> selected <% } %> > 
-            11:00 AM
-        </option>
-        <option value="12" 
-          <% if (notification.sendTimeHour == 12) { %> selected <% } %> > 
-            12:00 PM (Noon)
-        </option>
-        <option value="13" 
-          <% if (notification.sendTimeHour == 13) { %> selected <% } %> > 
-            01:00 PM
-        </option>
-        <option value="14" 
-          <% if (notification.sendTimeHour == 14) { %> selected <% } %> > 
-            02:00 PM
-        </option>
-        <option value="15" 
-          <% if (notification.sendTimeHour == 15) { %> selected <% } %> > 
-            03:00 PM 
-        </option>
-        <option value="16" 
-          <% if (notification.sendTimeHour == 16) { %> selected <% } %> > 
-            04:00 PM 
-        </option>
-        <option value="17" 
-          <% if (notification.sendTimeHour == 17) { %> selected <% } %> > 
-            05:00 PM 
-        </option>
-        <option value="18" 
-          <% if (notification.sendTimeHour == 18) { %> selected <% } %> > 
-            06:00 PM 
-        </option>
-        <option value="19" 
-          <% if (notification.sendTimeHour == 19) { %> selected <% } %> > 
-            07:00 PM 
-        </option>
-        <option value="20" 
-          <% if (notification.sendTimeHour == 20) { %> selected <% } %> > 
-            08:00 PM 
-        </option>
-        <option value="21" 
-          <% if (notification.sendTimeHour == 21) { %> selected <% } %> > 
-            09:00 PM 
-        </option>
-        <option value="22" 
-          <% if (notification.sendTimeHour == 22) { %> selected <% } %> > 
-            10:00 PM 
-        </option>
-        <option value="23" 
-          <% if (notification.sendTimeHour == 23) { %> selected <% } %> > 
-            11:00 PM 
-        </option>
-      </select>
-
-      <input type="hidden" name="sendTimeMin" value="00">
-      </select>
-
+  <div class="formRow">
+    <div class="formLabel"> Message Body </div>
+    <div class="formInput">
+      <textarea name="message" rows="5" maxlength="160" required></textarea>
     </div>
+  </div>
 
-      <div class="formRow">
-        <div class="formLabel">
-          Subject
-        </div>
-        <div class="formInput">
-          <input  type="text"
-                  name="subject" 
-                  maxlength="30" 
-                  required>
-        </div>
-      </div>
-
-      <div class="formRow">
-        <div class="formLabel"> 
-          Enter your notification message below.
-        </div>
-        <div class="formInput">
-          <textarea name="message"
-                    rows="5"></textarea>
-        </div>
-      </div>
-
-      <center>
-      <input  type="submit" 
-              class="formSubmit" 
-              value="Submit">
-      </center>
-
-    </form>
-
+  <input  type="submit" 
+          class="formSubmit" 
+          value="Submit Notification Message">
 </div>
+
+
 
 
 <% include ../../partials/cardFrameBottom %>

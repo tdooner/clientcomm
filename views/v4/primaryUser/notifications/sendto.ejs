@@ -87,7 +87,7 @@
 
   <input  type="submit" 
           class="formSubmit" 
-          value="Update Client Color">
+          value="Craft Notification Message">
 </div>
 
 
@@ -116,7 +116,7 @@
                         comm.name + " (" + comm.value + ")" + '</option>';
           $("#commConn").append(newOpt);
         });
-        var smartSelect = '<option value="" ' + '">Smart Select</option>';
+        var smartSelect = '<option value="null" ' + '">Smart Select</option>';
         $("#commConn").append(smartSelect);
       }
     });
@@ -130,13 +130,11 @@
 
     // only continue if client supplied
     if (clientID !== null) {
-      if (commConn == null) commConn = "null";
       var redirectURL = "/v4/users/" + encodeURIComponent("<%= user.cmid %>") + 
                         "/primary/notifications/create/sendto/" + encodeURIComponent(clientID) +
                         "/via/" + encodeURIComponent(commID) + 
                         "/on/" + encodeURIComponent(sendDate) + 
                         "/at/" + encodeURIComponent(sendHour);
-      console.log(redirectURL);
       window.location.replace(redirectURL);
     }
   });

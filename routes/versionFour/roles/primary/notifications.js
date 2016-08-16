@@ -70,7 +70,7 @@ router.get("/create/sendto", function (req, res) {
 });
 
 router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", function (req, res) {
-  res.send("req.params", req.params);
+  res.render("v4/primaryUser/notifications/create");
 });
 
 router.get("/remove/:notificationID", function (req, res) {
