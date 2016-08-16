@@ -18,10 +18,17 @@ class Groups {
   
   static findByUser (userID) {
     return new Promise((fulfill, reject) => {
-    })
+      db("groups")
+        .where("created_by", userID)
+        .andWhere("active", true)
+        .orderBy("name", asc)
+      .then((groups) => {
+        fulfill(groups);
+      }).catch(reject);
+    });
   }
   
 
 }
 
-module.exports = Groups
+module.exports = Groups;
