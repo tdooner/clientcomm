@@ -22,56 +22,56 @@
       width: 5%;
       text-align: center; }
 
-.notificationRow {
+.groupRow {
   height: 50px;
   line-height: 50px;
   overflow: hidden;
   color: #898989;
   background-color: #FFF; }
-  .notificationRow:hover {
+  .groupRow:hover {
     color: #FFF;
     background-color: #4A90E2 !important; }
-    .notificationRow:hover .bigNumber {
+    .groupRow:hover .bigNumber {
       color: #FFF !important; }
-  .notificationRow .column {
+  .groupRow .column {
     float: left;
     text-align: left; }
-    .notificationRow .column .bigNumber {
+    .groupRow .column .bigNumber {
       font-size: 1.5em;
       font-weight: 700;
       color: #4A90E2; }
-    .notificationRow .column .clientName {
+    .groupRow .column .groupName {
       padding-left: 15px; }
-    .notificationRow .column .time {
+    .groupRow .column .time {
       font-size: 12px; }
-    .notificationRow .column .subject {
+    .groupRow .column .subject {
       font-weight: 700; }
-    .notificationRow .column .subject, .notificationRow .column .message {
+    .groupRow .column .subject, .groupRow .column .message {
       font-size: 12px; }
-    .notificationRow .column .fa.highlight {
+    .groupRow .column .fa.highlight {
       padding: 5px;
       width: 16px;
       max-width: 16px;
       height: 16px;
       max-height: 16px;
       border-radius: 50%; }
-      .notificationRow .column .fa.highlight:hover {
+      .groupRow .column .fa.highlight:hover {
         color: #898989;
         background-color: #FFF; }
-    .notificationRow .column:nth-child(1) {
+    .groupRow .column:nth-child(1) {
       width: 20%; }
-    .notificationRow .column:nth-child(2) {
+    .groupRow .column:nth-child(2) {
       width: 15%; }
-    .notificationRow .column:nth-child(3) {
+    .groupRow .column:nth-child(3) {
       width: 55%;
       padding-top: 5px;
       line-height: 20px;
       font-size: 12px; }
-    .notificationRow .column:nth-child(4) {
+    .groupRow .column:nth-child(4) {
       width: 5%;
       text-align: center; }
-    .notificationRow .column:nth-child(5) {
+    .groupRow .column:nth-child(5) {
       width: 5%;
       text-align: center; }
-  .notificationRow:nth-child(even) {
+  .groupRow:nth-child(even) {
     background-color: #E8ECEF; }
