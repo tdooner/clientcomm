@@ -15,15 +15,15 @@
 
 <div class="cardBody">
   
-  <div class="templateBox">
+  <div class="scrollListBox">
     <% for (var i=0; i < templates.length; i++) { %>
-      <div class="templateRow" templateID="<%= templates[i].template_id %>">
+      <div class="scrollListRow" templateID="<%= templates[i].template_id %>">
         
         <div class="useCount">
           <%= templates[i].times_used %>
         </div>
 
-        <div class="templateContent">
+        <div class="scrollListContent">
           <div class="titleText">
             <% if (templates[i].title) { %>
               <%= templates[i].title %>
@@ -55,8 +55,8 @@
 <script type="text/javascript">
   var baseURL = "/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>/selecttemplate/";
 
-  $(".templateRow").click(function () {
-    $(".templateRow").removeClass("selected");
+  $(".scrollListRow").click(function () {
+    $(".scrollListRow").removeClass("selected");
     $(this).addClass("selected");
     var templateID = $(this).attr("templateID")
     $("#templateID").attr("href", baseURL + String(templateID))

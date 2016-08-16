@@ -134,7 +134,7 @@ body {
       font-size: 16px;
       font-weight: 700;
       color: #344289; }
-  .card .cardBody .templateBox {
+  .card .cardBody .scrollListBox {
     width: 450px;
     max-height: 400px;
     border: 2px solid #898989;
@@ -145,16 +145,16 @@ body {
     margin-right: auto;
     margin-left: auto;
     margin-bottom: 20px; }
-    .card .cardBody .templateBox::-webkit-scrollbar {
+    .card .cardBody .scrollListBox::-webkit-scrollbar {
       display: none; }
-    .card .cardBody .templateBox .templateRow {
+    .card .cardBody .scrollListBox .scrollListRow {
       max-height: 100px;
       overflow: hidden;
       cursor: pointer;
       border-bottom: 1px solid #D3D3D3; }
-      .card .cardBody .templateBox .templateRow:nth-last-child(1) {
+      .card .cardBody .scrollListBox .scrollListRow:nth-last-child(1) {
         border-bottom: 0px; }
-      .card .cardBody .templateBox .templateRow .useCount {
+      .card .cardBody .scrollListBox .scrollListRow .useCount {
         float: right;
         width: 45px;
         text-align: center;
@@ -162,11 +162,11 @@ body {
         font-size: 18px;
         font-weight: 700;
         color: #4A90E2; }
-      .card .cardBody .templateBox .templateRow .templateContent {
+      .card .cardBody .scrollListBox .scrollListRow .scrollListContent {
         float: right;
         padding: 10px;
         width: 365px; }
-        .card .cardBody .templateBox .templateRow .templateContent .titleText {
+        .card .cardBody .scrollListBox .scrollListRow .scrollListContent .titleText {
           font-size: 14px;
           line-height: 14px;
           font-weight: bold;
@@ -176,7 +176,7 @@ body {
           overflow: hidden;
           color: #4A90E2;
           text-decoration: underline; }
-        .card .cardBody .templateBox .templateRow .templateContent .bodyText {
+        .card .cardBody .scrollListBox .scrollListRow .scrollListContent .bodyText {
           word-wrap: break-word;
           overflow: hidden;
           font-size: 14px;
@@ -185,28 +185,28 @@ body {
           color: #898989;
           margin-top: 5px;
           margin-bottom: 5px; }
-        .card .cardBody .templateBox .templateRow .templateContent .tags {
+        .card .cardBody .scrollListBox .scrollListRow .scrollListContent .tags {
           color: #D3D3D3;
           font-size: 12px;
           font-weight: bold;
           line-height: 14px;
           margin-top: 5px; }
-        .card .cardBody .templateBox .templateRow .templateContent::after {
+        .card .cardBody .scrollListBox .scrollListRow .scrollListContent::after {
           content: "";
           display: block;
           clear: both; }
-      .card .cardBody .templateBox .templateRow:hover, .card .cardBody .templateBox .templateRow.selected {
+      .card .cardBody .scrollListBox .scrollListRow:hover, .card .cardBody .scrollListBox .scrollListRow.selected {
         background-color: #4A90E2;
         color: #FFF; }
-        .card .cardBody .templateBox .templateRow:hover .titleText, .card .cardBody .templateBox .templateRow.selected .titleText {
+        .card .cardBody .scrollListBox .scrollListRow:hover .titleText, .card .cardBody .scrollListBox .scrollListRow.selected .titleText {
           color: #FFF; }
-        .card .cardBody .templateBox .templateRow:hover .useCount, .card .cardBody .templateBox .templateRow.selected .useCount {
+        .card .cardBody .scrollListBox .scrollListRow:hover .useCount, .card .cardBody .scrollListBox .scrollListRow.selected .useCount {
           color: #FFF; }
-        .card .cardBody .templateBox .templateRow:hover .bodyText, .card .cardBody .templateBox .templateRow.selected .bodyText {
+        .card .cardBody .scrollListBox .scrollListRow:hover .bodyText, .card .cardBody .scrollListBox .scrollListRow.selected .bodyText {
           color: #FFF; }
-        .card .cardBody .templateBox .templateRow:hover .tags, .card .cardBody .templateBox .templateRow.selected .tags {
+        .card .cardBody .scrollListBox .scrollListRow:hover .tags, .card .cardBody .scrollListBox .scrollListRow.selected .tags {
           color: #FFF; }
-      .card .cardBody .templateBox .templateRow::after {
+      .card .cardBody .scrollListBox .scrollListRow::after {
         content: "";
         display: block;
         clear: both; }

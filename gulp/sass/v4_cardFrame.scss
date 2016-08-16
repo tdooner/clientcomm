@@ -221,7 +221,7 @@ body {
       }
     }
 
-    .templateBox {
+    .scrollListBox {
       width: 450px;
       max-height: 400px;
       border: 2px solid $grey;
@@ -238,7 +238,7 @@ body {
         display: none; 
       }
       
-      .templateRow {
+      .scrollListRow {
         max-height: 100px;
         overflow: hidden;
         cursor: pointer;
@@ -259,7 +259,7 @@ body {
           color: $lightblue;
         }
 
-        .templateContent {
+        .scrollListContent {
           float: right;
           padding: 10px;
           width: 365px;

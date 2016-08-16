@@ -28,6 +28,20 @@
       </div>
     </div>
 
+    <div class="scrollListBox">
+      <% clients.forEach(function (client) { %>
+        <div class="scrollListRow" templateID="<%= client.clid %>">
+
+          <div class="useCount">-</div>
+
+          <div class="scrollListContent">
+            <div class="titleText">
+              <%= client.last + ', ' + client.first + ' ' + client.middle %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
 
     <input  type="submit" 
             class="formSubmit" 
