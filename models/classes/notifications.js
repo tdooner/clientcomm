@@ -62,6 +62,7 @@ class Notifications {
   }
 
   static create (userID, clientID, commID, subject, message, send) {
+    console.log(userID, clientID, commID, subject, message, send)
     return new Promise((fulfill, reject) => {
       db("notifications")
         .insert({
@@ -71,11 +72,11 @@ class Notifications {
           subject: subject,
           message: message,
           send: send,
-          reepeat: false,
+          repeat: false,
           frequency: null,
           sent: false,
           closed: false,
-          repeat_terminus: null,
+          repeat_terminus: null
         })
       .then(() => {
         fulfill()

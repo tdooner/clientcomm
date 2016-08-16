@@ -85,14 +85,17 @@ router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", fu
   const commID = req.params.commID == "null" ? null : req.params.commID;
   const subject = req.body.subject;
   const message = req.body.message;
+  const send = moment(req.params.sendDate)
+              .tz(res.locals.local_tz)
+              .add(Number(req.params.sendHour), "hours")
+              .format("YYYY-MM-DD HH:mm:ss");
 
-  var send = moment(req.params.sendDate).tz(res.locals.local_tz).add(Number(req.params.sendHour), "hours");
-  res.send(send.toString())
-  // Notifications.create(userID, clientID, commID, subject, message, send)
-  // res.send({
-  //   params: req.params,
-  //   body: req.body
-  // });
+  Notifications.create(userID, clientID, commID, subject, message, send)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/notifications");
+  }).catch(error_500(res));
 });
 
 router.get("/remove/:notificationID", function (req, res) {
