@@ -22,12 +22,33 @@ var confirmMatch    = accessChecking.confirmMatch;
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
-  Groups.findByUser(Number(req.params.userID))
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/primary/groups/current");
+});
+
+
+router.get("/current", function (req, res) {
+  Groups.findByUser(Number(req.params.userID), true)
   .then((groups) => {
     res.render("v4/primaryUser/groups/groups", {
       hub: {
         tab: "groups",
-        sel: null
+        sel: "current"
+      },
+      groups: groups
+    });
+  }).catch(error_500(res));
+});
+
+
+router.get("/deleted", function (req, res) {
+  Groups.findByUser(Number(req.params.userID), false)
+  .then((groups) => {
+    res.render("v4/primaryUser/groups/groups", {
+      hub: {
+        tab: "groups",
+        sel: "deleted"
       },
       groups: groups
     });

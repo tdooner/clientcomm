@@ -16,11 +16,12 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 // Class
 class Groups {
   
-  static findByUser (userID) {
+  static findByUser (userID, active) {
+    if (typeof active == "undefined") active = true;
     return new Promise((fulfill, reject) => {
       db("groups")
         .where("user", userID)
-        .andWhere("active", true)
+        .andWhere("active", active)
         .orderBy("name", "asc")
       .then((groups) => {
         fulfill(groups);
