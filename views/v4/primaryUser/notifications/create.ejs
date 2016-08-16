@@ -23,7 +23,7 @@
 
   <form method="post"
         action="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>">
-    <div class="formRow subdued">
+    <div class="formRow <% if (!parameters.subject) { %>subdued<% } %>">
       <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
       <div class="formInput">
         <input  type="text" 
