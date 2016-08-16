@@ -7,7 +7,7 @@ var router          = express.Router({mergeParams: true});
 
 // Models
 const modelsImport  = require("../../../../models/models");
-const Templates     = modelsImport.Templates;
+const Groups        = modelsImport.Groups;
 
 
 // General error handling
@@ -33,60 +33,6 @@ router.get("/", function (req, res) {
     });
   }).catch(error_500(res));
 });
-
-router.get("/remove/:templateID", function (req, res) {
-  Templates.removeOne(req.params.templateID)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
-  }).catch(error_500(res));
-});
-
-router.get("/create", function (req, res) {
-  res.render("v4/primaryUser/templates/create");
-});
-
-router.post("/create", function (req, res) {
-  const orgID   = req.user.org;
-  const userID  = req.user.cmid;
-  const title   = req.body.title;
-  const content = req.body.content;
-  Templates.insertNew(orgID, userID, title, content)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
-  }).catch(error_500(res));
-});
-
-
-router.get("/edit/:templateID", function (req, res) {
-  Templates.findByID(req.params.templateID)
-  .then((template) => {
-    if (template) {
-      res.render("v4/primaryUser/templates/edit", {
-        template: template
-      });
-    } else {
-      res.redirect("/404")
-    }
-  }).catch(error_500(res));
-});
-
-
-router.post("/edit/:templateID", function (req, res) {
-  const templateID = req.params.templateID;
-  const title   = req.body.title;
-  const content = req.body.content;
-  Templates.editOne(templateID, title, content)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
-  }).catch(error_500(res));
-});
-
 
 // EXPORT ROUTER OBJECt
 module.exports = router;
