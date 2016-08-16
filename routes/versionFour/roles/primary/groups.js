@@ -8,6 +8,7 @@ var router          = express.Router({mergeParams: true});
 // Models
 const modelsImport  = require("../../../../models/models");
 const Groups        = modelsImport.Groups;
+const Clients       = modelsImport.Clients;
 
 
 // General error handling
@@ -41,7 +42,6 @@ router.get("/current", function (req, res) {
   }).catch(error_500(res));
 });
 
-
 router.get("/deleted", function (req, res) {
   Groups.findByUser(Number(req.params.userID), false)
   .then((groups) => {
@@ -52,6 +52,16 @@ router.get("/deleted", function (req, res) {
       },
       groups: groups
     });
+  }).catch(error_500(res));
+});
+
+
+router.get("/create", function (req, res) {
+  Clients.findByUser(Number(req.params.userID), false)
+  .then((clients) => {
+      res.render("v4/primaryUser/groups/create", {
+        clients: clients
+      });
   }).catch(error_500(res));
 });
 

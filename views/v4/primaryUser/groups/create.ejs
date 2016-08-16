@@ -6,7 +6,7 @@
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Edit Group Name
+    Create Group
   </div>
   <div class="cardSubtitle">
     Use groups to organize client populations.
@@ -16,23 +16,22 @@
 <div class="cardBody">
 
   <form method = "post"
-        action = "/v4/users/<%=user.cmid%>/primary/groups/edit/<%=group.group_id%>">
+        action = "/v4/users/<%=user.cmid%>/primary/groups/create">
 
     <div class="formRow">
       <div class="formLabel"> Name of group </div>
       <div class="formInput">
         <input  type="text" 
                 name="name" 
-                value="<%= group.name %>" 
+                value="" 
                 maxlength="100">
       </div>
     </div>
 
-    <% group.clients.forEach(function (client) { %>
 
     <input  type="submit" 
             class="formSubmit" 
-            value="Craft Notification Message">
+            value="Save Group">
   </form>
 </div>
 
