@@ -2,7 +2,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/notifications">
+  <a href="/v4/users/<%=user.cmid%>/primary/groups">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -32,10 +32,12 @@
       <% clients.forEach(function (client) { %>
         <div class="scrollListRow" templateID="<%= client.clid %>">
 
-          <div class="useCount">-</div>
+          <div class="colorTag">
+            <div class="tag" style="background-color:<%=client.color_tag%>"></div>
+          </div>
 
           <div class="scrollListContent">
-            <div class="titleText">
+            <div class="clientName">
               <%= client.last + ', ' + client.first + ' ' + client.middle %>
             </div>
           </div>

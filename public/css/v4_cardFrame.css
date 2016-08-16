@@ -162,10 +162,34 @@ body {
         font-size: 18px;
         font-weight: 700;
         color: #4A90E2; }
+      .card .cardBody .scrollListBox .scrollListRow .colorTag {
+        float: left;
+        width: 45px;
+        text-align: center;
+        line-height: 70px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #4A90E2; }
+        .card .cardBody .scrollListBox .scrollListRow .colorTag .tag {
+          width: 15px;
+          height: 28px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          margin-left: auto;
+          margin-right: auto;
+          border: 1px solid #FFF;
+          border-radius: 75px; }
       .card .cardBody .scrollListBox .scrollListRow .scrollListContent {
         float: right;
         padding: 10px;
         width: 365px; }
+        .card .cardBody .scrollListBox .scrollListRow .scrollListContent .clientName {
+          font-size: 22px;
+          line-height: 30px;
+          font-weight: bold;
+          word-wrap: break-word;
+          overflow: hidden;
+          color: #4A90E2; }
         .card .cardBody .scrollListBox .scrollListRow .scrollListContent .titleText {
           font-size: 14px;
           line-height: 14px;
@@ -198,13 +222,7 @@ body {
       .card .cardBody .scrollListBox .scrollListRow:hover, .card .cardBody .scrollListBox .scrollListRow.selected {
         background-color: #4A90E2;
         color: #FFF; }
-        .card .cardBody .scrollListBox .scrollListRow:hover .titleText, .card .cardBody .scrollListBox .scrollListRow.selected .titleText {
-          color: #FFF; }
-        .card .cardBody .scrollListBox .scrollListRow:hover .useCount, .card .cardBody .scrollListBox .scrollListRow.selected .useCount {
-          color: #FFF; }
-        .card .cardBody .scrollListBox .scrollListRow:hover .bodyText, .card .cardBody .scrollListBox .scrollListRow.selected .bodyText {
-          color: #FFF; }
-        .card .cardBody .scrollListBox .scrollListRow:hover .tags, .card .cardBody .scrollListBox .scrollListRow.selected .tags {
+        .card .cardBody .scrollListBox .scrollListRow:hover .clientName, .card .cardBody .scrollListBox .scrollListRow:hover .titleText, .card .cardBody .scrollListBox .scrollListRow:hover .useCount, .card .cardBody .scrollListBox .scrollListRow:hover .bodyText, .card .cardBody .scrollListBox .scrollListRow:hover .tags, .card .cardBody .scrollListBox .scrollListRow.selected .clientName, .card .cardBody .scrollListBox .scrollListRow.selected .titleText, .card .cardBody .scrollListBox .scrollListRow.selected .useCount, .card .cardBody .scrollListBox .scrollListRow.selected .bodyText, .card .cardBody .scrollListBox .scrollListRow.selected .tags {
           color: #FFF; }
       .card .cardBody .scrollListBox .scrollListRow::after {
         content: "";

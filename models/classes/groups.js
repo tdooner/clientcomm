@@ -22,7 +22,9 @@ class Groups {
       db("groups")
         .where("user", userID)
         .andWhere("active", active)
-        .orderBy("name", "asc")
+        .orderBy(
+          db.raw("upper(left(name, 1)), (substring(name from 2) || '')::varchar"), 
+          "asc")
       .then((groups) => {
         fulfill(groups);
       }).catch(reject);
