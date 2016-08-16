@@ -15,25 +15,40 @@
 
 <div class="cardBody">
 
-  <div class="formRow subdued">
-    <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
-    <div class="formInput">
-      <input type="text" name="subject" value="" maxlength="100" required>
+  <form method="post"
+        action="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>">
+    <div class="formRow subdued">
+      <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
+      <div class="formInput">
+        <input  type="text" 
+                name="subject" 
+                value="" 
+                placeholder="Enter a subject for the notification here" 
+                maxlength="100">
+      </div>
     </div>
-  </div>
 
-  <div class="formRow">
-    <div class="formLabel"> Message Body </div>
-    <div class="formInput">
-      <textarea name="message" rows="5" maxlength="160" required></textarea>
+    <div class="formRow">
+      <div class="formLabel"> Message Body </div>
+      <div class="formInput">
+        <textarea name="message" rows="5" maxlength="160" required></textarea>
+      </div>
     </div>
-  </div>
 
-  <input  type="submit" 
-          class="formSubmit" 
-          value="Submit Notification Message">
+    <input  type="submit" 
+            class="formSubmit" 
+            value="Submit Notification Message">
+  </form>
+
 </div>
 
+
+<script type="text/javascript">
+  $(".subdued").click(function () {
+    $(this).removeClass("subdued");
+    $("input[name=subject]").val("");
+  });
+</script>
 
 
 

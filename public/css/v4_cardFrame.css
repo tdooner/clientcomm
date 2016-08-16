@@ -53,12 +53,19 @@ body {
         font-weight: 300;
         font-size: 12px; }
     .card .cardBody .formRow.subdued {
-      opacity: 0.5; }
+      opacity: 0.5;
+      cursor: pointer; }
       .card .cardBody .formRow.subdued .formLabel {
         color: #898989; }
       .card .cardBody .formRow.subdued .formInput input[type=text] {
         border: 2px solid #898989;
-        background-color: #D3D3D3; }
+        background-color: #D3D3D3;
+        cursor: pointer; }
+      .card .cardBody .formRow.subdued:hover .formLabel {
+        color: #3F69B6; }
+      .card .cardBody .formRow.subdued:hover .formInput input[type=text] {
+        border: 2px solid #3F69B6;
+        background-color: #FFF; }
     .card .cardBody .formRow .formInput {
       color: #344289;
       font-size: 12; }

@@ -20,6 +20,10 @@ var error_500       = errorHandling.error_500;
 var accessChecking  = require("../../utilities/accessChecking");
 var confirmMatch    = accessChecking.confirmMatch;
 
+// DATETIME VARIABLES FOR EJS
+var moment          = require("moment");
+var moment_tz       = require("moment-timezone");
+
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
@@ -70,7 +74,25 @@ router.get("/create/sendto", function (req, res) {
 });
 
 router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", function (req, res) {
-  res.render("v4/primaryUser/notifications/create");
+  res.render("v4/primaryUser/notifications/create", {
+    parameters: req.params
+  });
+});
+
+router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", function (req, res) {
+  const userID = req.params.userID;
+  const clientID = req.params.clientID;
+  const commID = req.params.commID == "null" ? null : req.params.commID;
+  const subject = req.body.subject;
+  const message = req.body.message;
+
+  var send = moment(req.params.sendDate).tz(res.locals.local_tz).add(Number(req.params.sendHour), "hours");
+  res.send(send.toString())
+  // Notifications.create(userID, clientID, commID, subject, message, send)
+  // res.send({
+  //   params: req.params,
+  //   body: req.body
+  // });
 });
 
 router.get("/remove/:notificationID", function (req, res) {

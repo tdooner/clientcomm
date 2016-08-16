@@ -108,6 +108,7 @@ body {
 
       &.subdued {
         opacity: 0.5;
+        cursor: pointer;
 
         .formLabel {
           color: $grey;
@@ -117,6 +118,19 @@ body {
           input[type=text] {
             border: 2px solid $grey;
             background-color: $lightgrey;
+            cursor: pointer;
+          }
+        }
+
+        &:hover {
+          .formLabel {
+            color: $blue;
+          }
+          .formInput {
+            input[type=text] {
+              border: 2px solid $blue;
+              background-color: $white;
+            }
           }
         }
       }

@@ -61,8 +61,25 @@ class Notifications {
     })
   }
 
-  static insertNew () {
+  static create (userID, clientID, commID, subject, message, send) {
     return new Promise((fulfill, reject) => {
+      db("notifications")
+        .insert({
+          cm: userID,
+          client: clientID,
+          comm: commID,
+          subject: subject,
+          message: message,
+          send: send,
+          reepeat: false,
+          frequency: null,
+          sent: false,
+          closed: false,
+          repeat_terminus: null,
+        })
+      .then(() => {
+        fulfill()
+      }).catch(reject);
     })
   }
 
