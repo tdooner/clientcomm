@@ -19,60 +19,82 @@
 
 <div class="cardBody">
 
-  <div class="formRow">
-    <div class="formLabel"> Which client to notify  </div>
-    <select class="blueSelect" 
-            id="clientID" 
-            required>
-      <option value="" disabled selected> Client </option>
-      <% clients.forEach(function (client) { %>
-        <option value="<%= client.clid %>" <% if (client.clid == notification.client) { %>selected<% } %>>
-          <%= client.last + ', ' + client.first + ' ' + client.middle %> 
-        </option>
-      <% }); %>
-    </select>
-  </div>
-
-  <div class="formRow">
-    <div class="formLabel"> Which device to send to </div>
-    <select class="blueSelect" 
-            id="commConn" 
-            required>
-      <option value="" disabled selected> Contact Options </option>
-    </select>
-  </div>
-
-  <div class="formRow">
-    <div class="formLabel"> Date to send <small>(YYYY-MM-DD)</small></div>
-    <div class="formInput">
-      <input  type="date" 
-              id="sendDate" 
-              value="<%= moment(notification.send).format('YYYY-MM-DD') %>" 
+  <form method = "post"
+        action = "/v4/users/<%=user.cmid%>/primary/notifications/edit/<%=notification.notificationid%>">
+    <div class="formRow">
+      <div class="formLabel"> Which client to notify  </div>
+      <select class="blueSelect" 
+              id="clientID" 
+              name="clientID" 
               required>
-      </div>
-  </div>
-
-  <div class="formRow">
-    <div class="formLabel"> Time to send <small>(Organization timezone: <%= local_tz %>)</small></div>
-
-    <div class="formInput">
-      <select class="blueSelect" id="sendHour" required>
-
-        <% var chosenHour = moment(notification.send).format('HH') %>
-        <% var hours = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"] %>
-        <% hours.forEach(function (hour) { %>
-          <option value="<%= hour %>" <% if (hour == chosenHour) { %>selected<% } %>> 
-            <%= moment("1970-1-1").add(hour, "hours").format("hh:00 A") %>
+        <option value="" disabled selected> Client </option>
+        <% clients.forEach(function (client) { %>
+          <option value="<%= client.clid %>" <% if (client.clid == notification.client) { %>selected<% } %>>
+            <%= client.last + ', ' + client.first + ' ' + client.middle %> 
           </option>
-        <% }) %>
-
+        <% }); %>
       </select>
     </div>
-  </div>
 
-  <input  type="submit" 
-          class="formSubmit" 
-          value="Craft Notification Message">
+    <div class="formRow">
+      <div class="formLabel"> Which device to send to </div>
+      <select class="blueSelect" 
+              id="commConn" 
+              name="commID" 
+              required>
+        <option value="" disabled selected> Contact Options </option>
+      </select>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Date to send <small>(YYYY-MM-DD)</small></div>
+      <div class="formInput">
+        <input  type="date" 
+                id="sendDate" 
+                name="sendDate" 
+                value="<%= moment(notification.send).format('YYYY-MM-DD') %>" 
+                required>
+        </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Time to send <small>(Organization timezone: <%= local_tz %>)</small></div>
+      <div class="formInput">
+        <select class="blueSelect" id="sendHour" name="sendHour" required>
+
+          <% var chosenHour = moment(notification.send).format('HH') %>
+          <% var hours = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"] %>
+          <% hours.forEach(function (hour) { %>
+            <option value="<%= hour %>" <% if (hour == chosenHour) { %>selected<% } %>> 
+              <%= moment("1970-1-1").add(hour, "hours").format("hh:00 A") %>
+            </option>
+          <% }) %>
+
+        </select>
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
+      <div class="formInput">
+        <input  type="text" 
+                name="subject" 
+                value="<%= notification.subject %>" 
+                maxlength="100">
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Message Body </div>
+      <div class="formInput">
+        <textarea name="message" rows="5" maxlength="160" required><%= notification.message %></textarea>
+      </div>
+    </div>
+
+    <input  type="submit" 
+            class="formSubmit" 
+            value="Craft Notification Message">
+  </form>
 </div>
 
 
@@ -107,23 +129,7 @@
     });
   };
 
-  $(".formSubmit").click(function () {
-    var clientID = $("#clientID").val();
-    var commID = $("#commConn").val();
-    var sendDate = $("#sendDate").val();
-    var sendHour = Number($("#sendHour").val());
-
-    // only continue if client supplied
-    if (clientID !== null) {
-      var redirectURL = "/v4/users/" + encodeURIComponent("<%= user.cmid %>") + 
-                        "/primary/notifications/create/sendto/" + encodeURIComponent(clientID) +
-                        "/via/" + encodeURIComponent(commID) + 
-                        "/on/" + encodeURIComponent(sendDate) + 
-                        "/at/" + encodeURIComponent(sendHour);
-      window.location.replace(redirectURL);
-    }
-  });
-
+  // Run once since editing the page
   updateClientsAndComms(<%= notification.client %>)
 </script>
 

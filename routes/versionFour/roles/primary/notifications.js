@@ -77,6 +77,25 @@ router.get("/edit/:notificationID", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.post("/edit/:notificationID", function (req, res) {
+  const notificationID = req.params.notificationID;
+  const clientID       = req.body.clientID;
+  const commID         = req.body.commID;
+  const subject        = req.body.subject;
+  const message        = req.body.message;
+  const send           = moment(req.body.sendDate)
+                          .tz(res.locals.local_tz)
+                          .add(Number(req.body.sendHour) - 1, "hours")
+                          .format("YYYY-MM-DD HH:mm:ss");
+
+  Notifications.editOne(notificationID, clientID, commID, send, subject, message)
+  .then((notification) => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/notifications");
+  }).catch(error_500(res));
+});
+
 router.get("/create", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
@@ -129,7 +148,7 @@ router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", fu
   const message = req.body.message;
   const send = moment(req.params.sendDate)
               .tz(res.locals.local_tz)
-              .add(Number(req.params.sendHour), "hours")
+              .add(Number(req.params.sendHour) - 1, "hours")
               .format("YYYY-MM-DD HH:mm:ss");
 
   Notifications.create(userID, clientID, commID, subject, message, send)

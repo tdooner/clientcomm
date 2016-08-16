@@ -62,13 +62,24 @@ class Notifications {
     })
   }
 
-  static editOne (notificationID) {
+  static editOne (notificationID, clientID, commID, send, subject, message) {
     return new Promise((fulfill, reject) => {
+      db("notifications")
+        .update({
+          client: clientID,
+          comm: commID,
+          subject: subject,
+          message: message,
+          send: send
+        })
+        .where("notificationid", notificationID)
+      .then(() => {
+        fulfill()
+      }).catch(reject);
     })
   }
 
   static create (userID, clientID, commID, subject, message, send) {
-    console.log(userID, clientID, commID, subject, message, send)
     return new Promise((fulfill, reject) => {
       db("notifications")
         .insert({
