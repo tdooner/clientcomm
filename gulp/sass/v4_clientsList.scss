@@ -41,6 +41,7 @@ $width_row7:  5%;
   .column {
     float: left;
     text-align: left;
+    cursor: pointer;
 
     &:nth-child(1) {
       width: $width_row1;
