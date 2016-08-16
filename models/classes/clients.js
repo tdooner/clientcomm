@@ -51,7 +51,9 @@ class Clients {
         // Only where active T/F and case manager matches
         .where("clients.cm", managerID)
         .andWhere("clients.active", active)
-        .orderBy("clients.last", "asc")
+        .orderBy(
+          db.raw("upper(left(clients.last, 1)), (substring(clients.last from 2) || '')::varchar"), 
+          "asc")
       .then(function (clients) {
 
         // Need to make sure there is a default color_tag color
