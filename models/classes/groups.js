@@ -49,6 +49,17 @@ class Groups {
     });
   }
   
+  static activateOne (groupID) {
+    return new Promise((fulfill, reject) => {
+      db("groups")
+        .update({ active: true })
+        .where("group_id", groupID)
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    });
+  }
+  
   static editOne (groupID, name) {
     return new Promise((fulfill, reject) => {
       db("groups")

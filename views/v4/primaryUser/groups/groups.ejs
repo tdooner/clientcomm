@@ -35,9 +35,15 @@
       </a>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/groups/remove/<%=group.group_id%>">
-        <i class="fa highlight fa-trash" aria-hidden="true"></i>
-      </a>
+      <% if (group.active) { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/groups/remove/<%=group.group_id%>">
+          <i class="fa highlight fa-trash" aria-hidden="true"></i>
+        </a>
+      <% } else { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/groups/activate/<%=group.group_id%>">
+          <i class="fa highlight fa-undo" aria-hidden="true"></i>
+        </a>
+      <% } %>
     </div>
   </div>
 <% }) %>
