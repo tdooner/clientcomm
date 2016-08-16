@@ -55,6 +55,28 @@ router.get("/deleted", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/edit/:groupID", function (req, res) {
+  Groups.findByID(Number(req.params.groupID))
+  .then((group) => {
+    if (group) {
+      res.render("v4/primaryUser/groups/edit", {
+        group: group
+      });
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/edit/:groupID", function (req, res) {
+  Groups.editOne(Number(req.params.groupID), req.body.name)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/groups/current");
+  }).catch(error_500(res));
+});
+
 router.get("/remove/:groupID", function (req, res) {
   Groups.removeOne(Number(req.params.groupID))
   .then(() => {

@@ -1,0 +1,42 @@
+<% include ../../partials/cardFrameTop %>
+
+<div class="cardHead">
+  <!-- exit button -->
+  <a href="/v4/users/<%=user.cmid%>/primary/notifications">
+    <% include ../../partials/cardExit %>
+  </a>
+  <div class="cardTitle">
+    Edit Group Name
+  </div>
+  <div class="cardSubtitle">
+    Use groups to organize client populations.
+  </div>
+</div>
+
+<div class="cardBody">
+
+  <form method = "post"
+        action = "/v4/users/<%=user.cmid%>/primary/groups/edit/<%=group.group_id%>">
+
+    <div class="formRow">
+      <div class="formLabel"> Name of group </div>
+      <div class="formInput">
+        <input  type="text" 
+                name="name" 
+                value="<%= group.name %>" 
+                maxlength="100">
+      </div>
+    </div>
+
+    <input  type="submit" 
+            class="formSubmit" 
+            value="Craft Notification Message">
+  </form>
+</div>
+
+
+
+<script type="text/javascript">
+</script>
+
+<% include ../../partials/cardFrameBottom %>

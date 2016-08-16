@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/v4_groups.css">
 
 <div class="header">
+  <div class="column">contact</div>
   <div class="column">group name</div>
   <div class="column">last used</div>
   <div class="column">clients</div>
@@ -14,6 +15,13 @@
 
 <% groups.forEach(function (group) { %>
   <div class="groupRow">
+    <div class="column">
+      <% if (group.active) { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/groups/address/<%=group.groupid%>">
+          <i class="fa highlight fa-send" aria-hidden="true"></i>
+        </a>
+      <% } else { %>-<% } %>
+    </div>
     <div class="column">
       <span class="groupName">
         <%= group.name %>
@@ -30,9 +38,11 @@
       </span>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/groups/edit/<%=group.groupid%>">
-        <i class="fa highlight fa-pencil" aria-hidden="true"></i>
-      </a>
+      <% if (group.active) { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/groups/edit/<%=group.group_id%>">
+          <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+        </a>
+      <% } else { %>-<% } %>
     </div>
     <div class="column">
       <% if (group.active) { %>

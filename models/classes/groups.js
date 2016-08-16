@@ -29,11 +29,13 @@ class Groups {
     });
   }
   
-  static findByID (userID) {
+  static findByID (groupID) {
     return new Promise((fulfill, reject) => {
       db("groups")
+        .where("group_id", groupID)
+        .limit(1)
       .then((groups) => {
-        fulfill(groups);
+        fulfill(groups[0]);
       }).catch(reject);
     });
   }
