@@ -90,19 +90,20 @@ router.get("/clients/closed", function (req, res) {
 });
 
 
-// Client-specific operations
 var colorTags = require("./primary/colorTags");
 router.use("/colortags", colorTags);
 
 
-// Client-specific operations
 var templates = require("./primary/templates");
 router.use("/templates", templates);
 
 
-// Client-specific operations
 var notifications = require("./primary/notifications");
 router.use("/notifications", notifications);
+
+
+var groups = require("./primary/groups");
+router.use("/groups", groups);
 
 
 // Client-specific operations
