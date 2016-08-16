@@ -59,6 +59,24 @@ router.get("/sent", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/edit/:notificationID", function (req, res) {
+  var clients;
+  Clients.findByUser(req.user.cmid)
+  .then((clientsReturned) => {
+    clients = clientsReturned;
+    return Notifications.findByID(Number(req.params.notificationID))
+  }).then((notification) => {
+    if (notification) {
+      res.render("v4/primaryUser/notifications/edit", {
+        notification: notification,
+        clients: clients
+      });
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+});
+
 router.get("/create", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
@@ -84,7 +102,7 @@ router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selec
   }).catch(error_500(res));
 });
 
-router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selecttemplate/:templateID", function (req, res, next) {
+router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selecttemplate/:templateID", function (req, res) {
   Templates.findByID(Number(req.params.templateID))
   .then((template) => {
     if (template) {

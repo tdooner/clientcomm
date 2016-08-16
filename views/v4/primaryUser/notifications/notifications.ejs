@@ -33,11 +33,11 @@
       </span>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/notifications/edit/<%=notification.notification_id%>">
-        <% if (hub.sel == "pending") { %>
+      <% if (hub.sel == "pending") { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/notifications/edit/<%=notification.notificationid%>">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
-        <% } else { %>-<% } %>
-      </a>
+        </a>
+      <% } else { %>-<% } %>
     </div>
     <div class="column">
       <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=notification.notificationid%>">

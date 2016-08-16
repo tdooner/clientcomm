@@ -42,6 +42,12 @@ class Notifications {
 
   static findByID (notificationID) {
     return new Promise((fulfill, reject) => {
+      db("notifications")
+        .where("notificationid", notificationID)
+        .limit(1)
+      .then((notifications) => {
+        fulfill(notifications[0])
+      }).catch(reject);
     })
   }
 
