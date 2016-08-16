@@ -28,6 +28,50 @@ class Groups {
     });
   }
   
+  static findByID (userID) {
+    return new Promise((fulfill, reject) => {
+      db("groups")
+      .then((groups) => {
+        fulfill(groups);
+      }).catch(reject);
+    });
+  }
+  
+  static removeOne (groupID) {
+    return new Promise((fulfill, reject) => {
+      db("groups")
+        .update({ active: false })
+        .where("group_id", groupID)
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    });
+  }
+  
+  static editOne (groupID, name) {
+    return new Promise((fulfill, reject) => {
+      db("groups")
+        .update({ name: name })
+        .where("group_id", groupID)
+      .then((groups) => {
+        fulfill(groups);
+      }).catch(reject);
+    });
+  }
+  
+  static insertNew (userID, name) {
+    return new Promise((fulfill, reject) => {
+      db("groups")
+        .insert({
+          name: name,
+          user: userID,
+          active: true
+        })
+      .then((groups) => {
+        fulfill(groups);
+      }).catch(reject);
+    });
+  }
 
 }
 

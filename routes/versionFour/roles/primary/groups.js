@@ -34,6 +34,15 @@ router.get("/", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/remove/:groupID", function (req, res) {
+  Groups.removeOne(Number(req.params.groupID))
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/groups");
+  }).catch(error_500(res));
+});
+
 // EXPORT ROUTER OBJECt
 module.exports = router;
 
