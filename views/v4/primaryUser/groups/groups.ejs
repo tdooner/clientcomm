@@ -1,0 +1,51 @@
+<% include ../../partials/hubFrameTop %>
+
+<!-- Load in addition CSS -->
+<link rel="stylesheet" type="text/css" href="/static/css/v4_groups.css">
+
+<div class="header">
+  <div class="column">client name</div>
+  <div class="column">send at</div>
+  <div class="column">message</div>
+  <div class="column">edit</div>
+  <div class="column">delete</div>
+</div>
+
+
+<% groups.forEach(function (group) { %>
+  <div class="groupRow">
+    <div class="column">
+      <span class="clientName">
+        <%= group.last + ', ' + group.first + ' ' + group.middle %>
+      </span>
+    </div>
+    <div class="column">
+      <span class="time">
+        <%= moment.tz(group.send, local_tz).format('MMM. Do, hh:mmA') %>
+      </span>
+    </div>
+    <div class="column">
+      <span class="subject">
+        <%= group.subject %>
+      </span>
+      <span class="message">
+        <%= group.message.length > 210 ? group.message.substr(0,210) + '...' : group.message %>
+      </span>
+    </div>
+    <div class="column">
+      <% if (hub.sel == "pending") { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/groups/edit/<%=group.groupid%>">
+          <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+        </a>
+      <% } else { %>-<% } %>
+    </div>
+    <div class="column">
+      <a href="/v4/users/<%=user.cmid%>/primary/groups/remove/<%=group.groupid%>">
+        <i class="fa highlight fa-trash" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+<% }) %>
+
+
+<% include ../../partials/hubFrameBottom %>

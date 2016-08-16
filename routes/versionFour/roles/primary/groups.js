@@ -22,14 +22,14 @@ var confirmMatch    = accessChecking.confirmMatch;
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
-  Templates.findByUser(Number(req.params.userID))
-  .then((templates) => {
-    res.render("v4/primaryUser/templates/templates", {
+  Groups.findByUser(Number(req.params.userID))
+  .then((groups) => {
+    res.render("v4/primaryUser/groups/groups", {
       hub: {
-        tab: "templates",
+        tab: "groups",
         sel: null
       },
-      templates: templates
+      groups: groups
     });
   }).catch(error_500(res));
 });
