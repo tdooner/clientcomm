@@ -205,15 +205,6 @@ body {
         font-size: 16px;
         font-weight: 700;
         color: $darkblue;
-
-        &.half {
-          width: 215px;
-          float: left;
-          
-          &:nth-child(2) {
-            margin-right: 20px;
-          }
-        }
       }
 
 
@@ -367,9 +358,13 @@ body {
         color: $white;
       }
 
-      &.fixedWidth {
-        width: 250px;
-        overflow: hidden;
+      &.inverse {
+        background-color: $lightblue;
+        color: $white;
+        &:hover {
+          background-color: $white;
+          color: $lightblue;
+        }
       }
     }
 

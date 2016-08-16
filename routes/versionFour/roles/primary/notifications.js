@@ -8,6 +8,7 @@ var router          = express.Router({mergeParams: true});
 // Models
 const modelsImport  = require("../../../../models/models");
 const Notifications = modelsImport.Notifications;
+const Templates     = modelsImport.Templates;
 const Clients       = modelsImport.Clients;
 
 
@@ -73,6 +74,29 @@ router.get("/create/sendto", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selecttemplate", function (req, res) {
+  Templates.findByUser(req.user.cmid)
+  .then((templates) => {
+    res.render("v4/primaryUser/notifications/selecttemplate", {
+      templates: templates,
+      parameters: req.params
+    });
+  }).catch(error_500(res));
+});
+
+router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selecttemplate/:templateID", function (req, res, next) {
+  Templates.findByID(Number(req.params.templateID))
+  .then((template) => {
+    if (template) {
+      req.params.subject = template.title;
+      req.params.message = template.content;
+    }
+    res.render("v4/primaryUser/notifications/create", {
+      parameters: req.params
+    });
+  }).catch(error_500(res));
+});
+
 router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", function (req, res) {
   res.render("v4/primaryUser/notifications/create", {
     parameters: req.params
@@ -83,7 +107,7 @@ router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", fu
   const userID = req.params.userID;
   const clientID = req.params.clientID;
   const commID = req.params.commID == "null" ? null : req.params.commID;
-  const subject = req.body.subject;
+  const subject = !req.body.subject ? "" : req.body.subject;
   const message = req.body.message;
   const send = moment(req.params.sendDate)
               .tz(res.locals.local_tz)

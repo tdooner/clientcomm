@@ -124,11 +124,6 @@ body {
       font-size: 16px;
       font-weight: 700;
       color: #344289; }
-      .card .cardBody .formRow .formSelect.half {
-        width: 215px;
-        float: left; }
-        .card .cardBody .formRow .formSelect.half:nth-child(2) {
-          margin-right: 20px; }
     .card .cardBody .formRow .blueSelect {
       width: 440px;
       height: 35px;
@@ -237,9 +232,12 @@ body {
     .card .cardBody .formSubmit:hover {
       background-color: #4A90E2;
       color: #FFF; }
-    .card .cardBody .formSubmit.fixedWidth {
-      width: 250px;
-      overflow: hidden; }
+    .card .cardBody .formSubmit.inverse {
+      background-color: #4A90E2;
+      color: #FFF; }
+      .card .cardBody .formSubmit.inverse:hover {
+        background-color: #FFF;
+        color: #4A90E2; }
   .card .cardBody .orBreak {
     margin-right: auto;
     margin-left: auto;

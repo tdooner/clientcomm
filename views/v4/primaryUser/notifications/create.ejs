@@ -14,6 +14,12 @@
 </div>
 
 <div class="cardBody">
+  
+  <div class="formRow">
+    <a href="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>/selecttemplate">
+      <input type="submit" id="useTemplate" class="formSubmit inverse" value="Load a template">
+    <a href="">
+  </div>
 
   <form method="post"
         action="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>">
@@ -22,7 +28,7 @@
       <div class="formInput">
         <input  type="text" 
                 name="subject" 
-                value="" 
+                value="<%= parameters.subject %>" 
                 placeholder="Enter a subject for the notification here" 
                 maxlength="100">
       </div>
@@ -31,7 +37,7 @@
     <div class="formRow">
       <div class="formLabel"> Message Body </div>
       <div class="formInput">
-        <textarea name="message" rows="5" maxlength="160" required></textarea>
+        <textarea name="message" rows="5" maxlength="160" required><%= parameters.message %></textarea>
       </div>
     </div>
 
@@ -48,6 +54,10 @@
     $(this).removeClass("subdued");
     $("input[name=subject]").val("");
   });
+
+  $("#useTemplate").click(function () {
+
+  })
 </script>
 
 
