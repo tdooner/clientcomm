@@ -92,6 +92,15 @@ $width_row8:  5%;
     float: left;
     text-align: left;
 
+    .clientName {
+      padding: 5px 10px 5px 10px;
+      border-radius: 5px;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
     .colorTag {
       width: 15px;
       height: 28px;

@@ -43,6 +43,11 @@
   .clientRow .column {
     float: left;
     text-align: left; }
+    .clientRow .column .clientName {
+      padding: 5px 10px 5px 10px;
+      border-radius: 5px; }
+      .clientRow .column .clientName:hover {
+        background-color: rgba(255, 255, 255, 0.5); }
     .clientRow .column .colorTag {
       width: 15px;
       height: 28px;
