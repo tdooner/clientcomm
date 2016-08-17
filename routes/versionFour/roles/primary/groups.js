@@ -80,9 +80,13 @@ router.get("/edit/:groupID", function (req, res) {
   Groups.findByID(Number(req.params.groupID))
   .then((group) => {
     if (group) {
-      res.render("v4/primaryUser/groups/edit", {
-        group: group
-      });
+      Clients.findByUser(Number(req.params.userID), true)
+      .then((clients) => {
+        res.render("v4/primaryUser/groups/edit", {
+          group: group,
+          clients: clients
+        });
+      }).catch(error_500(res));
     } else {
       res.redirect("/404");
     }
@@ -90,12 +94,28 @@ router.get("/edit/:groupID", function (req, res) {
 });
 
 router.post("/edit/:groupID", function (req, res) {
-  Groups.editOne(Number(req.params.groupID), req.body.name)
-  .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/groups/current");
-  }).catch(error_500(res));
+  const userID = req.user.cmid;
+  const groupID = req.params.groupID;
+  const name = req.body.name;
+
+  // Clean clientIDs
+  var clientIDs = req.body.clientIDs;
+  if (!clientIDs) clientIDs = [];
+  if (typeof clientIDs == "string") clientIDs = isNaN(Number(clientIDs)) ? [] : Number(clientIDs);
+  if (typeof clientIDs == "number") clientIDs = [clientIDs];
+  if (Array.isArray(clientIDs)) {
+    clientIDs
+    .map(function (ID) { return Number(ID); })
+    .filter(function (ID) { return !(isNaN(ID)); });
+    Groups.editOne(userID, groupID, name, clientIDs)
+    .then(() => {
+      res.redirect( "/v4/users/" + 
+                    req.user.cmid + 
+                    "/primary/groups/current");
+    }).catch(error_500(res));
+  } else {
+    res.redirect("/404");
+  }
 });
 
 router.get("/remove/:groupID", function (req, res) {

@@ -66,7 +66,19 @@ class Groups {
         .where("group_id", groupID)
         .limit(1)
       .then((groups) => {
-        fulfill(groups[0]);
+        var group = groups[0];
+        if (group) {
+          return Groups.findMembers(group.group_id)
+          .then((members) => {
+            group.members = [];
+            members.forEach(function (member) {
+              if (member.group == group.group_id) group.members.push(member);
+            });
+            fulfill(group);
+          }).catch(reject);
+        } else {
+          fulfill();
+        }
       }).catch(reject);
     });
   }
@@ -93,13 +105,59 @@ class Groups {
     });
   }
   
-  static editOne (groupID, name) {
+  static editOne (userID, groupID, name, clientIDs) {
     return new Promise((fulfill, reject) => {
       db("groups")
         .update({ name: name })
         .where("group_id", groupID)
-      .then((groups) => {
-        fulfill(groups);
+      .then(() => {
+        return Groups.updateMembersOne(userID, groupID, clientIDs)
+      }).then(() => {
+        fulfill();
+      }).catch(reject);
+    });
+  }
+
+  static updateMembersOne (userID, groupID, clientIDs) {
+    return new Promise((fulfill, reject) => {
+      var activeClients;
+      db("group_members")
+        .whereIn("client", clientIDs)
+        .andWhere("group", groupID)
+        .update({ active: true })
+        .returning("client")
+      .then((clients) => {
+        activeClients = clients;
+        return db("group_members")
+        .whereNotIn("client", clientIDs)
+        .andWhere("group", groupID)
+        .update({ active: false })
+      }).then(() => {
+
+        clientIDs = clientIDs.filter(function (ID) {
+          return activeClients.indexOf(Number(ID)) < 0;
+        });
+
+        return Groups.addGroupMembers(userID, groupID, clientIDs)
+      }).then(() => {
+        fulfill();
+      }).catch(reject);
+    });
+  }
+
+  static addGroupMembers (userID, groupID, clientIDs) {
+    return new Promise((fulfill, reject) => {
+      var insertArray = clientIDs.map(function (clientID) {
+        return {
+          group: groupID,
+          client: clientID,
+          active: true
+        }
+      });
+      db("group_members")
+        .insert(insertArray)
+      .then(() => {
+        fulfill();
       }).catch(reject);
     });
   }
