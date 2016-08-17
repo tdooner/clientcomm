@@ -2,6 +2,7 @@
 
 
 module.exports = { 
+  Users:          require("./classes/users"), 
   Clients:        require("./classes/clients"), 
   Templates:      require("./classes/templates"),
   Notifications:  require("./classes/notifications"), 
