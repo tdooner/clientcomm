@@ -51,7 +51,7 @@ class Groups {
     return new Promise((fulfill, reject) => {
       db("group_members")
         .leftJoin("clients", "clients.clid", "group_members.client")
-        .whereIn("group_member_id", groupIDs)
+        .whereIn("group", groupIDs)
         .andWhere("group_members.active", true)
         .andWhere("clients.active", true)
       .then((members) => {
