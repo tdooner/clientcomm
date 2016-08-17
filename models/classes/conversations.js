@@ -50,12 +50,26 @@ class Conversations {
   }
 
   static getconversationMessages (conversationID) {
-    db("msgs")
-      .where("convo", conversationID)
-      .orderBy("created", "asc")
-    .then((messages) => {
-      fulfill(messages);
-    }).catch(reject);
+    return new Promise((fulfill, reject) => {
+      db("msgs")
+        .where("convo", conversationID)
+        .orderBy("created", "asc")
+      .then((messages) => {
+        fulfill(messages);
+      }).catch(reject);
+    });
+  }
+
+  static transferUserReference (clientID, fromUserID, toUserID) {
+    return new Promise((fulfill, reject) => {
+      db("convos")
+        .where("cm", fromUserID)
+        .andWhere("client", clientID)
+        .update("cm", "toUserID")
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    });
   }
 
   static create(userID, clientID, subject, open) {

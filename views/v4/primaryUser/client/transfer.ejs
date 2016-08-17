@@ -1,0 +1,84 @@
+<% include ../../partials/cardFrameTop %>
+
+<div class="cardHead">
+  <!-- exit button -->
+  <a href="/v4/users/<%=user.cmid%>/primary/clients/open">
+    <% include ../../partials/cardExit %>
+  </a>
+  <div class="cardTitle">
+    Transfer Client
+  </div>
+  <div class="cardSubtitle">
+    Transfer a client to a another case manager within your organization.
+  </div>
+</div>
+
+<div class="cardBody">
+
+  <form method = "post"
+        id="createClient"
+        action = "/v4/users/<%=user.cmid%>/primary/clients/client/<%=parameters.clientID%>/transfer">
+
+    <div class="formRow">
+      <div class="formLabel">
+        Search for a Case Manager
+      </div>
+      <div class="formInput">
+        <input list="suggestionList" id="userSelect">
+      </div>
+      <div class="formInput">
+
+        <datalist id="suggestionList">
+            <% users.forEach(function (user) { %>
+              <option userName="<%= user.last + ', ' + user.first %>"
+                      userID="<%= user.cmid %>"
+                      department="<%= user.department %>">
+                <%= user.last + ', ' + user.first %>
+              </option>
+            <% }) %>
+        </datalist>
+        <input type="hidden" name="userID" id="userSelect-hidden">
+
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel">
+        Select whether to transfer all current conversations
+      </div>
+      <div class="formInput">
+        <input type="checkbox" name="bundleConversations" value="true" checked> Bundle Conversations
+      </div>
+    </div>
+
+    <input type="submit" class="formSubmit" value="Submit">
+
+  </form>
+</div>
+
+
+
+<script type="text/javascript">
+  document
+    .querySelector("input[list]")
+    .addEventListener("input", 
+      function(e) {
+        var input       = e.target,
+            list        = input.getAttribute("list"),
+            options     = document.querySelectorAll("#" + list + " option"),
+            hiddenInput = document.getElementById(input.id + "-hidden"),
+            inputValue  = input.value;
+
+        hiddenInput.value = inputValue;
+
+        for (var i = 0; i < options.length; i++) {
+          var option = options[i];
+          if ($(option).attr("userName") == inputValue) {
+            hiddenInput.value = option.getAttribute("userID");
+            break;
+          }
+        }
+    });
+</script>
+
+<% include ../../partials/cardFrameBottom %>

@@ -71,7 +71,7 @@ body {
       .card .cardBody .formRow .formInput .inputOption {
         float: left;
         margin-right: 20px; }
-      .card .cardBody .formRow .formInput input[type=text] {
+      .card .cardBody .formRow .formInput input[type=text], .card .cardBody .formRow .formInput input[list=suggestionList] {
         background: #FFF;
         width: 420px;
         font-size: 12px;

@@ -10,6 +10,7 @@ const modelsImport  = require("../../../../models/models");
 const Client        = modelsImport.Client;
 const ColorTags     = modelsImport.ColorTags;
 const Conversations = modelsImport.Conversations;
+const Users         = modelsImport.Users;
 
 
 // Twilio library tools and secrets
@@ -119,6 +120,38 @@ router.get("/conversations", function (req, res) {
   Conversations.findByUser(req.user.cmid)
   .then((conversations) => {
     res.send(conversations);
+  }).catch(error_500(res));
+});
+
+
+router.get("/transfer", function (req, res) {
+  Users.findByOrg(req.user.org)
+  .then((users) => {
+    res.render("v4/primaryUser/client/transfer", {
+      users: users,
+      parameters: req.params
+    });
+  }).catch(error_500(res));
+});
+
+
+router.post("/transfer", function (req, res) {
+  const fromUserID = req.user.cmid;
+  const toUserID = Number(req.body.userID);
+  const clientID = Number(req.params.clientID);
+  const bundleConversations = req.params.bundleConversations ? true : false;
+  Users.findByID(toUserID)
+  .then((user) => {
+    if (user) {
+      Client.transfer(clientID, fromUserID, toUserID, bundleConversations)
+      .then(() => {
+        res.redirect( "/v4/users/" + 
+                      req.user.cmid + 
+                      "/primary/clients/open");
+      }).catch(error_500(res));
+    } else {
+      res.redirect("/404");
+    }
   }).catch(error_500(res));
 });
 

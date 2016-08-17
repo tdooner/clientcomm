@@ -10,6 +10,7 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 
 const CommConns = require("./commConns");
+const Conversations = require("./conversations");
 
 
 // Class
@@ -123,6 +124,27 @@ class Client {
         fulfill(clientIDs[0]);
       }).catch(reject);
     });
+  }
+
+  static transfer (clientID, fromUserID, toUserID, bundleConversations) {
+    if (typeof bundleConversations == "undefined") bundleConversations = true;
+    return new Promise((fulfill, reject) => { 
+      db("clients")
+        .where("clid", clientID)
+        .andWhere("cm", fromUserID)
+        .update({ cm: toUserID })
+      .then(() => {
+        if (bundleConversations) {
+          // also switch convos
+          Conversations.transferUserReference(clientID, fromUserID, toUserID)
+          .then(() => {
+            fulfill()
+          }).catch(reject);
+        } else {
+          fulfill()
+        }
+      }).catch(reject);
+    });   
   }
 
   static logActivity (clientID) {
