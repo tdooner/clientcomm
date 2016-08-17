@@ -9,7 +9,7 @@ var router          = express.Router({mergeParams: true});
 const modelsImport  = require("../../../models/models");
 const Client        = modelsImport.Client;
 const Clients       = modelsImport.Clients;
-const ColorTags       = modelsImport.ColorTags;
+const ColorTags     = modelsImport.ColorTags;
 const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Communication = modelsImport.Communication;
@@ -56,40 +56,6 @@ router.get("/", function (req, res) {
 });
 
 
-router.get("/clients/open", function (req, res) {
-  const managerID = Number(req.params.userID);
-  const active    = true;
-
-  Clients.findByUser(managerID, active)
-  .then((clients) => {
-    res.render("v4/primaryUser/clients", {
-      hub: {
-        tab: "clients",
-        sel: "open"
-      },
-      clients: clients
-    });
-  }).catch(error_500(res));
-});
-
-
-router.get("/clients/closed", function (req, res) {
-  const managerID = Number(req.params.userID);
-  const active    = false;
-
-  Clients.findByManager(managerID, active)
-  .then((clients) => {
-    res.render("v4/primaryUser/clients", {
-      hub: {
-        tab: "clients",
-        sel: "closed"
-      },
-      clients: clients
-    });
-  }).catch(error_500(res));
-});
-
-
 var colorTags = require("./primary/colorTags");
 router.use("/colortags", colorTags);
 
@@ -104,6 +70,10 @@ router.use("/notifications", notifications);
 
 var groups = require("./primary/groups");
 router.use("/groups", groups);
+
+
+var clients = require("./primary/clients");
+router.use("/clients", clients);
 
 
 // Client-specific operations

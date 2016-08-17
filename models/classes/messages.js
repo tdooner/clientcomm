@@ -104,7 +104,7 @@ class Messages {
 
         contentArray.forEach(function (contentPortion, contentIndex) {
           twClient.sendMessage({
-            to: "+18589057365", //communication.value,
+            to: communication.value,
             from: TWILIO_NUM,
             body: contentPortion
           }, (err, msg) => {

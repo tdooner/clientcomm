@@ -1,0 +1,87 @@
+<% include ../../partials/cardFrameTop %>
+
+<div class="cardHead">
+  <!-- exit button -->
+  <a href="/v4/users/<%=user.cmid%>/primary/groups">
+    <% include ../../partials/cardExit %>
+  </a>
+  <div class="cardTitle">
+    Create Client
+  </div>
+  <div class="cardSubtitle">
+    Create new clients to establish a profile through which to maintain contact.
+  </div>
+</div>
+
+<div class="cardBody">
+
+  <form method = "post"
+        id="createClient"
+        action = "/v4/users/<%=user.cmid%>/primary/clients/create">
+
+    <div class="formRow">
+      <div class="formLabel"> First </div>
+      <div class="formInput">
+        <input type="text" name="first" required>
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Middle </div>
+      <div class="formInput">
+        <input type="text" name="middle">
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Last </div>
+      <div class="formInput">
+        <input type="text" name="last" required>
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Date of Birth <small>(YYYY-MM-DD)</small> <span class="opt">optional</span> </div>
+      <div class="formInput">
+        <input type="date" name="dob">
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Sheriff's Number (SO#) <span class="opt">optional</span> </div>
+      <div class="formInput">
+        <input type="text" name="so">
+      </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Offender Tracking Number (OTN) <span class="opt">optional</span> </div>
+      <div class="formInput">
+        <input type="text" name="otn">
+      </div>
+    </div>
+
+    <input type="submit" class="formSubmit" value="Submit">
+
+  </form>
+</div>
+
+
+
+<script type="text/javascript">
+  $(".scrollListRow").click(function () {
+    $(this).toggleClass("selected");
+  });
+
+  $("#createGroup").submit(function () {
+    $(".scrollListRow").each(function () {
+      if ($(this).hasClass("selected")) {
+        var clientID = $(this).attr("clientID");
+        $(".scrollListBox").append("<input type='hidden' name='clientIDs' value='" + clientID + "'>")
+      }
+    });
+    return true;
+  });
+</script>
+
+<% include ../../partials/cardFrameBottom %>
