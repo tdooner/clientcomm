@@ -9,8 +9,7 @@ const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 
-// TO DOS
-// Check if arrays are indeed arrays and that they have length > 0
+const CommConns = require("./commConns");
 
 
 // Class
@@ -79,9 +78,6 @@ class Clients {
           return client.clid
         });
 
-        // Load in and use CommConns class
-        const modelsImport  = require("../models");
-        const CommConns = modelsImport.CommConns;
         return CommConns.findByIDs(clientIDs)
       }).then((commconns) => {
         // Add each communication method to relevant client

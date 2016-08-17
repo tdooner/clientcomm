@@ -47,13 +47,13 @@ class Conversations {
     }).catch(reject);
   }
 
-  static create(cmid, clid, subject, open) {
+  static create(userID, clientID, subject, open) {
     if (!open) open = true;
     return new Promise((fulfill, reject) => {
       db("convos")
         .insert({
-          cm: cmid,
-          client: clid,
+          cm: userID,
+          client: clientID,
           subject: subject,
           open: open,
           accepted: true,

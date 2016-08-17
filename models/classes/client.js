@@ -9,8 +9,7 @@ const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 
-// TO DOS
-// Check if arrays are indeed arrays and that they have length > 0
+const CommConns = require("./commConns");
 
 
 // Class
@@ -18,6 +17,7 @@ class Client {
 
   static findByID (clientID) {
     return new Promise((fulfill, reject) => {
+      var finalClientsObject;
       db("clients")
         .select("clients.*", 
                 "color_tags.color as color_tag", 
@@ -37,13 +37,28 @@ class Client {
       .then(function (clients) {
 
         // Need to make sure there is a default color_tag color
-        clients.map(function (client) {
+        finalClientsObject = clients.map(function (client) {
           if (!client.color_tag) client.color_tag = "#898989";
           if (!client.color_tag) client.color_name = "None";
           return client;
         });
 
-        fulfill(clients[0])
+        const clientIDs = finalClientsObject.map(function (client) {
+          return client.clid;
+        });
+
+        return CommConns.findByIDs(clientIDs)
+      }).then(function (commConns) {
+        finalClientsObject = finalClientsObject.map(function (client) {
+          client.communications = [];
+          commConns.forEach(function (commconn) {
+            if (client.clid == commconn.client) {
+             client.communications.push(commconn) 
+            }
+          });
+          return client;
+        });
+        fulfill(finalClientsObject[0]);
       }).catch(reject);
     })
   }

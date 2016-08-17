@@ -96,13 +96,13 @@ class Messages {
 
 
 
-  static startNewConversation (userID, clientID, title, content, commID) {
+  static startNewConversation (userID, clientID, subject, content, commID) {
     return new Promise((fulfill, reject) => {
       var newConvoId;
 
       Conversations.closeAllForClient(userID, clientID)
       .then(() => {
-        return Conversations.create(userID, clientID, title, true)
+        return Conversations.create(userID, clientID, subject, true)
       }).then((convoID) => {
         newConvoId = convoID;
         return Communications.findById(commID)

@@ -9,7 +9,7 @@
     Quick Message
   </div>
   <div class="cardSubtitle">
-    Send a quick message to <%= client.name %>.
+    Send a quick message to <%= client.first + ' ' + client.middle + ' ' + client.last %>.
   </div>
 </div>
 
@@ -22,13 +22,13 @@
   </div>
 
   <form method="post"
-        action="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>">
-    <div class="formRow <% if (!parameters.subject) { %>subdued<% } %>">
+        action="/v4/users/<%=user.cmid%>/primary/clients/address/<%= client.clid %>">
+    <div class="formRow <% if (!template.title) { %>subdued<% } %>">
       <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
       <div class="formInput">
         <input  type="text" 
                 name="subject" 
-                value="<%= parameters.subject %>" 
+                value="<%= template.title %>" 
                 placeholder="Enter a subject for the notification here" 
                 maxlength="100">
       </div>
@@ -37,13 +37,25 @@
     <div class="formRow">
       <div class="formLabel"> Message Body </div>
       <div class="formInput">
-        <textarea name="message" rows="5" maxlength="160" required><%= parameters.message %></textarea>
+        <textarea name="content" rows="5" maxlength="160" required><%= template.content %></textarea>
       </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Which device to send to </div>
+      <select class="blueSelect" 
+              id="commConn" 
+              required>
+        <option value="" disabled selected> Contact Options </option>
+        <% client.communications.forEach(function (comm) { %>
+          <option value="<%= comm.commid %>"><%= comm.name + '(' + comm.value + ')' %></option>
+        <% }) %>
+      </select>
     </div>
 
     <input  type="submit" 
             class="formSubmit" 
-            value="Submit Notification Message">
+            value="Send Client Message">
   </form>
 
 </div>

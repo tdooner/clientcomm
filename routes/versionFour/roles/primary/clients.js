@@ -12,6 +12,7 @@ const Clients       = modelsImport.Clients;
 const ColorTags     = modelsImport.ColorTags;
 const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
+const Messages      = modelsImport.Messages;
 const Communication = modelsImport.Communication;
 
 
@@ -73,11 +74,43 @@ router.post("/create", function (req, res) {
 
   Client.create(userID, first, middle, last, dob, otn, so)
   .then((clientID) => {
-    if (clientID) console.log(clientID);
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/clients/open");
   }).catch(error_500(res));
+});
+
+
+router.get ("/address/:clientID", function (req, res) {
+  const clientID = Number(req.params.clientID);
+  Client.findByID(clientID)
+  .then((client) => {
+    if (client) {
+      res.render("v4/primaryUser/client/address", {
+        client: client,
+        template: {},
+      });
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+});
+
+
+router.post ("/address/:clientID", function (req, res) {
+  const userID = req.user.cmid;
+  const clientID = Number(req.params.clientID);
+  const subject = req.body.subject;
+  const content = req.body.content;
+  const commID = req.body.commID;
+
+  Messages.startNewConversation(userID, clientID, subject, content, commID)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/clients/open");
+  }).catch(error_500(res));
+  
 });
 
 
