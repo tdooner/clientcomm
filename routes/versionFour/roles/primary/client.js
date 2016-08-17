@@ -127,6 +127,12 @@ router.get("/conversations", function (req, res) {
 router.get("/transfer", function (req, res) {
   Users.findByOrg(req.user.org)
   .then((users) => {
+
+    // limit only to same department transfers
+    users = users.filter(function (user) {
+      return user.department == req.user.department;
+    });
+    
     res.render("v4/primaryUser/client/transfer", {
       users: users,
       parameters: req.params
