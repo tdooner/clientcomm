@@ -11,6 +11,14 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 // Class
 class Conversations {
+
+  static findByUser (userID) {
+    return new Promise((fulfill, reject) => {
+      db("convos")
+      .then(function () {
+      }).catch(reject);
+    })
+  }
   
   static closeAllForClient (userID, clientID) {
     return new Promise((fulfill, reject) => {

@@ -77,8 +77,8 @@ router.use("/clients", clients);
 
 
 // Client-specific operations
-var specificClient = require("./primary/specificClient");
-router.use("/clients/client/:clientID", specificClient);
+var client = require("./primary/client");
+router.use("/clients/client/:clientID", client);
 
 // EXPORT ROUTER OBJECt
 module.exports = router;

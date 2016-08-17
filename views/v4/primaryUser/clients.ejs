@@ -45,7 +45,9 @@
       <% } else { %>-<% } %>
       </div>
     <div class="column">
-      <span class="clientName"><%= client.last + ', ' + client.first + ' ' + client.middle %></span>
+      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/conversations">
+        <span class="clientName"><%= client.last + ', ' + client.first + ' ' + client.middle %></span>
+      </a>
     </div>
     <div class="column">
       <% if (client.unread > 0) { %>
