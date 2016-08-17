@@ -14,7 +14,7 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 
 // Class
-class Conversation {
+class Conversations {
   static closeAll(cmid, clid) {
     return new Promise((fulfill, reject) => {
       db("convos")
@@ -54,4 +54,4 @@ class Conversation {
   }
 }
 
-module.exports = Conversation
+module.exports = Conversations
