@@ -22,6 +22,7 @@ var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 // Models
 const Conversations = require("./conversations");
+const Communications = require("./communications");
 
 
 // Class
@@ -29,105 +30,119 @@ class Messages {
 
   static sendMultiple (userID, clientIDs, title, content) {
     return new Promise((fulfill, reject) => {
-      clientIDs.forEach(function (clientID) {
+      clientIDs.forEach(function (clientID, i) {
         Messages.smartSend(userID, clientID, title, content)
-        .then(() => {
-          fulfill();
-        }).catch(reject);
+        .then(() => {}).catch(function (err) {});
       });
+      fulfill();
     });
   }
 
   static smartSend (userID, clientID, title, content) {
-    Messages.getLatestNumber(userID, clientID)
-    .then((convo) => {
-    }).catch(reject);
+    return new Promise((fulfill, reject) => {
+      Messages.getLatestNumber(userID, clientID)
+      .then((commID) => {
+        if (commID) {
+          Messages.startNewConversation(userID, clientID, title, content, commID)
+          .then(() => {
+            fulfill();
+          }).catch(reject);
+        } else {
+          // fail silently
+          fulfill();
+        }
+      }).catch(reject);
+    });
   }
 
   static getLatestNumber (userID, clientID) {
-    Messages.getMostRecentConversation(userID, clientID)
-    .then((convo) => {
-    }).catch(reject);
-  }
-
-  static getClientCommunications {
-    
-  }
-
-
-
-  static getMostRecentConversation (userID, clientID) {
     return new Promise((fulfill, reject) => {
-      db("convos")
-        .where("cm", userID)
-        .andWhere("client", clientIDs)
-        .orderBy("updated", "desc")
-        .limit(1)
-      .then((convos) => {
-        fulfill(convos[0]);
+      Communications.getClientCommunications(clientID)
+      .then((comms) => {
+        if (comms.length == 1) {
+          fulfill(comms[0].comm);
+        } else {
+          Conversations.getMostRecentConversation(userID, clientID)
+          .then((conversation) => {
+            if (conversation) {
+              const conversationID = conversation.convid;
+              Conversations.getconversationMessages(conversationID)
+              .then((messages) => {
+                const lastMessage = messages.pop();
+                if (lastMessage) {
+                  fulfill(lastMessage.comm);
+                } else {
+                  fulfill();
+                }
+              }).catch(reject);
+
+            } else {
+              // no communication device or conversation...
+              // fail silently?
+              fulfill();
+            }
+          }).catch(reject);
+        }
       }).catch(reject);
-    }); 
+    });
   }
+
+
 
   static startNewConversation (userID, clientID, title, content, commID) {
     return new Promise((fulfill, reject) => {
       var newConvoId;
 
-      Conversations.closeAllForClient(clientID)
+      Conversations.closeAllForClient(userID, clientID)
       .then(() => {
-        return Conversations.create(cmid, clid, subject, true)
-      }).then((convoId) => {
-        newConvoId = convoId
-        return Communication.findById(commid)
+        return Conversations.create(userID, clientID, title, true)
+      }).then((convoID) => {
+        newConvoId = convoID;
+        return Communications.findById(commID)
       }).then((communication) => {
         var contentArray = content.match(/.{1,1599}/g);
-        var twilioOperations = {
-          error: false,
-          explanation: null
-        };
 
         contentArray.forEach(function (contentPortion, contentIndex) {
-          var lastPortion = contentIndex == (contentArray.length - 1);
-
           twClient.sendMessage({
-            to: communication.value,
+            to: "+18589057365", //communication.value,
             from: TWILIO_NUM,
             body: contentPortion
           }, (err, msg) => {
             if (err) {
               reject(err)
             } else {
-              Message.create({
-                convo: newConvoId,
-                comm: commid,
-                content: contentPortion,
-                inbound: false,
-                read: true,
-                tw_sid: msg.sid,
-                tw_status: msg.status,
-              })
-              .then((messageId) => {
-
-                // Run only if error during last portion
-                if (lastPortion) {
-                  if (twilioOperations.error) {
-                    res.redirect("/500");
-                  } else {
-                    req.flash("success", "New conversation created.");
-                    redirect_loc = redirect_loc + "/convos/" + newConvoId;
-                    res.redirect(redirect_loc);                  
-                  }
-                }
-
-              }).catch(errorRedirect);
+              const MessageSID = msg.sid;
+              const MessageStatus = msg.status;
+              Messages.create(newConvoId, commID, contentPortion, MessageSID, MessageStatus)
+              .then(() => {
+                fulfill();
+              }).catch(reject);
             }
           })
-
         });
-
       }).catch(reject);
     });      
   }
+
+  static create (conversationID, commID, content, MessageSID, MessageStatus) {
+    return new Promise((fulfill, reject) => {
+      db("msgs")
+        .insert({
+          convo: conversationID,
+          comm: commID,
+          content: content,
+          inbound: false,
+          read: true,
+          tw_sid: MessageSID,
+          tw_status: MessageStatus
+        })
+        .returning("msgid")
+      .then((messageIDs) => {
+        fulfill(messageIDs[0])
+      }).catch(reject)
+    })
+  }
+
 }
 
 module.exports = Messages

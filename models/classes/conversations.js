@@ -11,38 +11,56 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 // Class
 class Conversations {
-  static closeAllForClient (clientID) {
+  
+  static closeAllForClient (userID, clientID) {
     return new Promise((fulfill, reject) => {
       db("convos")
-        .where("cm", cliendID)
-        .andWhere("convos.open", true)
-        .pluck("convid")
-        .then(function (convos) {
-          db("convos").whereIn("convid", convos)
-            .update({ open: false })
-            .then(function () {
-              fulfill()
-            })
-            .catch(reject)
-        })
-        .catch(reject)
+        .where("client", clientID)
+        .andWhere("cm", userID)
+        .andWhere("open", true)
+        .update({ open: false })
+      .then(function () {
+        fulfill();
+      }).catch(reject);
     })
   }
 
-  static create(cmid, clid, subject, open) {
-    if (!open) {
-      open = true;
-    }
+  static getMostRecentConversation (userID, clientID) {
     return new Promise((fulfill, reject) => {
       db("convos")
-      .insert({
-        cm: cmid,
-        client: clid,
-        subject: subject,
-        open: open,
-        accepted: true,
-      }).returning("convid").then((convoIds) => {
-        fulfill(convoIds[0])
+        .where("cm", userID)
+        .andWhere("client", clientIDs)
+        .orderBy("updated", "desc")
+        .limit(1)
+      .then((convos) => {
+        fulfill(convos[0]);
+      }).catch(reject);
+    }); 
+  }
+
+  static getconversationMessages (conversationID) {
+    db("msgs")
+      .where("convo", conversationID)
+      .orderBy("created", "asc")
+    .then((messages) => {
+      fulfill(messages);
+    }).catch(reject);
+  }
+
+  static create(cmid, clid, subject, open) {
+    if (!open) open = true;
+    return new Promise((fulfill, reject) => {
+      db("convos")
+        .insert({
+          cm: cmid,
+          client: clid,
+          subject: subject,
+          open: open,
+          accepted: true,
+        })
+        .returning("convid")
+      .then((convoIDs) => {
+        fulfill(convoIDs[0]);
       }).catch(reject)
     })
   }

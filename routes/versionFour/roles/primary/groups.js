@@ -41,6 +41,8 @@ router.post("/address/:groupID", function (req, res) {
   const title = req.body.title;
   const content = req.body.content;
 
+  if (title == "") title = "New Conversation";
+
   Groups.addressMembers(userID, groupID, title, content)
   .then(() => {
     res.redirect( "/v4/users/" + 

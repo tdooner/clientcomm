@@ -15,20 +15,30 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 // Class
 class Communications {
-  static findById(id) {
+
+  static findById (commID) {
     return new Promise((fulfill, reject) => {
       db("comms")
-      .where("commid", id)
-      .limit(1)
+        .where("commid", commID)
+        .limit(1)
       .then(function (comms) {
-        if (comms.length > 0) {
-          fulfill(comms[0])
-        } else {
-          fulfill()
-        }
+        fulfill(comms[0])
       })
-      .catch(reject)      
+      .catch(reject);
     })
+  }
+
+  static getClientCommunications (clientID) {
+    return new Promise((fulfill, reject) => {
+      db("commconns")
+        .select("commconns.*", "comms.type", "comms.value")
+        .leftJoin("comms", "comms.commid", "commconns.comm")
+        .whereNull("retired")
+        .andWhere("commconns.client", clientID)
+      .then((commConns) => {
+        fulfill(commConns);
+      }).catch(reject);
+    }); 
   }
 }
 
