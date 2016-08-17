@@ -6,23 +6,23 @@
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Create Group
+    Write to Group Members
   </div>
   <div class="cardSubtitle">
-    Use groups to organize client populations.
+    Write a message to all members of this group. The message will be sent to the most recently used cell device used by each respective client.
   </div>
 </div>
 
 <div class="cardBody">
 
   <form method="post"
-        action="/v4/users/<%=user.cmid%>/primary/notifications/address/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>">
-    <div class="formRow <% if (!parameters.subject) { %>subdued<% } %>">
+        action="/v4/users/<%=user.cmid%>/primary/groups/address/<%= parameters.groupID %>">
+    <div class="formRow subdued">
       <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
       <div class="formInput">
         <input  type="text" 
-                name="subject" 
-                value="<%= parameters.subject %>" 
+                name="title" 
+                value="" 
                 placeholder="Enter a subject for the notification here" 
                 maxlength="100">
       </div>
@@ -31,15 +31,23 @@
     <div class="formRow">
       <div class="formLabel"> Message Body </div>
       <div class="formInput">
-        <textarea name="message" rows="5" maxlength="160" required><%= parameters.message %></textarea>
+        <textarea name="content" rows="5" required></textarea>
       </div>
     </div>
 
     <input  type="submit" 
             class="formSubmit" 
-            value="Submit Notification Message">
+            value="Send Group Message">
   </form>
 
 </div>
+
+
+<script type="text/javascript">
+  $(".subdued").click(function () {
+    $(this).removeClass("subdued");
+    $("input[name=subject]").val("");
+  });
+</script>
 
 <% include ../../partials/cardFrameBottom %>

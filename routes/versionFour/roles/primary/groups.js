@@ -35,6 +35,19 @@ router.get("/address/:groupID", function (req, res) {
   });
 });
 
+router.post("/address/:groupID", function (req, res) {
+  const groupID = Number(req.params.groupID);
+  const title = req.body.title;
+  const content = req.body.content;
+
+  Groups.writeMembers(groupID, title, content)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/groups/current");
+  }).catch(error_500(res));
+});
+
 router.get("/current", function (req, res) {
   Groups.findByUser(Number(req.params.userID), true)
   .then((groups) => {
