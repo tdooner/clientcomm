@@ -9,6 +9,7 @@ var router          = express.Router({mergeParams: true});
 const modelsImport  = require("../../../../models/models");
 const Groups        = modelsImport.Groups;
 const Clients       = modelsImport.Clients;
+const Messages      = modelsImport.Messages;
 
 
 // General error handling
@@ -28,6 +29,11 @@ router.get("/", function (req, res) {
                 "/primary/groups/current");
 });
 
+router.get("/address/:groupID", function (req, res) {
+  res.render("v4/primaryUser/groups/address", {
+    parameters: req.params
+  });
+});
 
 router.get("/current", function (req, res) {
   Groups.findByUser(Number(req.params.userID), true)
