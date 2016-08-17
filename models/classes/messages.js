@@ -9,6 +9,17 @@ const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 
+// SECRET STUFF
+var credentials = require("../../credentials");
+var ACCOUNT_SID = credentials.accountSid;
+var AUTH_TOKEN = credentials.authToken;
+var TWILIO_NUM = credentials.twilioNum;
+
+// Twilio tools
+var twilio = require("twilio");
+var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
+
+
 // Class
 class Messages {
   static sendMultiple (clientIDs, title, content) {
@@ -50,24 +61,7 @@ class Messages {
             body: contentPortion
           }, (err, msg) => {
             if (err) {
-              res.send(err)
-
-              if (err.hasOwnProperty("code") && err.code == 21211) {
-                twilioOperations.error = true;
-                twilioOperations.explanation = "That number is not a valid phone number.";
-              } else {
-                twilioOperations.error = true;
-              }
-
-              // Run only if error during last portion
-              if (lastPortion) {
-                if (twilioOperations.explanation) {
-                  res.status(500).send(twilioOperations.explanation);
-                } else {
-                  res.redirect("/500");
-                }
-              }
-
+              reject(err)
             } else {
               Message.create({
                 convo: newConvoId,
