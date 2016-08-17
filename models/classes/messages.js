@@ -30,6 +30,7 @@ if (TESTENV && TESTENV == "true") {
 // Models
 const Conversations = require("./conversations");
 const Communications = require("./communications");
+const Client = require("./client");
 
 
 // Class
@@ -122,7 +123,10 @@ class Messages {
               const MessageStatus = msg.status;
               Messages.create(newConvoId, commID, contentPortion, MessageSID, MessageStatus)
               .then(() => {
-                fulfill();
+                Client.logActivity(clientID)
+                .then(() => {
+                  fulfill();
+                }).catch(reject)
               }).catch(reject);
             }
           })
@@ -145,7 +149,7 @@ class Messages {
         })
         .returning("msgid")
       .then((messageIDs) => {
-        fulfill(messageIDs[0])
+        fulfill(messageIDs[0]);
       }).catch(reject)
     })
   }

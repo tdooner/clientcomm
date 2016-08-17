@@ -48,7 +48,7 @@ class Client {
         });
 
         return CommConns.findByIDs(clientIDs)
-      }).then(function (commConns) {
+      }).then((commConns) => {
         finalClientsObject = finalClientsObject.map(function (client) {
           client.communications = [];
           commConns.forEach(function (commconn) {
@@ -106,7 +106,7 @@ class Client {
   }
 
   static create (userID, first, middle, last, dob, otn, so) {
-    return new Promise((fulfill, reject) => {;
+    return new Promise((fulfill, reject) => {
       db("clients")
         .insert({
           cm:     userID,
@@ -119,9 +119,19 @@ class Client {
           active: true
         })
         .returning("clid")
-      .then(function (clientIDs) {
-        console.log("ok", clientIDs);
+      .then((clientIDs) => {
         fulfill(clientIDs[0]);
+      }).catch(reject);
+    });
+  }
+
+  static logActivity (clientID) {
+    return new Promise((fulfill, reject) => {
+      db("clients")
+        .where("clid", clientID)
+        .update({ updated: db.fn.now() })
+      .then(() => {
+        fulfill();
       }).catch(reject);
     });
   }
