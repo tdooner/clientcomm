@@ -18,6 +18,13 @@ var TWILIO_NUM = credentials.twilioNum;
 // Twilio tools
 var twilio = require("twilio");
 var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
+// Only send to junk number when in test mode
+var TESTENV = process.env.TESTENV;
+if (TESTENV && TESTENV == "true") {
+  TESTENV = true;
+} else { 
+  TESTENV = false;
+}
 
 
 // Models
@@ -104,7 +111,7 @@ class Messages {
 
         contentArray.forEach(function (contentPortion, contentIndex) {
           twClient.sendMessage({
-            to: communication.value,
+            to: TESTENV ? "+18589057365" : communication.value,
             from: TWILIO_NUM,
             body: contentPortion
           }, (err, msg) => {

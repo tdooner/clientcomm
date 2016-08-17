@@ -8,6 +8,9 @@
     color
   </div>
   <div class="column">
+    contact
+  </div>
+  <div class="column">
     client name
   </div>
   <div class="column">
@@ -34,6 +37,13 @@
         <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
       </a>
     </div>
+    <div class="column">
+      <% if (client.active) { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/clients/address/<%=client.clid%>">
+          <i class="fa highlight fa-send" aria-hidden="true"></i>
+        </a>
+      <% } else { %>-<% } %>
+      </div>
     <div class="column">
       <span class="clientName"><%= client.last + ', ' + client.first + ' ' + client.middle %></span>
     </div>

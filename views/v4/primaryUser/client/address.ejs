@@ -2,21 +2,21 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/notifications">
+  <a href="/v4/users/<%=user.cmid%>/primary/clients/open">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Notification Message
+    Quick Message
   </div>
   <div class="cardSubtitle">
-    Use notifications to schedule messages to be sent in the future.
+    Send a quick message to <%= client.name %>.
   </div>
 </div>
 
 <div class="cardBody">
   
   <div class="formRow">
-    <a href="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>/selecttemplate">
+    <a href="/v4/users/<%=user.cmid%>/primary/address/<%= client.clid %>/selecttemplate">
       <input type="submit" id="useTemplate" class="formSubmit inverse" value="Load a template">
     </a>
   </div>
