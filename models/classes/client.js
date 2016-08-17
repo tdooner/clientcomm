@@ -87,8 +87,28 @@ class Client {
       .then(() => {
         fulfill()
       }).catch(reject);
-    })
+    });
+  }
 
+  static create (userID, first, middle, last, dob, otn, so) {
+    return new Promise((fulfill, reject) => {;
+      db("clients")
+        .insert({
+          cm:     userID,
+          first:  first,
+          middle: middle,
+          last:   last,
+          dob:    dob,
+          otn:    otn,
+          so:     so,
+          active: true
+        })
+        .returning("clid")
+      .then(function (clientIDs) {
+        console.log("ok", clientIDs);
+        fulfill(clientIDs[0]);
+      }).catch(reject);
+    });
   }
   
 }

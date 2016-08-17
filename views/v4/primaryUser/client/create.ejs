@@ -57,7 +57,7 @@
     <div class="formRow subdued">
       <div class="formLabel"> Offender Tracking Number (OTN) <span class="opt">optional</span> </div>
       <div class="formInput">
-        <input type="text" name="uniqueID1">
+        <input type="text" name="uniqueID2">
       </div>
     </div>
 
@@ -69,18 +69,9 @@
 
 
 <script type="text/javascript">
-  $(".scrollListRow").click(function () {
-    $(this).toggleClass("selected");
-  });
-
-  $("#createGroup").submit(function () {
-    $(".scrollListRow").each(function () {
-      if ($(this).hasClass("selected")) {
-        var clientID = $(this).attr("clientID");
-        $(".scrollListBox").append("<input type='hidden' name='clientIDs' value='" + clientID + "'>")
-      }
-    });
-    return true;
+  $(".subdued").click(function () {
+    $(this).removeClass("subdued");
+    $("input[name=subject]").val("");
   });
 </script>
 

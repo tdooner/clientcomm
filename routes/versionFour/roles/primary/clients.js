@@ -63,7 +63,21 @@ router.get("/create", function (req, res) {
 
 
 router.post("/create", function (req, res) {
-  res.send(req.body)
+  const userID = req.user.cmid;
+  const first = req.body.first;
+  const middle = req.body.middle ? req.body.middle : "";
+  const last = req.body.last;
+  const dob = req.body.DOB;
+  const so = req.body.uniqueID1 ? req.body.otn : null;
+  const otn = req.body.uniqueID2 ? req.body.so : null;
+
+  Client.create(userID, first, middle, last, dob, otn, so)
+  .then((clientID) => {
+    if (clientID) console.log(clientID);
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/clients/open");
+  }).catch(error_500(res));
 });
 
 
