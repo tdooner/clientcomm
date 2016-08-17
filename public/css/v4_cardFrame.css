@@ -133,6 +133,11 @@ body {
       font-size: 16px;
       font-weight: 700;
       color: #344289; }
+    .card .cardBody .formRow .opt {
+      font-size: small;
+      float: right;
+      font-weight: 300;
+      font-style: italic; }
   .card .cardBody .scrollListBox {
     width: 450px;
     max-height: 400px;
