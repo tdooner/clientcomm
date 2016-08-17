@@ -9,6 +9,7 @@ var router          = express.Router({mergeParams: true});
 const modelsImport  = require("../../../../models/models");
 const Client        = modelsImport.Client;
 const ColorTags     = modelsImport.ColorTags;
+const Conversations = modelsImport.Conversations;
 
 
 // Twilio library tools and secrets
@@ -115,7 +116,10 @@ router.post("/editcolortag", function (req, res) {
 
 
 router.get("/conversations", function (req, res) {
-  res.send("h")
+  Conversations.findByUser(req.user.cmid)
+  .then((conversations) => {
+    res.send(conversations);
+  }).catch(error_500(res));
 });
 
 

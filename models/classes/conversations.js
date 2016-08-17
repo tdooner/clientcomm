@@ -15,7 +15,10 @@ class Conversations {
   static findByUser (userID) {
     return new Promise((fulfill, reject) => {
       db("convos")
-      .then(function () {
+        .where("cm", userID)
+        .orderBy("updated", "desc")
+      .then((conversations) => {
+        fulfill(conversations);
       }).catch(reject);
     })
   }
