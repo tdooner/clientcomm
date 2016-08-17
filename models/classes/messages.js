@@ -21,16 +21,16 @@ var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 
 // Models
-const Conversations = require("./conversation");
+const Conversations = require("./conversations");
 
 
 // Class
 class Messages {
-  static sendMultiple (clientIDs, title, content) {
+
+  static sendMultiple (userID, clientIDs, title, content) {
     return new Promise((fulfill, reject) => {
       clientIDs.forEach(function (clientID) {
-        var commConn = null;
-        Messages.startNewConversation(clientID, title, content, commConn)
+        Messages.smartSend(userID, clientID, title, content)
         .then(() => {
           fulfill();
         }).catch(reject);
@@ -38,11 +38,42 @@ class Messages {
     });
   }
 
-  static startNewConversation (clientID, title, content, commConn) {
+  static smartSend (userID, clientID, title, content) {
+    Messages.getLatestNumber(userID, clientID)
+    .then((convo) => {
+    }).catch(reject);
+  }
+
+  static getLatestNumber (userID, clientID) {
+    Messages.getMostRecentConversation(userID, clientID)
+    .then((convo) => {
+    }).catch(reject);
+  }
+
+  static getClientCommunications {
+    
+  }
+
+
+
+  static getMostRecentConversation (userID, clientID) {
+    return new Promise((fulfill, reject) => {
+      db("convos")
+        .where("cm", userID)
+        .andWhere("client", clientIDs)
+        .orderBy("updated", "desc")
+        .limit(1)
+      .then((convos) => {
+        fulfill(convos[0]);
+      }).catch(reject);
+    }); 
+  }
+
+  static startNewConversation (userID, clientID, title, content, commID) {
     return new Promise((fulfill, reject) => {
       var newConvoId;
 
-      Conversations.closeAll(cmid, clientID)
+      Conversations.closeAllForClient(clientID)
       .then(() => {
         return Conversations.create(cmid, clid, subject, true)
       }).then((convoId) => {

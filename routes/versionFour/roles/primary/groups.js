@@ -36,11 +36,12 @@ router.get("/address/:groupID", function (req, res) {
 });
 
 router.post("/address/:groupID", function (req, res) {
+  const userID = req.user.cmid;
   const groupID = Number(req.params.groupID);
   const title = req.body.title;
   const content = req.body.content;
 
-  Groups.writeMembers(groupID, title, content)
+  Groups.addressMembers(userID, groupID, title, content)
   .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -49,7 +50,8 @@ router.post("/address/:groupID", function (req, res) {
 });
 
 router.get("/current", function (req, res) {
-  Groups.findByUser(Number(req.params.userID), true)
+  const userID = req.user.cmid;
+  Groups.findByUser(userID, true)
   .then((groups) => {
     res.render("v4/primaryUser/groups/groups", {
       hub: {

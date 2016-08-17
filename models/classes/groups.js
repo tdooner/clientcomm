@@ -192,12 +192,12 @@ class Groups {
     });
   }
 
-  static writeMembers (groupID, title, content) {
+  static addressMembers (userID, groupID, title, content) {
     return new Promise((fulfill, reject) => {
       Groups.findMembers(groupID)
       .then((clients) => {
         const clientIDs = clients.map(function (client) { return client.clid });
-        return Messages.sendMultiple(clientIDs, title, content)
+        return Messages.sendMultiple(userID, clientIDs, title, content)
       }).then(() => {
         fulfill();
       }).catch(reject);
