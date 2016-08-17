@@ -2,16 +2,16 @@
 
 
 module.exports = {
-  Client: require("./classes/client"), 
-  Clients: require("./classes/clients"), 
-  Templates: require("./classes/templates"),
+  Client:        require("./classes/client"), 
+  Clients:       require("./classes/clients"), 
+  Templates:     require("./classes/templates"),
   Notifications: require("./classes/notifications"), 
-  Groups: require("./classes/groups"), 
-  Message: require("./classes/message"), 
-  Messages: require("./classes/messages"), 
-  CommConns: require("./classes/commConns"), 
-  ColorTags: require("./classes/colorTags"), 
-  Convo: require("./classes/conversation"),
+  Groups:        require("./classes/groups"), 
+  Message:       require("./classes/message"), 
+  Messages:      require("./classes/messages"), 
+  CommConns:     require("./classes/commConns"), 
+  ColorTags:     require("./classes/colorTags"), 
+  Convo:         require("./classes/conversation"),
   Communication: require("./classes/communication"),
-  Group: require("./classes/group")
+  Group:         require("./classes/group")
 }

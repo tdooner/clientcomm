@@ -8,6 +8,11 @@ const Promise = require("bluebird");
 const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
+// Models
+const modelsImport  = require("../models");
+const Messages      = modelsImport.Messages;
+console.log("modelsImport", modelsImport);
+
 
 // TO DOS
 // Check if arrays are indeed arrays and that they have length > 0
@@ -189,6 +194,20 @@ class Groups {
         } else {
           reject("Failed create a new group and return ID.")
         }
+      }).catch(reject);
+    });
+  }
+
+  static writeMembers (groupID, title, content) {
+    return new Promise((fulfill, reject) => {
+      Groups.findMembers(groupID)
+      .then((clients) => {
+        const clientIDs = clients.map(function (client) { return client.clid });
+        console.log("Messages", Messages);
+        console.log(Messages, Messages.sendMultiple)
+        return Messages.sendMultiple(clientIDs, title, content)
+      }).then(() => {
+        fulfill();
       }).catch(reject);
     });
   }
