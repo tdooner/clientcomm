@@ -20,6 +20,10 @@ var twilio = require("twilio");
 var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 
+// Models
+const Conversations = require("./conversation");
+
+
 // Class
 class Messages {
   static sendMultiple (clientIDs, title, content) {
@@ -35,13 +39,12 @@ class Messages {
   }
 
   static startNewConversation (clientID, title, content, commConn) {
-
-
+    return new Promise((fulfill, reject) => {
       var newConvoId;
 
-      Convo.closeAll(cmid, clid)
+      Conversations.closeAll(cmid, clientID)
       .then(() => {
-        return Convo.create(cmid, clid, subject, true)
+        return Conversations.create(cmid, clid, subject, true)
       }).then((convoId) => {
         newConvoId = convoId
         return Communication.findById(commid)
@@ -92,7 +95,7 @@ class Messages {
         });
 
       }).catch(reject);
-
+    });      
   }
 }
 

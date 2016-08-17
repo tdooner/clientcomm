@@ -9,7 +9,7 @@ module.exports = {
   Groups:         require("./classes/groups"), 
   Message:        require("./classes/message"), 
   Messages:       require("./classes/messages"), 
-  Conversations:  require("./classes/conversation"),
+  Conversations:  require("./classes/conversations"),
   CommConns:      require("./classes/commConns"), 
   ColorTags:      require("./classes/colorTags"), 
   Communication:  require("./classes/communication"),

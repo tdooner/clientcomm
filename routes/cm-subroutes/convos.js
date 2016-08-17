@@ -7,6 +7,7 @@ var ACCOUNT_SID = credentials.accountSid;
 var AUTH_TOKEN = credentials.authToken;
 var TWILIO_NUM = credentials.twilioNum;
 
+
 // DEPENDENCIES
 // Router
 var express = require("express");
