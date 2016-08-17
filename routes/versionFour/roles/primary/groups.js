@@ -55,13 +55,24 @@ router.get("/deleted", function (req, res) {
   }).catch(error_500(res));
 });
 
-
 router.get("/create", function (req, res) {
-  Clients.findByUser(Number(req.params.userID), false)
+  Clients.findByUser(Number(req.params.userID), true)
   .then((clients) => {
       res.render("v4/primaryUser/groups/create", {
         clients: clients
       });
+  }).catch(error_500(res));
+});
+
+router.post("/create", function (req, res) {
+  const userID = Number(req.params.userID);
+  const name = req.body.name;
+  const clientIDs = req.body.clientIDs;
+  Groups.insertNew(userID, name, clientIDs)
+  .then(() => {
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/groups/current");
   }).catch(error_500(res));
 });
 

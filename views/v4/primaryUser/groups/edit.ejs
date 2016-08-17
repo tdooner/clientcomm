@@ -2,11 +2,11 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/notifications">
+  <a href="/v4/users/<%=user.cmid%>/primary/groups">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Edit Group Name
+    Edit Group
   </div>
   <div class="cardSubtitle">
     Use groups to organize client populations.
@@ -28,7 +28,6 @@
       </div>
     </div>
 
-    <% group.clients.forEach(function (client) { %>
 
     <input  type="submit" 
             class="formSubmit" 

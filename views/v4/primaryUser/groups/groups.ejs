@@ -34,7 +34,7 @@
     </div>
     <div class="column">
       <span class="message">
-        <%= 'foobar' %>
+        <%= group.members.map(function (m) { return m.first + ' ' + m.last }).join(', ') %>
       </span>
     </div>
     <div class="column">

@@ -38,7 +38,6 @@ body {
   overflow-x: hidden;
   
   margin-top: 70px;
-  margin-bottom: 70px;
   margin-left: auto;
   margin-right: auto;
 
@@ -286,9 +285,8 @@ body {
           width: 365px;
 
           .clientName {
-            font-size: 22px;
+            font-size: 18px;
             line-height: 30px;
-            font-weight: bold;
             word-wrap: break-word;
             overflow: hidden;
             color: $lightblue;
