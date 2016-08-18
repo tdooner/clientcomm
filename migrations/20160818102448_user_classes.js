@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
   return Promise.all([
 
     // Create a new col for timezone
-    knex.raw("ALTER TABLE cms ADD COLUMN class TYPE varchar(255) default 'primary';"),
+    knex.raw("ALTER TABLE cms ADD COLUMN class varchar(255) DEFAULT 'primary';"),
 
   ])
 };
