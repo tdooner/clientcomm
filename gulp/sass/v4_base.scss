@@ -2,9 +2,14 @@
 
 // Variables
 $white:       #FFF;
-$black:       #000;
+$offwhite:    #E8ECEF;
 $lightgrey:   #D3D3D3;
 $grey:        #898989;
+$black:       #000;
+$lightorange: #FFA500;
+$orange:      #E96100;
+$lightblue:   #4A90E2;
+$blue:        #3F69B6;
 $darkblue:    #344289;
 
 
@@ -68,4 +73,23 @@ a, a:hover, a:active {
       border-radius: 3px;
     }
   }
+}
+
+.headerBaseBarOne {
+  position: fixed;
+  height: 45px;
+  width: 100%;
+  z-index: -4;
+  border-bottom: 1px solid $white;
+  background-color: $darkblue;
+}
+.headerBaseBarTwo {
+  position: fixed;
+  top: 46px;
+  border-bottom: 1px solid $white;
+  height: 45px;
+  left: 0px;
+  right: 0px;
+  z-index: -5;
+  background-color: $lightblue;;
 }
