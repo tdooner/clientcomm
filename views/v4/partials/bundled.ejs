@@ -4,6 +4,18 @@
   // REMOVE ALERTS AFTER A SEC
   setTimeout(function () { $(".FLASH").fadeOut("slow"); }, 1500);
   $(".alertsBindedClickAction").click(function () { $(".hiddenAlerts").toggle(); });
+  $(".hiddenAlerts .alertRow .close").click(function () { 
+    closeOutAlert($(this).attr("alertID"));
+    $(this).parent().remove(); 
+    var nr = $(".numberRemaining");
+    nr.text(Number(nr.text())-1); // reduce the remaining alerts by one
+    if ($(".hiddenAlerts .alertRow").length == 0) $(".alerts").remove();
+  });
+
+  function closeOutAlert (alertID) {
+    $.get("/v4/alerts/close/" + alertID)
+    .fail(function (error) { console.log(error.status+": "+error.statusText); });
+  };
 
   // EMBEDDED TOOLS SECTION //
   // Google analytics

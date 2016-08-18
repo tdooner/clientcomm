@@ -7,6 +7,7 @@ var router          = express.Router({mergeParams: true});
 
 // Models
 const modelsImport  = require("../../models/models");
+const Alerts        = modelsImport.Alerts;
 const Client        = modelsImport.Client;
 const Clients       = modelsImport.Clients;
 const Convo         = modelsImport.Convo;
@@ -32,6 +33,17 @@ var error_500       = errorHandling.error_500;
 // 1. camelCase throughout
 // 2. new naming conventions to "generalize" and influence future database changes
 
+
+// Standard checks for every role, no matter
+router.use(function (req, res, next) {
+  Alerts.findByUser(req.user.cmid)
+  .then((alerts) => {
+    res.locals.ALERTS_FEED = alerts;
+    next()
+  }).catch(error_500(res))
+});
+
+
 // Reroute from standard drop endpoint
 router.get("/", function (req, res) {
   res.redirect("/v4/users/" + req.user.cmid + "/primary");
@@ -43,6 +55,10 @@ router.get("/", function (req, res) {
 
 var primary = require("./roles/primary");
 router.use("/users/:userID/primary", primary);
+
+
+var alerts = require("./support/alerts");
+router.use("/alerts", alerts);
 
 
 

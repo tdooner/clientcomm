@@ -4,6 +4,7 @@
 module.exports = { 
   Users:          require("./classes/users"), 
   Clients:        require("./classes/clients"), 
+  Alerts:         require("./classes/alerts"), 
   Templates:      require("./classes/templates"),
   Notifications:  require("./classes/notifications"), 
   Groups:         require("./classes/groups"), 
