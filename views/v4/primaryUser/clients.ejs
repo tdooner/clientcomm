@@ -30,6 +30,12 @@
   </div>
 </div>
 
+
+<% if (clients.length == 0) { %>
+  <% include ../partials/emptyResultsGreeting %>
+<% } %>
+
+
 <% clients.forEach( function (client) { %>
   <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
     <div class="column" value="<%= client.color_name %>">
