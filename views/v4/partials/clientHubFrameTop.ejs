@@ -1,0 +1,28 @@
+<% include ./navBarTop %>
+
+<!-- Load in addition CSS -->
+<link rel="stylesheet" type="text/css" href="/static/css/v4_clientHubFrame.css">
+
+
+  <div class="navSub">
+
+    <div class="leftTab">
+      <div class="icon">
+        <i class="fa fa-cog" aria-hidden="true"></i>
+      </div>
+      <div class="title">
+        <a href="/v4/users/<%=user.cmid%>/primary/clients/open"><%= client.first + ' ' + client.last %></a>
+      </div>
+    </div>
+
+    <div class="rightTab open">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Clients</a></div>
+      <div class="option"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Open</a></div>
+      <div class="option"><a href="/v4/users/<%=user.cmid%>/primary/clients/closed">Closed</a></div>
+    </div>
+
+
+
+  </div>
+
+  <div class="coreContent">

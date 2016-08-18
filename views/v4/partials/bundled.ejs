@@ -2,9 +2,8 @@
   
 
   // REMOVE ALERTS AFTER A SEC
-  console.log($(".FLASH"));
   setTimeout(function () { $(".FLASH").fadeOut("slow"); }, 1500);
-  // $(".alertsBindedClickAction").click(function () { $(".hiddenAlerts").toggle(); });
+  $(".alertsBindedClickAction").click(function () { $(".hiddenAlerts").toggle(); });
   $(".hiddenAlerts .alertRow .close").click(function () { 
     closeOutAlert($(this).attr("alertID"));
     $(this).parent().remove(); 

@@ -42,7 +42,11 @@ router.use(function (req, res, next) {
 
 // ROUTES
 router.get("/", function (req, res) {
-  res.send("Page not made yet.")
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/clients/client/" + 
+                  req.params.clientID + 
+                  "/conversations");
 });
 
 
@@ -120,14 +124,6 @@ router.post("/editcolortag", function (req, res) {
 });
 
 
-router.get("/conversations", function (req, res) {
-  Conversations.findByUser(req.user.cmid)
-  .then((conversations) => {
-    res.send(conversations);
-  }).catch(error_500(res));
-});
-
-
 router.get("/transfer", function (req, res) {
   Users.findByOrg(req.user.org)
   .then((users) => {
@@ -162,6 +158,16 @@ router.post("/transfer", function (req, res) {
     } else {
       res.redirect("/404");
     }
+  }).catch(error_500(res));
+});
+
+
+router.get("/conversations", function (req, res) {
+  Conversations.findByUser(req.user.cmid)
+  .then((conversations) => {
+    res.render("v4/primaryUser/client/conversations", {
+      conversations: conversations
+    });
   }).catch(error_500(res));
 });
 

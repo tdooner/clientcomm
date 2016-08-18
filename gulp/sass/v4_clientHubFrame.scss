@@ -1,0 +1,188 @@
+
+
+// Variables
+$white:       #FFF;
+$offwhite:    #E8ECEF;
+$lightgrey:   #D3D3D3;
+$grey:        #898989;
+$black:       #000;
+$lightorange: #FFA500;
+$orange:      #E96100;
+$lightblue:   #4A90E2;
+$blue:        #3F69B6;
+$darkblue:    #344289;
+
+
+
+// Mixins
+@mixin float-center() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// SCSS
+
+.applicationFrame {
+
+  .navSub {
+    position: absolute;
+    top: 46px;
+    width: inherit;
+    height: 45px;
+    background-color: $lightblue;
+    border-bottom: 1px solid $white;
+    overflow: hidden;
+    position: fixed;
+
+    .leftTab {
+      height: inherit;
+      width: auto;
+      float: left;
+      color: $lightblue;
+      line-height: 45px;
+      background-color: $white;
+
+      .icon {
+        float: left;
+        margin-left: 15px;
+        font-size: 24px;
+        color: $lightgrey;
+      }
+
+      .title {
+        float: left;
+        margin-left: 10px;
+        margin-right: 15px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+    }
+
+    .rightTab {
+      height: inherit;
+      width: auto;
+      float: right;
+      color: $white;
+      line-height: 45px;
+
+      &.open {
+        background-color: $darkblue;
+
+        .title {
+          display: inline;
+          margin-left: 15px;
+          margin-right: 10px;
+          font-weight: 700;
+          font-size: 18px;
+          cursor: pointer;
+        }
+
+        .option {
+          display: inline;
+          font-size: 14px;
+          padding: 3px;
+          padding-left: 10px;
+          padding-right: 10px;
+          margin-right: 5px;
+          border-radius: 15px;
+          cursor: pointer;
+
+          &.selected, &:hover {
+            background-color: $white;
+            color: $lightblue;
+          }
+
+          &:nth-last-child(1) {
+            margin-right: 15px;
+          }
+        }
+      }
+
+      &.closed {
+        .title {
+          display: inline;
+          margin-left: 15px;
+          margin-right: 10px;
+          cursor: pointer;
+        }
+
+        .option {
+          display: none;
+        }
+
+        &:hover {
+          background-color: $blue;
+        }
+      }
+    }
+
+    .rightActions {
+      float: right;
+      line-height: 45px;
+      font-size: 0.75em;
+      color: $white;
+      padding-left: 10px;
+      padding-right: 15px;
+
+      .fa-stack.fa-lg {
+        font-size: 1em;
+      }
+
+      .fa.fa-inverse {
+        color: $lightblue;
+      }
+
+      .text {
+        display: none;
+      }
+
+      &:hover {
+        background-color: $blue;
+        .fa.fa-inverse {
+          color: $blue;
+        }
+        .text {
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .coreContent {
+    padding-top: 92px;
+    background-color: $white;
+  }
+
+
+
+  .emptyResultsGreeting {
+    text-align: middle;
+    background-color: $lightgrey;
+
+    .message {
+      padding-top: 75px;
+      padding-left: 15px;
+      float: left;
+      line-height: 50px;
+      font-size: 44px;
+      width: 80%;
+
+      small {
+        font-size: 36px;
+      }
+    }
+
+    .icon {
+      float: right;
+      font-size: 150px;
+      padding: 25px 25px 0px 25px;
+    }
+
+    &::after {
+      content:"";
+      display:block;
+      clear:both;
+    }
+  }
+
+}
