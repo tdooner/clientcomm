@@ -26,9 +26,14 @@ module.exports = function (app) {
       VERSION: APP_VERSION
     };
 
+    res.locals.FLASH_ALERTS = {
+      WARNINGS: req.flash("warning"),
+      SUCCESSES: req.flash("success"),
+    };
+
     // Flash messages
-    res.locals.warning = req.flash("warning");
-    res.locals.success = req.flash("success");
+    res.locals.warning = res.locals.FLASH_ALERTS.WARNINGS;
+    res.locals.success = res.locals.FLASH_ALERTS.SUCCESSES;
 
     // Inclusion of momentJS for datetime modifications
     res.locals.moment = moment;

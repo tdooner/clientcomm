@@ -106,6 +106,7 @@ router.post ("/address/:clientID", function (req, res) {
 
   Messages.startNewConversation(userID, clientID, subject, content, commID)
   .then(() => {
+    req.flash("success", "Message to client sent.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/clients/open");

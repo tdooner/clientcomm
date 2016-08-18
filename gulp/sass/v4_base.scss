@@ -2,6 +2,7 @@
 
 // Variables
 $white:       #FFF;
+$black:       #000;
 $lightgrey:   #D3D3D3;
 $grey:        #898989;
 $darkblue:    #344289;
@@ -36,4 +37,35 @@ body {
 a, a:hover, a:active {
   text-decoration: none;
   color: inherit;
+}
+
+.FLASH {
+  position: absolute;
+  top: 20px;
+  z-index: 100;
+  background-color: rgba(0,0,0,0);
+  text-align: center;
+  width: 100%;
+
+  .ALERTS {
+    color: $white;
+    display: inline-block;
+    font-size: 24px;
+    text-decoration: underline;
+    font-style: italic;
+    border-radius: 5px;
+    border: 2px solid $black;
+    box-shadow: 0px 0px 10px $black;
+    padding-right: 20px;
+    font-weight: 700;
+
+    .ICON {
+      display: inline-block;
+      padding: 5px 15px 5px 15px;
+      margin-right: 15px;
+      background-color: $white;
+      color: $black;
+      border-radius: 3px;
+    }
+  }
 }

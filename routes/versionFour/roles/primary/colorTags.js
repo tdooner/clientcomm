@@ -53,6 +53,7 @@ router.get("/", function (req, res) {
 router.post("/new", function (req, res) {
   ColorTags.addNewColorTag(req.user.cmid, req.body.color, req.body.name)
   .then(() => {
+    req.flash("success", "New color tag created.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/colortags");
@@ -62,6 +63,7 @@ router.post("/new", function (req, res) {
 router.get("/:colorTagID/remove", function (req, res) {
   ColorTags.removeColorTag(req.params.colorTagID)
   .then(() => {
+    req.flash("success", "Color tag removed.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/colortags");

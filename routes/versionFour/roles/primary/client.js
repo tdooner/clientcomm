@@ -49,6 +49,7 @@ router.get("/", function (req, res) {
 router.get("/closecase", function (req, res) {
   Client.alterCase(req.params.clientID, false)
   .then(() => {
+    req.flash("success", "Closed client case.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/clients/open");
@@ -59,6 +60,7 @@ router.get("/closecase", function (req, res) {
 router.get("/opencase", function (req, res) {
   Client.alterCase(req.params.clientID, true)
   .then(() => {
+    req.flash("success", "Opened client case.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/clients/open");
@@ -81,6 +83,7 @@ router.post("/edit", function (req, res) {
   const uniqueID2 = req.body.uniqueID2;
   Client.editOne(clientID, first, middle, last, dob, uniqueID1, uniqueID2)
   .then(() => {
+    req.flash("success", "Edited client.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/clients/open");
@@ -109,6 +112,7 @@ router.post("/editcolortag", function (req, res) {
   if (colorTagID == "") colorTagID = null
   Client.udpateColorTag(req.params.clientID, colorTagID)
   .then(() => {
+    req.flash("success", "Changed client color.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/clients/open");
@@ -132,7 +136,7 @@ router.get("/transfer", function (req, res) {
     users = users.filter(function (user) {
       return user.department == req.user.department;
     });
-    
+
     res.render("v4/primaryUser/client/transfer", {
       users: users,
       parameters: req.params

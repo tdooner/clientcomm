@@ -45,6 +45,7 @@ router.post("/address/:groupID", function (req, res) {
 
   Groups.addressMembers(userID, groupID, title, content)
   .then(() => {
+    req.flash("success", "Messaged group members.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/groups/current");
@@ -93,6 +94,7 @@ router.post("/create", function (req, res) {
   const clientIDs = req.body.clientIDs;
   Groups.insertNew(userID, name, clientIDs)
   .then(() => {
+    req.flash("success", "Created new group.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/groups/current");
@@ -132,6 +134,7 @@ router.post("/edit/:groupID", function (req, res) {
     .filter(function (ID) { return !(isNaN(ID)); });
     Groups.editOne(userID, groupID, name, clientIDs)
     .then(() => {
+      req.flash("success", "Edited group.");
       res.redirect( "/v4/users/" + 
                     req.user.cmid + 
                     "/primary/groups/current");

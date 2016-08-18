@@ -37,6 +37,7 @@ router.get("/", function (req, res) {
 router.get("/remove/:templateID", function (req, res) {
   Templates.removeOne(req.params.templateID)
   .then(() => {
+    req.flash("success", "Removed template.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/templates");
@@ -54,6 +55,7 @@ router.post("/create", function (req, res) {
   const content = req.body.content;
   Templates.insertNew(orgID, userID, title, content)
   .then(() => {
+    req.flash("success", "Created new template.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/templates");
@@ -81,6 +83,7 @@ router.post("/edit/:templateID", function (req, res) {
   const content = req.body.content;
   Templates.editOne(templateID, title, content)
   .then(() => {
+    req.flash("success", "Template edited.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/templates");

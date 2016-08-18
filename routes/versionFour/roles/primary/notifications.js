@@ -90,6 +90,7 @@ router.post("/edit/:notificationID", function (req, res) {
 
   Notifications.editOne(notificationID, clientID, commID, send, subject, message)
   .then((notification) => {
+    req.flash("success", "Edited notification.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/notifications");
@@ -164,6 +165,7 @@ router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", fu
 
   Notifications.create(userID, clientID, commID, subject, message, send)
   .then(() => {
+    req.flash("success", "Created new notification.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/notifications");
@@ -173,6 +175,7 @@ router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", fu
 router.get("/remove/:notificationID", function (req, res) {
   Notifications.removeOne(req.params.notificationID)
   .then(() => {
+    req.flash("success", "Removed notification.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/notifications/pending");
