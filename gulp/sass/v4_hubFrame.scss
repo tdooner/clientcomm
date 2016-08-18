@@ -82,6 +82,27 @@ $darkblue:    #344289;
       .alertRow {
         padding: 5px 10px 5px 10px;
         border-bottom: 1px solid $lightblue;
+        overflow: hidden;
+        cursor: default;
+
+        .message {
+          float: left;
+          width: 260px;
+          white-space: break;
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        .close {
+          float: left;
+          width: 20px;
+          text-align: right;
+          cursor: pointer;
+
+          &:hover {
+            color: $darkblue;
+          }
+        }
 
         &:hover {
           background-color: $lightblue;

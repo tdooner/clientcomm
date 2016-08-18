@@ -48,7 +48,22 @@
       overflow: hidden; }
       .alerts .hiddenAlerts .alertsBody .alertRow {
         padding: 5px 10px 5px 10px;
-        border-bottom: 1px solid #4A90E2; }
+        border-bottom: 1px solid #4A90E2;
+        overflow: hidden;
+        cursor: default; }
+        .alerts .hiddenAlerts .alertsBody .alertRow .message {
+          float: left;
+          width: 260px;
+          white-space: break;
+          font-size: 14px;
+          line-height: 18px; }
+        .alerts .hiddenAlerts .alertsBody .alertRow .close {
+          float: left;
+          width: 20px;
+          text-align: right;
+          cursor: pointer; }
+          .alerts .hiddenAlerts .alertsBody .alertRow .close:hover {
+            color: #344289; }
         .alerts .hiddenAlerts .alertsBody .alertRow:hover {
           background-color: #4A90E2; }
 
