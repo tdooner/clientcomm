@@ -46,7 +46,19 @@ router.use(function (req, res, next) {
 
 // Reroute from standard drop endpoint
 router.get("/", function (req, res) {
-  res.redirect("/v4/users/" + req.user.cmid + "/primary");
+
+  // need to route if owner
+  // need to route if supervisor
+  // else based on class
+  if (req.user.class == "primary") {
+    res.redirect("/v4/users/" + req.user.cmid + "/primary");
+  } else if (req.user.class == "support") {
+    res.send("support")
+    // res.redirect("/v4/users/" + req.user.cmid + "/support");
+  } else {
+    res.redirect("/404")
+  }
+
 });
 
 
