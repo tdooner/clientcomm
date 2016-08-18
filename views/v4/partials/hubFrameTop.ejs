@@ -1,35 +1,8 @@
-<% include ./headerBase %>
+<% include ./navBarTop %>
 
 <!-- Load in addition CSS -->
 <link rel="stylesheet" type="text/css" href="/static/css/v4_hubFrame.css">
 
-
-<% include ./alertsFeed %>
-
-
-<!-- Structure -->
-<div class="applicationFrame">
-
-  <div class="navHeader">
-    <div class="leftLogo">
-      <% include ../../../public/icons/logo.svg %>
-      <a href="/v4">
-        <span class="button">
-          <%= user.first %>
-          <%= user.last %>
-        </span>
-      </a>
-    </div>
-
-    <div class="rightLogout">
-      <a href="/logout">
-        <span class="button">
-          <i class="fa fa-times" aria-hidden="true"></i>
-          Logout
-        </span>
-      </a>
-    </div>
-  </div>
 
   <div class="navSub">
     <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">

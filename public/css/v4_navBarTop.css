@@ -1,0 +1,114 @@
+.alerts {
+  position: absolute;
+  z-index: 100;
+  top: 9px;
+  left: 47%;
+  line-height: 27px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #FFF;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none; }
+  .alerts .exclamationCircle {
+    float: left;
+    height: 21px;
+    width: 21px;
+    line-height: 21px;
+    text-align: center;
+    border-radius: 100%;
+    border: 3px solid #FFF;
+    margin-right: 10px; }
+  .alerts:hover {
+    text-decoration: underline; }
+    .alerts:hover .exclamationCircle {
+      background-color: #FFA500;
+      box-shadow: 0px 0px; }
+  .alerts .hiddenAlerts {
+    display: none; }
+    .alerts .hiddenAlerts .arrowTop {
+      margin-left: 50px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 5px solid #FFF; }
+    .alerts .hiddenAlerts .alertsBody {
+      margin-left: -90px;
+      position: absolute;
+      background-color: #3F69B6;
+      width: 300px;
+      border: 1px solid #FFF;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px #000;
+      overflow: hidden; }
+      .alerts .hiddenAlerts .alertsBody .alertRow {
+        padding: 5px 10px 5px 10px;
+        border-bottom: 1px solid #4A90E2;
+        overflow: hidden;
+        cursor: default; }
+        .alerts .hiddenAlerts .alertsBody .alertRow .message {
+          float: left;
+          width: 260px;
+          white-space: break;
+          font-size: 14px;
+          line-height: 18px; }
+        .alerts .hiddenAlerts .alertsBody .alertRow .close {
+          float: left;
+          width: 20px;
+          text-align: right;
+          cursor: pointer; }
+          .alerts .hiddenAlerts .alertsBody .alertRow .close:hover {
+            color: #344289; }
+        .alerts .hiddenAlerts .alertsBody .alertRow:hover {
+          background-color: #4A90E2; }
+
+.applicationFrame {
+  margin-left: auto;
+  margin-right: auto;
+  width: 1024px;
+  background-color: #FFF; }
+  .applicationFrame .navHeader {
+    height: 45px;
+    width: inherit;
+    color: #FFF;
+    background-color: #344289;
+    border-bottom: 1px solid #FFF;
+    overflow: hidden;
+    position: fixed; }
+    .applicationFrame .navHeader .leftLogo {
+      color: #FFF;
+      line-height: 45px;
+      display: inline; }
+      .applicationFrame .navHeader .leftLogo svg {
+        height: 25px;
+        width: auto;
+        padding: 10px;
+        padding-left: 15px;
+        margin-right: 10px;
+        float: left; }
+        .applicationFrame .navHeader .leftLogo svg path {
+          fill: #FFF; }
+      .applicationFrame .navHeader .leftLogo span.button {
+        padding: 5px;
+        border-radius: 3px;
+        cursor: pointer; }
+        .applicationFrame .navHeader .leftLogo span.button:hover {
+          background-color: #3F69B6; }
+    .applicationFrame .navHeader .rightLogout {
+      color: #FFF;
+      line-height: 45px;
+      display: inline;
+      float: right;
+      margin-right: 15px;
+      font-size: 0.75em; }
+      .applicationFrame .navHeader .rightLogout span.button {
+        padding: 5px;
+        border-radius: 3px;
+        cursor: pointer; }
+        .applicationFrame .navHeader .rightLogout span.button:hover {
+          background-color: #3F69B6; }

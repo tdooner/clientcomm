@@ -36,6 +36,9 @@ var error_500       = errorHandling.error_500;
 
 // Standard checks for every role, no matter
 router.use(function (req, res, next) {
+    console.log("--------------------")
+    console.log("res.locals.FLASH_ALERTS")
+    console.log(res.locals.FLASH_ALERTS)
   Alerts.findByUser(req.user.cmid)
   .then((alerts) => {
     res.locals.ALERTS_FEED = alerts;
