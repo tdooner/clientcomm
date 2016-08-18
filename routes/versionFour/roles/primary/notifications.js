@@ -61,12 +61,18 @@ router.get("/sent", function (req, res) {
 
 router.get("/edit/:notificationID", function (req, res) {
   var clients;
-  Clients.findByUser(req.user.cmid)
+  Clients.findAllByUser(req.user.cmid)
   .then((clientsReturned) => {
     clients = clientsReturned;
     return Notifications.findByID(Number(req.params.notificationID))
   }).then((notification) => {
     if (notification) {
+
+      // remove all closed clients except for if matches with notification
+      clients = clients.filter(function (client) {
+        return client.active || client.clid == notification.client;
+      });
+
       res.render("v4/primaryUser/notifications/edit", {
         notification: notification,
         clients: clients

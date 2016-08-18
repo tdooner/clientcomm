@@ -28,6 +28,19 @@ class Clients {
     });
   }
 
+  static findAllByUser (managerID) {
+    return new Promise((fulfill, reject) => {
+      var clientsOpen;
+      Clients.findByUser(managerID, true)
+      .then((clients) => {
+        clientsOpen = clients;
+        return Clients.findByUser(managerID, false)
+      }).then((clientsClosed) => {
+        fulfill(clientsOpen.concat(clientsClosed));
+      }).catch(reject);
+    });
+  }
+
   static findByUser (managerID, active) {
     // Default to an assuming viewing active clients
     if (typeof active == "undefined") active = true;

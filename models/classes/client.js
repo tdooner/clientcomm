@@ -134,6 +134,9 @@ class Client {
         .andWhere("cm", fromUserID)
         .update({ cm: toUserID })
       .then(() => {
+      //   return db()
+      // .then(() => {
+
         if (bundleConversations) {
           // also switch convos
           Conversations.transferUserReference(clientID, fromUserID, toUserID)
