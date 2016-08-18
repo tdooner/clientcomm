@@ -22,7 +22,7 @@
     .applicationFrame .navSub .leftTab .title {
       float: left;
       margin-left: 10px;
-      margin-right: 15px;
+      margin-right: 10px;
       font-size: 18px;
       cursor: pointer; }
   .applicationFrame .navSub .rightTab {
@@ -36,7 +36,7 @@
       .applicationFrame .navSub .rightTab.open .title {
         display: inline;
         margin-left: 15px;
-        margin-right: 10px;
+        margin-right: 15px;
         font-weight: 700;
         font-size: 18px;
         cursor: pointer; }
@@ -57,31 +57,12 @@
     .applicationFrame .navSub .rightTab.closed .title {
       display: inline;
       margin-left: 15px;
-      margin-right: 10px;
+      margin-right: 15px;
       cursor: pointer; }
     .applicationFrame .navSub .rightTab.closed .option {
       display: none; }
     .applicationFrame .navSub .rightTab.closed:hover {
       background-color: #3F69B6; }
-  .applicationFrame .navSub .rightActions {
-    float: right;
-    line-height: 45px;
-    font-size: 0.75em;
-    color: #FFF;
-    padding-left: 10px;
-    padding-right: 15px; }
-    .applicationFrame .navSub .rightActions .fa-stack.fa-lg {
-      font-size: 1em; }
-    .applicationFrame .navSub .rightActions .fa.fa-inverse {
-      color: #4A90E2; }
-    .applicationFrame .navSub .rightActions .text {
-      display: none; }
-    .applicationFrame .navSub .rightActions:hover {
-      background-color: #3F69B6; }
-      .applicationFrame .navSub .rightActions:hover .fa.fa-inverse {
-        color: #3F69B6; }
-      .applicationFrame .navSub .rightActions:hover .text {
-        display: inline; }
 
 .applicationFrame .coreContent {
   padding-top: 92px;

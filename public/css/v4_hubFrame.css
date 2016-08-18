@@ -39,7 +39,7 @@
     .applicationFrame .navSub .leftTab.closed .title {
       display: inline;
       margin-left: 15px;
-      margin-right: 10px;
+      margin-right: 15px;
       cursor: pointer; }
     .applicationFrame .navSub .leftTab.closed .option {
       display: none; }

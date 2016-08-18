@@ -166,6 +166,10 @@ router.get("/conversations", function (req, res) {
   Conversations.findByUser(req.user.cmid)
   .then((conversations) => {
     res.render("v4/primaryUser/client/conversations", {
+      hub: {
+        tab: "conversations",
+        sel: null
+      },
       conversations: conversations
     });
   }).catch(error_500(res));

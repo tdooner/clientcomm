@@ -52,7 +52,7 @@ $darkblue:    #344289;
       .title {
         float: left;
         margin-left: 10px;
-        margin-right: 15px;
+        margin-right: 10px;
         font-size: 18px;
         cursor: pointer;
       }
@@ -71,7 +71,7 @@ $darkblue:    #344289;
         .title {
           display: inline;
           margin-left: 15px;
-          margin-right: 10px;
+          margin-right: 15px;
           font-weight: 700;
           font-size: 18px;
           cursor: pointer;
@@ -102,7 +102,7 @@ $darkblue:    #344289;
         .title {
           display: inline;
           margin-left: 15px;
-          margin-right: 10px;
+          margin-right: 15px;
           cursor: pointer;
         }
 
@@ -112,37 +112,6 @@ $darkblue:    #344289;
 
         &:hover {
           background-color: $blue;
-        }
-      }
-    }
-
-    .rightActions {
-      float: right;
-      line-height: 45px;
-      font-size: 0.75em;
-      color: $white;
-      padding-left: 10px;
-      padding-right: 15px;
-
-      .fa-stack.fa-lg {
-        font-size: 1em;
-      }
-
-      .fa.fa-inverse {
-        color: $lightblue;
-      }
-
-      .text {
-        display: none;
-      }
-
-      &:hover {
-        background-color: $blue;
-        .fa.fa-inverse {
-          color: $blue;
-        }
-        .text {
-          display: inline;
         }
       }
     }
