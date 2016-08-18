@@ -106,17 +106,26 @@ router.get("/:cmid", function (req, res) {
     var rawQuery = " SELECT " +
                     "   count(CASE WHEN msgs.read=FALSE THEN 1 ELSE NULL END) AS msg_ct, " +
                     "   convos.open, convos.subject, convos.convid, " +
-                    "   clients.*  " +
+                    "   clients.*, color_tags.color  " +
                     " FROM clients " + 
                     " LEFT JOIN (SELECT * FROM convos WHERE convos.updated IN (SELECT MAX(convos.updated) FROM convos WHERE cm = " + String(cmid) + 
                     "     GROUP BY client) " + 
                     "     AND cm = " + String(cmid) + ") AS convos " + 
                     "     ON (convos.client=clients.clid) " +
+                    " LEFT JOIN color_tags on (clients.color_tag = color_tags.color_tag_id) " + 
                     " LEFT JOIN msgs ON (msgs.convo=convos.convid) " +
                     " WHERE clients.cm = " + String(cmid) + " " +
-                    " GROUP BY clients.clid, convos.open, convos.subject, convos.convid ORDER BY last ASC; ";
+                    " GROUP BY clients.clid, convos.open, convos.subject, convos.convid, color_tags.color ORDER BY last ASC; ";
     
     db.raw(rawQuery).then(function (clients) {
+
+      // get color tags to replace with color
+      if (clients && clients.rows) {
+        clients.rows = clients.rows.map(function (ea) {
+          ea.color_tag = ea.color;
+          return ea;
+        });
+      }
 
       res.render("casemanagers/clients/clients", {
         clients: clients.rows,
