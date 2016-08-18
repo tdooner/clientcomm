@@ -22,6 +22,75 @@ $darkblue:    #344289;
 
 // SCSS
 
+.alerts {
+  position: absolute;
+  z-index: 100;
+  top: 9px;
+  left: 47%;
+  line-height: 27px;
+  cursor: pointer;
+  font-weight: 700;
+  color: $white;
+
+  // prevent user highlight
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none; 
+
+  .exclamationCircle {
+    float: left;
+    height: 21px;
+    width: 21px;
+    line-height: 21px;
+    text-align: center;
+    border-radius: 100%;
+    border: 3px solid $white;
+    margin-right: 10px;
+  }
+
+  &:hover {
+    .exclamationCircle {
+      background-color: $lightorange;
+      box-shadow: 0px 0px;
+    }
+    text-decoration: underline;
+  }
+
+  .hiddenAlerts {
+    display: none;
+
+    .arrowTop {
+      margin-left: 50px;
+      width: 0; 
+      height: 0; 
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid $white;
+    }
+
+    .alertsBody {
+      margin-left: -90px;
+      position: absolute;
+      background-color: $blue;
+      width: 300px;
+      border: 1px solid $white;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px $black;
+      overflow: hidden;
+
+      .alertRow {
+        padding: 5px 10px 5px 10px;
+        border-bottom: 1px solid $lightblue;
+
+        &:hover {
+          background-color: $lightblue;
+        }
+      }
+    }
+  }
+}
+
 .applicationFrame {
 
   // Mixins
@@ -88,36 +157,6 @@ $darkblue:    #344289;
         &:hover {
           background-color: $blue;
         }
-      }
-    }
-
-    .alerts {
-      position: absolute;
-      top: 9px;
-      left: 47%;
-      line-height: 27px;
-      cursor: pointer;
-      font-weight: 700;
-
-      .exclamationCircle {
-        float: left;
-        height: 21px;
-        width: 21px;
-        line-height: 21px;
-        text-align: center;
-        border-radius: 100%;
-        border: 3px solid $white;
-        background-color: $orange;
-        margin-right: 10px;
-        box-shadow: 0px 0px 7px $black;
-      }
-
-      &:hover {
-        .exclamationCircle {
-          background-color: $lightorange;
-          box-shadow: 0px 0px;
-        }
-        text-decoration: underline;
       }
     }
   }
