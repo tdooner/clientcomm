@@ -11,6 +11,10 @@
   <div class="column">delete</div>
 </div>
 
+<% if (notifications.length == 0) { %>
+  <% include ../../partials/emptyResultsGreeting %>
+<% } %>
+
 
 <% notifications.forEach(function (notification) { %>
   <div class="notificationRow">
