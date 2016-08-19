@@ -11,7 +11,7 @@
         <i class="fa fa-cog" aria-hidden="true"></i>
       </div>
       <div class="title">
-        <a href="/v4/users/<%=user.cmid%>/primary/clients/open"><%= client.first + ' ' + client.last %></a>
+        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>"><%= client.first + ' ' + client.last %></a>
       </div>
     </div>
 
@@ -27,6 +27,8 @@
 
     <div class="rightTab <%= hub.tab == 'messages' ? 'open' : 'closed' %>">
       <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Messages</a></div>
+      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/all">All</a></div>
+      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/sent">Texts</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'conversations' ? 'open' : 'closed' %>">
