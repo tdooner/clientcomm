@@ -23,6 +23,29 @@
 <div class="rightContent">
   <% messages.forEach(function (message) { %>
     <%= message.content %> <br>
+
+    <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>">
+      <div class="content">
+        <%= message.content %>
+      </div>
+
+      <div class="bottomRow">
+        <b><%= message.name %></b>
+        
+        <% try { %>
+          <% var day = moment.tz(message.created, local_tz).format("MM/DD"); %>
+          <% var hrs = moment.tz(message.created, local_tz).format("hh:mm A"); %>
+          <%= day + " " + hrs %>
+        <% } catch (err) { %>
+          Unknown
+        <% } %>
+
+        <span class="state">
+          <%= message.tw_status %>
+        </span>
+      </div>
+    </div>
+
   <% }) %>
 </div>
 
