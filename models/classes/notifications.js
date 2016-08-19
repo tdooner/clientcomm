@@ -40,6 +40,18 @@ class Notifications {
     })
   }
 
+  static findByClient (clientID, sent) {
+    if (typeof sent == "undefined") sent = false;
+
+    return new Promise((fulfill, reject) => {
+      // db("notifications")
+      //   .where("client", clientID)
+      //   .andWhere("sent", sent)
+      //   .andWhere("closed", false)
+      //   .orderBy("send", "asc")
+    })
+  }
+
   static findByID (notificationID) {
     return new Promise((fulfill, reject) => {
       db("notifications")

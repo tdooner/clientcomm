@@ -11,6 +11,7 @@ const Client        = modelsImport.Client;
 const ColorTags     = modelsImport.ColorTags;
 const Conversations = modelsImport.Conversations;
 const Users         = modelsImport.Users;
+const Notifications = modelsImport.Notifications;
 
 
 // Twilio library tools and secrets
@@ -46,7 +47,7 @@ router.get("/", function (req, res) {
                   req.user.cmid + 
                   "/primary/clients/client/" + 
                   req.params.clientID + 
-                  "/conversations");
+                  "/messages");
 });
 
 
@@ -176,7 +177,39 @@ router.get("/conversations", function (req, res) {
 });
 
 
+router.get("/messages", function (req, res) {
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/primary/clients/client/" + 
+                req.params.clientID + 
+                "/messages/all");
+});
+
+router.get("/messages/all", function (req, res) {
+  Conversations.findByUser(req.user.cmid)
+  .then((conversations) => {
+    res.render("v4/primaryUser/client/conversations", {
+      hub: {
+        tab: "messages",
+        sel: "all"
+      },
+      conversations: conversations
+    });
+  }).catch(error_500(res));
+});
+
+
+router.get("/notifications/pending", function (req, res) {
+  Notifications.findByClient(req.params.clientID)
+  .then((notifications) => {
+      res.send(notifications);
+  }).catch(error_500(res));
+});
+
+
 // EXPORT ROUTER OBJECt
 module.exports = router;
+
+
 
 
