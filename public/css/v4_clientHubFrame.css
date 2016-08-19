@@ -28,7 +28,7 @@
   .applicationFrame .navSub .rightTab {
     height: inherit;
     width: auto;
-    float: right;
+    float: left;
     color: #FFF;
     line-height: 45px; }
     .applicationFrame .navSub .rightTab.open {

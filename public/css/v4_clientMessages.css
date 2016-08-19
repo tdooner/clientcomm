@@ -31,4 +31,24 @@
   width: 75%;
   overflow-y: scroll;
   float: right;
-  background-color: red; }
+  background-color: #E8ECEF; }
+  .rightContent .messageStream {
+    padding: 5px 15px 5px 15px; }
+    .rightContent .messageStream .message {
+      padding: 15px 20px 10px 20px;
+      margin-bottom: 10px;
+      border-radius: 5px; }
+      .rightContent .messageStream .message.outbound {
+        background-color: #3F69B6;
+        color: #FFF; }
+      .rightContent .messageStream .message.inbound {
+        background-color: #FFF;
+        color: #898989; }
+      .rightContent .messageStream .message .bottomRow {
+        margin-top: 15px;
+        font-size: 12px;
+        line-height: 18px; }
+        .rightContent .messageStream .message .bottomRow .fa {
+          font-size: 18px; }
+        .rightContent .messageStream .message .bottomRow .state {
+          float: right; }

@@ -15,8 +15,10 @@
       </div>
     </div>
 
-    <div class="rightTab <%= hub.tab == 'contactMethods' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Contact Methods</a></div>
+    <div class="rightTab <%= hub.tab == 'messages' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Messages</a></div>
+      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/all">All</a></div>
+      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/sent">Texts</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
@@ -25,10 +27,8 @@
       <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/sent">Sent</a></div>
     </div>
 
-    <div class="rightTab <%= hub.tab == 'messages' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Messages</a></div>
-      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/all">All</a></div>
-      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/sent">Texts</a></div>
+    <div class="rightTab <%= hub.tab == 'contactMethods' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Contact Methods</a></div>
     </div>
 
 

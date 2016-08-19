@@ -56,6 +56,13 @@ class Messages {
     
     return new Promise((fulfill, reject) => {
       db("msgs")
+        .select("msgs.*", 
+                "commconns.comm", 
+                "commconns.name as commconn_name", 
+                "comms.value as comm_value",
+                "comms.type as comm_type")
+        .leftJoin("commconns", "commconns.comm", "msgs.comm")
+        .leftJoin("comms", "comms.commid", "msgs.comm")
         .whereIn("convo", conversationIDs)
         .orderBy("created", "desc")
         .then((messages) => {

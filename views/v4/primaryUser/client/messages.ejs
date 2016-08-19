@@ -21,32 +21,35 @@
 
 
 <div class="rightContent">
-  <% messages.forEach(function (message) { %>
-    <%= message.content %> <br>
 
-    <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>">
-      <div class="content">
-        <%= message.content %>
+  <div class="messageStream">
+    <% messages.forEach(function (message) { %>
+
+      <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>">
+        <div class="content">
+          <%= message.content %>
+        </div>
+
+        <div class="bottomRow">
+
+          <% if (message.comm_type == 'cell') { %>
+            <i class="fa fa-mobile" aria-hidden="true"></i>
+          <% } %>
+
+          <%= message.inbound ? 'Received via' : 'Sent to' %>
+          <%= client.first + "'s" %> <%= message.commconn_name %>
+
+          <span class="state">
+            <%= message.tw_status %> on 
+            <%= moment.tz(message.created, local_tz).format("MM/DD"); %> at 
+            <%= moment.tz(message.created, local_tz).format("hh:mm A"); %>
+          </span>
+        </div>
       </div>
 
-      <div class="bottomRow">
-        <b><%= message.name %></b>
-        
-        <% try { %>
-          <% var day = moment.tz(message.created, local_tz).format("MM/DD"); %>
-          <% var hrs = moment.tz(message.created, local_tz).format("hh:mm A"); %>
-          <%= day + " " + hrs %>
-        <% } catch (err) { %>
-          Unknown
-        <% } %>
+    <% }) %>
+  </div>
 
-        <span class="state">
-          <%= message.tw_status %>
-        </span>
-      </div>
-    </div>
-
-  <% }) %>
 </div>
 
 <script type="text/javascript">

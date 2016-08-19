@@ -76,8 +76,40 @@ $width_row5:  5%;
   width: 75%;
   overflow-y: scroll;
   float: right;
-  background-color: red;
-
+  background-color: $offwhite;
   
+  .messageStream {
+    padding: 5px 15px 5px 15px;
+
+    .message {
+      padding: 15px 20px 10px 20px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+
+      &.outbound {
+        background-color: $blue;
+        color: $white;
+      } 
+      
+      &.inbound {
+        background-color: $white;
+        color: $grey;
+      } 
+
+      .bottomRow {
+        margin-top: 15px; 
+        font-size: 12px;
+        line-height: 18px;
+
+        .fa {
+          font-size: 18px;
+        }
+
+        .state {
+          float: right;
+        }
+      }
+    }
+  }
 }
 
