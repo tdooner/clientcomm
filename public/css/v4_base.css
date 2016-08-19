@@ -46,13 +46,3 @@ a, a:hover, a:active {
   z-index: -4;
   border-bottom: 1px solid #E8ECEF;
   background-color: #344289; }
-
-.headerBaseBarTwo {
-  position: fixed;
-  top: 46px;
-  border-bottom: 1px solid #E8ECEF;
-  height: 45px;
-  left: 0px;
-  right: 0px;
-  z-index: -5;
-  background-color: #4A90E2; }

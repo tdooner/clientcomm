@@ -1,18 +1,32 @@
 <% include ../../partials/clientHubFrameTop %>
 
 <!-- Load in addition CSS -->
-<link rel="stylesheet" type="text/css" href="/static/css/v4_conversations.css">
+<link rel="stylesheet" type="text/css" href="/static/css/v4_clientMessages.css">
 
-<div class="header">
-  <div class="column">clienst namse</div>
-  <div class="column">send at</div>
-  <div class="column">message</div>
-  <div class="column">edit</div>
-  <div class="column">delete</div>
+<div class="leftBar">
+  <div class="conversations">
+    <% conversations.forEach(function (conversation) { %>
+      <div class="conversation">
+        <div class="subject">
+          <%= conversation.subject ? conversation.subject : 'No Subject' %>
+        </div>
+        <div class="date">
+          <div class="day"><%= moment.tz(conversation.updated, local_tz).format("DD/MM/YY") %></div>
+          <div class="time"><%= moment.tz(conversation.updated, local_tz).format("hh:mm A") %></div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
 </div>
 
 
+<div class="rightContent">
+ddd
+</div>
 
-
+<script type="text/javascript">
+  // Intended to handle issue with height of content being dynamic in height
+  $(".leftBar").height($(window).height() - 92);
+</script>
 
 <% include ../../partials/hubFrameBottom %>

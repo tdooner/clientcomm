@@ -1,72 +1,33 @@
-.header {
-  height: 20px;
-  overflow: hidden;
-  color: #898989;
-  background-color: #D3D3D3;
-  line-height: 20px;
-  font-size: 0.65em; }
-  .header .column {
-    float: left;
-    text-align: left;
-    cursor: pointer; }
-    .header .column:nth-child(1) {
-      width: 8%;
-      text-align: center; }
-    .header .column:nth-child(2) {
-      width: 22%; }
-    .header .column:nth-child(3) {
-      width: 60%; }
-    .header .column:nth-child(4) {
-      width: 5%;
-      text-align: center; }
-    .header .column:nth-child(5) {
-      width: 5%;
-      text-align: center; }
-
-.conversationRow {
-  height: 50px;
-  line-height: 50px;
-  overflow: hidden;
-  color: #898989;
+.leftBar {
+  width: 25%;
+  overflow-y: scroll;
+  float: left;
   background-color: #FFF; }
-  .conversationRow:hover {
-    color: #FFF;
-    background-color: #4A90E2 !important; }
-    .conversationRow:hover .bigNumber {
-      color: #FFF !important; }
-  .conversationRow .column {
-    float: left;
-    text-align: left; }
-    .conversationRow .column .bigNumber {
-      font-size: 1.5em;
-      font-weight: 700;
-      color: #4A90E2; }
-    .conversationRow .column .fa.highlight {
-      padding: 5px;
-      width: 16px;
-      max-width: 16px;
-      height: 16px;
-      max-height: 16px;
-      border-radius: 50%; }
-      .conversationRow .column .fa.highlight:hover {
-        color: #898989;
-        background-color: #FFF; }
-    .conversationRow .column:nth-child(1) {
-      width: 8%;
-      text-align: center; }
-    .conversationRow .column:nth-child(2) {
-      width: 22%;
-      font-weight: 700; }
-    .conversationRow .column:nth-child(3) {
-      width: 60%;
-      padding-top: 5px;
-      line-height: 20px;
-      font-size: 12px; }
-    .conversationRow .column:nth-child(4) {
-      width: 5%;
-      text-align: center; }
-    .conversationRow .column:nth-child(5) {
-      width: 5%;
-      text-align: center; }
-  .conversationRow:nth-child(even) {
-    background-color: #E8ECEF; }
+  .leftBar .conversations {
+    padding: 5px 10px 5px 10px; }
+    .leftBar .conversations .conversation {
+      padding: 5px 5px 5px 5px;
+      border-bottom: 1px solid #E8ECEF; }
+      .leftBar .conversations .conversation .subject {
+        color: #4A90E2;
+        margin-bottom: 5px; }
+      .leftBar .conversations .conversation .date {
+        font-size: 12px;
+        padding-bottom: 5px; }
+        .leftBar .conversations .conversation .date .day {
+          float: left; }
+        .leftBar .conversations .conversation .date .time {
+          float: right; }
+        .leftBar .conversations .conversation .date::after {
+          content: "";
+          display: block;
+          clear: both; }
+      .leftBar .conversations .conversation:hover {
+        background-color: #D3D3D3;
+        color: #FFF;
+        font-weight: 700; }
+
+.rightContent {
+  width: 75%;
+  float: right;
+  background-color: red; }

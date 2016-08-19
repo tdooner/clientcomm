@@ -163,20 +163,6 @@ router.post("/transfer", function (req, res) {
 });
 
 
-router.get("/conversations", function (req, res) {
-  Conversations.findByUser(req.user.cmid)
-  .then((conversations) => {
-    res.render("v4/primaryUser/client/conversations", {
-      hub: {
-        tab: "conversations",
-        sel: null
-      },
-      conversations: conversations
-    });
-  }).catch(error_500(res));
-});
-
-
 router.get("/messages", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
@@ -188,7 +174,7 @@ router.get("/messages", function (req, res) {
 router.get("/messages/all", function (req, res) {
   Conversations.findByUser(req.user.cmid)
   .then((conversations) => {
-    res.render("v4/primaryUser/client/conversations", {
+    res.render("v4/primaryUser/client/messages", {
       hub: {
         tab: "messages",
         sel: "all"

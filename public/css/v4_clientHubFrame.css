@@ -9,7 +9,7 @@
   position: fixed; }
   .applicationFrame .navSub .leftTab {
     height: inherit;
-    width: auto;
+    width: 25%;
     float: left;
     color: #4A90E2;
     line-height: 45px;

@@ -22,6 +22,7 @@ class Notifications {
   
   static findByUser (userID, sent) {
     if (typeof sent == "undefined") sent = false;
+    const order = sent ? "desc" : "asc";
 
     return new Promise((fulfill, reject) => {
       db("notifications")
@@ -33,7 +34,7 @@ class Notifications {
         .where("cm", userID)
         .andWhere("sent", sent)
         .andWhere("closed", false)
-        .orderBy("send", "asc")
+        .orderBy("send", order)
       .then((notifications) => {
         fulfill(notifications)
       }).catch(reject);
@@ -42,7 +43,8 @@ class Notifications {
 
   static findByClient (clientID, sent) {
     if (typeof sent == "undefined") sent = false;
-
+    const order = sent ? "desc" : "asc";
+    
     return new Promise((fulfill, reject) => {
       // db("notifications")
       //   .where("client", clientID)
