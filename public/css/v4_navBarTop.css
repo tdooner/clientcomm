@@ -3,10 +3,13 @@
   z-index: 100;
   top: 9px;
   left: 47%;
-  line-height: 27px;
+  line-height: 24px;
+  font-size: 12px;
   cursor: pointer;
   font-weight: 700;
   color: #FFF;
+  border-radius: 5px;
+  padding: 2px 10px 2px 10px;
   -webkit-user-select: none;
   /* Chrome all / Safari all */
   -moz-user-select: none;
@@ -16,29 +19,25 @@
   user-select: none; }
   .alerts .exclamationCircle {
     float: left;
-    height: 21px;
-    width: 21px;
-    line-height: 21px;
+    font-size: 18px;
+    line-height: 24px;
     text-align: center;
-    border-radius: 100%;
-    border: 3px solid #FFF;
-    margin-right: 10px; }
+    margin-right: 5px; }
   .alerts:hover {
-    text-decoration: underline; }
+    background-color: #3F69B6; }
     .alerts:hover .exclamationCircle {
-      background-color: #FFA500;
-      box-shadow: 0px 0px; }
+      color: #FFA500; }
   .alerts .hiddenAlerts {
     display: none; }
     .alerts .hiddenAlerts .arrowTop {
-      margin-left: 50px;
+      margin-left: 25px;
       width: 0;
       height: 0;
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-bottom: 5px solid #FFF; }
     .alerts .hiddenAlerts .alertsBody {
-      margin-left: -90px;
+      margin-left: -110px;
       position: absolute;
       background-color: #3F69B6;
       width: 300px;
