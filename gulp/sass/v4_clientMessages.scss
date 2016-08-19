@@ -74,6 +74,7 @@ $width_row5:  5%;
 
 .rightContent {
   width: 75%;
+  overflow-y: scroll;
   float: right;
   background-color: red;
 }

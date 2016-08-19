@@ -12,6 +12,7 @@ const ColorTags     = modelsImport.ColorTags;
 const Conversations = modelsImport.Conversations;
 const Users         = modelsImport.Users;
 const Notifications = modelsImport.Notifications;
+const Messages      = modelsImport.Messages;
 
 
 // Twilio library tools and secrets
@@ -174,13 +175,17 @@ router.get("/messages", function (req, res) {
 router.get("/messages/all", function (req, res) {
   Conversations.findByUser(req.user.cmid)
   .then((conversations) => {
-    res.render("v4/primaryUser/client/messages", {
-      hub: {
-        tab: "messages",
-        sel: "all"
-      },
-      conversations: conversations
-    });
+    Messages.findByClient(req.user.cmid)
+    .then((messages) => {
+      res.render("v4/primaryUser/client/messages", {
+        hub: {
+          tab: "messages",
+          sel: "all"
+        },
+        conversations: conversations,
+        messages: messages
+      });
+    }).catch(error_500(res));
   }).catch(error_500(res));
 });
 

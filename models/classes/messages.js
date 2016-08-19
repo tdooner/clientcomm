@@ -36,6 +36,34 @@ const Client = require("./client");
 // Class
 class Messages {
 
+  static findByClient (clientID) {
+    return new Promise((fulfill, reject) => {
+      Conversations.findByUser(clientID)
+      .then((conversations) => {
+        conversations = conversations.map(function (conversation) {
+          return conversation.convid;
+        });
+
+        return Messages.findByConversations(conversations)
+      }).then((messages) => {
+          fulfill(messages);
+      }).catch(reject);
+    });
+  }
+
+  static findByConversations (conversationIDs) {
+    if (!Array.isArray(conversationIDs)) conversationIDs = [conversationIDs];
+    
+    return new Promise((fulfill, reject) => {
+      db("msgs")
+        .whereIn("convo", conversationIDs)
+        .orderBy("created", "desc")
+        .then((messages) => {
+          fulfill(messages)
+        }).catch(reject);
+    });
+  }
+
   static sendMultiple (userID, clientIDs, title, content) {
     return new Promise((fulfill, reject) => {
       clientIDs.forEach(function (clientID, i) {
@@ -85,8 +113,6 @@ class Messages {
               }).catch(reject);
 
             } else {
-              // no communication device or conversation...
-              // fail silently?
               fulfill();
             }
           }).catch(reject);

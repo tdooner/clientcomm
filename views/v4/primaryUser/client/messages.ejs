@@ -21,12 +21,15 @@
 
 
 <div class="rightContent">
-ddd
+  <% messages.forEach(function (message) { %>
+    <%= message.content %> <br>
+  <% }) %>
 </div>
 
 <script type="text/javascript">
   // Intended to handle issue with height of content being dynamic in height
   $(".leftBar").height($(window).height() - 92);
+  $(".rightContent").height($(window).height() - 92);
 </script>
 
 <% include ../../partials/hubFrameBottom %>
