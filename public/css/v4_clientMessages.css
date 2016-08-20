@@ -28,9 +28,18 @@
           content: "";
           display: block;
           clear: both; }
+      .leftBar .conversations .conversation.selected {
+        background-color: #4A90E2;
+        color: #FFF; }
+        .leftBar .conversations .conversation.selected .subject {
+          color: #FFF;
+          font-weight: 700; }
       .leftBar .conversations .conversation:hover {
         background-color: #E8ECEF;
         color: #898989; }
+        .leftBar .conversations .conversation:hover .subject {
+          color: #4A90E2;
+          font-weight: 700; }
 
 .rightContent {
   width: 75%;

@@ -174,10 +174,10 @@ router.get("/messages", function (req, res) {
 });
 
 router.get("/messages/filter/:method", function (req, res) {
-  var filter = "all";
-  if (req.params.method == "texts") filter = "cell";
+  var methodFilter = "all";
+  if (req.params.method == "texts") methodFilter = "cell";
 
-  const conversationFilterID = Number(req.query.conversation);
+  var conversationFilterID = Number(req.query.conversation);
   if (isNaN(conversationFilterID)) conversationFilterID = null;
 
   var conversations, messages;
@@ -187,7 +187,11 @@ router.get("/messages/filter/:method", function (req, res) {
     return Messages.findByClient(req.user.cmid)
   }).then((msgs) => {
     messages = msgs.filter(function (msg) {
-      return msg.comm_type == filter || filter == "all";
+      if (msg.comm_type == methodFilter || methodFilter == "all") {
+        if (msg.convo == conversationFilterID || conversationFilterID == null) {
+          return true;
+        } else { return false; }
+      } else { return false; }
     });
     return CommConns.findByClientID(req.user.cmid)
   }).then((communications) => {

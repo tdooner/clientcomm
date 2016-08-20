@@ -11,15 +11,17 @@
       </div>
     </div>
     <% conversations.forEach(function (conversation) { %>
-      <div class="conversation">
-        <div class="subject">
-          <%= conversation.subject ? conversation.subject : 'No Subject' %>
+      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/all?conversation=<%= conversation.convid %>">
+        <div class="conversation <% if (conversationFilterID == Number(conversation.convid)) { %>selected<% } %>">
+          <div class="subject">
+            <%= conversation.subject ? conversation.subject : 'No Subject' %>
+          </div>
+          <div class="date">
+            <div class="day"><%= moment.tz(conversation.updated, local_tz).format("DD/MM/YY") %></div>
+            <div class="time"><%= moment.tz(conversation.updated, local_tz).format("hh:mm A") %></div>
+          </div>
         </div>
-        <div class="date">
-          <div class="day"><%= moment.tz(conversation.updated, local_tz).format("DD/MM/YY") %></div>
-          <div class="time"><%= moment.tz(conversation.updated, local_tz).format("hh:mm A") %></div>
-        </div>
-      </div>
+      </a>
     <% }) %>
   </div>
 </div>
@@ -29,32 +31,28 @@
 
   <div class="messageStream">
     <% messages.forEach(function (message, messageIndex) { %>
-      <% if (!conversationFilterID || conversationFilterID == message.convo) { %>
-
-        <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>"
-              <% if (messageIndex == messages.length - 1) { %>id="lastMessage"<% } %>>
-          <div class="content">
-            <%= message.content %>
-          </div>
-
-          <div class="bottomRow">
-
-            <% if (message.comm_type == 'cell') { %>
-              <i class="fa fa-mobile" aria-hidden="true"></i>
-            <% } %>
-
-            <%= message.inbound ? 'Received via' : 'Sent to' %>
-            <%= client.first + "'s" %> <%= message.commconn_name %>
-
-            <span class="state">
-              <%= message.tw_status %> on 
-              <%= moment.tz(message.created, local_tz).format("MM/DD"); %> at 
-              <%= moment.tz(message.created, local_tz).format("hh:mm A"); %>
-            </span>
-          </div>
+      <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>"
+            <% if (messageIndex == messages.length - 1) { %>id="lastMessage"<% } %>>
+        <div class="content">
+          <%= message.content %>
         </div>
 
-      <% } %>
+        <div class="bottomRow">
+
+          <% if (message.comm_type == 'cell') { %>
+            <i class="fa fa-mobile" aria-hidden="true"></i>
+          <% } %>
+
+          <%= message.inbound ? 'Received via' : 'Sent to' %>
+          <%= client.first + "'s" %> <%= message.commconn_name %>
+
+          <span class="state">
+            <%= message.tw_status %> on 
+            <%= moment.tz(message.created, local_tz).format("MM/DD"); %> at 
+            <%= moment.tz(message.created, local_tz).format("hh:mm A"); %>
+          </span>
+        </div>
+      </div>
     <% }) %>
   </div>
 

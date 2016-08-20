@@ -72,9 +72,22 @@ $width_row5:  5%;
         }
       }
 
+      &.selected {
+        background-color: $lightblue;
+        color: $white;
+        .subject {
+          color: $white;
+          font-weight: 700;
+        }
+      }
+
       &:hover {
         background-color: $offwhite;
         color: $grey;
+        .subject {
+          color: $lightblue;
+          font-weight: 700;
+        }
       }
     }
   }
