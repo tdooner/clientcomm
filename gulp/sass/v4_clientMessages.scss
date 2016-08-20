@@ -45,6 +45,14 @@ $width_row5:  5%;
       .subject {
         color: $lightblue;
         margin-bottom: 5px;
+
+        &.showAll {
+          text-transform: uppercase;
+          text-align: center;
+          margin-top: 7px;
+          font-size: 12px;
+          letter-spacing: 1px;
+        }
       }
 
       .date {
@@ -127,7 +135,7 @@ $width_row5:  5%;
       padding: 10px 10px 10px 10px;
 
       .messageInput {
-        width: 698px;
+        width: 733px;
         height: 45px;
         background-color: $darkblue;
         border-radius: 3px;
@@ -135,13 +143,12 @@ $width_row5:  5%;
         font-size: 18px;
         color: $white;
         font-weight: 300;
-        padding-right: 25px;
-        padding-left: 25px;
+        padding-left: 15px;
         text-align: left;
         cursor: pointer;
 
         &:hover {
-          box-shadow: none;
+          color: $offwhite;
           box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
         }
       }

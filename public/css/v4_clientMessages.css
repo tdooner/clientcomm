@@ -11,6 +11,12 @@
       .leftBar .conversations .conversation .subject {
         color: #4A90E2;
         margin-bottom: 5px; }
+        .leftBar .conversations .conversation .subject.showAll {
+          text-transform: uppercase;
+          text-align: center;
+          margin-top: 7px;
+          font-size: 12px;
+          letter-spacing: 1px; }
       .leftBar .conversations .conversation .date {
         font-size: 12px;
         padding-bottom: 5px; }
@@ -63,7 +69,7 @@
       background-color: #4A90E2;
       padding: 10px 10px 10px 10px; }
       .rightContent .responseBox .mini .messageInput {
-        width: 698px;
+        width: 733px;
         height: 45px;
         background-color: #344289;
         border-radius: 3px;
@@ -71,12 +77,11 @@
         font-size: 18px;
         color: #FFF;
         font-weight: 300;
-        padding-right: 25px;
-        padding-left: 25px;
+        padding-left: 15px;
         text-align: left;
         cursor: pointer; }
         .rightContent .responseBox .mini .messageInput:hover {
-          box-shadow: none;
+          color: #E8ECEF;
           box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5); }
     .rightContent .responseBox .full {
       display: none;

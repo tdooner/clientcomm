@@ -170,10 +170,13 @@ router.get("/messages", function (req, res) {
                 req.user.cmid + 
                 "/primary/clients/client/" + 
                 req.params.clientID + 
-                "/messages/all");
+                "/messages/filter/all");
 });
 
-router.get("/messages/all", function (req, res) {
+router.get("/messages/filter/:method", function (req, res) {
+  var filter = "all";
+  if (req.params.method == "texts") filter = "cell";
+
   const conversationFilterID = Number(req.query.conversation);
   if (isNaN(conversationFilterID)) conversationFilterID = null;
 
@@ -183,13 +186,15 @@ router.get("/messages/all", function (req, res) {
     conversations = convos;
     return Messages.findByClient(req.user.cmid)
   }).then((msgs) => {
-    messages = msgs;
+    messages = msgs.filter(function (msg) {
+      return msg.comm_type == filter || filter == "all";
+    });
     return CommConns.findByClientID(req.user.cmid)
   }).then((communications) => {
     res.render("v4/primaryUser/client/messages", {
       hub: {
         tab: "messages",
-        sel: "all"
+        sel: req.params.method
       },
       conversations: conversations,
       messages: messages,

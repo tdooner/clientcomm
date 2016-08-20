@@ -6,8 +6,8 @@
 <div class="leftBar">
   <div class="conversations">
     <div class="conversation">
-      <div class="subject">
-        Show all conversation
+      <div class="subject showAll">
+        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/all">Show all conversations</a>
       </div>
     </div>
     <% conversations.forEach(function (conversation) { %>
@@ -60,7 +60,7 @@
 
   <div class="responseBox">
     <div class="mini">
-      <div class="messageInput">Start typing message...</div>
+      <div class="messageInput"><i class="fa fa-keyboard-o" aria-hidden="true"></i> Start typing message...</div>
     </div>
 
     <div class="full">
