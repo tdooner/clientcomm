@@ -13,7 +13,16 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 // Class
 class CommConns {
   
-  static findByIDs (clientIDs) {
+  static findByClientID (clientID) {
+    return new Promise((fulfill, reject) => {
+      CommConns.findByClientIDs([clientID])
+      .then((commconns) => {
+        fulfill(commconns);
+      }).catch(reject);
+    })
+  }
+  
+  static findByClientIDs (clientIDs) {
     return new Promise((fulfill, reject) => {
       db("commconns")
         .leftJoin(
@@ -21,7 +30,6 @@ class CommConns {
             .select("comms.commid", "comms.type", "comms.value")
             .as("comms"),
           "comms.commid", "commconns.comm")
-
         .whereIn("client", clientIDs)
         .and.where("retired", null)
       .then((commconns) => {

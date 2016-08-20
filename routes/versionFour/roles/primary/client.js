@@ -13,6 +13,7 @@ const Conversations = modelsImport.Conversations;
 const Users         = modelsImport.Users;
 const Notifications = modelsImport.Notifications;
 const Messages      = modelsImport.Messages;
+const CommConns     = modelsImport.CommConns;
 
 
 // Twilio library tools and secrets
@@ -173,19 +174,28 @@ router.get("/messages", function (req, res) {
 });
 
 router.get("/messages/all", function (req, res) {
+  const conversationFilterID = Number(req.query.conversation);
+  if (isNaN(conversationFilterID)) conversationFilterID = null;
+
+  var conversations, messages;
   Conversations.findByUser(req.user.cmid)
-  .then((conversations) => {
-    Messages.findByClient(req.user.cmid)
-    .then((messages) => {
-      res.render("v4/primaryUser/client/messages", {
-        hub: {
-          tab: "messages",
-          sel: "all"
-        },
-        conversations: conversations,
-        messages: messages
-      });
-    }).catch(error_500(res));
+  .then((convos) => {
+    conversations = convos;
+    return Messages.findByClient(req.user.cmid)
+  }).then((msgs) => {
+    messages = msgs;
+    return CommConns.findByClientID(req.user.cmid)
+  }).then((communications) => {
+    res.render("v4/primaryUser/client/messages", {
+      hub: {
+        tab: "messages",
+        sel: "all"
+      },
+      conversations: conversations,
+      messages: messages,
+      communications: communications,
+      conversationFilterID: conversationFilterID
+    });
   }).catch(error_500(res));
 });
 

@@ -91,7 +91,7 @@ class Clients {
           return client.clid
         });
 
-        return CommConns.findByIDs(clientIDs)
+        return CommConns.findByClientIDs(clientIDs)
       }).then((commconns) => {
         // Add each communication method to relevant client
         finalClientsObject = finalClientsObject.map(function (client) {

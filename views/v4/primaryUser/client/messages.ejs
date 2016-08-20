@@ -5,6 +5,11 @@
 
 <div class="leftBar">
   <div class="conversations">
+    <div class="conversation">
+      <div class="subject">
+        Show all conversation
+      </div>
+    </div>
     <% conversations.forEach(function (conversation) { %>
       <div class="conversation">
         <div class="subject">
@@ -24,36 +29,66 @@
 
   <div class="messageStream">
     <% messages.forEach(function (message, messageIndex) { %>
+      <% if (!conversationFilterID || conversationFilterID == message.convo) { %>
 
-      <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>"
-            <% if (messageIndex == messages.length - 1) { %>id="lastMessage"<% } %>>
-        <div class="content">
-          <%= message.content %>
+        <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>"
+              <% if (messageIndex == messages.length - 1) { %>id="lastMessage"<% } %>>
+          <div class="content">
+            <%= message.content %>
+          </div>
+
+          <div class="bottomRow">
+
+            <% if (message.comm_type == 'cell') { %>
+              <i class="fa fa-mobile" aria-hidden="true"></i>
+            <% } %>
+
+            <%= message.inbound ? 'Received via' : 'Sent to' %>
+            <%= client.first + "'s" %> <%= message.commconn_name %>
+
+            <span class="state">
+              <%= message.tw_status %> on 
+              <%= moment.tz(message.created, local_tz).format("MM/DD"); %> at 
+              <%= moment.tz(message.created, local_tz).format("hh:mm A"); %>
+            </span>
+          </div>
         </div>
 
-        <div class="bottomRow">
-
-          <% if (message.comm_type == 'cell') { %>
-            <i class="fa fa-mobile" aria-hidden="true"></i>
-          <% } %>
-
-          <%= message.inbound ? 'Received via' : 'Sent to' %>
-          <%= client.first + "'s" %> <%= message.commconn_name %>
-
-          <span class="state">
-            <%= message.tw_status %> on 
-            <%= moment.tz(message.created, local_tz).format("MM/DD"); %> at 
-            <%= moment.tz(message.created, local_tz).format("hh:mm A"); %>
-          </span>
-        </div>
-      </div>
-
+      <% } %>
     <% }) %>
   </div>
 
   <div class="responseBox">
+    <div class="mini">
+      <div class="messageInput">Start typing message...</div>
+    </div>
+
     <div class="full">
-      <div class="messageInput"></div>
+      <div class="messageInput">
+        <textarea name="content"
+                  rows="5"></textarea>
+      </div>
+
+      <div class="bottomRow">
+        <div class="optionButton" id="closeTypeBox"><i class="fa fa-chevron-down" aria-hidden="true"></i> Close</div>
+        <div class="optionButton"><i class="fa fa-upload" aria-hidden="true"></i> Load a Template</div>
+
+        <div class="contactSelect">
+          <select name="commid" required>
+            <option value="" selected disabled>Comm Method</option>
+            <% communications.forEach(function (communication) { %>
+              <option value="<%= communication.commid %>"><%= communication.name + ' (' + communication.value + ')' %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="submit">
+          <i class="fa fa-paper-plane" aria-hidden="true"></i>
+          Send
+        </div>
+
+      </div>
+
     </div>
   </div>
 
@@ -67,13 +102,29 @@
   // Animate scroll to latest text on load
   $("#lastMessage")[0].scrollIntoView({block: "end", behavior: "smooth"});
 
+  // Toggle Writing View for Message Entry
+  function toggleTypeBox () {
+    $(".mini").toggle();
+    $(".full").toggle();
+    if ($(".mini").is(":visible")) {
+      $(".messageStream").css("margin-bottom", 60);
+    } else { 
+      $(".messageStream").css("margin-bottom", 150);
+      $("#lastMessage")[0].scrollIntoView({block: "end", behavior: "smooth"});
+    }
+  }
+
+  $(".mini").click(toggleTypeBox);
+  $("#closeTypeBox").click(toggleTypeBox);
+
+
   // Animate enter text words
-  var enterTextPromptArray = "Start typing message...".split("");
-  enterTextPromptArray.forEach(function (letter, index) {
-    setTimeout(function () {
-      $(".messageInput").text($(".messageInput").text() + letter);
-    }, index * 100);
-  });
+  // var enterTextPromptArray = "Start typing message...".split("");
+  // enterTextPromptArray.forEach(function (letter, index) {
+  //   setTimeout(function () {
+  //     $(".messageInput").text($(".messageInput").text() + letter);
+  //   }, index * 100);
+  // });
 </script>
 
 <% include ../../partials/hubFrameBottom %>

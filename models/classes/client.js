@@ -48,7 +48,7 @@ class Client {
           return client.clid;
         });
 
-        return CommConns.findByIDs(clientIDs)
+        return CommConns.findByClientIDs(clientIDs)
       }).then((commConns) => {
         finalClientsObject = finalClientsObject.map(function (client) {
           client.communications = [];
