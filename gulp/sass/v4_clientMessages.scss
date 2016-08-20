@@ -5,6 +5,7 @@ $white:       #FFF;
 $offwhite:    #E8ECEF;
 $lightgrey:   #D3D3D3;
 $grey:        #898989;
+$darkgrey:    #2A2A2A;
 $black:       #000;
 $lightorange: #FFA500;
 $orange:      #E96100;
@@ -80,6 +81,7 @@ $width_row5:  5%;
   
   .messageStream {
     padding: 5px 15px 5px 15px;
+    margin-bottom: 60px;
 
     .message {
       padding: 15px 20px 10px 20px;
@@ -87,13 +89,14 @@ $width_row5:  5%;
       border-radius: 5px;
 
       &.outbound {
-        background-color: $blue;
-        color: $white;
+        // background-color: $lightgrey;
+        border: 1px solid $white;
+        color: $darkgrey;
       } 
       
       &.inbound {
         background-color: $white;
-        color: $grey;
+        color: $darkgrey;
       } 
 
       .bottomRow {
@@ -111,5 +114,42 @@ $width_row5:  5%;
       }
     }
   }
+
+  .responseBox {
+    position: absolute;
+    bottom: 0px;
+    overflow: hidden;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+
+    .full {
+      width: inherit;
+      background-color: $lightblue;
+      padding: 10px 10px 10px 10px;
+
+      .messageInput {
+        width: 698px;
+        height: 45px;
+        background-color: $darkblue;
+        border-radius: 10px;
+        top: 100px;
+        line-height: 45px;
+        font-size: 18px;
+        color: $white;
+        font-weight: 300;
+        padding-right: 25px;
+        padding-left: 25px;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+          box-shadow: none;
+          box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
+        }
+      }
+    }
+  }
 }
+
+
 

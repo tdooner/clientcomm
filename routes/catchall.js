@@ -15,7 +15,7 @@ module.exports = function (app, db, utils, passport) {
 
 
   app.get("/404", function (req, res) {
-    res.status(404).render("errors/404");
+    res.status(404).render("v4/general/404");
   });
 
 

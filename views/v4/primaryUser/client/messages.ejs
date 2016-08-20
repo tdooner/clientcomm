@@ -23,9 +23,10 @@
 <div class="rightContent">
 
   <div class="messageStream">
-    <% messages.forEach(function (message) { %>
+    <% messages.forEach(function (message, messageIndex) { %>
 
-      <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>">
+      <div class="message <%= message.inbound ? 'inbound' : 'outbound' %>"
+            <% if (messageIndex == messages.length - 1) { %>id="lastMessage"<% } %>>
         <div class="content">
           <%= message.content %>
         </div>
@@ -50,12 +51,29 @@
     <% }) %>
   </div>
 
+  <div class="responseBox">
+    <div class="full">
+      <div class="messageInput"></div>
+    </div>
+  </div>
+
 </div>
 
 <script type="text/javascript">
   // Intended to handle issue with height of content being dynamic in height
   $(".leftBar").height($(window).height() - 92);
   $(".rightContent").height($(window).height() - 92);
+
+  // Animate scroll to latest text on load
+  $("#lastMessage")[0].scrollIntoView({block: "end", behavior: "smooth"});
+
+  // Animate enter text words
+  var enterTextPromptArray = "Start typing message...".split("");
+  enterTextPromptArray.forEach(function (letter, index) {
+    setTimeout(function () {
+      $(".messageInput").text($(".messageInput").text() + letter);
+    }, index * 100);
+  });
 </script>
 
 <% include ../../partials/hubFrameBottom %>

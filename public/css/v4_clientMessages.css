@@ -33,17 +33,18 @@
   float: right;
   background-color: #E8ECEF; }
   .rightContent .messageStream {
-    padding: 5px 15px 5px 15px; }
+    padding: 5px 15px 5px 15px;
+    margin-bottom: 60px; }
     .rightContent .messageStream .message {
       padding: 15px 20px 10px 20px;
       margin-bottom: 10px;
       border-radius: 5px; }
       .rightContent .messageStream .message.outbound {
-        background-color: #3F69B6;
-        color: #FFF; }
+        border: 1px solid #FFF;
+        color: #2A2A2A; }
       .rightContent .messageStream .message.inbound {
         background-color: #FFF;
-        color: #898989; }
+        color: #2A2A2A; }
       .rightContent .messageStream .message .bottomRow {
         margin-top: 15px;
         font-size: 12px;
@@ -52,3 +53,30 @@
           font-size: 18px; }
         .rightContent .messageStream .message .bottomRow .state {
           float: right; }
+  .rightContent .responseBox {
+    position: absolute;
+    bottom: 0px;
+    overflow: hidden;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px; }
+    .rightContent .responseBox .full {
+      width: inherit;
+      background-color: #4A90E2;
+      padding: 10px 10px 10px 10px; }
+      .rightContent .responseBox .full .messageInput {
+        width: 698px;
+        height: 45px;
+        background-color: #344289;
+        border-radius: 10px;
+        top: 100px;
+        line-height: 45px;
+        font-size: 18px;
+        color: #FFF;
+        font-weight: 300;
+        padding-right: 25px;
+        padding-left: 25px;
+        text-align: left;
+        cursor: pointer; }
+        .rightContent .responseBox .full .messageInput:hover {
+          box-shadow: none;
+          box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5); }
