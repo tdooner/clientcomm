@@ -93,7 +93,9 @@ router.post("/edit", function (req, res) {
     req.flash("success", "Edited client.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/primary/clients/open");
+                  "/primary/clients/client/" + 
+                  clientID + 
+                  "/");
   }).catch(error_500(res));
 });
 

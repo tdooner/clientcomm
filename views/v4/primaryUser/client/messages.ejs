@@ -98,7 +98,7 @@
   $(".rightContent").height($(window).height() - 92);
 
   // Animate scroll to latest text on load
-  $("#lastMessage")[0].scrollIntoView({block: "end", behavior: "smooth"});
+  try { scrollLast() } catch (e) { console.log(e); }
 
   // Toggle Writing View for Message Entry
   function toggleTypeBox () {
@@ -108,8 +108,15 @@
       $(".messageStream").css("margin-bottom", 60);
     } else { 
       $(".messageStream").css("margin-bottom", 150);
-      $("#lastMessage")[0].scrollIntoView({block: "end", behavior: "smooth"});
+      scrollLast()
     }
+  }
+
+  function scrollLast () {
+    $("#lastMessage")[0].scrollIntoView({ 
+      block: "end", 
+      behavior: "smooth"
+    });
   }
 
   $(".mini").click(toggleTypeBox);
