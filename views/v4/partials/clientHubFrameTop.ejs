@@ -24,7 +24,7 @@
     </div>
 
     <div class="rightTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/notifications">Notifications</a></div>
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/notifications">Notifications</a></div>
       <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/pending">Pending</a></div>
       <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/sent">Sent</a></div>
     </div>

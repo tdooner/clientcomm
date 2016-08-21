@@ -46,11 +46,14 @@ class Notifications {
     const order = sent ? "desc" : "asc";
     
     return new Promise((fulfill, reject) => {
-      // db("notifications")
-      //   .where("client", clientID)
-      //   .andWhere("sent", sent)
-      //   .andWhere("closed", false)
-      //   .orderBy("send", "asc")
+      db("notifications")
+        .where("client", clientID)
+        .andWhere("sent", sent)
+        .andWhere("closed", false)
+        .orderBy("send", order)
+      .then((notifications) => {
+        fulfill(notifications)
+      }).catch(reject);
     })
   }
 

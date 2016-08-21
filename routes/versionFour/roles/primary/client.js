@@ -243,10 +243,19 @@ router.post("/messages/create/infer_conversation", function (req, res) {
 });
 
 
+router.get("/notifications", function (req, res) {
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/primary/clients/client/" + 
+                req.params.clientID + 
+                "/notifications/pending");
+});
+
+
 router.get("/notifications/pending", function (req, res) {
   Notifications.findByClient(req.params.clientID)
   .then((notifications) => {
-      res.send(notifications);
+    res.send(notifications);
   }).catch(error_500(res));
 });
 
