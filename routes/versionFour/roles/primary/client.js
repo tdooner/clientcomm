@@ -211,6 +211,9 @@ router.get("/messages/filter/:method", function (req, res) {
 });
 
 
+router.post("create/infer_conversation", function (req, res) {})
+
+
 router.get("/notifications/pending", function (req, res) {
   Notifications.findByClient(req.params.clientID)
   .then((notifications) => {

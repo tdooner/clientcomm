@@ -68,26 +68,29 @@
       </div>
 
       <div class="bottomRow">
-        <div class="optionButton" id="closeTypeBox">
-          <i class="fa fa-chevron-down" aria-hidden="true"></i> 
-          <small>Close</small>
-        </div>
-        <div class="optionButton"><i class="fa fa-upload" aria-hidden="true"></i> Load a Template</div>
+        <form method="post"
+              id="newMessage" 
+              action="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/create/infer_conversation">
+          <div class="optionButton" id="closeTypeBox">
+            <i class="fa fa-chevron-down" aria-hidden="true"></i> 
+            <small>Close</small>
+          </div>
+          <div class="optionButton"><i class="fa fa-upload" aria-hidden="true"></i> Load a Template</div>
 
-        <div class="contactSelect">
-          <select name="commid" required>
-            <option value="" selected disabled>Comm Method</option>
-            <% communications.forEach(function (communication) { %>
-              <option value="<%= communication.commid %>"><%= communication.name + ' (' + communication.value + ')' %></option>
-            <% }) %>
-          </select>
-        </div>
+          <div class="contactSelect">
+            <select name="commid" required>
+              <option value="" selected disabled>Comm Method</option>
+              <% communications.forEach(function (communication) { %>
+                <option value="<%= communication.commid %>"><%= communication.name + ' (' + communication.value + ')' %></option>
+              <% }) %>
+            </select>
+          </div>
 
-        <div class="submit">
-          <i class="fa fa-paper-plane" aria-hidden="true"></i>
-          Send
-        </div>
-
+          <div class="submit">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            Send
+          </div>
+        </form>
       </div>
 
     </div>
@@ -125,14 +128,13 @@
   $(".mini").click(toggleTypeBox);
   $("#closeTypeBox").click(toggleTypeBox);
 
+  $("#newMessage").click(function () {
+    var newMessage = $("textarea[name=content]").val();
+    if (newMessage.length) {
+      console.log("k")
+    }
+  });
 
-  // Animate enter text words
-  // var enterTextPromptArray = "Start typing message...".split("");
-  // enterTextPromptArray.forEach(function (letter, index) {
-  //   setTimeout(function () {
-  //     $(".messageInput").text($(".messageInput").text() + letter);
-  //   }, index * 100);
-  // });
 </script>
 
 <% include ../../partials/hubFrameBottom %>
