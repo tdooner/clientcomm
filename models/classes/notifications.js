@@ -47,6 +47,16 @@ class Notifications {
     
     return new Promise((fulfill, reject) => {
       db("notifications")
+        .leftJoin(
+          db("clients")
+            .select(db.raw("first, middle, last, clid"))
+            .as("clients"),
+          "clients.clid", "notifications.client")
+        .leftJoin(
+          db("commconns")
+            .select(db.raw("name as communication_name, comm, commconnid"))
+            .as("commconns"), 
+            "commconns.comm", "notifications.comm")
         .where("client", clientID)
         .andWhere("sent", sent)
         .andWhere("closed", false)

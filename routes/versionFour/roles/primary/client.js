@@ -253,12 +253,26 @@ router.get("/notifications", function (req, res) {
 
 
 router.get("/notifications/pending", function (req, res) {
-  Notifications.findByClient(req.params.clientID)
+  Notifications.findByClient(req.params.clientID, false)
   .then((notifications) => {
     res.render("v4/primaryUser/client/notifications", {
       hub: {
         tab: "notifications",
         sel: "pending"
+      },
+      notifications: notifications
+    });
+  }).catch(error_500(res));
+});
+
+
+router.get("/notifications/sent", function (req, res) {
+  Notifications.findByClient(req.params.clientID, true)
+  .then((notifications) => {
+    res.render("v4/primaryUser/client/notifications", {
+      hub: {
+        tab: "notifications",
+        sel: "sent"
       },
       notifications: notifications
     });
