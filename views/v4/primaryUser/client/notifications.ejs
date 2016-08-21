@@ -1,7 +1,7 @@
 <% include ../../partials/clientHubFrameTop %>
 
 <!-- Load in addition CSS -->
-<link rel="stylesheet" type="text/css" href="/static/css/v4_notifications.css">
+<link rel="stylesheet" type="text/css" href="/static/css/v4_clientNotifications.css">
 
 <div class="header">
   <div class="column">send at</div>
@@ -20,15 +20,13 @@
 <% notifications.forEach(function (notification) { %>
   <div class="notificationRow">
     <div class="column">
-      <span class="clientName">
-        <i class="fa highlight fa-clock-o" aria-hidden="true"></i>
-        <%= moment.tz(notification.send, local_tz).format('MMM. Do, hh:mmA') %>
+      <span class="time">
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
+        <%= moment.tz(notification.send, local_tz).format('MMM. Do, hh:mm A') %>
       </span>
     </div>
     <div class="column">
-      <span class="time">
-        <%= notification.communication_name %>
-      </span>
+      <%= notification.communication_name %>
     </div>
     <div class="column">
       <span class="subject">
@@ -46,7 +44,7 @@
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=notification.notificationid%>">
+      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/notifications/remove/<%=notification.notificationid%>">
         <i class="fa highlight fa-trash" aria-hidden="true"></i>
       </a>
     </div>

@@ -280,6 +280,19 @@ router.get("/notifications/sent", function (req, res) {
 });
 
 
+router.get("/notifications/remove/:notificationID", function (req, res) {
+  Notifications.removeOne(req.params.notificationID)
+  .then(() => {
+    req.flash("success", "Removed notification.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/clients/client/" + 
+                  req.params.clientID + 
+                  "/notifications/pending");
+  }).catch(error_500(res));
+});
+
+
 // EXPORT ROUTER OBJECt
 module.exports = router;
 
