@@ -57,28 +57,28 @@
   </div>
 
   <div class="responseBox">
-    <div class="mini">
-      <div class="messageInput"><i class="fa fa-keyboard-o" aria-hidden="true"></i> Start typing message...</div>
-    </div>
-
-    <div class="full">
-      <div class="messageInput">
-        <textarea name="content"
-                  rows="5"></textarea>
+    <form method="post"
+          id="newMessage" 
+          action="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/create/infer_conversation">
+      <div class="mini">
+        <div class="messageInput"><i class="fa fa-keyboard-o" aria-hidden="true"></i> Start typing message...</div>
       </div>
 
-      <div class="bottomRow">
-        <form method="post"
-              id="newMessage" 
-              action="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/create/infer_conversation">
-          <div class="optionButton" id="closeTypeBox">
+      <div class="full">
+        <div class="messageInput">
+          <textarea name="content"
+                    rows="5"></textarea>
+        </div>
+
+        <div class="bottomRow">
+            <div class="optionButton" id="closeTypeBox">
             <i class="fa fa-chevron-down" aria-hidden="true"></i> 
             <small>Close</small>
           </div>
           <div class="optionButton"><i class="fa fa-upload" aria-hidden="true"></i> Load a Template</div>
 
           <div class="contactSelect">
-            <select name="commid" required>
+            <select name="commID" required>
               <option value="" selected disabled>Comm Method</option>
               <% communications.forEach(function (communication) { %>
                 <option value="<%= communication.commid %>"><%= communication.name + ' (' + communication.value + ')' %></option>
@@ -90,10 +90,9 @@
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
             Send
           </div>
-        </form>
+        </div>
       </div>
-
-    </div>
+    </form>
   </div>
 
 </div>
@@ -128,10 +127,11 @@
   $(".mini").click(toggleTypeBox);
   $("#closeTypeBox").click(toggleTypeBox);
 
-  $("#newMessage").click(function () {
+  $(".submit").click(function () {
     var newMessage = $("textarea[name=content]").val();
-    if (newMessage.length) {
-      console.log("k")
+    var commID = $("select[name=commID]").val();
+    if (newMessage.length > 0 && commID !== null) {
+      $("#newMessage").submit();
     }
   });
 

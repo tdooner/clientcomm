@@ -40,7 +40,7 @@ class Conversations {
     return new Promise((fulfill, reject) => {
       db("convos")
         .where("cm", userID)
-        .andWhere("client", clientIDs)
+        .andWhere("client", clientID)
         .orderBy("updated", "desc")
         .limit(1)
       .then((convos) => {

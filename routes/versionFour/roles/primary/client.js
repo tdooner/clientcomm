@@ -211,7 +211,36 @@ router.get("/messages/filter/:method", function (req, res) {
 });
 
 
-router.post("create/infer_conversation", function (req, res) {})
+router.post("/messages/create/infer_conversation", function (req, res) {
+  const userID = req.user.cmid;
+  const clientID = Number(req.params.clientID);
+  const subject = "New Conversation";
+  const content = req.body.content;
+  const commID = req.body.commID;
+  const redirect = "/v4/users/" + userID + "/primary/clients/client/" + clientID + "/messages";
+
+  Conversations.getMostRecentConversation(userID, clientID)
+  .then((conversation) => {
+    // use existing conversation if exists
+    if (conversation) {
+      Messages.sendOne(commID, content, conversation.convid)
+      .then(() => {
+        logClientActivity(req.params.clientID);
+        res.redirect(redirect);
+      }).catch(error_500(res));
+    
+    //otherwise create a new conversation
+    } else {
+      Conversations.create(userID, clientID, subject, true)
+      .then((conversationID) => {
+        return Messages.sendOne(commID, content, conversationID)
+      }).then(() => {
+        logClientActivity(req.params.clientID);
+        res.redirect(redirect);
+      }).catch(error_500(res));
+    }
+  }).catch(error_500(res));
+});
 
 
 router.get("/notifications/pending", function (req, res) {
@@ -226,5 +255,10 @@ router.get("/notifications/pending", function (req, res) {
 module.exports = router;
 
 
+// Utilities
+
+function logClientActivity (clientID) {
+  Client.logActivity(clientID).then(() => { }).catch(() => { });
+}
 
 

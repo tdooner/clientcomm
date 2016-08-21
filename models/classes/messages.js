@@ -64,7 +64,7 @@ class Messages {
         .leftJoin("commconns", "commconns.comm", "msgs.comm")
         .leftJoin("comms", "comms.commid", "msgs.comm")
         .whereIn("convo", conversationIDs)
-        .orderBy("created", "desc")
+        .orderBy("created", "asc")
         .then((messages) => {
           fulfill(messages)
         }).catch(reject);
@@ -141,31 +141,40 @@ class Messages {
         newConvoId = convoID;
         return Communications.findById(commID)
       }).then((communication) => {
-        var contentArray = content.match(/.{1,1599}/g);
+        Messages.sendOneText(commID, content, newConvoId)
+        .then(() => {
+          fulfill();
+        }).catch(reject);
+      }).catch(reject);
+    });      
+  }
 
+  static sendOne (commID, content, conversationID) {
+    return new Promise((fulfill, reject) => {
+      var contentArray = content.match(/.{1,1599}/g);
+
+      Communications.findById(commID)
+      .then((communication) => {
         contentArray.forEach(function (contentPortion, contentIndex) {
           twClient.sendMessage({
             to: TESTENV ? "+18589057365" : communication.value,
             from: TWILIO_NUM,
-            body: contentPortion
+            body: content
           }, (err, msg) => {
             if (err) {
               reject(err)
             } else {
               const MessageSID = msg.sid;
               const MessageStatus = msg.status;
-              Messages.create(newConvoId, commID, contentPortion, MessageSID, MessageStatus)
+              Messages.create(conversationID, commID, contentPortion, MessageSID, MessageStatus)
               .then(() => {
-                Client.logActivity(clientID)
-                .then(() => {
-                  fulfill();
-                }).catch(reject)
+                if (contentIndex == contentArray.length - 1) fulfill();
               }).catch(reject);
             }
           })
         });
       }).catch(reject);
-    });      
+    });
   }
 
   static create (conversationID, commID, content, MessageSID, MessageStatus) {
