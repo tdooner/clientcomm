@@ -266,6 +266,13 @@ $width_row5:  5%;
             background-color: $blue;
             color: $white;
           }
+
+          &.disabled {
+            cursor: not-allowed;
+            background-color: $lightgrey;
+            color: $grey;
+            border: 2px solid $grey;
+          }
         }
       }
     }

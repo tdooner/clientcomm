@@ -175,3 +175,8 @@
           .rightContent .responseBox .full .bottomRow .submit:hover {
             background-color: #3F69B6;
             color: #FFF; }
+          .rightContent .responseBox .full .bottomRow .submit.disabled {
+            cursor: not-allowed;
+            background-color: #D3D3D3;
+            color: #898989;
+            border: 2px solid #898989; }
