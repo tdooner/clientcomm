@@ -36,10 +36,36 @@ class Communications {
         .whereNull("retired")
         .andWhere("commconns.client", clientID)
       .then((commConns) => {
-        fulfill(commConns);
+        const commConnsIDArray = commConns.map(function (commConn) { 
+          return commConn.comm;
+        });
+        Communications.getUseCounts(clientID, commConnsIDArray)
+        .then((counts) => {
+          commConns.map(function (commConn) {
+            commConn.useCount = 0;
+            counts.forEach(function (count) {
+              if (count.comm == commConn.comm) commConn.useCount = count.count;
+            });
+            return commConn;
+          });
+          fulfill(commConns);
+        }).catch(reject);
       }).catch(reject);
     }); 
   }
+
+  static getUseCounts (clientID, communicationsIDArray) {
+    return new Promise((fulfill, reject) => {
+      db("msgs")
+        .select(db.raw("count(msgid), comm"))
+        .whereIn("comm", communicationsIDArray)
+        .groupBy("comm")
+      .then((counts) => {
+        fulfill(counts);
+      }).catch(reject);
+    }); 
+  }
+
 }
 
 module.exports = Communications

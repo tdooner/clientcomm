@@ -199,7 +199,7 @@ router.get("/messages/filter/:method", function (req, res) {
         } else { return false; }
       } else { return false; }
     });
-    return CommConns.findByClientID(req.user.cmid)
+    return CommConns.findByClientID(req.params.clientID)
   }).then((communications) => {
     res.render("v4/primaryUser/client/messages", {
       hub: {
