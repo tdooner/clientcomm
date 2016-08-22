@@ -17,6 +17,7 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 class Communication {
   static findById(id) {
     return new Promise((fulfill, reject) => {
+      console.log("Warning! Communication class deprecated use Communications instead.")
       db("comms")
       .where("commid", id)
       .limit(1)
