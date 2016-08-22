@@ -49,9 +49,14 @@ class Notifications {
       db("notifications")
         .leftJoin(
           db("clients")
-            .select(db.raw("first, middle, last, clid"))
+            .select(db.raw("first as client_first, middle as client_middle, last as client_last, clid"))
             .as("clients"),
           "clients.clid", "notifications.client")
+        .leftJoin(
+          db("cms")
+            .select(db.raw("first as creator_first, last as creator_last, department as creator_department, cmid as creator_id"))
+            .as("cms"),
+          "cms.creator_id", "notifications.cm")
         .leftJoin(
           db("commconns")
             .select(db.raw("name as communication_name, comm, commconnid"))

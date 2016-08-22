@@ -7,6 +7,7 @@
   <div class="column">send at</div>
   <div class="column">via</div>
   <div class="column">message</div>
+  <div class="column">created by</div>
   <div class="column">edit</div>
   <div class="column">delete</div>
 </div>
@@ -35,6 +36,13 @@
       <span class="message">
         <%= notification.message.length > 210 ? notification.message.substr(0,210) + '...' : notification.message %>
       </span>
+    </div>
+    <div class="column">
+      <% if (notification.creator_id == user.cmid) { %>
+        You
+      <% } else { %>
+          <%= notification.creator_first + ' ' + notification.creator_last %>
+      <% } %>
     </div>
     <div class="column">
       <% if (hub.sel == "pending") { %>
