@@ -29,6 +29,9 @@ var twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 var errorHandling   = require("../../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
+var logging           = require("../../utilities/logging");
+var logClientActivity = logging.logClientActivity;
+
 
 // MUST PASS THROUGH
 router.use(function (req, res, next) {
@@ -320,11 +323,5 @@ router.get("/communications/filter/open", function (req, res) {
 // EXPORT ROUTER OBJECt
 module.exports = router;
 
-
-// Utilities
-
-function logClientActivity (clientID) {
-  Client.logActivity(clientID).then(() => { }).catch(() => { });
-}
 
 
