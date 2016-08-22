@@ -320,6 +320,19 @@ router.get("/communications/filter/open", function (req, res) {
 });
 
 
+router.get("/communications/remove/:communicationID", function (req, res) {
+  Communications.removeOne(req.params.communicationID)
+  .then((communications) => {
+    req.flash("success", "Removed communication method.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/primary/clients/client/" + 
+                  req.params.clientID + 
+                  "/communications/");
+  }).catch(error_500(res));
+});
+
+
 // EXPORT ROUTER OBJECt
 module.exports = router;
 

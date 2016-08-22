@@ -116,6 +116,37 @@ $darkblue:    #344289;
         }
       }
     }
+    
+    .rightActions {
+      float: right;
+      line-height: 45px;
+      font-size: 0.75em;
+      color: $white;
+      padding-left: 10px;
+      padding-right: 15px;
+
+      .fa-stack.fa-lg {
+        font-size: 1em;
+      }
+
+      .fa.fa-inverse {
+        color: $lightblue;
+      }
+
+      .text {
+        display: none;
+      }
+
+      &:hover {
+        background-color: $blue;
+        .fa.fa-inverse {
+          color: $blue;
+        }
+        .text {
+          display: inline;
+        }
+      }
+    }
   }
 
   .coreContent {

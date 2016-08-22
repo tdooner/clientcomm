@@ -54,14 +54,25 @@ class Communications {
     }); 
   }
 
-  static getUseCounts (clientID, communicationsIDArray) {
+  static getUseCounts (clientID, communicationIDArray) {
     return new Promise((fulfill, reject) => {
       db("msgs")
         .select(db.raw("count(msgid), comm"))
-        .whereIn("comm", communicationsIDArray)
+        .whereIn("comm", communicationIDArray)
         .groupBy("comm")
       .then((counts) => {
         fulfill(counts);
+      }).catch(reject);
+    }); 
+  }
+
+  static removeOne (commConnID) {
+    return new Promise((fulfill, reject) => {
+      db("commconns")
+        .where("commconnid", commConnID)
+        .update({ retired: db.fn.now() })
+      .then(() => {
+        fulfill();
       }).catch(reject);
     }); 
   }
