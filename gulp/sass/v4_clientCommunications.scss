@@ -13,9 +13,9 @@ $lightblue:   #4A90E2;
 $blue:        #3F69B6;
 $darkblue:    #344289;
 
-$width_row1:  22%;
-$width_row2:  15%;
-$width_row3:  38%;
+$width_row1:  30%;
+$width_row2:  30%;
+$width_row3:  15%;
 $width_row4:  15%;
 $width_row5:  5%;
 $width_row6:  5%;
@@ -59,13 +59,13 @@ $width_row6:  5%;
       text-align: center;
     }
     &:nth-child(6) {
-      width: $width_row6;
+      width: $width_row5;
       text-align: center;
     }
   }
 }
 
-.notificationRow {
+.communicationRow {
   height: 50px;
   line-height: 50px;
   overflow: hidden;
@@ -91,7 +91,7 @@ $width_row6:  5%;
       color: $lightblue;
     }
 
-    .time {
+    .name {
       padding-left: 15px;
     }
 
@@ -122,9 +122,6 @@ $width_row6:  5%;
     }
     &:nth-child(3) {
       width: $width_row3;
-      padding-top: 5px;
-      line-height: 20px;
-      font-size: 12px;
     }
     &:nth-child(4) {
       width: $width_row4;
@@ -134,7 +131,7 @@ $width_row6:  5%;
       text-align: center;
     }
     &:nth-child(6) {
-      width: $width_row6;
+      width: $width_row5;
       text-align: center;
     }
   }

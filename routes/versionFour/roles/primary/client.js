@@ -6,14 +6,15 @@ var router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport  = require("../../../../models/models");
-const Client        = modelsImport.Client;
-const ColorTags     = modelsImport.ColorTags;
-const Conversations = modelsImport.Conversations;
-const Users         = modelsImport.Users;
-const Notifications = modelsImport.Notifications;
-const Messages      = modelsImport.Messages;
-const CommConns     = modelsImport.CommConns;
+const modelsImport   = require("../../../../models/models");
+const Client         = modelsImport.Client;
+const ColorTags      = modelsImport.ColorTags;
+const Conversations  = modelsImport.Conversations;
+const Communications = modelsImport.Communications;
+const Users          = modelsImport.Users;
+const Notifications  = modelsImport.Notifications;
+const Messages       = modelsImport.Messages;
+const CommConns      = modelsImport.CommConns;
 
 
 // Twilio library tools and secrets
@@ -289,6 +290,29 @@ router.get("/notifications/remove/:notificationID", function (req, res) {
                   "/primary/clients/client/" + 
                   req.params.clientID + 
                   "/notifications/pending");
+  }).catch(error_500(res));
+});
+
+
+router.get("/communications/", function (req, res) {
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/primary/clients/client/" + 
+                req.params.clientID + 
+                "/communications/filter/open");
+});
+
+
+router.get("/communications/filter/open", function (req, res) {
+  Communications.getClientCommunications(req.params.clientID)
+  .then((communications) => {
+    res.render("v4/primaryUser/client/communications", {
+      hub: {
+        tab: "contactMethods",
+        sel: null
+      },
+      communications: communications
+    });
   }).catch(error_500(res));
 });
 

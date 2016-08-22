@@ -1,0 +1,48 @@
+<% include ../../partials/clientHubFrameTop %>
+
+<!-- Load in addition CSS -->
+<link rel="stylesheet" type="text/css" href="/static/css/v4_clientCommunications.css">
+
+<div class="header">
+  <div class="column">name</div>
+  <div class="column">details</div>
+  <div class="column">type</div>
+  <div class="column">use count</div>
+  <div class="column">edit</div>
+  <div class="column">delete</div>
+</div>
+
+
+<% if (communications.length == 0) { %>
+  <% include ../../partials/emptyResultsGreeting %>
+<% } %>
+
+
+<% communications.forEach(function (communication) { %>
+  <div class="communicationRow">
+    <div class="column">
+      <span class="name"><%= communication.name %></span>
+    </div>
+    <div class="column">
+      <%= communication.value %>
+    </div>
+    <div class="column">
+      <%= communication.type %>
+    </div>
+    <div class="column">
+      <span class="bigNumber"><%= communication.use_count %>12</span>
+    </div>
+    <div class="column">
+      <a href="/v4/users/<%=user.cmid%>/primary/communications/edit/<%=communication.communicationid%>">
+        <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div class="column">
+      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/communications/remove/<%=communication.communicationid%>">
+        <i class="fa highlight fa-trash" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+<% }) %>
+
+<% include ../../partials/hubFrameBottom %>
