@@ -101,6 +101,17 @@ class Conversations {
       }).catch(reject)
     })
   }
+
+  static logActivity (conversationID) {
+    return new Promise((fulfill, reject) => {
+      db("convos")
+        .where("convid", conversationID)
+        .update({ updated: db.fn.now() })
+      .then(function () {
+        fulfill();
+      }).catch(reject);
+    });
+  }
 }
 
 module.exports = Conversations

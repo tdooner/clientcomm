@@ -29,8 +29,9 @@ var twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 var errorHandling   = require("../../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
-var logging           = require("../../utilities/logging");
-var logClientActivity = logging.logClientActivity;
+var logging                 = require("../../utilities/logging");
+var logClientActivity       = logging.logClientActivity;
+var logConversationActivity = logging.logConversationActivity;
 
 
 // MUST PASS THROUGH
@@ -237,6 +238,7 @@ router.post("/messages/create/infer_conversation", function (req, res) {
       Messages.sendOne(commID, content, conversation.convid)
       .then(() => {
         logClientActivity(req.params.clientID);
+        logConversationActivity(conversation.convid);
         res.redirect(redirect);
       }).catch(error_500(res));
     
@@ -343,7 +345,6 @@ router.get("/communications/filter/open", function (req, res) {
 
 
 router.get("/communications/remove/:communicationID", function (req, res) {
-  
   CommConns.findByClientID(req.params.clientID)
   .then((commConns) => {
     if (commConns.length > 1) {
