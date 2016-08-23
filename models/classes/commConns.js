@@ -95,7 +95,7 @@ class CommConns {
             fulfill();
           }).catch(reject);
         } else {
-          Communications.createOne(type, value, name)
+          Communications.createOne(type, name, value)
           .then((commID) => { 
             db("commconns")
               .insert({

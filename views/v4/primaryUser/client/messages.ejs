@@ -14,7 +14,6 @@
       <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/all?conversation=<%= conversation.convid %>">
         <div class="conversation <% if (conversationFilterID == Number(conversation.convid)) { %>selected<% } %>">
           <div class="subject">
-            <%= conversation.convid %>
             <%= conversation.subject ? conversation.subject : 'No Subject' %>
           </div>
           <div class="date">

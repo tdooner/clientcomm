@@ -40,7 +40,7 @@ class Notifications {
     })
   }
 
-  static findByClient (clientID, sent) {
+  static findByClientID (clientID, sent) {
     if (typeof sent == "undefined") sent = false;
     const order = sent ? "desc" : "asc";
     
