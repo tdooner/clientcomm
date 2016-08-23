@@ -99,7 +99,9 @@ router.post("/edit/:notificationID", function (req, res) {
     req.flash("success", "Edited notification.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/primary/notifications");
+                  "/primary/clients/client/" + 
+                  clientID + 
+                  "/notifications");
   }).catch(error_500(res));
 });
 
