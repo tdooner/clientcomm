@@ -61,7 +61,10 @@
           id="newMessage" 
           action="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/create/infer_conversation">
       <div class="mini">
-        <div class="messageInput"><i class="fa fa-keyboard-o" aria-hidden="true"></i> Start typing message...</div>
+        <div class="messageInput">
+          <div class="left">Start typing message...</div>
+          <div class="right"><i class="fa fa-keyboard-o" aria-hidden="true"></i> </div>
+        </div>
       </div>
 
       <div class="full">

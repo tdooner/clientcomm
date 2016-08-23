@@ -157,8 +157,22 @@ $width_row5:  5%;
         color: $white;
         font-weight: 300;
         padding-left: 15px;
-        text-align: left;
         cursor: pointer;
+
+        .left {
+          float: left;
+          width: 50%;
+          text-align: left;
+        }
+        .right {
+          float: left;
+          width: 50%;
+          text-align: right;
+
+          .fa {
+            padding-right: 15px;
+          }
+        }
 
         &:hover {
           color: $offwhite;

@@ -87,8 +87,17 @@
         color: #FFF;
         font-weight: 300;
         padding-left: 15px;
-        text-align: left;
         cursor: pointer; }
+        .rightContent .responseBox .mini .messageInput .left {
+          float: left;
+          width: 50%;
+          text-align: left; }
+        .rightContent .responseBox .mini .messageInput .right {
+          float: left;
+          width: 50%;
+          text-align: right; }
+          .rightContent .responseBox .mini .messageInput .right .fa {
+            padding-right: 15px; }
         .rightContent .responseBox .mini .messageInput:hover {
           color: #E8ECEF;
           box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5); }
