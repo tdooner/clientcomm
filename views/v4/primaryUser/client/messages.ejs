@@ -97,12 +97,8 @@
 </div>
 
 <script type="text/javascript">
-  // Intended to handle issue with height of content being dynamic in height
-  $(".leftBar").height($(window).height() - 92);
-  $(".rightContent").height($(window).height() - 92);
-
-  // Animate scroll to latest text on load
-  try { scrollLast() } catch (e) { console.log(e); }
+  // On load actions
+  try { scrollLast(); adjustDivs(); } catch (e) { console.log(e); }
 
   // Toggle Writing View for Message Entry
   function toggleTypeBox () {
@@ -114,6 +110,11 @@
       $(".messageStream").css("margin-bottom", 150);
       scrollLast()
     }
+  }
+
+  function adjustDivs () {
+    $(".leftBar").height($(window).height() - 92);
+    $(".rightContent").height($(window).height() - 92);
   }
 
   function scrollLast () {
@@ -134,6 +135,8 @@
     }
     return ok;
   }
+
+  $(window).resize(adjustDivs)
 
   $(".mini").click(toggleTypeBox);
   $("#closeTypeBox").click(toggleTypeBox);
