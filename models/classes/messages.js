@@ -145,7 +145,7 @@ class Messages {
         newConvoId = convoID;
         return Communications.findById(commID)
       }).then((communication) => {
-        Messages.sendOneText(commID, content, newConvoId)
+        Messages.sendOne(commID, content, newConvoId)
         .then(() => {
           fulfill();
         }).catch(reject);

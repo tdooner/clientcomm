@@ -109,7 +109,8 @@ router.post ("/address/:clientID", function (req, res) {
     req.flash("success", "Message to client sent.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/primary/clients/open");
+                  "/primary/clients/client/" + 
+                  clientID);
   }).catch(error_500(res));
   
 });
