@@ -36,38 +36,42 @@ const Client = require("./client");
 // Class
 class Messages {
 
-  static findByClient (clientID) {
+  static findByClientID (userID, clientID) {
     return new Promise((fulfill, reject) => {
-      Conversations.findByUser(clientID)
+      Conversations.findByUser(userID)
       .then((conversations) => {
         conversations = conversations.map(function (conversation) {
           return conversation.convid;
         });
-
-        return Messages.findByConversations(conversations)
+        return Messages.findByConversations(clientID, conversations)
       }).then((messages) => {
           fulfill(messages);
       }).catch(reject);
     });
   }
 
-  static findByConversations (conversationIDs) {
+  static findByConversations (clientID, conversationIDs) {
     if (!Array.isArray(conversationIDs)) conversationIDs = [conversationIDs];
     
     return new Promise((fulfill, reject) => {
+
       db("msgs")
         .select("msgs.*", 
-                "commconns.comm", 
+                "commconns.client",
                 "commconns.name as commconn_name", 
-                "comms.value as comm_value",
-                "comms.type as comm_type")
-        .leftJoin("commconns", "commconns.comm", "msgs.comm")
-        .leftJoin("comms", "comms.commid", "msgs.comm")
+                "commconns.value as comm_value",
+                "commconns.type as comm_type")
+        .leftJoin(
+          db("commconns")
+            .join("comms", "commconns.comm", "comms.commid")
+            .as("commconns"),
+          "commconns.commid", "msgs.comm")
         .whereIn("convo", conversationIDs)
+        .andWhere("client", clientID)
         .orderBy("created", "asc")
-        .then((messages) => {
-          fulfill(messages)
-        }).catch(reject);
+      .then((messages) => {
+        fulfill(messages)
+      }).catch(reject);
     });
   }
 

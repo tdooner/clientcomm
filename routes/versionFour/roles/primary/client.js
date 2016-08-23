@@ -190,7 +190,7 @@ router.get("/messages/filter/:method", function (req, res) {
   Conversations.findByUser(req.user.cmid)
   .then((convos) => {
     conversations = convos;
-    return Messages.findByClient(req.user.cmid)
+    return Messages.findByClientID(req.user.cmid, req.params.clientID)
   }).then((msgs) => {
     messages = msgs.filter(function (msg) {
       if (msg.comm_type == methodFilter || methodFilter == "all") {
@@ -257,7 +257,7 @@ router.get("/notifications", function (req, res) {
 
 
 router.get("/notifications/pending", function (req, res) {
-  Notifications.findByClient(req.params.clientID, false)
+  Notifications.findByClientID(req.params.clientID, false)
   .then((notifications) => {
     res.render("v4/primaryUser/client/notifications", {
       hub: {
@@ -271,7 +271,7 @@ router.get("/notifications/pending", function (req, res) {
 
 
 router.get("/notifications/sent", function (req, res) {
-  Notifications.findByClient(req.params.clientID, true)
+  Notifications.findByClientID(req.params.clientID, true)
   .then((notifications) => {
     res.render("v4/primaryUser/client/notifications", {
       hub: {
