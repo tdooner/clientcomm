@@ -39,10 +39,50 @@ class CommConns {
     })
   }
 
-  static createOne (clientID, name, value) {
+  static getClientCommunications (clientID) {
     return new Promise((fulfill, reject) => {
+      db("commconns")
+        .select("commconns.*", "comms.type", "comms.value")
+        .leftJoin("comms", "comms.commid", "commconns.comm")
+        .whereNull("retired")
+        .andWhere("commconns.client", clientID)
+      .then((commConns) => {
+        const commConnsIDArray = commConns.map(function (commConn) { 
+          return commConn.comm;
+        });
+        CommConns.getUseCounts(clientID, commConnsIDArray)
+        .then((counts) => {
+          commConns.map(function (commConn) {
+            commConn.useCount = 0;
+            counts.forEach(function (count) {
+              if (count.comm == commConn.comm) commConn.useCount = count.count;
+            });
+            return commConn;
+          });
+          fulfill(commConns);
+        }).catch(reject);
+      }).catch(reject);
+    }); 
+  }
 
-      Communications.findByValue
+  static getUseCounts (clientID, communicationIDArray) {
+    return new Promise((fulfill, reject) => {
+      db("msgs")
+        .select(db.raw("count(msgid), msgs.comm"))
+        .leftJoin("convos", "convos.convid", "msgs.convo")
+        .whereIn("comm", communicationIDArray)
+        .andWhere("convos.client", clientID)
+        .groupBy("msgs.comm")
+      .then((counts) => {
+        console.log(counts[0])
+        fulfill(counts);
+      }).catch(reject);
+    }); 
+  }
+
+  static createOne (clientID, type, name, value) {
+    return new Promise((fulfill, reject) => {
+      Communications.findByValue(value)
       .then((comm) => {
         // if a comm method already exists just create a reference 
         if (comm) {
@@ -52,11 +92,22 @@ class CommConns {
               comm: comm.commid,
               name: name
             })
-          .then((success) => {
+          .then((success) => { 
             fulfill();
           }).catch(reject);
         } else {
-          Communications.createOne
+          Communications.createOne(type, value, name)
+          .then((commID) => { 
+            db("commconns")
+              .insert({
+                client: clientID,
+                comm: commID,
+                name: name
+              })
+            .then((success) => { 
+              fulfill();
+            }).catch(reject);
+          }).catch(reject);
         }
       }).catch(reject);
 

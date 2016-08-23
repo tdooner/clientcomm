@@ -38,32 +38,6 @@ class Communications {
     })
   }
 
-  static getClientCommunications (clientID) {
-    return new Promise((fulfill, reject) => {
-      db("commconns")
-        .select("commconns.*", "comms.type", "comms.value")
-        .leftJoin("comms", "comms.commid", "commconns.comm")
-        .whereNull("retired")
-        .andWhere("commconns.client", clientID)
-      .then((commConns) => {
-        const commConnsIDArray = commConns.map(function (commConn) { 
-          return commConn.comm;
-        });
-        Communications.getUseCounts(clientID, commConnsIDArray)
-        .then((counts) => {
-          commConns.map(function (commConn) {
-            commConn.useCount = 0;
-            counts.forEach(function (count) {
-              if (count.comm == commConn.comm) commConn.useCount = count.count;
-            });
-            return commConn;
-          });
-          fulfill(commConns);
-        }).catch(reject);
-      }).catch(reject);
-    }); 
-  }
-
   static getUseCounts (clientID, communicationIDArray) {
     return new Promise((fulfill, reject) => {
       db("msgs")
@@ -87,19 +61,18 @@ class Communications {
     }); 
   }
 
-  static createOne (clientID, commID, name, value) {
+  static createOne (type, description, value) {
     return new Promise((fulfill, reject) => {
-
-      Communications.createOne
-
-      db("commconns")
+      console.log("commIDs");
+      db("comms")
         .insert({
-          client: clientID,
-          comm: commID,
-          name: name
+          type: type,
+          value: value,
+          description: description
         })
-      .then((success) => {
-        fulfill();
+        .returning("commid")
+      .then((commIDs) => {
+        fulfill(commIDs[0]);
       }).catch(reject);
     }); 
   }

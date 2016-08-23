@@ -297,7 +297,7 @@ router.get("/notifications/remove/:notificationID", function (req, res) {
 });
 
 
-router.get("/communications/", function (req, res) {
+router.get("/communications", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
                 "/primary/clients/client/" + 
@@ -307,7 +307,7 @@ router.get("/communications/", function (req, res) {
 
 
 router.get("/communications/filter/open", function (req, res) {
-  Communications.getClientCommunications(req.params.clientID)
+  CommConns.getClientCommunications(req.params.clientID)
   .then((communications) => {
     res.render("v4/primaryUser/client/communications", {
       hub: {
@@ -321,22 +321,52 @@ router.get("/communications/filter/open", function (req, res) {
 
 
 router.get("/communications/remove/:communicationID", function (req, res) {
-  Communications.removeOne(req.params.communicationID)
-  .then((communications) => {
-    req.flash("success", "Removed communication method.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  req.params.clientID + 
-                  "/communications/");
-  }).catch(error_500(res));
+  
+  CommConns.findByClientID(req.params.clientID)
+  .then((commConns) => {
+    if (commConns.length > 1) {
+      Communications.removeOne(req.params.communicationID)
+      .then((communications) => {
+        req.flash("success", "Removed communication method.");
+        res.redirect( "/v4/users/" + 
+                      req.user.cmid + 
+                      "/primary/clients/client/" + 
+                      req.params.clientID + 
+                      "/communications/");
+      }).catch(error_500(res));
+    } else {
+      req.flash("warning", "Can't remove the only remaining communication method.");
+      res.redirect( "/v4/users/" + 
+                    req.user.cmid + 
+                    "/primary/clients/client/" + 
+                    req.params.clientID + 
+                    "/communications");
+    }
+  })
 });
 
 
 router.get("/communications/create", function (req, res) {
-  Communications.removeOne(req.params.communicationID)
-  .then((communications) => {
-    req.flash("success", "Removed communication method.");
+  res.render("v4/primaryUser/client/createComm", {
+    commConn: {}
+  });
+});
+
+
+router.post("/communications/create", function (req, res) {
+  const clientID = req.params.clientID;
+  const name = req.body.description;
+  const type = req.body.type;
+  var   value = req.body.value;
+
+  // clean up numbers
+  if (type == "cell" || type == "landline") {
+    value = value.replace(/[^0-9.]/g, "");
+    if (value.length == 10) { value = "1" + value; }
+  }
+  CommConns.createOne(clientID, type, name, value)
+  .then(() => {
+    req.flash("success", "Created new communication method.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/primary/clients/client/" + 
