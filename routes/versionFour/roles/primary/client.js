@@ -187,7 +187,7 @@ router.get("/messages/filter/:method", function (req, res) {
   if (isNaN(conversationFilterID)) conversationFilterID = null;
 
   var conversations, messages;
-  Conversations.findByUser(req.user.cmid)
+  Conversations.findByUserAndClient(req.user.cmid, req.params.clientID)
   .then((convos) => {
     conversations = convos;
     return Messages.findByClientID(req.user.cmid, req.params.clientID)

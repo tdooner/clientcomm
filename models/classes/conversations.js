@@ -23,6 +23,18 @@ class Conversations {
     })
   }
   
+  static findByUserAndClient (userID, clientID) {
+    return new Promise((fulfill, reject) => {
+      db("convos")
+        .where("cm", userID)
+        .andWhere("client", clientID)
+        .orderBy("updated", "desc")
+      .then((conversations) => {
+        fulfill(conversations);
+      }).catch(reject);
+    })
+  }
+
   static closeAllForClient (userID, clientID) {
     return new Promise((fulfill, reject) => {
       db("convos")

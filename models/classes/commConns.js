@@ -74,7 +74,6 @@ class CommConns {
         .andWhere("convos.client", clientID)
         .groupBy("msgs.comm")
       .then((counts) => {
-        console.log(counts[0])
         fulfill(counts);
       }).catch(reject);
     }); 
