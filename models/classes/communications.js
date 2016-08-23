@@ -8,9 +8,7 @@ const Promise = require("bluebird");
 const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
-
-// TO DOS
-// Check if arrays are indeed arrays and that they have length > 0
+const CommConns = require("./commConns");
 
 
 // Class
@@ -20,6 +18,18 @@ class Communications {
     return new Promise((fulfill, reject) => {
       db("comms")
         .where("commid", commID)
+        .limit(1)
+      .then(function (comms) {
+        fulfill(comms[0])
+      })
+      .catch(reject);
+    })
+  }
+
+  static findByValue (value) {
+    return new Promise((fulfill, reject) => {
+      db("comms")
+        .whereRaw("LOWER(value) = LOWER('" + String(value) + "')")
         .limit(1)
       .then(function (comms) {
         fulfill(comms[0])
@@ -72,6 +82,23 @@ class Communications {
         .where("commconnid", commConnID)
         .update({ retired: db.fn.now() })
       .then(() => {
+        fulfill();
+      }).catch(reject);
+    }); 
+  }
+
+  static createOne (clientID, commID, name, value) {
+    return new Promise((fulfill, reject) => {
+
+      Communications.createOne
+
+      db("commconns")
+        .insert({
+          client: clientID,
+          comm: commID,
+          name: name
+        })
+      .then((success) => {
         fulfill();
       }).catch(reject);
     }); 
