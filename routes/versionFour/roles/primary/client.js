@@ -292,21 +292,15 @@ router.get("/notifications/remove/:notificationID", function (req, res) {
                   req.user.cmid + 
                   "/primary/clients/client/" + 
                   req.params.clientID + 
-                  "/notifications/pending");
+                  "/notifications");
   }).catch(error_500(res));
 });
 
 
 router.get("/notifications/create", function (req, res) {
-  Notifications.removeOne(req.params.notificationID)
-  .then(() => {
-    req.flash("success", "Removed notification.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  req.params.clientID + 
-                  "/notifications/pending");
-  }).catch(error_500(res));
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/primary/notifications/create/sendto");
 });
 
 

@@ -174,7 +174,9 @@ router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", fu
     req.flash("success", "Created new notification.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/primary/notifications");
+                  "/primary/clients/client/" + 
+                  req.params.clientID + 
+                  "/notifications");
   }).catch(error_500(res));
 });
 
