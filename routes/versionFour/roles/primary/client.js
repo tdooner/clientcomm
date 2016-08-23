@@ -225,8 +225,15 @@ router.post("/messages/create/infer_conversation", function (req, res) {
 
   Conversations.getMostRecentConversation(userID, clientID)
   .then((conversation) => {
-    // use existing conversation if exists
+    // use existing conversation if exists and recent (5 days)
+    var now, lastUpdated, recentOkay = false;
     if (conversation) {
+      now = new Date().getTime() - (5 * 24 * 60 * 60 * 1000);
+      lastUpdated = new Date(conversation.updated).getTime();
+      recentOkay = lastUpdated > now;
+    }
+
+    if (conversation && recentOkay) {
       Messages.sendOne(commID, content, conversation.convid)
       .then(() => {
         logClientActivity(req.params.clientID);
