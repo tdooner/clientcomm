@@ -2,11 +2,11 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/groups">
+  <a href="/v4/users/<%=user.cmid%>/owner/departments">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Create Department
+    Edit Department
   </div>
   <div class="cardSubtitle">
     Use departments to organize your workforce.
@@ -17,14 +17,14 @@
 
   <form method = "post"
         id="createGroup"
-        action = "/v4/users/<%=user.cmid%>/owner/departments/create">
+        action = "/v4/users/<%=user.cmid%>/owner/departments/edit/<%=department.department_id%>">
 
     <div class="formRow">
       <div class="formLabel"> Name of department </div>
       <div class="formInput">
         <input  type="text" 
                 name="name" 
-                value=""
+                value="<%=department.name%>"
                 placeholder="Enter a name of the group" 
                 maxlength="160"
                 required="">
@@ -37,7 +37,8 @@
               name="phoneNumber" 
               required>
         <% phoneNumbers.forEach(function (phoneNumber) { %>
-            <option value="<%= phoneNumber.phone_number_id %>">
+            <option value="<%= phoneNumber.phone_number_id %>"
+                    <% if (department.phone_number == phoneNumber.phone_number_id) { %>selected<% } %>>
               <%= phoneNumber.value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4'); %>
             </option>
         <% }) %>
@@ -46,7 +47,7 @@
 
     <input  type="submit" 
             class="formSubmit" 
-            value="Submit Department">
+            value="Save Department">
   </form>
 </div>
 

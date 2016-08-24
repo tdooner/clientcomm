@@ -64,6 +64,18 @@ class Departments {
   }
 
 
+  static findByID (departmentID) {
+    return new Promise((fulfill, reject) => {
+      db("departments")
+        .where("department_id", departmentID)
+        .limit(1)
+      .then((departments) => {
+        fulfill(departments[0]);
+      }).catch(reject);
+    });
+  }
+
+
   static findMembers (departmentID) {
     return new Promise((fulfill, reject) => {
       db("cms")

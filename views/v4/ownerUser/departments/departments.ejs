@@ -42,8 +42,8 @@
       </span>
     </div>
     <div class="column">
-      <% if (hub.sel == "pending") { %>
-        <a href="/v4/users/<%=user.cmid%>/primary/notifications/edit/<%=department.notificationid%>">
+      <% if (hub.sel == "active") { %>
+        <a href="/v4/users/<%=user.cmid%>/owner/departments/edit/<%=department.department_id%>">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>

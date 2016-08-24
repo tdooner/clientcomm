@@ -71,6 +71,23 @@ router.post("/create", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/edit/:departmentID", function (req, res) {
+  Departments.findByID(req.params.departmentID)
+  .then((department) => {
+    if (department) {
+      PhoneNumbers.fingByOrgID(req.user.org)
+      .then((phoneNumbers) => {
+        res.render("v4/ownerUser/departments/edit", {
+          department: department,
+          phoneNumbers: phoneNumbers
+        });
+      }).catch(error_500(res));
+    } else {
+      res.redirect("/404")
+    }
+  }).catch(error_500(res));
+});
+
 router.get("/deactivate/:departmentID", function (req, res) {
   Departments.findMembers(req.params.departmentID)
   .then((members) => {
