@@ -4,9 +4,10 @@
 <link rel="stylesheet" type="text/css" href="/static/css/v4_departments.css">
 
 <div class="header">
-  <div class="column">client name</div>
-  <div class="column">send at</div>
-  <div class="column">message</div>
+  <div class="column">name</div>
+  <div class="column">attached number</div>
+  <div class="column">members</div>
+  <div class="column">creation details</div>
   <div class="column">edit</div>
   <div class="column">delete</div>
 </div>
@@ -21,21 +22,18 @@
   <div class="notificationRow">
     <div class="column">
       <span class="clientName">
-        <%= department.last + ', ' + department.first + ' ' + department.middle %>
+        <%= department.name %>
       </span>
     </div>
     <div class="column">
-      <span class="time">
-        <%= moment.tz(department.send, local_tz).format('MMM. Do, hh:mmA') %>
-      </span>
+      <%= department.value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4') %>
     </div>
     <div class="column">
-      <span class="subject">
-        <%= department.subject %>
-      </span>
-      <span class="message">
-        <%= department.message %>
-      </span>
+      <span class="bigNumber"><%= department.members ? department.members : '0' %></span>
+    </div>
+    <div class="column">
+      <%= moment.tz(department.send, local_tz).format('MMM. Do, hh:mmA') %>
+      by <%= department.created_by_first + ' ' + department.created_by_last %>
     </div>
     <div class="column">
       <% if (hub.sel == "pending") { %>

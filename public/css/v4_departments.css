@@ -10,15 +10,18 @@
     text-align: left;
     cursor: pointer; }
     .header .column:nth-child(1) {
-      width: 20%; }
+      width: 30%; }
     .header .column:nth-child(2) {
       width: 15%; }
     .header .column:nth-child(3) {
-      width: 55%; }
+      width: 15%;
+      text-align: center; }
     .header .column:nth-child(4) {
+      width: 30%; }
+    .header .column:nth-child(5) {
       width: 5%;
       text-align: center; }
-    .header .column:nth-child(5) {
+    .header .column:nth-child(6) {
       width: 5%;
       text-align: center; }
 
@@ -59,18 +62,18 @@
         color: #898989;
         background-color: #FFF; }
     .notificationRow .column:nth-child(1) {
-      width: 20%; }
+      width: 30%; }
     .notificationRow .column:nth-child(2) {
       width: 15%; }
     .notificationRow .column:nth-child(3) {
-      width: 55%;
-      padding-top: 5px;
-      line-height: 20px;
-      font-size: 12px; }
+      width: 15%;
+      text-align: center; }
     .notificationRow .column:nth-child(4) {
+      width: 30%; }
+    .notificationRow .column:nth-child(5) {
       width: 5%;
       text-align: center; }
-    .notificationRow .column:nth-child(5) {
+    .notificationRow .column:nth-child(6) {
       width: 5%;
       text-align: center; }
   .notificationRow:nth-child(even) {
