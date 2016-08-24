@@ -38,6 +38,7 @@ module.exports = function (passport) {
 
         db("cms")
         .whereRaw("LOWER(email) = LOWER('" + String(email) + "')")
+        .andWhere("active", true)
         .limit(1)
         .then(function (acct) {
           if (acct.constructor === Array && acct.length == 1) {
