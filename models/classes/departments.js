@@ -8,6 +8,7 @@ const Promise = require("bluebird");
 const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
+const DepartmentSupervisors = require("./departmentSupervisors");
 
 
 
@@ -17,6 +18,7 @@ class Departments {
   static selectByOrgID (orgID, activeStatus) {
     if (typeof activeStatus == "undefined") activeStatus = true;
     return new Promise((fulfill, reject) => {
+      var departmentsAll;
       db("departments")
         .select("departments.*", 
                 "phone_numbers.value", 
@@ -36,10 +38,26 @@ class Departments {
         .andWhere("departments.active", activeStatus)
         .orderBy("departments.name", "asc")
       .then((departments) => {
-        fulfill(departments)
+        departmentsAll = departments;
+        const departmentIDs = departments.map(function (department) {
+          return department.department_id;
+        });
+        return DepartmentSupervisors.selectByDepartmentIDs(departmentIDs, true)
+      }).then((supervisors) => {
+        departmentsAll = departmentsAll.map(function (department) {
+          department.supervisors = [];
+          supervisors.forEach(function (supervisor) {
+            if (supervisor.department == department.department_id) {
+              department.supervisors.push(supervisor);
+            }
+          });
+          return department;
+        });
+        fulfill(departmentsAll)
       }).catch(reject);
     })
   }
+
 
   static createOne (orgID, name, phoneNumber, userID) {
     return new Promise((fulfill, reject) => {

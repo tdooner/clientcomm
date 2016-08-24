@@ -4,12 +4,13 @@
 <link rel="stylesheet" type="text/css" href="/static/css/v4_departments.css">
 
 <div class="header">
-  <div class="column">name</div>
+  <div class="column">department name</div>
   <div class="column">attached number</div>
   <div class="column">members</div>
-  <div class="column">creation details</div>
+  <div class="column">supervisor(s)</div>
+  <div class="column">created</div>
   <div class="column">edit</div>
-  <div class="column">delete</div>
+  <div class="column"><%= hub.sel == 'active' ? 'deactivate' : 'activate' %></div>
 </div>
 
 
@@ -32,8 +33,13 @@
       <span class="bigNumber"><%= department.members ? department.members : '0' %></span>
     </div>
     <div class="column">
-      <%= moment.tz(department.send, local_tz).format('MMM. Do, hh:mmA') %>
-      by <%= department.created_by_first + ' ' + department.created_by_last %>
+      <% if (department.supervisors.length == 0) { %><b>No supervisors</b><% } %>
+      <%= department.supervisors.map(function (d) { return d.first + ' ' + d.last }).join(','); %>
+    </div>
+    <div class="column">
+      <span class="time">
+        <%= moment.tz(department.send, local_tz).format('MMM. Do, hh:mmA') %>
+      </span>
     </div>
     <div class="column">
       <% if (hub.sel == "pending") { %>
@@ -43,9 +49,15 @@
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=department.notificationid%>">
-        <i class="fa highlight fa-trash" aria-hidden="true"></i>
-      </a>
+      <% if (hub.sel == "active") { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=department.notificationid%>">
+          <i class="fa highlight fa-book" aria-hidden="true"></i>
+        </a>
+      <% } else { %>
+        <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=department.notificationid%>">
+          <i class="fa highlight fa-undo" aria-hidden="true"></i>
+        </a>
+      <% } %>
     </div>
   </div>
 <% }) %>
