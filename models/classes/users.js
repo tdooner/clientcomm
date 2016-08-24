@@ -15,12 +15,16 @@ const CommConns = require("./commConns");
 // Class
 class Users {
 
-  static findByOrg (orgID) {
+  static findByOrg (orgID, activeStatus) {
+    if (typeof activeStatus == "undefined") activeStatus = true;
+
     return new Promise((fulfill, reject) => {
       db("cms")
-        .where("org", orgID)
-        .andWhere("active", true)
-        .orderBy("last", "asc")
+        .select("cms.*", "departments.name as department_name")
+        .leftJoin("departments", "departments.department_id", "cms.department")
+        .where("cms.org", orgID)
+        .andWhere("cms.active", activeStatus)
+        .orderBy("cms.last", "asc")
       .then((users) => {
         fulfill(users);
       }).catch(reject);
@@ -31,7 +35,6 @@ class Users {
     return new Promise((fulfill, reject) => {
       db("cms")
         .where("cmid", userID)
-        .andWhere("active", true)
         .limit(1)
       .then((users) => {
         fulfill(users[0]);
@@ -50,7 +53,26 @@ class Users {
       }).catch(reject);
     })
   }
+
+  static updateOne (targetUserID, first, middle, last, email, department, position, className) {
+    return new Promise((fulfill, reject) => {
+      db("cms")
+        .where("cmid", targetUserID)
+        .update({
+          first: first,
+          middle: middle,
+          last: last,
+          email: email,
+          department: department,
+          position: position,
+          class: className
+        })
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    })
+  }
   
 }
 
-module.exports = Users
+module.exports = Users;

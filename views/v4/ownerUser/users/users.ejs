@@ -37,7 +37,7 @@
       <small><%= targetUser.position %></small>
     </div>
     <div class="column">
-      <small><%= targetUser.department ? targetUser.department : 'No department' %></small>
+      <small><%= targetUser.department_name ? targetUser.department_name : 'No department' %></small>
     </div>
     <div class="column">
       <span class="time">
@@ -45,15 +45,17 @@
       </span>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=targetUser.cmid%>/owner/users/edit/<%=targetUser.department_id%>">
+      <a href="/v4/users/<%=user.cmid%>/owner/users/edit/<%=targetUser.cmid%>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>
-        <a href="/v4/users/<%=user.cmid%>/owner/users/deactivate/<%=targetUser.cmid%>">
-          <i class="fa highlight fa-book" aria-hidden="true"></i>
-        </a>
+        <% if (user.cmid !== targetUser.cmid) { %>
+          <a href="/v4/users/<%=user.cmid%>/owner/users/deactivate/<%=targetUser.cmid%>">
+            <i class="fa highlight fa-book" aria-hidden="true"></i>
+          </a>
+        <% } else { %>-<% } %>
       <% } else { %>
         <a href="/v4/users/<%=user.cmid%>/owner/users/activate/<%=targetUser.cmid%>">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>

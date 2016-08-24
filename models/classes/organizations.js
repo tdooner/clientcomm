@@ -15,18 +15,18 @@ const Messages = require("./messages");
 // Class
 class Organizations {
   
-  static selectUsersByOrgID (orgID, activeStatus) {
-    if (typeof activeStatus == "undefined") activeStatus = true;
-    return new Promise((fulfill, reject) => {
-      db("cms")
-        .where("cms.org", orgID)
-        .andWhere("active", activeStatus)
-        .orderBy("last", "asc")
-      .then((users) => {
-        fulfill(users);
-      }).catch(reject);
-    });
-  }
+  // static selectUsersByOrgID (orgID, activeStatus) {
+  //   if (typeof activeStatus == "undefined") activeStatus = true;
+  //   return new Promise((fulfill, reject) => {
+  //     db("cms")
+  //       .where("cms.org", orgID)
+  //       .andWhere("active", activeStatus)
+  //       .orderBy("last", "asc")
+  //     .then((users) => {
+  //       fulfill(users);
+  //     }).catch(reject);
+  //   });
+  // }
 
 }
 

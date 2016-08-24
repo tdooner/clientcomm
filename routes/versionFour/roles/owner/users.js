@@ -42,7 +42,7 @@ router.get("/filter/:activeStatus", function (req, res) {
     activeStatus = false;
   }
 
-  Organizations.selectUsersByOrgID(req.user.org, activeStatus)
+  Users.findByOrg(req.user.org, activeStatus)
   .then((users) => {
     res.render("v4/ownerUser/users/users", {
       hub: {
@@ -55,7 +55,6 @@ router.get("/filter/:activeStatus", function (req, res) {
 });
 
 router.get("/deactivate/:targetUserID", function (req, res) {
-  console.log("her");
   Users.changeActivityStatus(req.params.targetUserID, false)
   .then(() => {
     req.flash("success", "Deactivated user.");
@@ -69,6 +68,42 @@ router.get("/activate/:targetUserID", function (req, res) {
   Users.changeActivityStatus(req.params.targetUserID, true)
   .then(() => {
     req.flash("success", "Activated user.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/users");
+  }).catch(error_500(res));
+});
+
+router.get("/edit/:targetUserID", function (req, res) {
+  var departments;
+  Departments.selectByOrgID(req.user.org)
+  .then((depts) => {
+    departments = depts;
+    return Users.findByID(req.params.targetUserID)
+  }).then((targetUser) => {
+    if (targetUser) {
+      res.render("v4/ownerUser/users/edit", {
+        targetUser: targetUser,
+        departments: departments
+      })
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/edit/:targetUserID", function (req, res) {
+  const targetUserID = req.params.targetUserID;
+  const first = req.body.first;
+  const middle = req.body.middle;
+  const last = req.body.last;
+  const email = req.body.email;
+  const department = req.body.department;
+  const position = req.body.position;
+  const className = req.body.className;
+  Users.updateOne(targetUserID, first, middle, last, email, department, position, className)
+  .then(() => {
+    req.flash("success", "Updated user.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/users");

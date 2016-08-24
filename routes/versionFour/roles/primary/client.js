@@ -158,7 +158,7 @@ router.post("/transfer", function (req, res) {
   const bundleConversations = req.params.bundleConversations ? true : false;
   Users.findByID(toUserID)
   .then((user) => {
-    if (user) {
+    if (user && user.active) {
       Client.transfer(clientID, fromUserID, toUserID, bundleConversations)
       .then(() => {
         res.redirect( "/v4/users/" + 
