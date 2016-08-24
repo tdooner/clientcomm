@@ -17,35 +17,35 @@
 <% } %>
 
 
-<% departments.forEach(function (notification) { %>
+<% departments.forEach(function (department) { %>
   <div class="notificationRow">
     <div class="column">
       <span class="clientName">
-        <%= notification.last + ', ' + notification.first + ' ' + notification.middle %>
+        <%= department.last + ', ' + department.first + ' ' + department.middle %>
       </span>
     </div>
     <div class="column">
       <span class="time">
-        <%= moment.tz(notification.send, local_tz).format('MMM. Do, hh:mmA') %>
+        <%= moment.tz(department.send, local_tz).format('MMM. Do, hh:mmA') %>
       </span>
     </div>
     <div class="column">
       <span class="subject">
-        <%= notification.subject %>
+        <%= department.subject %>
       </span>
       <span class="message">
-        <%= notification.message.length > 210 ? notification.message.substr(0,210) + '...' : notification.message %>
+        <%= department.message %>
       </span>
     </div>
     <div class="column">
       <% if (hub.sel == "pending") { %>
-        <a href="/v4/users/<%=user.cmid%>/primary/notifications/edit/<%=notification.notificationid%>">
+        <a href="/v4/users/<%=user.cmid%>/primary/notifications/edit/<%=department.notificationid%>">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=notification.notificationid%>">
+      <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=department.notificationid%>">
         <i class="fa highlight fa-trash" aria-hidden="true"></i>
       </a>
     </div>

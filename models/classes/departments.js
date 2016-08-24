@@ -26,6 +26,22 @@ class Departments {
       }).catch(reject);
     })
   }
+
+  static createOne (orgID, name, phoneNumber, userID) {
+    return new Promise((fulfill, reject) => {
+      db("departments")
+        .insert({
+          organization: orgID,
+          name: name,
+          phone_number: phoneNumber,
+          created_by: userID,
+          active: true
+        })
+      .then(() => {
+        fulfill()
+      }).catch(reject);
+    });
+  }
   
 }
 

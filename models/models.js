@@ -14,6 +14,7 @@ module.exports = {
   ColorTags:      require("./classes/colorTags"), 
   Communications: require("./classes/communications"),
   Departments:    require("./classes/departments"),
+  PhoneNumbers:   require("./classes/phoneNumbers"),
 
   // Remove the below eventually
   Convo:         require("./classes/conversation"),

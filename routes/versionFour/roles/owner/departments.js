@@ -15,6 +15,7 @@ const Message       = modelsImport.Message;
 const Messages      = modelsImport.Messages;
 const Communication = modelsImport.Communication;
 const Departments   = modelsImport.Departments;
+const PhoneNumbers  = modelsImport.PhoneNumbers;
 
 
 // General error handling
@@ -28,10 +29,10 @@ var error_500       = errorHandling.error_500;
 router.get("/", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/owner/departments/active");
+                "/owner/departments/filter/active");
 });
 
-router.get("/:activeStatus", function (req, res) {
+router.get("/filter/:activeStatus", function (req, res) {
   var activeStatus = req.params.activeStatus;
   if (activeStatus == "active") activeStatus == true;
   else activeStatus = false;
@@ -45,6 +46,27 @@ router.get("/:activeStatus", function (req, res) {
       },
       departments: departments
     });
+  }).catch(error_500(res));
+});
+
+router.get("/create", function (req, res) {
+  PhoneNumbers.fingByOrgID(req.user.org)
+  .then((phoneNumbers) => {
+    res.render("v4/ownerUser/departments/create", {
+      phoneNumbers: phoneNumbers
+    });
+  }).catch(error_500(res));
+});
+
+router.post("/create", function (req, res) {
+  console.log(req.body);
+  Departments.createOne(req.user.org, req.body.name, req.body.phoneNumber, req.user.cmid)
+  .then(() => {
+    console.log("ff");
+    req.flash("success", "Made new department.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/departments");
   }).catch(error_500(res));
 });
 
