@@ -16,6 +16,7 @@ module.exports = {
   Departments:    require("./classes/departments"),
   PhoneNumbers:   require("./classes/phoneNumbers"),
   DepartmentSupervisors: require("./classes/departmentSupervisors"),
+  Organizations: require("./classes/organizations"),
 
   // Remove the below eventually
   Convo:         require("./classes/conversation"),

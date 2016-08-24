@@ -18,8 +18,10 @@
       <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/departments/filter/inactive">Inactive</a></div>
     </div>
 
-    <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/notifications">Users</a></div>
+    <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/users">Users</a></div>
+      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/users/filter/active">Active</a></div>
+      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/users/filter/inactive">Inactive</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
