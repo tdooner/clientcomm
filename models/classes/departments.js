@@ -88,6 +88,21 @@ class Departments {
   }
 
 
+  static editOne (departmentID, name, phoneNumber) {
+    return new Promise((fulfill, reject) => {
+      db("departments")
+        .where("department_id", departmentID)
+        .update({
+          name: name,
+          phone_number: phoneNumber
+        })
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    });
+  }
+
+
   static createOne (orgID, name, phoneNumber, userID) {
     return new Promise((fulfill, reject) => {
       db("departments")

@@ -88,6 +88,19 @@ router.get("/edit/:departmentID", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.post("/edit/:departmentID", function (req, res) {
+  const departmentID = req.params.departmentID;
+  const name = req.body.name;
+  const phoneNumber = req.body.phoneNumber;
+  Departments.editOne(departmentID, name, phoneNumber)
+  .then(() => {
+    req.flash("success", "Updated department.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/departments");
+  }).catch(error_500(res));
+});
+
 router.get("/deactivate/:departmentID", function (req, res) {
   Departments.findMembers(req.params.departmentID)
   .then((members) => {
