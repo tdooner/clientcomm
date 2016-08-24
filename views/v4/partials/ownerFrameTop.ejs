@@ -1,0 +1,45 @@
+<% include ./navBarTop %>
+
+<!-- Load in addition CSS -->
+<link rel="stylesheet" type="text/css" href="/static/css/v4_hubFrame.css">
+
+
+  <div class="navSub">
+
+    <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/groups">Dashboard</a></div>
+      <div class="option <%= hub.sel == 'overall' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/groups/current">Overall</a></div>
+      <div class="option <%= hub.sel == 'department' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/groups/deleted">Department</a></div>
+    </div>
+
+    <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/clients/open">Departments</a></div>
+    </div>
+
+    <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/notifications">Users</a></div>
+    </div>
+
+    <div class="rightActions">
+      <a href="">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-circle fa-stack-2x"></i>
+          <i class="fa fa-building fa-stack-1x fa-inverse"></i>
+        </span>
+        <span class="text">New Department</span>
+      </a>
+    </div>
+
+    <div class="rightActions">
+      <a href="">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-circle fa-stack-2x"></i>
+          <i class="fa fa-user-plus fa-stack-1x fa-inverse"></i>
+        </span>
+        <span class="text">New User</span>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="coreContent">

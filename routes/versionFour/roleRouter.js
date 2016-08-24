@@ -46,28 +46,22 @@ router.use(function (req, res, next) {
 
 // Reroute from standard drop endpoint
 router.get("/", function (req, res) {
-
-  // need to route if owner
-  // need to route if supervisor
-  // else based on class
-  if (req.user.class == "primary") {
-    res.redirect("/v4/users/" + req.user.cmid + "/primary");
-  } else if (req.user.class == "support") {
-    res.send("support")
-    // res.redirect("/v4/users/" + req.user.cmid + "/support");
+  if (["owner", "supervisor", "developer", "primary", "support"].indexOf(req.user.class) > -1) {
+    res.redirect("/v4/users/" + req.user.cmid + "/" + req.user.class );
   } else {
     res.redirect("/404")
   }
-
 });
 
 
 // To do: Some sort of handling for the type of user
 // Then direct to the appropriate sub-directory of routes
 
+var owner = require("./roles/owner");
+router.use("/users/:userID/owner", owner);
+
 var primary = require("./roles/primary");
 router.use("/users/:userID/primary", primary);
-
 
 var alerts = require("./support/alerts");
 router.use("/alerts", alerts);

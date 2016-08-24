@@ -23,6 +23,16 @@
     </div>
 
     <div class="rightLogout">
+
+      <% if (typeof user !== "undefined" && ["owner", "supervisor", "developer"].indexOf(user.class) > -1) { %>
+        <a href="/preferences">
+          <span class="button">
+            <i class="fa fa-lg fa-tachometer" aria-hidden="true"></i>
+            <span class="hidden">Dashboard</span>
+          </span>
+        </a>
+      <% } %>
+
       <a href="/preferences">
         <span class="button">
           <i class="fa fa-lg fa-cog" aria-hidden="true"></i>

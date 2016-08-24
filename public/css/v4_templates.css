@@ -41,14 +41,14 @@
       font-size: 1.5em;
       font-weight: 700;
       color: #4A90E2; }
-    .templateRow .column .fa.highlight {
+    .templateRow .column .fa.highlight, .templateRow .column .ss.highlight {
       padding: 5px;
       width: 16px;
       max-width: 16px;
       height: 16px;
       max-height: 16px;
       border-radius: 50%; }
-      .templateRow .column .fa.highlight:hover {
+      .templateRow .column .fa.highlight:hover, .templateRow .column .ss.highlight:hover {
         color: #898989;
         background-color: #FFF; }
     .templateRow .column:nth-child(1) {

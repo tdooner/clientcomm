@@ -48,14 +48,14 @@
       font-weight: 700; }
     .notificationRow .column .subject, .notificationRow .column .message {
       font-size: 12px; }
-    .notificationRow .column .fa.highlight {
+    .notificationRow .column .fa.highlight, .notificationRow .column .ss.highlight {
       padding: 5px;
       width: 16px;
       max-width: 16px;
       height: 16px;
       max-height: 16px;
       border-radius: 50%; }
-      .notificationRow .column .fa.highlight:hover {
+      .notificationRow .column .fa.highlight:hover, .notificationRow .column .ss.highlight:hover {
         color: #898989;
         background-color: #FFF; }
     .notificationRow .column:nth-child(1) {
