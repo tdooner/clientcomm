@@ -23,6 +23,8 @@ const Users         = modelsImport.Users;
 // General error handling
 var errorHandling   = require("../../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
+var emailAlerts     = require("../../utilities/emailAlerts");
+var alertOfAccountActivation = emailAlerts.alertOfAccountActivation;
 
 
 
@@ -71,6 +73,41 @@ router.get("/activate/:targetUserID", function (req, res) {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/users");
+  }).catch(error_500(res));
+});
+
+router.get("/create", function (req, res) {
+  Departments.selectByOrgID(req.user.org)
+  .then((departments) => {
+    res.render("v4/ownerUser/users/create", {
+      departments: departments
+    });
+  }).catch(error_500(res));
+});
+
+router.post("/create", function (req, res) {
+  const first = req.body.first;
+  const middle = req.body.middle;
+  const last = req.body.last;
+  const email = req.body.email;
+  const orgID = req.user.org;
+  const department = req.body.department;
+  const position = req.body.position;
+  const className = req.body.className;
+  Users.createOne(first, middle, last, email, orgID, department, position, className)
+  .then((autoCreatedPassword) => {
+    alertOfAccountActivation(email, autoCreatedPassword);
+    req.flash("success", "Created new user.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/users");
+  }).catch(error_500(res));
+});
+
+router.get("/create/check_email/:email", function (req, res) {
+  Users.findByEmail(decodeURIComponent(req.params.email))
+  .then((user) => {
+    res.json({ user: user });
   }).catch(error_500(res));
 });
 

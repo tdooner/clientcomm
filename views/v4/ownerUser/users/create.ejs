@@ -2,11 +2,11 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/owner/departments">
+  <a href="/v4/users/<%=user.cmid%>/owner/users">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Edit User
+    Create User
   </div>
   <div class="cardSubtitle">
     Keep user information reflective of organization structure.
@@ -16,15 +16,15 @@
 <div class="cardBody">
 
   <form method = "post"
-        id="createGroup"
-        action = "/v4/users/<%=user.cmid%>/owner/users/edit/<%=targetUser.cmid%>">
+        id="createNewUser"
+        action = "/v4/users/<%=user.cmid%>/owner/users/create">
 
     <div class="formRow">
       <div class="formLabel"> First Name </div>
       <div class="formInput">
         <input  type="text" 
                 name="first" 
-                value="<%=targetUser.first%>"
+                value=""
                 maxlength="160"
                 required>
       </div>
@@ -35,7 +35,7 @@
       <div class="formInput">
         <input  type="text" 
                 name="middle" 
-                value="<%=targetUser.middle%>"
+                value=""
                 maxlength="160">
       </div>
     </div>
@@ -45,7 +45,7 @@
       <div class="formInput">
         <input  type="text" 
                 name="last" 
-                value="<%=targetUser.last%>"
+                value=""
                 maxlength="160"
                 required>
       </div>
@@ -54,9 +54,9 @@
     <div class="formRow">
       <div class="formLabel"> Email Address </div>
       <div class="formInput">
-        <input  type="text" 
+        <input  type="email" 
                 name="email" 
-                value="<%=targetUser.email%>"
+                value=""
                 maxlength="160"
                 required>
       </div>
@@ -68,9 +68,8 @@
               name="department" 
               required>
         <% departments.forEach(function (department) { %>
-            <option value="<%= department.department_id %>"
-                    <% if (targetUser.department == department.department_id) { %>selected<% } %>>
-              <%= department.name; %>
+            <option value="<%= department.department_id %>">
+              <%= department.name %>
             </option>
         <% }) %>
       </select>
@@ -81,7 +80,7 @@
       <div class="formInput">
         <input  type="text" 
                 name="position" 
-                value="<%=targetUser.position%>"
+                value=""
                 maxlength="160"
                 required>
       </div>
@@ -93,9 +92,8 @@
               name="className" 
               required>
         <% ["owner", "supervisor", "primary", "support", "developer"].forEach(function (className) { %>
-            <option value="<%= className %>"
-                    <% if (targetUser.class == className) { %>selected<% } %>>
-              <%= className %>
+            <option value="<%= className %>" <% if (className == "primary") { %>selected<% } %>>
+              <%= className.charAt(0).toUpperCase() + className.slice(1) %> User
             </option>
         <% }) %>
       </select>
@@ -103,11 +101,25 @@
 
     <input  type="submit" 
             class="formSubmit" 
-            value="Submit Updates">
+            value="Submit New User">
   </form>
 </div>
 
 
-
+<script type="text/javascript">
+  $("#createNewUser").submit(function (event) {
+    var email = $("input[name=email]").val();
+    $.get("/v4/users/<%=user.cmid%>/owner/users/create/check_email/" + encodeURIComponent(email))
+    .done(function (res) {
+      if (res.user) {
+        alert("That email already is being used. Use a different address.");
+        event.preventDefault();
+        return false;
+      } else {
+        return true;
+      }
+    }).fail(function (err) { console.log(err); });
+  });
+</script>
 
 <% include ../../partials/cardFrameBottom %>

@@ -7,6 +7,7 @@ const Promise = require("bluebird");
 // Utilities
 const utilities = require("../utilities")
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
+const bcrypt = require("bcrypt-nodejs");
 
 
 const CommConns = require("./commConns");
@@ -42,6 +43,17 @@ class Users {
     })
   }
 
+  static findByEmail (email) {
+    return new Promise((fulfill, reject) => {
+      db("cms")
+        .where("email", email)
+        .limit(1)
+      .then((users) => {
+        fulfill(users[0]);
+      }).catch(reject);
+    })
+  }
+
   static changeActivityStatus (userID, activeStatus) {
     if (typeof activeStatus == "undefined") activeStatus = false;
     return new Promise((fulfill, reject) => {
@@ -50,6 +62,35 @@ class Users {
         .update({ active: activeStatus })
       .then(() => {
         fulfill();
+      }).catch(reject);
+    })
+  }
+
+  static createOne (first, middle, last, email, orgID, department, position, className) {
+    const passwordString = Math.random().toString(36).slice(-5);
+    const hashedPW = bcrypt.hashSync(passwordString, bcrypt.genSaltSync(8), null);
+    return new Promise((fulfill, reject) => {
+      Users.findByEmail(email)
+      .then((user) => {
+        if (user) {
+          reject("Email already exists");
+        } else {
+          return db("cms")
+                  .insert({
+                    org: orgID,
+                    first: first,
+                    middle: middle,
+                    last: last,
+                    email: email,
+                    pass: hashedPW,
+                    department: department,
+                    position: position,
+                    class: className,
+                    active: true
+                  })
+        }
+      }).then(() => {
+        fulfill(passwordString);
       }).catch(reject);
     })
   }
