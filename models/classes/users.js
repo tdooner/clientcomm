@@ -21,7 +21,7 @@ class Users {
         .where("org", orgID)
         .andWhere("active", true)
         .orderBy("last", "asc")
-      .then(function (users) {
+      .then((users) => {
         fulfill(users);
       }).catch(reject);
     })
@@ -33,8 +33,20 @@ class Users {
         .where("cmid", userID)
         .andWhere("active", true)
         .limit(1)
-      .then(function (users) {
+      .then((users) => {
         fulfill(users[0]);
+      }).catch(reject);
+    })
+  }
+
+  static changeActivityStatus (userID, activeStatus) {
+    if (typeof activeStatus == "undefined") activeStatus = false;
+    return new Promise((fulfill, reject) => {
+      db("cms")
+        .where("cmid", userID)
+        .update({ active: activeStatus })
+      .then(() => {
+        fulfill();
       }).catch(reject);
     })
   }

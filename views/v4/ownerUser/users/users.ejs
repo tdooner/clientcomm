@@ -20,44 +20,42 @@
 <% } %>
 
 
-<% users.forEach(function (user) { %>
+<% users.forEach(function (targetUser) { %>
   <div class="notificationRow">
     <div class="column">
       <span class="clientName">
-        <%= user.last + ', ' + user.first %> <%= user.middle %> 
+        <%= targetUser.last + ', ' + targetUser.first %> <%= targetUser.middle %> 
       </span>
     </div>
     <div class="column">
-      <%= user.email %>
+      <small><%= targetUser.email %></small>
     </div>
     <div class="column">
-      <%= user.class.charAt(0).toUpperCase() + user.class.slice(1) %>
+      <small><%= targetUser.class.charAt(0).toUpperCase() + targetUser.class.slice(1) %></small>
     </div>
     <div class="column">
-      <%= user.position %>
+      <small><%= targetUser.position %></small>
     </div>
     <div class="column">
-      <%= user.department ? user.department : 'No department' %>
+      <small><%= targetUser.department ? targetUser.department : 'No department' %></small>
     </div>
     <div class="column">
       <span class="time">
-        <%= moment.tz(user.created, local_tz).format('MMM. Do, YYYY hh:mmA') %>
+        <%= moment.tz(targetUser.created, local_tz).format('MMM. Do, YYYY hh:mmA') %>
       </span>
     </div>
     <div class="column">
-      <% if (hub.sel == "active") { %>
-        <a href="/v4/users/<%=user.cmid%>/owner/departments/edit/<%=user.department_id%>">
-          <i class="fa highlight fa-pencil" aria-hidden="true"></i>
-        </a>
-      <% } else { %>-<% } %>
+      <a href="/v4/users/<%=targetUser.cmid%>/owner/users/edit/<%=targetUser.department_id%>">
+        <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+      </a>
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>
-        <a href="/v4/users/<%=user.cmid%>/owner/departments/deactivate/<%=user.department_id%>">
+        <a href="/v4/users/<%=user.cmid%>/owner/users/deactivate/<%=targetUser.cmid%>">
           <i class="fa highlight fa-book" aria-hidden="true"></i>
         </a>
       <% } else { %>
-        <a href="/v4/users/<%=user.cmid%>/owner/departments/activate/<%=user.department_id%>">
+        <a href="/v4/users/<%=user.cmid%>/owner/users/activate/<%=targetUser.cmid%>">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>

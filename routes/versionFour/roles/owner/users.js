@@ -17,6 +17,7 @@ const Communication = modelsImport.Communication;
 const Departments   = modelsImport.Departments;
 const PhoneNumbers  = modelsImport.PhoneNumbers;
 const Organizations = modelsImport.Organizations; 
+const Users         = modelsImport.Users; 
 
 
 // General error handling
@@ -53,6 +54,26 @@ router.get("/filter/:activeStatus", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/deactivate/:targetUserID", function (req, res) {
+  console.log("her");
+  Users.changeActivityStatus(req.params.targetUserID, false)
+  .then(() => {
+    req.flash("success", "Deactivated user.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/users");
+  }).catch(error_500(res));
+});
+
+router.get("/activate/:targetUserID", function (req, res) {
+  Users.changeActivityStatus(req.params.targetUserID, true)
+  .then(() => {
+    req.flash("success", "Activated user.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/users");
+  }).catch(error_500(res));
+});
 
 
 
