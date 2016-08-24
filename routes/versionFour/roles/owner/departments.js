@@ -33,11 +33,14 @@ router.get("/", function (req, res) {
 });
 
 router.get("/filter/:activeStatus", function (req, res) {
-  var activeStatus = req.params.activeStatus;
-  if (activeStatus == "active") activeStatus == true;
-  else activeStatus = false;
+  var activeStatus;
+  if (req.params.activeStatus == "active") {
+    activeStatus = true;
+  } else { 
+    activeStatus = false;
+  }
 
-  Departments.selectByOrgID(req.user.org)
+  Departments.selectByOrgID(req.user.org, activeStatus)
   .then((departments) => {
     res.render("v4/ownerUser/departments/departments", {
       hub: {
