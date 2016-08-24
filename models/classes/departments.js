@@ -29,10 +29,15 @@ class Departments {
         .leftJoin(
           db("cms")
             .select(db.raw("COUNT(*) AS members"), "department")
+            .where("cms.active", true)
             .groupBy("department")
             .as("member_counts"),
           "member_counts.department", "departments.department_id")
-        .leftJoin("cms", "cms.cmid", "departments.created_by")
+        .leftJoin(
+          db("cms")
+            .where("cms.active", true)
+            .as("cms"), 
+          "cms.cmid", "departments.created_by")
         .leftJoin("phone_numbers", "phone_numbers.phone_number_id", "departments.phone_number")
         .where("departments.organization", orgID)
         .andWhere("departments.active", activeStatus)
@@ -59,6 +64,18 @@ class Departments {
   }
 
 
+  static findMembers (departmentID) {
+    return new Promise((fulfill, reject) => {
+      db("cms")
+        .where("department", departmentID)
+        .andWhere("active", true)
+      .then((members) => {
+        fulfill(members);
+      }).catch(reject);
+    });
+  }
+
+
   static createOne (orgID, name, phoneNumber, userID) {
     return new Promise((fulfill, reject) => {
       db("departments")
@@ -71,6 +88,28 @@ class Departments {
         })
       .then(() => {
         fulfill()
+      }).catch(reject);
+    });
+  }
+
+  static activate (departmentID) {
+    return new Promise((fulfill, reject) => {
+      db("departments")
+        .where("department_id", departmentID)
+        .update({ active: true })
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    });
+  }
+
+  static deactivate (departmentID) {
+    return new Promise((fulfill, reject) => {
+      db("departments")
+        .where("department_id", departmentID)
+        .update({ active: false })
+      .then(() => {
+        fulfill();
       }).catch(reject);
     });
   }

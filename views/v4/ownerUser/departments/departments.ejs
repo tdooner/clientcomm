@@ -9,7 +9,7 @@
   <div class="column">members</div>
   <div class="column">supervisor(s)</div>
   <div class="column">created</div>
-  <div class="column">edit</div>
+  <div class="column">manage</div>
   <div class="column"><%= hub.sel == 'active' ? 'deactivate' : 'activate' %></div>
 </div>
 
@@ -38,7 +38,7 @@
     </div>
     <div class="column">
       <span class="time">
-        <%= moment.tz(department.send, local_tz).format('MMM. Do, hh:mmA') %>
+        <%= moment.tz(department.send, local_tz).format('MMM. Do, YYYY hh:mmA') %>
       </span>
     </div>
     <div class="column">
@@ -50,11 +50,13 @@
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>
-        <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=department.notificationid%>">
-          <i class="fa highlight fa-book" aria-hidden="true"></i>
-        </a>
+        <% if (department.members && Number(department.members) == 0) { %>
+          <a href="/v4/users/<%=user.cmid%>/owner/departments/deactivate/<%=department.department_id%>">
+            <i class="fa highlight fa-book" aria-hidden="true"></i>
+          </a>
+        <% } else { %>-<% } %>
       <% } else { %>
-        <a href="/v4/users/<%=user.cmid%>/primary/notifications/remove/<%=department.notificationid%>">
+        <a href="/v4/users/<%=user.cmid%>/owner/departments/activate/<%=department.department_id%>">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>

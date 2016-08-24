@@ -62,11 +62,39 @@ router.get("/create", function (req, res) {
 });
 
 router.post("/create", function (req, res) {
-  console.log(req.body);
   Departments.createOne(req.user.org, req.body.name, req.body.phoneNumber, req.user.cmid)
   .then(() => {
-    console.log("ff");
     req.flash("success", "Made new department.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/departments");
+  }).catch(error_500(res));
+});
+
+router.get("/deactivate/:departmentID", function (req, res) {
+  Departments.findMembers(req.params.departmentID)
+  .then((members) => {
+    if (members.length == 0) {
+      Departments.deactivate(req.params.departmentID)
+      .then(() => {
+        req.flash("success", "Deactivated department.");
+        res.redirect( "/v4/users/" + 
+                      req.user.cmid + 
+                      "/owner/departments");
+      }).catch(error_500(res));
+    } else {
+      req.flash("warning", "Need to remove or close out members first.");
+      res.redirect( "/v4/users/" + 
+                    req.user.cmid + 
+                    "/owner/departments");
+    }
+  }).catch(error_500(res));
+});
+
+router.get("/activate/:departmentID", function (req, res) {
+  Departments.activate(req.params.departmentID)
+  .then(() => {
+    req.flash("success", "Activated department.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/departments");
