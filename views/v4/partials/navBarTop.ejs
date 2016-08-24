@@ -25,15 +25,24 @@
     <div class="rightLogout">
 
       <% if (typeof user !== "undefined" && ["owner", "supervisor", "developer"].indexOf(user.class) > -1) { %>
-        <a href="/preferences">
+        <a href="/v4/users/<%=user.cmid%>/<%=user.class%>">
           <span class="button">
             <i class="fa fa-lg fa-tachometer" aria-hidden="true"></i>
             <span class="hidden">Dashboard</span>
           </span>
         </a>
+
+        <a href="/v4/users/<%=user.cmid%>/primary">
+          <span class="button">
+            <i class="fa fa-lg fa-users" aria-hidden="true"></i>
+            <span class="hidden">Clients</span>
+          </span>
+        </a>
+
+        <span class="verticalDivider"></span>
       <% } %>
 
-      <a href="/preferences">
+      <a href="">
         <span class="button">
           <i class="fa fa-lg fa-cog" aria-hidden="true"></i>
           <span class="hidden">Settings</span>
