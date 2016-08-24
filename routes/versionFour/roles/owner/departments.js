@@ -14,6 +14,7 @@ const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Messages      = modelsImport.Messages;
 const Communication = modelsImport.Communication;
+const Departments   = modelsImport.Departments;
 
 
 // General error handling
@@ -27,32 +28,22 @@ var error_500       = errorHandling.error_500;
 router.get("/", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/owner/dashboard/overview");
+                "/owner/departments/active");
 });
 
-router.get("/dashboard", function (req, res) {
-  // const managerID = Number(req.params.userID);
-  // const active    = true;
+router.get("/:activeStatus", function (req, res) {
+  var activeStatus = req.params.activeStatus;
+  if (activeStatus == "active") activeStatus == true;
+  else activeStatus = false;
 
-  // Clients.findByUser(managerID, active)
-  // .then((clients) => {
-    res.render("v4/ownerUser/dashboards/overall", {
+  Departments.selectByOrgID(req.user.org)
+  .then((departments) => {
+    res.render("v4/ownerUser/departments/departments", {
       hub: {
-        tab: "dashboard",
-        sel: "overall"
-      }
-    });
-  // }).catch(error_500(res));
-});
-
-router.get("/departments", function (req, res) {
-  Clients.findByUser(managerID, active)
-  .then((clients) => {
-    res.render("v4/ownerUser/dashboards/overall", {
-      hub: {
-        tab: "dashboard",
-        sel: "overall"
-      }
+        tab: "departments",
+        sel: activeStatus ? "active" : "inactive"
+      },
+      departments: departments
     });
   }).catch(error_500(res));
 });

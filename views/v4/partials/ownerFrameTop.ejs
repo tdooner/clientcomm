@@ -7,13 +7,15 @@
   <div class="navSub">
 
     <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/groups">Dashboard</a></div>
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/dashboard">Dashboard</a></div>
       <div class="option <%= hub.sel == 'overall' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/groups/current">Overall</a></div>
       <div class="option <%= hub.sel == 'department' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/groups/deleted">Department</a></div>
     </div>
 
-    <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/clients/open">Departments</a></div>
+    <div class="leftTab <%= hub.tab == 'departments' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/departments">Departments</a></div>
+      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/departments/active">Active</a></div>
+      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/departments/inactive">Inactive</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">

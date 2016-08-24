@@ -52,12 +52,15 @@ router.use(function (req, res, next) {
 router.get("/", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/owner/dashboard");
+                "/owner/departments");
 });
 
 
 var dashboard = require("./owner/dashboard");
 router.use("/dashboard", dashboard);
+
+var departments = require("./owner/departments");
+router.use("/departments", departments);
 
 
 // EXPORT ROUTER OBJECt
