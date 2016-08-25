@@ -100,9 +100,6 @@
 </div>
 
 <script type="text/javascript">
-  // On load actions
-  try { scrollLast(); adjustDivs(); } catch (e) { console.log(e); }
-
   // Toggle Writing View for Message Entry
   function toggleTypeBox () {
     $(".mini").toggle();
@@ -153,6 +150,10 @@
     }
   });
 
+  // On load actions
+  $(window).ready(function () {
+    try { adjustDivs(); scrollLast(); } catch (e) { console.log(e); }
+  });
 </script>
 
 <% include ../../partials/hubFrameBottom %>
