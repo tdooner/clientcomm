@@ -50,11 +50,17 @@ router.use(function (req, res, next) {
 
 // Primary hub view, loads in active clients by default
 router.get("/", function (req, res) {
-  res.send("HEY");
-  // res.redirect( "/v4/users/" + 
-  //               req.user.cmid + 
-  //               "/supervisor");
+  res.redirect( "/v4/users/" + 
+                req.user.cmid + 
+                "/supervisor/dashboard");
 });
+
+
+var dashboard = require("./supervisor/dashboard");
+router.use("/dashboard", dashboard);
+
+var users = require("./supervisor/users");
+router.use("/users", users);
 
 
 // EXPORT ROUTER OBJECt
