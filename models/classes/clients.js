@@ -10,46 +10,85 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 
 
 const CommConns = require("./commConns");
+const Users     = require("./users");
 
 
 // Class
 class Clients {
 
-  static findByManager (managerID, active) {
-    // findByManager deprecated, use findByUser
-    console.log("Warning! Clients method findByManager() deprecated, use findByUser()");
-
+  static findByDepartment (departmentID, activeStatus) {
+    if (typeof activeStatus == "undefined") activeStatus = true;
     return new Promise((fulfill, reject) => {
-      Clients
-      .findByUser(managerID, active)
+      Users.findByDepartment(departmentID, activeStatus)
+      .then((users) => {
+        const userIDs = users.map(function (user) { return user.cmid; });
+        return Clients.findByUsers(userIDs, activeStatus)
+      }).then((clients) => {
+        fulfill(clients);
+      }).catch(reject);
+    });
+  }
+
+  static findByManager (userIDs, active) {
+    // findByManager deprecated, use findByUsers
+    console.log("Warning! Clients method findByManager() deprecated, use findByUsers()");
+    if (!Array.isArray(userIDs)) userIDs = [userIDs];
+    return new Promise((fulfill, reject) => {
+      Clients.findAllByUsers(userIDs, active)
       .then((clients) => {
         fulfill(clients);
       }).catch(reject);
     });
   }
 
-  static findAllByUser (managerID) {
+  static findAllByUser (userIDs) {
+    console.log("Warning! Clients method findAllByUser() deprecated, use findAllByUsers()");
+    if (!Array.isArray(userIDs)) userIDs = [userIDs];
+    return new Promise((fulfill, reject) => {
+      Clients.findAllByUsers(userIDs)
+      .then((clients) => {
+        fulfill(clients);
+      }).catch(reject);
+    });
+  }
+
+  static findAllByUsers (userIDs) {
+    if (!Array.isArray(userIDs)) userIDs = [userIDs];
     return new Promise((fulfill, reject) => {
       var clientsOpen;
-      Clients.findByUser(managerID, true)
+      Clients.findByUsers(userIDs, true)
       .then((clients) => {
         clientsOpen = clients;
-        return Clients.findByUser(managerID, false)
+        return Clients.findByUsers(userIDs, false)
       }).then((clientsClosed) => {
         fulfill(clientsOpen.concat(clientsClosed));
       }).catch(reject);
     });
   }
 
-  static findByUser (managerID, active) {
-    // Default to an assuming viewing active clients
+  static findByUser (userIDs, active) {
+    console.log("Warning! Clients method findAllByUser() deprecated, use findByUsers()");
+    return new Promise((fulfill, reject) => {
+      Clients.findByUsers(userIDs, active)
+      .then((clients) => {
+        fulfill(clients);
+      }).catch(reject);
+    });
+  }
+
+  static findByUsers (userIDs, active) {
     if (typeof active == "undefined") active = true;
+    if (!Array.isArray(userIDs)) userIDs = [userIDs];
 
     return new Promise((fulfill, reject) => {
       var finalClientsObject;
 
       db("clients")
         .select("clients.*", 
+                "cms.cmid as user_id",
+                "cms.first as user_first",
+                "cms.middle as user_middle",
+                "cms.last as user_last",
                 "color_tags.color as color_tag", 
                 "color_tags.name as color_name")
 
@@ -60,8 +99,10 @@ class Clients {
             .as("color_tags"),
           "color_tags.color_tag_id", "clients.color_tag")
 
+        .leftJoin("cms", "clients.cm", "cms.cmid")
+
         // Only where active T/F and case manager matches
-        .where("clients.cm", managerID)
+        .whereIn("clients.cm", userIDs)
         .andWhere("clients.active", active)
         .orderBy(
           db.raw("upper(left(clients.last, 1)), (substring(clients.last from 2) || '')::varchar"), 
@@ -76,7 +117,7 @@ class Clients {
         });
 
         // Get unread messages and add them to client list
-        return Clients.getUnreadMessages(managerID)
+        return Clients.getUnreadMessages(userIDs)
       }).then((unreads) => {
         finalClientsObject = finalClientsObject.map(function (client) {
           client.unread = 0;
@@ -108,13 +149,14 @@ class Clients {
     });
   }
 
-  static getUnreadMessages (managerID) {
+  static getUnreadMessages (userIDs) {
+    if (!Array.isArray(userIDs)) userIDs = [userIDs];
     return new Promise((fulfill, reject) => {
       db("msgs")
         .select(db.raw("count(msgs.read) as unread, client"))
         .leftJoin("convos", "convos.convid", "msgs.convo")
-        .where("msgs.read", false)
-        .andWhere("convos.cm", managerID)
+        .whereIn("convos.cm", userIDs)
+        .andWhere("msgs.read", false)
         .groupBy("convos.client")
       .then(function (unreads) {
         fulfill(unreads)

@@ -62,6 +62,9 @@ router.use("/dashboard", dashboard);
 var users = require("./supervisor/users");
 router.use("/users", users);
 
+var clients = require("./supervisor/clients");
+router.use("/clients", clients);
+
 
 // EXPORT ROUTER OBJECt
 module.exports = router;

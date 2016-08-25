@@ -32,6 +32,21 @@ class Users {
     })
   }
 
+  static findByDepartment (departmentID, activeStatus) {
+    if (typeof activeStatus == "undefined") activeStatus = true;
+
+    return new Promise((fulfill, reject) => {
+      db("cms")
+        .where("department", departmentID)
+        .andWhere("active", activeStatus)
+        .orderBy("last", "asc")
+      .then((users) => {
+        fulfill(users);
+      }).catch(reject);
+    })
+
+  }
+
   static findByID (userID) {
     return new Promise((fulfill, reject) => {
       db("cms")

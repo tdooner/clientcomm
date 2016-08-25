@@ -16,6 +16,12 @@
       <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/supervisor/users/filter/inactive">Inactive</a></div>
     </div>
 
+    <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/supervisor/clients">Clients</a></div>
+      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/supervisor/clients/open">Open</a></div>
+      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/supervisor/clients/closed">Closed</a></div>
+    </div>
+
     <div class="rightActions">
       <a href="/v4/users/<%=user.cmid%>/supervisor/users/create">
         <span class="fa-stack fa-lg">

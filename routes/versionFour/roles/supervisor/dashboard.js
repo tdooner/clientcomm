@@ -27,13 +27,13 @@ var error_500       = errorHandling.error_500;
 router.get("/", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/supervisor/dashboard/overview");
+                "/supervisor/dashboard/overview?departmentID=" + req.user.department);
 });
 
 router.get("/overview", function (req, res) {
   var departments, countsByWeek, countsByDay;
   var departmentFilterID = Number(req.query.departmentID);
-  if (isNaN(departmentFilterID)) departmentFilterID = req.user.department;
+  if (isNaN(departmentFilterID)) departmentFilterID = null;
 
   Departments.selectByOrgID(req.user.org, true)
   .then((depts) => {
