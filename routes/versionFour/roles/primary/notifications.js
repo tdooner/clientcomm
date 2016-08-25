@@ -86,7 +86,7 @@ router.get("/edit/:notificationID", function (req, res) {
 router.post("/edit/:notificationID", function (req, res) {
   const notificationID = req.params.notificationID;
   const clientID       = req.body.clientID;
-  const commID         = req.body.commID;
+  const commID         = req.body.commID ? req.body.commID : null;
   const subject        = req.body.subject;
   const message        = req.body.message;
   const send           = moment(req.body.sendDate)

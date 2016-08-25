@@ -94,6 +94,8 @@ class Notifications {
   }
 
   static editOne (notificationID, clientID, commID, send, subject, message) {
+    if (!commID || commID == "null") commID = null;
+    
     return new Promise((fulfill, reject) => {
       db("notifications")
         .update({
