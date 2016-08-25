@@ -3,6 +3,7 @@
 // Libraries
 const db      = require("../../server/db");
 const Promise = require("bluebird");
+const moment  = require("moment");
 
 // Utilities
 const utilities = require("../utilities")
@@ -71,6 +72,30 @@ class Messages {
         .orderBy("created", "asc")
       .then((messages) => {
         fulfill(messages)
+      }).catch(reject);
+    });
+  }
+
+  static countsByOrg (orgID, timeframe) {
+    return new Promise((fulfill, reject) => {
+      db("msgs")
+        .select(db.raw("date_trunc('" + timeframe + "', created) AS Week , count(*) AS message_count"))
+        .leftJoin(
+          db("convos")
+            .select("convos.convid", "cms.org")
+            .leftJoin("cms", "cms.cmid", "convos.cm")
+            .as("convos"),
+          "convos.convid", "msgs.convo")
+        .whereRaw("msgs.created > now() - INTERVAL '12 months'")
+        .andWhere("convos.org", orgID)
+        .groupBy(db.raw("1"))
+        .orderBy(db.raw("1"))
+      .then((counts) => {
+        counts = counts.map(function (count) {
+          count.week = moment(count.week).format("YYYY-MM-DD");
+          return count;
+        });
+        fulfill(counts);
       }).catch(reject);
     });
   }

@@ -31,18 +31,29 @@ router.get("/", function (req, res) {
 });
 
 router.get("/overview", function (req, res) {
+  var departments, countsByWeek, countsByDay;
   var departmentFilterID = Number(req.query.departmentID);
   if (isNaN(departmentFilterID)) departmentFilterID = null;
 
   Departments.selectByOrgID(req.user.org, true)
-  .then((departments) => {
+  .then((depts) => {
+    departments = depts;
+
+    return Messages.countsByOrg(req.user.org, "day")
+  }).then((counts) => {
+    countsByDay = counts;
+    return Messages.countsByOrg(req.user.org, "week")
+  }).then((counts) => {
+    countsByWeek = counts;
     res.render("v4/ownerUser/dashboards/organization", {
       hub: {
         tab: "dashboard",
         sel: null
       },
       departments: departments,
-      departmentFilterID: departmentFilterID
+      departmentFilterID: departmentFilterID,
+      countsByWeek: countsByWeek,
+      countsByDay: countsByDay,
     });
   }).catch(error_500(res));
 });

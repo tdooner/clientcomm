@@ -77,7 +77,7 @@ router.get("/edit/:departmentID", function (req, res) {
   Departments.findByID(req.params.departmentID)
   .then((department) => {
     if (department) {
-      PhoneNumbers.fingByOrgID(req.user.org)
+      PhoneNumbers.findByOrgID(req.user.org)
       .then((phoneNumbers) => {
         res.render("v4/ownerUser/departments/edit", {
           department: department,
