@@ -14,6 +14,7 @@ const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Messages      = modelsImport.Messages;
 const Communication = modelsImport.Communication;
+const Templates     = modelsImport.Templates;
 
 
 // General error handling
@@ -81,7 +82,7 @@ router.post("/create", function (req, res) {
 });
 
 
-router.get ("/address/:clientID", function (req, res) {
+router.get("/address/:clientID", function (req, res) {
   const clientID = Number(req.params.clientID);
   Client.findByID(clientID)
   .then((client) => {
@@ -97,7 +98,48 @@ router.get ("/address/:clientID", function (req, res) {
 });
 
 
-router.post ("/address/:clientID", function (req, res) {
+router.get("/address/:clientID/selecttemplate", function (req, res) {
+  Templates.findByUser(req.user.cmid)
+  .then((templates) => {
+    res.render("v4/primaryUser/client/selecttemplate", {
+      templates: templates,
+      parameters: req.params
+    });
+  }).catch(error_500(res));
+});
+
+
+router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) {
+  const templateID = Number(req.params.templateID);
+  const userID = req.user.cmid;
+  const clientID = Number(req.params.clientID);
+
+  Client.findByID(clientID)
+  .then((client) => {
+    Templates.findByID(templateID)
+    .then((template) => {
+      if (template) {
+        Templates.logUse(templateID, userID, clientID)
+        .then(() => {
+          req.params.subject = template.title;
+          req.params.message = template.content;
+          res.render("v4/primaryUser/client/address", {
+            client: client,
+            template: template,
+          });
+        }).catch(error_500(res));
+      } else {
+        res.render("v4/primaryUser/client/address", {
+          client: client,
+          template: {},
+        });
+      }
+    }).catch(error_500(res));
+  }).catch(error_500(res));
+});
+
+
+router.post("/address/:clientID", function (req, res) {
   const userID = req.user.cmid;
   const clientID = Number(req.params.clientID);
   const subject = req.body.subject;
