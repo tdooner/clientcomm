@@ -53,7 +53,7 @@ router.get("/overview", function (req, res) {
       departments: departments,
       departmentFilterID: departmentFilterID,
       countsByWeek: countsByWeek,
-      countsByDay: countsByDay,
+      countsByDay: countsByDay
     });
   }).catch(error_500(res));
 });

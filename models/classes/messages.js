@@ -79,7 +79,7 @@ class Messages {
   static countsByOrg (orgID, timeframe) {
     return new Promise((fulfill, reject) => {
       db("msgs")
-        .select(db.raw("date_trunc('" + timeframe + "', created) AS Week , count(*) AS message_count"))
+        .select(db.raw("date_trunc('" + timeframe + "', created) AS time_period , count(*) AS message_count"))
         .leftJoin(
           db("convos")
             .select("convos.convid", "cms.org")
@@ -92,7 +92,7 @@ class Messages {
         .orderBy(db.raw("1"))
       .then((counts) => {
         counts = counts.map(function (count) {
-          count.week = moment(count.week).format("YYYY-MM-DD");
+          count.time_period = moment(count.time_period).format("YYYY-MM-DD");
           return count;
         });
         fulfill(counts);

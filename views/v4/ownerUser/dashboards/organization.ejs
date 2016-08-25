@@ -49,18 +49,31 @@
 
   var countsByWeek = <%- JSON.stringify(countsByWeek) %>;
   var countsByDay = <%- JSON.stringify(countsByDay) %>;
-  buildPerformanceChart(countsByDay);
+  buildPerformanceChart(countsByWeek, countsByDay);
 
-  function buildPerformanceChart (countsByWeek) {
-    var keys = countsByWeek.map(function (count) { return count.week; });
-    var vals = countsByWeek.map(function (count) { return Number(count.message_count); });
+  function buildPerformanceChart (countsByWeek, countsByDay) {
+    var keysWeek = countsByWeek.map( function (count) { return count.time_period; });
+    var keysDay  = countsByDay.map(  function (count) { return count.time_period; });
+    var valsWeek = countsByWeek.map( function (count) { return Number(count.message_count); });
+    var valsDay  = countsByDay.map(  function (count) { return Number(count.message_count); });
 
     c3.generate({
-      data: { 
-        x: "x", 
-        columns: [["x"].concat(keys), ["Weekly Messaging Volume"].concat(vals)], 
-        color: function (color, d) { return "#4BAEFF"; },
-        types: {"Weekly Messaging Volume": "area", "Daily Messaging Volume": "area"}
+      data: {
+        xs:{
+            "Weekly Activity": "x1",
+            "Daily Activity":  "x2"
+        },
+        columns: [
+            ["x1"].concat(keysWeek),
+            ["x2"].concat(keysDay),
+            ["Weekly Activity"].concat(valsWeek),
+            ["Daily Activity"].concat(valsDay)
+        ],
+        types: {"Weekly Activity": "area"},
+        colors: {
+            "Weekly Activity": "#FFC966",
+            "Daily Activity": "#FF6700"
+        }
       },
       legend: { hide: true },
       axis: { x: { type: "timeseries", tick: { format: "%m/%d" } } },
