@@ -50,6 +50,7 @@ router.get("/filter/:activeStatus", function (req, res) {
     users = users.filter(function (user) {
       return req.user.department == user.department;
     });
+
     res.render("v4/supervisorUser/users/users", {
       hub: {
         tab: "users",
@@ -81,12 +82,7 @@ router.get("/activate/:targetUserID", function (req, res) {
 });
 
 router.get("/create", function (req, res) {
-  Departments.selectByOrgID(req.user.org)
-  .then((departments) => {
-    res.render("v4/supervisorUser/users/create", {
-      departments: departments
-    });
-  }).catch(error_500(res));
+  res.render("v4/supervisorUser/users/create");
 });
 
 router.post("/create", function (req, res) {
@@ -95,7 +91,7 @@ router.post("/create", function (req, res) {
   const last = req.body.last;
   const email = req.body.email;
   const orgID = req.user.org;
-  const department = req.body.department;
+  const department = req.user.department;
   const position = req.body.position;
   const className = req.body.className;
   Users.createOne(first, middle, last, email, orgID, department, position, className)
@@ -133,13 +129,31 @@ router.get("/edit/:targetUserID", function (req, res) {
   }).catch(error_500(res));
 });
 
+router.get("/transfer/:targetUserID", function (req, res) {
+  var departments;
+  Departments.selectByOrgID(req.user.org)
+  .then((depts) => {
+    departments = depts;
+    return Users.findByID(req.params.targetUserID)
+  }).then((targetUser) => {
+    if (targetUser) {
+      res.render("v4/supervisorUser/users/edit", {
+        targetUser: targetUser,
+        departments: departments
+      })
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+});
+
 router.post("/edit/:targetUserID", function (req, res) {
   const targetUserID = req.params.targetUserID;
   const first = req.body.first;
   const middle = req.body.middle;
   const last = req.body.last;
   const email = req.body.email;
-  const department = req.body.department;
+  const department = req.user.department;
   const position = req.body.position;
   const className = req.body.className;
   Users.updateOne(targetUserID, first, middle, last, email, department, position, className)
