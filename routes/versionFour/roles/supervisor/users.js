@@ -129,24 +129,6 @@ router.get("/edit/:targetUserID", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/transfer/:targetUserID", function (req, res) {
-  var departments;
-  Departments.selectByOrgID(req.user.org)
-  .then((depts) => {
-    departments = depts;
-    return Users.findByID(req.params.targetUserID)
-  }).then((targetUser) => {
-    if (targetUser) {
-      res.render("v4/supervisorUser/users/edit", {
-        targetUser: targetUser,
-        departments: departments
-      })
-    } else {
-      res.redirect("/404");
-    }
-  }).catch(error_500(res));
-});
-
 router.post("/edit/:targetUserID", function (req, res) {
   const targetUserID = req.params.targetUserID;
   const first = req.body.first;

@@ -66,7 +66,8 @@
       <div class="formLabel"> Assigned department </div>
       <select class="blueSelect" 
               name="department" 
-              required>
+              required
+              <% if (targetUser.cmid == user.cmid) { %>disabled<% } %>>
         <% departments.forEach(function (department) { %>
             <option value="<%= department.department_id %>"
                     <% if (targetUser.department == department.department_id) { %>selected<% } %>>
