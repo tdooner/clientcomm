@@ -55,7 +55,7 @@ router.get("/filter/:activeStatus", function (req, res) {
 });
 
 router.get("/create", function (req, res) {
-  PhoneNumbers.fingByOrgID(req.user.org)
+  PhoneNumbers.findByOrgID(req.user.org)
   .then((phoneNumbers) => {
     res.render("v4/ownerUser/departments/create", {
       phoneNumbers: phoneNumbers

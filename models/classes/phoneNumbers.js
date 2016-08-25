@@ -14,11 +14,7 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 // Class
 class PhoneNumbers {
 
-  static createOne (orgID, phone_number) {
-    
-  }
-
-  static fingByOrgID (orgID) {
+  static findByOrgID (orgID) {
     return new Promise((fulfill, reject) => {
       db("phone_numbers")
         .where("organization", orgID)

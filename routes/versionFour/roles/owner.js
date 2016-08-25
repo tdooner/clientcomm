@@ -65,6 +65,9 @@ router.use("/departments", departments);
 var users = require("./owner/users");
 router.use("/users", users);
 
+var numbers = require("./owner/numbers");
+router.use("/numbers", numbers);
+
 
 // EXPORT ROUTER OBJECt
 module.exports = router;
