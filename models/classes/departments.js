@@ -47,7 +47,7 @@ class Departments {
         const departmentIDs = departments.map(function (department) {
           return department.department_id;
         });
-        return DepartmentSupervisors.selectByDepartmentIDs(departmentIDs, true)
+        return DepartmentSupervisors.findByDepartmentIDs(departmentIDs, true)
       }).then((supervisors) => {
         departmentsAll = departmentsAll.map(function (department) {
           department.supervisors = [];

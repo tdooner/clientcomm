@@ -14,7 +14,7 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 // Class
 class DepartmentSupervisors {
 
-  static selectByDepartmentIDs (departmentIDArray, active) {
+  static findByDepartmentIDs (departmentIDArray, active) {
     if (typeof active == "undefined") active = true;
     return new Promise((fulfill, reject) => {
       db("department_supervisors")

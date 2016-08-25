@@ -1,0 +1,49 @@
+<% include ../../partials/cardFrameTop %>
+
+<div class="cardHead">
+  <!-- exit button -->
+  <a href="/v4/users/<%=user.cmid%>/owner/departments">
+    <% include ../../partials/cardExit %>
+  </a>
+  <div class="cardTitle">
+    Edit Department
+  </div>
+  <div class="cardSubtitle">
+    Use departments to organize your workforce.
+  </div>
+</div>
+
+<div class="cardBody">
+
+  <form method = "post"
+        id="createGroup"
+        action = "/v4/users/<%=user.cmid%>/owner/departments/edit/<%=department.department_id%>">
+
+    <div class="scrollListBox">
+      <% var supervisors = supervisors.map(function (s) { return s.cmid }) %>
+      <% members.forEach(function (member) { %>
+        <div class="scrollListRow <% if (supervisors.indexOf(member.cmid) > -1) { %>selected<% } %>" memberID="<%= member.cmid %>">
+
+          <div class="colorTag">
+            <div class="tag" style="background-color:<%=member.color_tag%>"></div>
+          </div>
+
+          <div class="scrollListContent">
+            <div class="memberName">
+              <%= member.last + ', ' + member.first + ' ' + member.middle %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <input  type="submit" 
+            class="formSubmit" 
+            value="Save Department">
+  </form>
+</div>
+
+
+
+
+<% include ../../partials/cardFrameBottom %>

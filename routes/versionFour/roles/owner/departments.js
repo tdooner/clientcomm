@@ -11,10 +11,12 @@ const Client        = modelsImport.Client;
 const Clients       = modelsImport.Clients;
 const ColorTags     = modelsImport.ColorTags;
 const Convo         = modelsImport.Convo;
+const Users         = modelsImport.Users;
 const Message       = modelsImport.Message;
 const Messages      = modelsImport.Messages;
 const Communication = modelsImport.Communication;
 const Departments   = modelsImport.Departments;
+const DepartmentSupervisors = modelsImport.DepartmentSupervisors;
 const PhoneNumbers  = modelsImport.PhoneNumbers;
 
 
@@ -98,6 +100,27 @@ router.post("/edit/:departmentID", function (req, res) {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/departments");
+  }).catch(error_500(res));
+});
+
+router.get("/edit/:departmentID/supervisors", function (req, res) {
+  var supervisors;
+  const departmentID = req.params.departmentID;
+  DepartmentSupervisors.findByDepartmentIDs(req.params.departmentID)
+  .then((supers) => {
+    supervisors = supers;
+    return Users.findByOrg(req.user.org)
+  }).then((users) => {
+    // limit only to same department
+    const members = users.filter(function (user) {
+      return user.department == departmentID;
+    });
+
+    res.render("v4/ownerUser/departments/edit", {
+      supervisors: supervisors,
+      members: members,
+      parameters: req.params
+    });
   }).catch(error_500(res));
 });
 
