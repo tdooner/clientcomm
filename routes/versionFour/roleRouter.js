@@ -60,6 +60,9 @@ router.get("/", function (req, res) {
 var owner = require("./roles/owner");
 router.use("/users/:userID/owner", owner);
 
+var supervisor = require("./roles/supervisor");
+router.use("/users/:userID/supervisor", supervisor);
+
 var primary = require("./roles/primary");
 router.use("/users/:userID/primary", primary);
 
