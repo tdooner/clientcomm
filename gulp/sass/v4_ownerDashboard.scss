@@ -300,5 +300,25 @@ $width_row5:  5%;
   }
 }
 
+.chart {
+  margin: 15px;
+  border-bottom: 1px solid $lightgrey;
+
+  .title {
+    text-align: right;
+    margin: 15px;
+    color: $grey;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .loading {
+    text-align: center;
+    font-size: 18px;
+    line-height: 24px;
+    padding: 15px;
+  }
+}
+
 
 

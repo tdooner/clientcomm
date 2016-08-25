@@ -192,3 +192,18 @@
             background-color: #D3D3D3;
             color: #898989;
             border: 2px solid #898989; }
+
+.chart {
+  margin: 15px;
+  border-bottom: 1px solid #D3D3D3; }
+  .chart .title {
+    text-align: right;
+    margin: 15px;
+    color: #898989;
+    font-size: 12px;
+    text-transform: uppercase; }
+  .chart .loading {
+    text-align: center;
+    font-size: 18px;
+    line-height: 24px;
+    padding: 15px; }
