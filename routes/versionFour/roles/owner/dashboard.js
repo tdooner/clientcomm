@@ -39,10 +39,19 @@ router.get("/overview", function (req, res) {
   .then((depts) => {
     departments = depts;
 
-    return Messages.countsByOrg(req.user.org, "day")
+    if (departmentFilterID) {
+      return Messages.countsByDepartment(req.user.org, departmentFilterID, "day")
+    } else {
+      return Messages.countsByOrg(req.user.org, "day")
+    }
   }).then((counts) => {
     countsByDay = counts;
-    return Messages.countsByOrg(req.user.org, "week")
+
+    if (departmentFilterID) {
+      return Messages.countsByDepartment(req.user.org, departmentFilterID, "week")
+    } else {
+      return Messages.countsByOrg(req.user.org, "week")
+    }
   }).then((counts) => {
     countsByWeek = counts;
     res.render("v4/ownerUser/dashboards/organization", {
