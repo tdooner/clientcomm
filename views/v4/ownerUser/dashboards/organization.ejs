@@ -1,0 +1,47 @@
+<% include ../../partials/ownerFrameTop %>
+
+<!-- Load in addition CSS -->
+<link rel="stylesheet" type="text/css" href="/static/css/v4_ownerDashboard.css">
+
+<div class="leftBar">
+  <div class="departments">
+    <div class="department">
+      <div class="subject showAll">
+        <a href="/v4/users/<%=user.cmid%>/owner/dashboard/overview">Show for all departments</a>
+      </div>
+    </div>
+    <% departments.forEach(function (department) { %>
+      <a href="/v4/users/<%=user.cmid%>/owner/dashboard/overview?departmentID=<%= department.department_id %>">
+        <div class="department <% if (departmentFilterID == Number(department.department_id)) { %>selected<% } %>">
+          <div class="subject">
+            <%= department.name %>
+          </div>
+          <div class="date">
+            <div class="day">Created on <%= moment.tz(department.updated, local_tz).format("DD/MM/YY") %></div>
+          </div>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+
+<div class="rightContent">
+
+</div>
+
+
+<script type="text/javascript">
+  // On load actions
+  try { adjustDivs(); } catch (e) { console.log(e); }
+
+  function adjustDivs () {
+    $(".leftBar").height($(window).height() - 92);
+    $(".rightContent").height($(window).height() - 92);
+  }
+
+  $(window).resize(adjustDivs);
+
+</script>
+
+<% include ../../partials/hubFrameBottom %>

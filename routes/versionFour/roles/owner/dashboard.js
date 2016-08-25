@@ -13,7 +13,7 @@ const ColorTags     = modelsImport.ColorTags;
 const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Messages      = modelsImport.Messages;
-const Communication = modelsImport.Communication;
+const Departments   = modelsImport.Departments;
 
 
 // General error handling
@@ -30,29 +30,19 @@ router.get("/", function (req, res) {
                 "/owner/dashboard/overview");
 });
 
-router.get("/dashboard", function (req, res) {
-  // const managerID = Number(req.params.userID);
-  // const active    = true;
+router.get("/overview", function (req, res) {
+  var departmentFilterID = Number(req.query.departmentID);
+  if (isNaN(departmentFilterID)) departmentFilterID = null;
 
-  // Clients.findByUser(managerID, active)
-  // .then((clients) => {
-    res.render("v4/ownerUser/dashboards/overall", {
+  Departments.selectByOrgID(req.user.org, true)
+  .then((departments) => {
+    res.render("v4/ownerUser/dashboards/organization", {
       hub: {
         tab: "dashboard",
-        sel: "overall"
-      }
-    });
-  // }).catch(error_500(res));
-});
-
-router.get("/departments", function (req, res) {
-  Clients.findByUser(managerID, active)
-  .then((clients) => {
-    res.render("v4/ownerUser/dashboards/overall", {
-      hub: {
-        tab: "dashboard",
-        sel: "overall"
-      }
+        sel: null
+      },
+      departments: departments,
+      departmentFilterID: departmentFilterID
     });
   }).catch(error_500(res));
 });

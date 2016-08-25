@@ -7,9 +7,7 @@
   <div class="navSub">
 
     <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/dashboard">Dashboard</a></div>
-      <div class="option <%= hub.sel == 'overall' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/groups/current">Overall</a></div>
-      <div class="option <%= hub.sel == 'department' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/owner/groups/deleted">Department</a></div>
+      <div class="title"><a href="/v4/users/<%=user.cmid%>/owner/dashboard">Metrics Dashboard</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'departments' ? 'open' : 'closed' %>">
