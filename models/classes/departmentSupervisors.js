@@ -57,10 +57,31 @@ class DepartmentSupervisors {
         });
         return DepartmentSupervisors.createSupervisors(departmentID, remainingSupervisors)
       }).then(() => {
-        fulfill()
+        return DepartmentSupervisors.updateUserStatuses(departmentID, supervisorIDArray)
+      }).then(() => {
+        fulfill();
       }).catch(reject);
     });
   }
+
+
+  static updateUserStatuses (departmentID, supervisorIDArray) {
+    return new Promise((fulfill, reject) => {
+      db("cms")
+        .whereIn("cmid", supervisorIDArray)
+        .andWhere("department", departmentID)
+        .update({ class: "supervisor" })
+      .then(() => {
+        return db("cms")
+        .whereNotIn("cmid", supervisorIDArray)
+        .andWhere("department", departmentID)
+        .update({ class: "primary" })
+      }).then(() => {
+        fulfill();
+      }).catch(reject);
+    });
+  }
+
 
   static createSupervisor (departmentID, supervisorID) {
     return new Promise((fulfill, reject) => {
