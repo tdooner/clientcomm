@@ -125,9 +125,11 @@ router.get("/edit/:departmentID/supervisors", function (req, res) {
 });
 
 router.post("/edit/:departmentID/supervisors", function (req, res) {
+  const revertClass = req.body.revertClass;
+  const departmentID = req.params.departmentID;
   var supervisorIDs = req.body.supervisorIDs;
   if (!Array.isArray(supervisorIDs)) supervisorIDs = [req.body.supervisorIDs];
-  DepartmentSupervisors.updateSupervisors(req.params.departmentID, supervisorIDs)
+  DepartmentSupervisors.updateSupervisors(departmentID, supervisorIDs, revertClass)
   .then(() => {
     req.flash("success", "Updated department supervisors.");
     res.redirect( "/v4/users/" + 

@@ -32,7 +32,7 @@ class DepartmentSupervisors {
     });
   }
 
-  static updateSupervisors (departmentID, supervisorIDArray) {
+  static updateSupervisors (departmentID, supervisorIDArray, revertClass) {
     supervisorIDArray = supervisorIDArray.map(function (supervisorID) {
       return Number(supervisorID);
     }).filter(function (supervisorID) {
@@ -57,7 +57,7 @@ class DepartmentSupervisors {
         });
         return DepartmentSupervisors.createSupervisors(departmentID, remainingSupervisors)
       }).then(() => {
-        return DepartmentSupervisors.updateUserStatuses(departmentID, supervisorIDArray)
+        return DepartmentSupervisors.updateUserStatuses(departmentID, supervisorIDArray, revertClass)
       }).then(() => {
         fulfill();
       }).catch(reject);
@@ -65,7 +65,8 @@ class DepartmentSupervisors {
   }
 
 
-  static updateUserStatuses (departmentID, supervisorIDArray) {
+  static updateUserStatuses (departmentID, supervisorIDArray, revertClass) {
+    if (typeof revertClass == "undefined") revertClass = "primary"
     return new Promise((fulfill, reject) => {
       db("cms")
         .whereIn("cmid", supervisorIDArray)
@@ -75,7 +76,7 @@ class DepartmentSupervisors {
         return db("cms")
         .whereNotIn("cmid", supervisorIDArray)
         .andWhere("department", departmentID)
-        .update({ class: "primary" })
+        .update({ class: revertClass })
       }).then(() => {
         fulfill();
       }).catch(reject);
