@@ -116,11 +116,23 @@ router.get("/edit/:departmentID/supervisors", function (req, res) {
       return user.department == departmentID;
     });
 
-    res.render("v4/ownerUser/departments/edit", {
+    res.render("v4/ownerUser/departments/editSupervisors", {
       supervisors: supervisors,
       members: members,
       parameters: req.params
     });
+  }).catch(error_500(res));
+});
+
+router.post("/edit/:departmentID/supervisors", function (req, res) {
+  var supervisorIDs = req.body.supervisorIDs;
+  if (!Array.isArray(supervisorIDs)) supervisorIDs = [req.body.supervisorIDs];
+  DepartmentSupervisors.updateSupervisors(req.params.departmentID, supervisorIDs)
+  .then(() => {
+    req.flash("success", "Updated department supervisors.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/owner/departments");
   }).catch(error_500(res));
 });
 

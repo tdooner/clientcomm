@@ -34,7 +34,7 @@
     </div>
     <div class="column">
       <% if (department.supervisors.length == 0) { %><b>No supervisors</b><% } %>
-      <%= department.supervisors.map(function (d) { return d.first + ' ' + d.last }).join(','); %>
+      <%= department.supervisors.map(function (d) { return d.first + ' ' + d.last }).join(', '); %>
     </div>
     <div class="column">
       <span class="time">

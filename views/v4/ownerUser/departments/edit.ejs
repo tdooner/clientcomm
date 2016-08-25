@@ -6,7 +6,7 @@
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
-    Select Supervisors
+    Edit Department
   </div>
   <div class="cardSubtitle">
     Use departments to organize your workforce.
@@ -15,22 +15,40 @@
 
 <div class="cardBody">
 
+  <div class="formRow">
+    <a href="/v4/users/<%=user.cmid%>/owner/departments/edit/<%=department.department_id%>/supervisors">
+      <input type="submit" class="formSubmit inverse" value="Manage supervisors">
+    </a>
+  </div>
+
   <form method = "post"
-        id="updateSupervisors"
-        action = "/v4/users/<%=user.cmid%>/owner/departments/edit/<%=parameters.departmentID%>">
+        id="createGroup"
+        action = "/v4/users/<%=user.cmid%>/owner/departments/edit/<%=department.department_id%>">
 
-    <div class="scrollListBox">
-      <% var supervisorIDs = supervisors.map(function (s) { return s.cmid }) %>
-      <% members.forEach(function (member) { %>
-        <div class="scrollListRow <% if (supervisorIDs.indexOf(member.cmid) > -1) { %>selected<% } %>" memberID="<%= member.cmid %>">
+    <div class="formRow">
+      <div class="formLabel"> Name of department </div>
+      <div class="formInput">
+        <input  type="text" 
+                name="name" 
+                value="<%=department.name%>"
+                placeholder="Enter a name of the group" 
+                maxlength="160"
+                required="">
+      </div>
+    </div>
 
-          <div class="scrollListContent">
-            <div class="clientName">
-              <%= member.last + ', ' + member.first %> <%= member.middle %>
-            </div>
-          </div>
-        </div>
-      <% }) %>
+    <div class="formRow">
+      <div class="formLabel"> Which phone number to pair </div>
+      <select class="blueSelect" 
+              name="phoneNumber" 
+              required>
+        <% phoneNumbers.forEach(function (phoneNumber) { %>
+            <option value="<%= phoneNumber.phone_number_id %>"
+                    <% if (department.phone_number == phoneNumber.phone_number_id) { %>selected<% } %>>
+              <%= phoneNumber.value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4'); %>
+            </option>
+        <% }) %>
+      </select>
     </div>
 
     <input  type="submit" 
@@ -40,31 +58,6 @@
 </div>
 
 
-<script type="text/javascript">
-  $(".scrollListRow").click(function () {
-    var selected = 0;
-    $(".scrollListRow").each(function () {
-      if ($(this).hasClass("selected")) {
-        selected += 1;
-      }
-    });
-    var currentlySelected = $(this).hasClass("selected");
-    if (currentlySelected) selected += 1;
-    console.log(selected, currentlySelected, $(this).attr("memberID"))
-    if (selected !== 1 || (selected == 1 && !currentlySelected)) {
-      $(this).toggleClass("selected");
-    }
-  });
 
-  $("#updateSupervisors").submit(function () {
-    $(".scrollListRow").each(function () {
-      if ($(this).hasClass("selected")) {
-        var clientID = $(this).attr("clientID");
-        $(".scrollListBox").append("<input type='hidden' name='clientIDs' value='" + clientID + "'>");
-      }
-    });
-    return true;
-  });
-</script>
 
 <% include ../../partials/cardFrameBottom %>
