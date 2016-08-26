@@ -15,6 +15,7 @@ const Message       = modelsImport.Message;
 const Messages      = modelsImport.Messages;
 const Communication = modelsImport.Communication;
 const Templates     = modelsImport.Templates;
+const Users         = modelsImport.Users;
 
 
 // General error handling
@@ -52,7 +53,7 @@ router.get("/closed", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = false;
 
-  Clients.findByManager(managerID, active)
+  Clients.findByDepartment(req.user.department, active)
   .then((clients) => {
     res.render("v4/supervisorUser/clients/clients", {
       hub: {
@@ -66,12 +67,17 @@ router.get("/closed", function (req, res) {
 
 
 router.get("/create", function (req, res) {
-  res.render("v4/supervisorUser/client/create")
+  Users.findByDepartment(req.user.department, true)
+  .then((users) => {
+    res.render("v4/supervisorUser/clients/create", {
+      users: users
+    })
+  }).catch(error_500(res));
 });
 
 
 router.post("/create", function (req, res) {
-  const userID = req.user.cmid;
+  const userID = req.body.targetUserID;
   const first = req.body.first;
   const middle = req.body.middle ? req.body.middle : "";
   const last = req.body.last;
@@ -80,10 +86,10 @@ router.post("/create", function (req, res) {
   const otn = req.body.uniqueID2 ? req.body.so : null;
 
   Client.create(userID, first, middle, last, dob, otn, so)
-  .then((clientID) => {
+  .then(() => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/supervisor/clients/open");
+                  "/supervisor/clients");
   }).catch(error_500(res));
 });
 

@@ -52,12 +52,14 @@
       <% } else { %>-<% } %>
       </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/clients/client/<%=client.clid%>">
+      <a href="/v4/users/<%=user.cmid%>/supervisor/users">
         <span class="clientName"><%= client.last + ', ' + client.first + ' ' + client.middle %></span>
       </a>
     </div>
     <div class="column">
-      <span class="clientName"><%= client.user_last + ', ' + client.user_first %></span>
+      <a href="/v4/users/<%=user.cmid%>/supervisor/users">
+        <span class="clientName"><%= client.user_last + ', ' + client.user_first %></span>
+      </a>
     </div>
     <div class="column">
       <% if (client.unread > 0) { %>
