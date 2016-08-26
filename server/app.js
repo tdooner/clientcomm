@@ -116,7 +116,7 @@ app.get("/*", function (req, res) {
 
 
 // START UP CLIENTCOMM
-var port = 8000;
+var port = 4000;
 var server = app.listen(port, function () { 
   console.log("Listening on port", port);
 
