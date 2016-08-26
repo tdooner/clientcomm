@@ -3,7 +3,8 @@ exports.up = function(knex, Promise) {
   return Promise.all([
 
     // Get rid of old groups table design
-    knex.schema.dropTable("groups"),
+    knex.schema.dropTableIfExists("group_members"),
+    knex.schema.dropTableIfExists("groups"),
 
     knex.schema.createTable("groups", function(table) {
       table.increments("group_id").primary();;
