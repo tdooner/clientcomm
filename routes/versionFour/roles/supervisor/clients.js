@@ -22,6 +22,9 @@ const Users         = modelsImport.Users;
 var errorHandling   = require("../../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
+var logging                 = require("../../utilities/logging");
+var logClientActivity       = logging.logClientActivity;
+var logConversationActivity = logging.logConversationActivity;
 
 
 // ROUTES
@@ -99,7 +102,7 @@ router.get("/address/:clientID", function (req, res) {
   Client.findByID(clientID)
   .then((client) => {
     if (client) {
-      res.render("v4/supervisorUser/client/address", {
+      res.render("v4/supervisorUser/clients/address", {
         client: client,
         template: {},
       });
@@ -113,7 +116,7 @@ router.get("/address/:clientID", function (req, res) {
 router.get("/address/:clientID/selecttemplate", function (req, res) {
   Templates.findByUser(req.user.cmid)
   .then((templates) => {
-    res.render("v4/supervisorUser/client/selecttemplate", {
+    res.render("v4/supervisorUser/clients/selecttemplate", {
       templates: templates,
       parameters: req.params
     });
@@ -128,45 +131,56 @@ router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) 
 
   Client.findByID(clientID)
   .then((client) => {
-    Templates.findByID(templateID)
-    .then((template) => {
-      if (template) {
-        Templates.logUse(templateID, userID, clientID)
-        .then(() => {
-          req.params.subject = template.title;
-          req.params.message = template.content;
-          res.render("v4/supervisorUser/client/address", {
-            client: client,
-            template: template,
-          });
-        }).catch(error_500(res));
-      } else {
-        res.render("v4/supervisorUser/client/address", {
-          client: client,
-          template: {},
-        });
-      }
-    }).catch(error_500(res));
+    if (client) { 
+      Templates.findByID(templateID)
+      .then((template) => {
+        if (template) {
+          Templates.logUse(templateID, userID, clientID)
+          .then(() => {
+            req.params.subject = template.title;
+            req.params.message = template.content;
+            res.render("v4/supervisorUser/clients/address", {
+              client: client,
+              template: template,
+            });
+          }).catch(error_500(res));
+        } else {
+          res.redirect( "/v4/users/" + 
+                        req.user.cmid + 
+                        "/supervisor/clients/address/" + 
+                        clientID);
+        }
+      }).catch(error_500(res));
+    } else {
+      res.redirect("/404");
+    }
   }).catch(error_500(res));
 });
 
 
 router.post("/address/:clientID", function (req, res) {
-  const userID = req.user.cmid;
+  var targetUserID;
   const clientID = Number(req.params.clientID);
   const subject = req.body.subject;
   const content = req.body.content;
   const commID = req.body.commID;
 
-  Messages.startNewConversation(userID, clientID, subject, content, commID)
-  .then(() => {
-    req.flash("success", "Message to client sent.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/clients/client/" + 
-                  clientID);
-  }).catch(error_500(res));
-  
+  Client.findByID(clientID)
+  .then((client) => {
+    if (client) {
+      targetUserID = client.cm;
+      Messages.startNewConversation(targetUserID, clientID, subject, content, commID)
+      .then(() => {
+        logClientActivity(clientID);
+        req.flash("success", "Message to client sent.");
+        res.redirect( "/v4/users/" + 
+                      req.user.cmid + 
+                      "/supervisor/clients");
+      }).catch(error_500(res));
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));  
 });
 
 
