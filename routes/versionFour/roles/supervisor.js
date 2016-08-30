@@ -65,6 +65,11 @@ router.use("/users", users);
 var clients = require("./supervisor/clients");
 router.use("/clients", clients);
 
+// Client-specific operations
+var client = require("./primary/client");
+router.use("/clients/client/:clientID", client);
+
+
 
 // EXPORT ROUTER OBJECt
 module.exports = router;

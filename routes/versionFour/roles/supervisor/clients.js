@@ -37,9 +37,7 @@ router.get("/", function (req, res) {
 
 router.get("/open", function (req, res) {
   const managerID = Number(req.user.cmid);
-  const active    = true;
-
-  Clients.findByDepartment(req.user.department, active)
+  Clients.findByDepartment(req.user.department, true)
   .then((clients) => {
     res.render("v4/supervisorUser/clients/clients", {
       hub: {
@@ -54,9 +52,7 @@ router.get("/open", function (req, res) {
 
 router.get("/closed", function (req, res) {
   const managerID = Number(req.params.userID);
-  const active    = false;
-
-  Clients.findByDepartment(req.user.department, active)
+  Clients.findByDepartment(req.user.department, false)
   .then((clients) => {
     res.render("v4/supervisorUser/clients/clients", {
       hub: {

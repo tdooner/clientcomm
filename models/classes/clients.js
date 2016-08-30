@@ -19,7 +19,7 @@ class Clients {
   static findByDepartment (departmentID, activeStatus) {
     if (typeof activeStatus == "undefined") activeStatus = true;
     return new Promise((fulfill, reject) => {
-      Users.findByDepartment(departmentID, activeStatus)
+      Users.findAllByDepartment(departmentID)
       .then((users) => {
         const userIDs = users.map(function (user) { return user.cmid; });
         return Clients.findByUsers(userIDs, activeStatus)
@@ -76,8 +76,8 @@ class Clients {
     });
   }
 
-  static findByUsers (userIDs, active) {
-    if (typeof active == "undefined") active = true;
+  static findByUsers (userIDs, activeStatus) {
+    if (typeof activeStatus == "undefined") activeStatus = true;
     if (!Array.isArray(userIDs)) userIDs = [userIDs];
 
     return new Promise((fulfill, reject) => {
@@ -103,7 +103,7 @@ class Clients {
 
         // Only where active T/F and case manager matches
         .whereIn("clients.cm", userIDs)
-        .andWhere("clients.active", active)
+        .andWhere("clients.active", activeStatus)
         .orderBy(
           db.raw("upper(left(clients.last, 1)), (substring(clients.last from 2) || '')::varchar"), 
           "asc")

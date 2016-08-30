@@ -32,9 +32,21 @@ class Users {
     })
   }
 
+  static findAllByDepartment (departmentID) {
+    return new Promise((fulfill, reject) => {
+      var allUsers;
+      Users.findByDepartment(departmentID, true)
+      .then((users) => {
+        allUsers = users;
+        return Users.findByDepartment(departmentID, false)
+      }).then((users) => {
+        fulfill(allUsers.concat(users));
+      }).catch(reject);
+    })
+  }
+
   static findByDepartment (departmentID, activeStatus) {
     if (typeof activeStatus == "undefined") activeStatus = true;
-
     return new Promise((fulfill, reject) => {
       db("cms")
         .where("department", departmentID)
@@ -44,7 +56,6 @@ class Users {
         fulfill(users);
       }).catch(reject);
     })
-
   }
 
   static findByID (userID) {
