@@ -64,6 +64,26 @@ class DepartmentSupervisors {
     });
   }
 
+  static updateSupervisor (departmentID, supervisorID) {
+    return new Promise((fulfill, reject) => {
+      db("department_supervisors")
+        .where("supervisor", supervisorIDArray)
+        .andWhere("department", departmentID)
+        .update({ active: true })
+        .returning("supervisor")
+      .then((updatedSupervisors) => {
+        if (updatedSupervisors.length > 0) {
+          DepartmentSupervisors.createSupervisor(departmentID, supervisorID)
+          .then(() => {
+            fulfill();
+          }).catch(reject);
+        } else {
+          fulfill();
+        }
+      }).catch(reject);
+    });
+  }
+
 
   static updateUserStatuses (departmentID, supervisorIDArray, revertClass) {
     if (typeof revertClass == "undefined") revertClass = "primary"

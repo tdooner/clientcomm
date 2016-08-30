@@ -18,6 +18,7 @@ const Departments   = modelsImport.Departments;
 const PhoneNumbers  = modelsImport.PhoneNumbers;
 const Organizations = modelsImport.Organizations; 
 const Users         = modelsImport.Users; 
+const DepartmentSupervisors = modelsImport.DepartmentSupervisors;
 
 
 // General error handling
@@ -135,10 +136,22 @@ router.post("/edit/:targetUserID", function (req, res) {
   const className = req.body.className;
   Users.updateOne(targetUserID, first, middle, last, email, department, position, className)
   .then(() => {
-    req.flash("success", "Updated user.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/users");
+
+    if (department == "supervisor") {
+      DepartmentSupervisors.updateSupervisor(department, targetUserID)
+      .then(() => {
+        req.flash("success", "Updated user.");
+        res.redirect( "/v4/users/" + 
+                      req.user.cmid + 
+                      "/supervisor/users");
+      }).catch(error_500(res));
+    } else {
+      req.flash("success", "Updated user.");
+      res.redirect( "/v4/users/" + 
+                    req.user.cmid + 
+                    "/supervisor/users");
+    }
+    
   }).catch(error_500(res));
 });
 
