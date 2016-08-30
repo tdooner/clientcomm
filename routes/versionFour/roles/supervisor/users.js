@@ -136,22 +136,13 @@ router.post("/edit/:targetUserID", function (req, res) {
   const className = req.body.className;
   Users.updateOne(targetUserID, first, middle, last, email, department, position, className)
   .then(() => {
-
-    if (department == "supervisor") {
-      DepartmentSupervisors.updateSupervisor(department, targetUserID)
-      .then(() => {
-        req.flash("success", "Updated user.");
-        res.redirect( "/v4/users/" + 
-                      req.user.cmid + 
-                      "/supervisor/users");
-      }).catch(error_500(res));
-    } else {
-      req.flash("success", "Updated user.");
-      res.redirect( "/v4/users/" + 
-                    req.user.cmid + 
-                    "/supervisor/users");
-    }
-    
+    const activeSupervisor = (department == "supervisor");
+    return DepartmentSupervisors.updateSupervisor(department, targetUserID, activeSupervisor)
+  }).then(() => {
+    req.flash("success", "Updated user.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/supervisor/users");
   }).catch(error_500(res));
 });
 

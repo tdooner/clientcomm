@@ -64,12 +64,13 @@ class DepartmentSupervisors {
     });
   }
 
-  static updateSupervisor (departmentID, supervisorID) {
+  static updateSupervisor (departmentID, supervisorID, activeStatus) {
+    if (typeof activeStatus == "undefined") activeStatus = true;
     return new Promise((fulfill, reject) => {
       db("department_supervisors")
         .where("supervisor", supervisorIDArray)
         .andWhere("department", departmentID)
-        .update({ active: true })
+        .update({ active: activeStatus })
         .returning("supervisor")
       .then((updatedSupervisors) => {
         if (updatedSupervisors.length > 0) {

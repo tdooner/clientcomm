@@ -59,7 +59,7 @@
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>
-        <% if (user.cmid !== targetUser.cmid) { %>
+        <% if (user.cmid !== targetUser.cmid && ["primary", "support"].indexOf(targetUser.class) > -1) { %>
           <a href="/v4/users/<%=user.cmid%>/supervisor/users/deactivate/<%=targetUser.cmid%>">
             <i class="fa highlight fa-book" aria-hidden="true"></i>
           </a>
