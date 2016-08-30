@@ -1,7 +1,7 @@
 <% include ../../partials/supervisorFrameTop %>
 
 <!-- Load in addition CSS -->
-<link rel="stylesheet" type="text/css" href="/static/css/v4_users.css">
+<link rel="stylesheet" type="text/css" href="/static/css/v4_users_supervisor.css">
 
 <div class="header">
   <div class="column">name</div>
@@ -11,6 +11,7 @@
   <div class="column">department</div>
   <div class="column">added</div>
   <div class="column">edit</div>
+  <div class="column">transfer</div>
   <div class="column"><%= hub.sel == 'active' ? 'deactivate' : 'activate' %></div>
 </div>
 
@@ -48,6 +49,13 @@
       <a href="/v4/users/<%=user.cmid%>/supervisor/users/edit/<%=targetUser.cmid%>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
+    </div>
+    <div class="column">
+      <% if (user.cmid !== targetUser.cmid && ["primary", "support"].indexOf(targetUser.class) > -1) { %>
+        <a href="/v4/users/<%=user.cmid%>/supervisor/users/transfer/<%=targetUser.cmid%>">
+          <i class="fa highlight fa-mail-forward" aria-hidden="true"></i>
+        </a>
+      <% } else { %>-<% } %>
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>

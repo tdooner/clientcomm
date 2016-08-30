@@ -110,6 +110,20 @@ class Users {
     })
   }
 
+  static transferOne (targetUserID, department) {
+    return new Promise((fulfill, reject) => {
+      db("cms")
+        .where("cmid", targetUserID)
+        .update({
+          department: department,
+          updated: db.fn.now()
+        })
+      .then(() => {
+        fulfill();
+      }).catch(reject);
+    })
+  }
+
   static updateOne (targetUserID, first, middle, last, email, department, position, className) {
     return new Promise((fulfill, reject) => {
       db("cms")
@@ -119,9 +133,10 @@ class Users {
           middle: middle,
           last: last,
           email: email,
-          department: department,
           position: position,
-          class: className
+          department: department,
+          class: className,
+          updated: db.fn.now()
         })
       .then(() => {
         fulfill();

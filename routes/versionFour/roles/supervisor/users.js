@@ -112,16 +112,11 @@ router.get("/create/check_email/:email", function (req, res) {
 });
 
 router.get("/edit/:targetUserID", function (req, res) {
-  var departments;
-  Departments.selectByOrgID(req.user.org)
-  .then((depts) => {
-    departments = depts;
-    return Users.findByID(req.params.targetUserID)
-  }).then((targetUser) => {
+  Users.findByID(req.params.targetUserID)
+  .then((targetUser) => {
     if (targetUser) {
       res.render("v4/supervisorUser/users/edit", {
-        targetUser: targetUser,
-        departments: departments
+        targetUser: targetUser
       })
     } else {
       res.redirect("/404");
@@ -141,6 +136,36 @@ router.post("/edit/:targetUserID", function (req, res) {
   Users.updateOne(targetUserID, first, middle, last, email, department, position, className)
   .then(() => {
     req.flash("success", "Updated user.");
+    res.redirect( "/v4/users/" + 
+                  req.user.cmid + 
+                  "/supervisor/users");
+  }).catch(error_500(res));
+});
+
+router.get("/transfer/:targetUserID", function (req, res) {
+  var departments;
+  Departments.selectByOrgID(req.user.org)
+  .then((depts) => {
+    departments = depts;
+    return Users.findByID(req.params.targetUserID)
+  }).then((targetUser) => {
+    if (targetUser) {
+      res.render("v4/supervisorUser/users/transfer", {
+        targetUser: targetUser,
+        departments: departments
+      })
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/transfer/:targetUserID", function (req, res) {
+  const targetUserID = req.params.targetUserID;
+  const department = req.body.department;
+  Users.transferOne(targetUserID, department)
+  .then(() => {
+    req.flash("success", "Transfered user.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/supervisor/users");

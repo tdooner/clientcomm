@@ -63,21 +63,6 @@
     </div>
 
     <div class="formRow">
-      <div class="formLabel"> Assigned department </div>
-      <select class="blueSelect" 
-              name="department" 
-              required
-              <% if (targetUser.cmid == user.cmid) { %>disabled<% } %>>
-        <% departments.forEach(function (department) { %>
-            <option value="<%= department.department_id %>"
-                    <% if (targetUser.department == department.department_id) { %>selected<% } %>>
-              <%= department.name; %>
-            </option>
-        <% }) %>
-      </select>
-    </div>
-
-    <div class="formRow">
       <div class="formLabel"> Position </div>
       <div class="formInput">
         <input  type="text" 
@@ -93,7 +78,7 @@
       <select class="blueSelect" 
               name="className" 
               required>
-        <% ["supervisor", "primary", "support", "developer"].forEach(function (className) { %>
+        <% ["supervisor", "primary", "support"].forEach(function (className) { %>
             <option value="<%= className %>"
                     <% if (targetUser.class == className) { %>selected<% } %>>
               <%= className %>
