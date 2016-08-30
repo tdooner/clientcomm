@@ -46,9 +46,11 @@
       </span>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/users/edit/<%=targetUser.cmid%>">
-        <i class="fa highlight fa-pencil" aria-hidden="true"></i>
-      </a>
+      <% if (targetUser.active) { %>
+        <a href="/v4/users/<%=user.cmid%>/supervisor/users/edit/<%=targetUser.cmid%>">
+          <i class="fa highlight fa-pencil" aria-hidden="true"></i>
+        </a>
+      <% } else { %>-<% } %>
     </div>
     <div class="column">
       <% if (user.cmid !== targetUser.cmid && ["primary", "support"].indexOf(targetUser.class) > -1) { %>
