@@ -15,6 +15,7 @@ const Users          = modelsImport.Users;
 const Notifications  = modelsImport.Notifications;
 const Messages       = modelsImport.Messages;
 const CommConns      = modelsImport.CommConns;
+const Clients        = modelsImport.Clients;
 
 
 // Twilio library tools and secrets
@@ -123,22 +124,27 @@ router.get("/transfer", function (req, res) {
     users = users.filter(function (user) {
       return allDepartments || user.department == req.user.department;
     });
-    
+
     res.render("v4/supervisorUser/client/transfer", {
       users: users,
-      parameters: req.params
+      parameters: req.params,
+      allDepartments: allDepartments
     });
   }).catch(error_500(res));
 });
 
 
 router.post("/transfer", function (req, res) {
-  const fromUserID = req.user.cmid;
+  var fromUserID = null;
   const toUserID = Number(req.body.userID);
   const clientID = Number(req.params.clientID);
   const bundleConversations = req.params.bundleConversations ? true : false;
-  Users.findByID(toUserID)
-  .then((user) => {
+
+  Client.findByID(clientID)
+  .then((client) => {
+    if (client) fromUserID = client.cm;
+    return Users.findByID(toUserID)
+  }).then((user) => {
     if (user && user.active) {
       Client.transfer(clientID, fromUserID, toUserID, bundleConversations)
       .then(() => {

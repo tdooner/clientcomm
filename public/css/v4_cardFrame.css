@@ -109,6 +109,20 @@ body {
         resize: none;
         overflow: auto;
         padding: 5px 10px 5px 10px; }
+      .card .cardBody .formRow .formInput .tt-dataset {
+        background-color: #FFF;
+        width: 440px;
+        max-width: 440px;
+        border: 2px solid #4A90E2;
+        border-radius: 4px;
+        margin-top: 5px; }
+        .card .cardBody .formRow .formInput .tt-dataset .tt-suggestion, .card .cardBody .formRow .formInput .tt-dataset .tt-selectable {
+          max-width: 420px;
+          padding: 5px 10px 5px 10px;
+          cursor: pointer; }
+          .card .cardBody .formRow .formInput .tt-dataset .tt-suggestion:hover, .card .cardBody .formRow .formInput .tt-dataset .tt-selectable:hover {
+            color: #FFF;
+            background-color: #4A90E2; }
       .card .cardBody .formRow .formInput::after {
         content: "";
         display: block;

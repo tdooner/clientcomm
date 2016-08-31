@@ -187,6 +187,26 @@ body {
           padding: 5px 10px 5px 10px;
         }
 
+        .tt-dataset {
+          background-color: $white;
+          width: 440px;
+          max-width: 440px;
+          border: 2px solid $lightblue;
+          border-radius: 4px;
+          margin-top: 5px;
+
+          .tt-suggestion, .tt-selectable {
+            max-width: 420px;
+            padding: 5px 10px 5px 10px;
+            cursor: pointer;
+
+            &:hover {
+              color: $white;
+              background-color: $lightblue;
+            }
+          }
+        }
+
         &::after {
           content:"";
           display:block;
