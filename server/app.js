@@ -33,6 +33,7 @@ var flash = require("connect-flash");
 // CONFIGURATION 1
 app.set("view engine", "ejs");
 app.use("/static", express.static("public"));
+app.use("/components", express.static("bower_components"));
 app.use("/modules", express.static("node_modules"));
 app.use(cookieParser());
 
