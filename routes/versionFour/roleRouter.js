@@ -13,6 +13,7 @@ const Clients       = modelsImport.Clients;
 const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Communication = modelsImport.Communication;
+const Organizations = modelsImport.Organizations;
 
 
 // Twilio library tools and secrets
@@ -39,10 +40,18 @@ router.use(function (req, res, next) {
   Alerts.findByUser(req.user.cmid)
   .then((alerts) => {
     res.locals.ALERTS_FEED = alerts;
-    next()
-  }).catch(error_500(res))
+    next();
+  }).catch(error_500(res));
 });
 
+
+router.use(function (req, res, next) {
+  Organizations.findByID(req.user.org)
+  .then((org) => {
+    res.locals.organization = org;
+    next();
+  }).catch(error_500(res));
+});
 
 // Reroute from standard drop endpoint
 router.get("/", function (req, res) {

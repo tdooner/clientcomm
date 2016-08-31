@@ -15,18 +15,16 @@ const Messages = require("./messages");
 // Class
 class Organizations {
   
-  // static selectUsersByOrgID (orgID, activeStatus) {
-  //   if (typeof activeStatus == "undefined") activeStatus = true;
-  //   return new Promise((fulfill, reject) => {
-  //     db("cms")
-  //       .where("cms.org", orgID)
-  //       .andWhere("active", activeStatus)
-  //       .orderBy("last", "asc")
-  //     .then((users) => {
-  //       fulfill(users);
-  //     }).catch(reject);
-  //   });
-  // }
+  static findByID (orgID) {
+    return new Promise((fulfill, reject) => {
+      db("orgs")
+        .where("orgid", orgID)
+        .limit(1)
+      .then((orgs) => {
+        fulfill(orgs[0]);
+      }).catch(reject);
+    });
+  }
 
 }
 

@@ -15,10 +15,15 @@
     <div class="leftLogo">
       <% include ../../../public/icons/logo.svg %>
       <a href="/v4">
-        <span class="button">
-          <%= user.first %>
-          <%= user.last %>
-        </span>
+        <div class="button">
+          <div class="name">
+            <%= user.first %>
+            <%= user.last %>
+          </div>
+          <div class="organization">
+            <%=organization.name%>
+          </div>
+        </div>
       </a>
     </div>
 

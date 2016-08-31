@@ -86,22 +86,33 @@
     position: fixed; }
     .applicationFrame .navHeader .leftLogo {
       color: #FFF;
-      line-height: 45px;
       display: inline; }
       .applicationFrame .navHeader .leftLogo svg {
         height: 25px;
         width: auto;
         padding: 10px;
         padding-left: 15px;
-        margin-right: 10px;
+        margin-right: 0px;
         float: left; }
         .applicationFrame .navHeader .leftLogo svg path {
           fill: #FFF; }
-      .applicationFrame .navHeader .leftLogo span.button {
+      .applicationFrame .navHeader .leftLogo .button {
+        float: left;
         padding: 5px;
         border-radius: 3px;
-        cursor: pointer; }
-        .applicationFrame .navHeader .leftLogo span.button:hover {
+        cursor: pointer;
+        margin: 5px; }
+        .applicationFrame .navHeader .leftLogo .button .name {
+          font-size: 15px;
+          line-height: 15px;
+          padding: 0px;
+          margin: 0px; }
+        .applicationFrame .navHeader .leftLogo .button .organization {
+          font-size: 10px;
+          line-height: 10px;
+          padding: 0px;
+          margin: 0px; }
+        .applicationFrame .navHeader .leftLogo .button:hover {
           background-color: #3F69B6; }
     .applicationFrame .navHeader .rightLogout {
       color: #FFF;
