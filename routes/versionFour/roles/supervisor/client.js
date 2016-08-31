@@ -117,8 +117,13 @@ router.get("/editcolortag", function (req, res) {
 
 
 router.get("/transfer", function (req, res) {
+  var allDepartments = req.query.allDepartments == "true" ? true : false;
   Users.findByOrg(req.user.org)
   .then((users) => {
+    users = users.filter(function (user) {
+      return allDepartments || user.department == req.user.department;
+    });
+    
     res.render("v4/supervisorUser/client/transfer", {
       users: users,
       parameters: req.params
@@ -137,6 +142,8 @@ router.post("/transfer", function (req, res) {
     if (user && user.active) {
       Client.transfer(clientID, fromUserID, toUserID, bundleConversations)
       .then(() => {
+        logClientActivity(req.params.clientID);
+        req.flash("success", "Client transferred.")
         res.redirect( "/v4/users/" + 
                       req.user.cmid + 
                       "/supervisor/clients/open");
