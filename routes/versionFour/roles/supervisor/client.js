@@ -97,12 +97,11 @@ router.post("/edit", function (req, res) {
   const uniqueID2 = req.body.uniqueID2;
   Client.editOne(clientID, first, middle, last, dob, uniqueID1, uniqueID2)
   .then(() => {
+    logClientActivity(req.params.clientID);
     req.flash("success", "Edited client.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/supervisor/clients/client/" + 
-                  clientID + 
-                  "/");
+                  "/supervisor/clients");
   }).catch(error_500(res));
 });
 
