@@ -42,7 +42,9 @@
 <% clients.forEach( function (client) { %>
   <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
     <div class="column" value="<%= client.color_name %>">
-      <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
+      <a href="/v4/users/<%=user.cmid%>/supervisor/clients/client/<%=client.clid%>/editcolortag">
+        <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
+      </a>
     </div>
     <div class="column">
       <% if (client.active) { %>

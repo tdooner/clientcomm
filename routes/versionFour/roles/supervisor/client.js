@@ -61,6 +61,7 @@ router.get("/", function (req, res) {
 router.get("/closecase", function (req, res) {
   Client.alterCase(req.params.clientID, false)
   .then(() => {
+    logClientActivity(req.params.clientID);
     req.flash("success", "Closed client case.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -72,6 +73,7 @@ router.get("/closecase", function (req, res) {
 router.get("/opencase", function (req, res) {
   Client.alterCase(req.params.clientID, true)
   .then(() => {
+    logClientActivity(req.params.clientID);
     req.flash("success", "Opened client case.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -106,30 +108,11 @@ router.post("/edit", function (req, res) {
 
 
 router.get("/editcolortag", function (req, res) {
-  ColorTags.selectAllByUser(req.user.cmid)
+  ColorTags.selectAllByUser(res.locals.client.cm)
   .then((colorTags) => {
-    if (colorTags.length > 0) {
-      res.render("v4/supervisorUser/client/selectcolor", {
-        colorTags: colorTags,
-      });
-    } else {
-      res.redirect( "/v4/users/" + 
-                    req.user.cmid + 
-                    "/supervisor/colortags");
-    }
-  }).catch(error_500(res));
-});
-
-
-router.post("/editcolortag", function (req, res) {
-  var colorTagID = req.body.colorTagID;
-  if (colorTagID == "") colorTagID = null
-  Client.udpateColorTag(req.params.clientID, colorTagID)
-  .then(() => {
-    req.flash("success", "Changed client color.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/clients/open");
+    res.render("v4/supervisorUser/client/selectcolor", {
+      colorTags: colorTags,
+    });
   }).catch(error_500(res));
 });
 

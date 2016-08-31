@@ -61,6 +61,7 @@ router.get("/", function (req, res) {
 router.get("/closecase", function (req, res) {
   Client.alterCase(req.params.clientID, false)
   .then(() => {
+    logClientActivity(req.params.clientID);
     req.flash("success", "Closed client case.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -72,6 +73,7 @@ router.get("/closecase", function (req, res) {
 router.get("/opencase", function (req, res) {
   Client.alterCase(req.params.clientID, true)
   .then(() => {
+    logClientActivity(req.params.clientID);
     req.flash("success", "Opened client case.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -95,6 +97,7 @@ router.post("/edit", function (req, res) {
   const uniqueID2 = req.body.uniqueID2;
   Client.editOne(clientID, first, middle, last, dob, uniqueID1, uniqueID2)
   .then(() => {
+    logClientActivity(req.params.clientID);
     req.flash("success", "Edited client.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -126,6 +129,7 @@ router.post("/editcolortag", function (req, res) {
   if (colorTagID == "") colorTagID = null
   Client.udpateColorTag(req.params.clientID, colorTagID)
   .then(() => {
+    logClientActivity(req.params.clientID);
     req.flash("success", "Changed client color.")
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
@@ -161,6 +165,7 @@ router.post("/transfer", function (req, res) {
     if (user && user.active) {
       Client.transfer(clientID, fromUserID, toUserID, bundleConversations)
       .then(() => {
+        logClientActivity(req.params.clientID);
         res.redirect( "/v4/users/" + 
                       req.user.cmid + 
                       "/primary/clients/open");

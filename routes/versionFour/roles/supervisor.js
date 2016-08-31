@@ -66,7 +66,7 @@ var clients = require("./supervisor/clients");
 router.use("/clients", clients);
 
 // Client-specific operations
-var client = require("./primary/client");
+var client = require("./supervisor/client");
 router.use("/clients/client/:clientID", client);
 
 
