@@ -17,11 +17,12 @@
       <a href="/v4">
         <div class="button">
           <div class="name">
-            <%= user.first %>
-            <%= user.last %>
+            <b><%= user.first %> <%= user.last %></b>
+            <small><%= user.class.charAt(0).toUpperCase() + user.class.slice(1) %></small>
           </div>
           <div class="organization">
-            <%=organization.name%>
+            <%= department.name %> Department, 
+            <%= organization.name %>
           </div>
         </div>
       </a>

@@ -14,6 +14,7 @@ const Convo         = modelsImport.Convo;
 const Message       = modelsImport.Message;
 const Communication = modelsImport.Communication;
 const Organizations = modelsImport.Organizations;
+const Departments   = modelsImport.Departments;
 
 
 // Twilio library tools and secrets
@@ -44,11 +45,20 @@ router.use(function (req, res, next) {
   }).catch(error_500(res));
 });
 
-
+// Add organization
 router.use(function (req, res, next) {
   Organizations.findByID(req.user.org)
   .then((org) => {
     res.locals.organization = org;
+    next();
+  }).catch(error_500(res));
+});
+
+// Add department
+router.use(function (req, res, next) {
+  Departments.findByID(req.user.department)
+  .then((department) => {
+    res.locals.department = department;
     next();
   }).catch(error_500(res));
 });
