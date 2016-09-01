@@ -50,24 +50,22 @@ router.use(function (req, res, next) {
 
 // Primary hub view, loads in active clients by default
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/dashboard");
+  res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.user.department}/dashboard`);
 });
 
 
 var dashboard = require("./supervisor/dashboard");
-router.use("/dashboard", dashboard);
+router.use("/department/:departmentID/dashboard", dashboard);
 
 var users = require("./supervisor/users");
-router.use("/users", users);
+router.use("/department/:departmentID/users", users);
 
 var clients = require("./supervisor/clients");
-router.use("/clients", clients);
+router.use("/department/:departmentID/clients", clients);
 
 // Client-specific operations
 var client = require("./supervisor/client");
-router.use("/clients/client/:clientID", client);
+router.use("/department/:departmentID/clients/client/:clientID", client);
 
 
 

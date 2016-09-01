@@ -7,11 +7,11 @@
   <div class="departments">
     <div class="department">
       <div class="subject showAll">
-        <a href="/v4/users/<%=user.cmid%>/supervisor/dashboard/overview">Show for all departments</a>
+        <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/dashboard/overview">Show for all departments</a>
       </div>
     </div>
     <% departments.forEach(function (department) { %>
-      <a href="/v4/users/<%=user.cmid%>/supervisor/dashboard/overview?departmentID=<%= department.department_id %>">
+      <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/dashboard/overview?departmentID=<%= department.department_id %>">
         <div class="department <% if (departmentFilterID == Number(department.department_id)) { %>selected<% } %>">
           <div class="subject">
             <%= department.name %>

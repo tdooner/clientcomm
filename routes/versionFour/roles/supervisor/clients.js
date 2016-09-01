@@ -26,12 +26,16 @@ var logging                 = require("../../utilities/logging");
 var logClientActivity       = logging.logClientActivity;
 var logConversationActivity = logging.logConversationActivity;
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`;
+  next();
+});
 
 // ROUTES
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/clients/open");
+  res.redirect(`${req.redirectUrlBase}/open`);
 });
 
 
@@ -86,9 +90,7 @@ router.post("/create", function (req, res) {
 
   Client.create(userID, first, middle, last, dob, otn, so)
   .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/clients");
+    res.redirect(req.redirectUrlBase);
   }).catch(error_500(res));
 });
 
@@ -141,10 +143,7 @@ router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) 
             });
           }).catch(error_500(res));
         } else {
-          res.redirect( "/v4/users/" + 
-                        req.user.cmid + 
-                        "/supervisor/clients/address/" + 
-                        clientID);
+          res.redirect(`${req.redirectUrlBase}/address/${clientID}`);
         }
       }).catch(error_500(res));
     } else {
@@ -169,9 +168,7 @@ router.post("/address/:clientID", function (req, res) {
       .then(() => {
         logClientActivity(clientID);
         req.flash("success", "Message to client sent.");
-        res.redirect( "/v4/users/" + 
-                      req.user.cmid + 
-                      "/supervisor/clients");
+        res.redirect(req.redirectUrlBase);
       }).catch(error_500(res));
     } else {
       res.redirect("/404");

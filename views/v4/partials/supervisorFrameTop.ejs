@@ -1,3 +1,5 @@
+<% const baseSupervisorURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+
 <% include ./navBarTop %>
 
 <!-- Load in addition CSS -->
@@ -7,23 +9,23 @@
   <div class="navSub">
 
     <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/supervisor/dashboard">Metrics Dashboard</a></div>
+      <div class="title"><a href="<%=`${baseSupervisorURL}/dashboard`%>">Metrics Dashboard</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/supervisor/users">Users</a></div>
-      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/supervisor/users/filter/active">Active</a></div>
-      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/supervisor/users/filter/inactive">Inactive</a></div>
+      <div class="title"><a href="<%=`${baseSupervisorURL}/users`%>">Users</a></div>
+      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="<%=`${baseSupervisorURL}/users/filter/active`%>">Active</a></div>
+      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="<%=`${baseSupervisorURL}/users/filter/inactive`%>">Inactive</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/supervisor/clients">Clients</a></div>
-      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/supervisor/clients/open">Open</a></div>
-      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/supervisor/clients/closed">Closed</a></div>
+      <div class="title"><a href="<%=`${baseSupervisorURL}/clients`%>">Clients</a></div>
+      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`${baseSupervisorURL}/clients/open`%>">Open</a></div>
+      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`${baseSupervisorURL}/clients/closed`%>">Closed</a></div>
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/users/create">
+      <a href="${baseSupervisorURL}/users/create">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-user-plus fa-stack-1x fa-inverse"></i>
@@ -33,7 +35,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/clients/create">
+      <a href="${baseSupervisorURL}/clients/create">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-male fa-stack-1x fa-inverse"></i>

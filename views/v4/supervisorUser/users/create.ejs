@@ -1,8 +1,10 @@
+<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/supervisor/users">
+  <a href="<%= `${baseURL}/users` %>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -17,7 +19,7 @@
 
   <form method = "post"
         id="createNewUser"
-        action = "/v4/users/<%=user.cmid%>/supervisor/users/create">
+        action = "<%= `${baseURL}/users/create` %>">
 
     <div class="formRow">
       <div class="formLabel"> First Name </div>
@@ -96,7 +98,7 @@
 <script type="text/javascript">
   $("#createNewUser").submit(function (event) {
     var email = $("input[name=email]").val();
-    $.get("/v4/users/<%=user.cmid%>/supervisor/users/create/check_email/" + encodeURIComponent(email))
+    $.get("<%= `${baseURL}/users/create/check_email/` %>" + encodeURIComponent(email))
     .done(function (res) {
       if (res.user) {
         alert("That email already is being used. Use a different address.");

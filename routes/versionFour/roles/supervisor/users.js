@@ -28,13 +28,17 @@ var emailAlerts     = require("../../utilities/emailAlerts");
 var alertOfAccountActivation = emailAlerts.alertOfAccountActivation;
 
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/users/`;
+  next();
+});
+
 
 // ROUTES
-
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/users/filter/active");
+  res.redirect(req.redirectUrlBase + "filter/active");
 });
 
 router.get("/filter/:activeStatus", function (req, res) {
@@ -66,9 +70,7 @@ router.get("/deactivate/:targetUserID", function (req, res) {
   Users.changeActivityStatus(req.params.targetUserID, false)
   .then(() => {
     req.flash("success", "Deactivated user.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/users");
+    res.redirect(req.redirectUrlBase);
   }).catch(error_500(res));
 });
 
@@ -76,9 +78,7 @@ router.get("/activate/:targetUserID", function (req, res) {
   Users.changeActivityStatus(req.params.targetUserID, true)
   .then(() => {
     req.flash("success", "Activated user.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/users");
+    res.redirect(req.redirectUrlBase);
   }).catch(error_500(res));
 });
 
@@ -99,9 +99,7 @@ router.post("/create", function (req, res) {
   .then((autoCreatedPassword) => {
     alertOfAccountActivation(email, autoCreatedPassword);
     req.flash("success", "Created new user.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/users");
+    res.redirect(req.redirectUrlBase);
   }).catch(error_500(res));
 });
 
@@ -140,9 +138,7 @@ router.post("/edit/:targetUserID", function (req, res) {
     return DepartmentSupervisors.updateSupervisor(department, targetUserID, activeSupervisor)
   }).then(() => {
     req.flash("success", "Updated user.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/users");
+    res.redirect(req.redirectUrlBase);
   }).catch(error_500(res));
 });
 
@@ -170,9 +166,7 @@ router.post("/transfer/:targetUserID", function (req, res) {
   Users.transferOne(targetUserID, department)
   .then(() => {
     req.flash("success", "Transfered user.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/users");
+    res.redirect(req.redirectUrlBase);
   }).catch(error_500(res));
 });
 

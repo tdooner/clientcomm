@@ -2,7 +2,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/supervisor/clients/address/<%= parameters.clientID %>">
+  <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/address/<%= parameters.clientID %>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -53,7 +53,7 @@
 
 
 <script type="text/javascript">
-  var baseURL = "/v4/users/<%=user.cmid%>/supervisor/clients/address/<%= parameters.clientID %>/selecttemplate/";
+  var baseURL = "/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/address/<%= parameters.clientID %>/selecttemplate/";
 
   $(".scrollListRow").click(function () {
     $(".scrollListRow").removeClass("selected");

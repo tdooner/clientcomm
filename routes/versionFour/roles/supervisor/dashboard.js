@@ -20,14 +20,18 @@ const Departments   = modelsImport.Departments;
 var errorHandling   = require("../../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/dashboard/`;
+  next();
+});
 
 
 // ROUTES
 
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/dashboard/overview?departmentID=" + req.user.department);
+  res.redirect(req.redirectUrlBase + "overview?departmentID=" + req.user.department);
 });
 
 router.get("/overview", function (req, res) {

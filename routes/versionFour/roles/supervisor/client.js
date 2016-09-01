@@ -48,14 +48,17 @@ router.use(function (req, res, next) {
   }).catch(error_500(res));
 });
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients/client/${req.params.clientID}`;
+  next();
+});
+
 
 // ROUTES
 router.get("/", function (req, res) {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/clients/client/" + 
-                  req.params.clientID + 
-                  "/messages");
+    res.redirect(`${req.redirectUrlBase}/messages`);
 });
 
 
@@ -64,9 +67,7 @@ router.get("/closecase", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Closed client case.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/clients/open");
+    res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
   }).catch(error_500(res));
 });
 
@@ -76,9 +77,7 @@ router.get("/opencase", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Opened client case.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/clients/open");
+    res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
   }).catch(error_500(res));
 });
 
@@ -100,9 +99,7 @@ router.post("/edit", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Edited client.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/clients");
+    res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
   }).catch(error_500(res));
 });
 
@@ -150,9 +147,7 @@ router.post("/transfer", function (req, res) {
       .then(() => {
         logClientActivity(req.params.clientID);
         req.flash("success", "Client transferred.")
-        res.redirect( "/v4/users/" + 
-                      req.user.cmid + 
-                      "/supervisor/clients/open");
+        res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
       }).catch(error_500(res));
     } else {
       res.redirect("/404");
@@ -162,11 +157,7 @@ router.post("/transfer", function (req, res) {
 
 
 router.get("/messages", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/clients/client/" + 
-                req.params.clientID + 
-                "/messages/filter/all");
+  res.redirect(`${req.redirectUrlBase}/messages/filter/all`);
 });
 
 router.get("/messages/filter/:method", function (req, res) {
@@ -211,7 +202,6 @@ router.post("/messages/create/infer_conversation", function (req, res) {
   const subject = "New Conversation";
   const content = req.body.content;
   const commID = req.body.commID;
-  const redirect = "/v4/users/" + userID + "/supervisor/clients/client/" + clientID + "/messages";
 
   Conversations.getMostRecentConversation(userID, clientID)
   .then((conversation) => {
@@ -228,7 +218,7 @@ router.post("/messages/create/infer_conversation", function (req, res) {
       .then(() => {
         logClientActivity(req.params.clientID);
         logConversationActivity(conversation.convid);
-        res.redirect(redirect);
+        res.redirect(`${req.redirectUrlBase}/messages`);
       }).catch(error_500(res));
     
     //otherwise create a new conversation
@@ -238,7 +228,7 @@ router.post("/messages/create/infer_conversation", function (req, res) {
         return Messages.sendOne(commID, content, conversationID)
       }).then(() => {
         logClientActivity(req.params.clientID);
-        res.redirect(redirect);
+        res.redirect(`${req.redirectUrlBase}/messages`);
       }).catch(error_500(res));
     }
   }).catch(error_500(res));
@@ -248,7 +238,8 @@ router.post("/messages/create/infer_conversation", function (req, res) {
 router.get("/conversations/create", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/supervisor/clients/address/" + 
+                "/supervisor/department/" + req.user.department + 
+                "/clients/address/" + 
                 req.params.clientID);
 });
 
@@ -256,7 +247,8 @@ router.get("/conversations/create", function (req, res) {
 router.get("/notifications", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/supervisor/clients/client/" + 
+                "/supervisor/department/" + req.user.department + 
+                "/clients/client/" + 
                 req.params.clientID + 
                 "/notifications/pending");
 });
@@ -296,7 +288,8 @@ router.get("/notifications/remove/:notificationID", function (req, res) {
     req.flash("success", "Removed notification.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/supervisor/clients/client/" + 
+                  "/supervisor/department/" + req.user.department + 
+                  "/clients/client/" + 
                   req.params.clientID + 
                   "/notifications");
   }).catch(error_500(res));
@@ -306,14 +299,16 @@ router.get("/notifications/remove/:notificationID", function (req, res) {
 router.get("/notifications/create", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/supervisor/notifications/create/sendto");
+                "/supervisor/department/" + req.user.department + 
+                "/notifications/create/sendto");
 });
 
 
 router.get("/communications", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
-                "/supervisor/clients/client/" + 
+                "/supervisor/department/" + req.user.department + 
+                "/clients/client/" + 
                 req.params.clientID + 
                 "/communications/filter/open");
 });
@@ -342,7 +337,8 @@ router.get("/communications/remove/:communicationID", function (req, res) {
         req.flash("success", "Removed communication method.");
         res.redirect( "/v4/users/" + 
                       req.user.cmid + 
-                      "/supervisor/clients/client/" + 
+                      "/supervisor/department/" + req.user.department + 
+                      "/clients/client/" + 
                       req.params.clientID + 
                       "/communications/");
       }).catch(error_500(res));
@@ -350,7 +346,8 @@ router.get("/communications/remove/:communicationID", function (req, res) {
       req.flash("warning", "Can't remove the only remaining communication method.");
       res.redirect( "/v4/users/" + 
                     req.user.cmid + 
-                    "/supervisor/clients/client/" + 
+                    "/supervisor/department/" + req.user.department + 
+                    "/clients/client/" + 
                     req.params.clientID + 
                     "/communications");
     }
@@ -381,7 +378,8 @@ router.post("/communications/create", function (req, res) {
     req.flash("success", "Created new communication method.");
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
-                  "/supervisor/clients/client/" + 
+                  "/supervisor/department/" + req.user.department + 
+                  "/clients/client/" + 
                   req.params.clientID + 
                   "/communications/");
   }).catch(error_500(res));

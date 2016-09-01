@@ -1,3 +1,5 @@
+<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+
 <% include ../../partials/supervisorFrameTop %>
 
 <!-- Load in addition CSS -->
@@ -47,14 +49,14 @@
     </div>
     <div class="column">
       <% if (targetUser.active) { %>
-        <a href="/v4/users/<%=user.cmid%>/supervisor/users/edit/<%=targetUser.cmid%>">
+        <a href="<%= `${baseURL}/users/edit/${targetUser.cmid}` %>">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
     </div>
     <div class="column">
       <% if (user.cmid !== targetUser.cmid && ["primary", "support"].indexOf(targetUser.class) > -1) { %>
-        <a href="/v4/users/<%=user.cmid%>/supervisor/users/transfer/<%=targetUser.cmid%>">
+        <a href="<%= `${baseURL}/users/transfer/${targetUser.cmid}` %>">
           <i class="fa highlight fa-mail-forward" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
@@ -62,12 +64,12 @@
     <div class="column">
       <% if (hub.sel == "active") { %>
         <% if (user.cmid !== targetUser.cmid && ["primary", "support"].indexOf(targetUser.class) > -1) { %>
-          <a href="/v4/users/<%=user.cmid%>/supervisor/users/deactivate/<%=targetUser.cmid%>">
+          <a href="<%= `${baseURL}/users/deactivate/${targetUser.cmid}` %>">
             <i class="fa highlight fa-book" aria-hidden="true"></i>
           </a>
         <% } else { %>-<% } %>
       <% } else { %>
-        <a href="/v4/users/<%=user.cmid%>/supervisor/users/activate/<%=targetUser.cmid%>">
+        <a href="<%= `${baseURL}/users/activate/${targetUser.cmid}` %>">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>
