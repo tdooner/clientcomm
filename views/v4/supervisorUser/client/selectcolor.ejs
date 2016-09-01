@@ -1,3 +1,5 @@
+<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+
 <% include ../../partials/cardFrameTop %>
 
 <!-- color picker -->
@@ -6,7 +8,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/open">
+  <a href="<%=`${baseURL}/clients`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -35,7 +37,7 @@
   </div>
 
 
-  <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/open">
+  <a href="<%=`${baseURL}/clients`%>">
     <input  type="submit" 
             class="formSubmit" 
             value="Back">

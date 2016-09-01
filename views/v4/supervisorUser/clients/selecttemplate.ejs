@@ -1,3 +1,5 @@
+<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
@@ -53,7 +55,7 @@
 
 
 <script type="text/javascript">
-  var baseURL = "/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/address/<%= parameters.clientID %>/selecttemplate/";
+  var baseURL = "<%= `${baseURL}/clients/address/${parameters.clientID}/selecttemplate` %>";
 
   $(".scrollListRow").click(function () {
     $(".scrollListRow").removeClass("selected");

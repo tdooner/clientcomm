@@ -134,9 +134,11 @@ router.post("/edit/:targetUserID", function (req, res) {
   const className = req.body.className;
   Users.updateOne(targetUserID, first, middle, last, email, department, position, className)
   .then(() => {
-    const activeSupervisor = (department == "supervisor");
+    const activeSupervisor = (className == "supervisor");
+    console.log("part 2b", className, activeSupervisor);
     return DepartmentSupervisors.updateSupervisor(department, targetUserID, activeSupervisor)
   }).then(() => {
+    console.log("part 3");
     req.flash("success", "Updated user.");
     res.redirect(req.redirectUrlBase);
   }).catch(error_500(res));

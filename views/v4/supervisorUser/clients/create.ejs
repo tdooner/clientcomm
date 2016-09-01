@@ -1,8 +1,10 @@
+<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients">
+  <a href="<%= `${baseURL}/clients` %>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -17,7 +19,7 @@
 
   <form method = "post"
         id="createClient"
-        action = "/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/create">
+        action="<%= `${baseURL}/clients/create` %>">
 
     <div class="formRow">
       <div class="formLabel"> First </div>

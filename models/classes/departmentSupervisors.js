@@ -68,7 +68,7 @@ class DepartmentSupervisors {
     if (typeof activeStatus == "undefined") activeStatus = true;
     return new Promise((fulfill, reject) => {
       db("department_supervisors")
-        .where("supervisor", supervisorIDArray)
+        .where("supervisor", supervisorID)
         .andWhere("department", departmentID)
         .update({ active: activeStatus })
         .returning("supervisor")

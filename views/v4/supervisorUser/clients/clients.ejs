@@ -1,3 +1,5 @@
+<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+
 <% include ../../partials/supervisorFrameTop %>
 
 <!-- Load in addition CSS -->
@@ -42,24 +44,24 @@
 <% clients.forEach( function (client) { %>
   <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
     <div class="column" value="<%= client.color_name %>">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/client/<%=client.clid%>/editcolortag">
+      <a href="<%= `${baseURL}/clients/client/${client.clid}/editcolortag` %>">
         <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
       </a>
     </div>
     <div class="column">
       <% if (client.active) { %>
-        <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/address/<%=client.clid%>">
+        <a href="<%= `${baseURL}/clients/address/${client.clid}` %>">
           <i class="fa highlight fa-send" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
       </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/users">
+      <a href="<%= `${baseURL}/users` %>">
         <span class="clientName"><%= client.last + ', ' + client.first + ' ' + client.middle %></span>
       </a>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/users">
+      <a href="<%= `${baseURL}/users` %>">
         <span class="clientName"><%= client.user_last + ', ' + client.user_first %></span>
       </a>
     </div>
@@ -75,22 +77,22 @@
       </small>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/client/<%=client.clid%>/edit">
+      <a href="<%= `${baseURL}/clients/client/${client.clid}/edit` %>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/client/<%=client.clid%>/transfer">
+      <a href="<%= `${baseURL}/clients/client/${client.clid}/transfer` %>">
         <i class="fa highlight fa-mail-forward" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
       <% if (hub.sel === "open") { %>
-        <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/client/<%=client.clid%>/closecase">
+        <a href="<%= `${baseURL}/clients/client/${client.clid}/closecase` %>">
           <i class="fa highlight fa-book" aria-hidden="true"></i>
         </a>
       <% } else { %>
-        <a href="/v4/users/<%=user.cmid%>/supervisor/department/<%department.department_id%>/clients/client/<%=client.clid%>/opencase">
+        <a href="<%= `${baseURL}/clients/client/${client.clid}/opencase` %>">
           <i class="fa fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>
