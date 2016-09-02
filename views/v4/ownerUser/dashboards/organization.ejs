@@ -56,7 +56,7 @@
     Keen.ready(function () {
       var keenQuery = new Keen.Query("sum", {
         eventCollection: "pagedurations",
-        groupBy: [ "user.first", "user.last" ],
+        groupBy: [ "user.first", "user.last", "user.department", "user.cmid" ],
         targetProperty: "duration",
         timeframe: "this_2_days",
         timezone: "UTC"
