@@ -21,6 +21,12 @@ const Templates     = modelsImport.Templates;
 var errorHandling   = require("../../utilities/errorHandling");
 var error_500       = errorHandling.error_500;
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary`;
+  next();
+});
 
 
 // ROUTES
@@ -75,9 +81,7 @@ router.post("/create", function (req, res) {
 
   Client.create(userID, first, middle, last, dob, otn, so)
   .then((clientID) => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/open");
+    res.redirect(`${res.redirectUrlBase}/clients/open`);
   }).catch(error_500(res));
 });
 
@@ -149,10 +153,7 @@ router.post("/address/:clientID", function (req, res) {
   Messages.startNewConversation(userID, clientID, subject, content, commID)
   .then(() => {
     req.flash("success", "Message to client sent.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  clientID);
+    res.redirect(`${res.redirectUrlBase}/clients/client/${clientID}`);
   }).catch(error_500(res));
   
 });

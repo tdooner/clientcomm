@@ -21,12 +21,16 @@ var error_500       = errorHandling.error_500;
 var accessChecking  = require("../../utilities/accessChecking");
 var confirmMatch    = accessChecking.confirmMatch;
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary`;
+  next();
+});
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/groups/current");
+  res.redirect(`${res.redirectUrlBase}/groups/current`);
 });
 
 router.get("/address/:groupID", function (req, res) {
@@ -46,9 +50,7 @@ router.post("/address/:groupID", function (req, res) {
   Groups.addressMembers(userID, groupID, title, content)
   .then(() => {
     req.flash("success", "Messaged group members.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/groups/current");
+    res.redirect(`${res.redirectUrlBase}/groups/current`);
   }).catch(error_500(res));
 });
 
@@ -95,9 +97,7 @@ router.post("/create", function (req, res) {
   Groups.insertNew(userID, name, clientIDs)
   .then(() => {
     req.flash("success", "Created new group.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/groups/current");
+    res.redirect(`${res.redirectUrlBase}/groups/current`);
   }).catch(error_500(res));
 });
 
@@ -135,9 +135,7 @@ router.post("/edit/:groupID", function (req, res) {
     Groups.editOne(userID, groupID, name, clientIDs)
     .then(() => {
       req.flash("success", "Edited group.");
-      res.redirect( "/v4/users/" + 
-                    req.user.cmid + 
-                    "/primary/groups/current");
+      res.redirect(`${res.redirectUrlBase}/groups/current`);
     }).catch(error_500(res));
   } else {
     res.redirect("/404");
@@ -147,18 +145,14 @@ router.post("/edit/:groupID", function (req, res) {
 router.get("/remove/:groupID", function (req, res) {
   Groups.removeOne(Number(req.params.groupID))
   .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/groups/current");
+    res.redirect(`${res.redirectUrlBase}/groups/current`);
   }).catch(error_500(res));
 });
 
 router.get("/activate/:groupID", function (req, res) {
   Groups.activateOne(Number(req.params.groupID))
   .then(() => {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/groups/deleted");
+    res.redirect(`${res.redirectUrlBase}/groups/deleted`);
   }).catch(error_500(res));
 });
 

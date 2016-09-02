@@ -26,11 +26,16 @@ var moment          = require("moment");
 var moment_tz       = require("moment-timezone");
 
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary`;
+  next();
+});
+
 // GENERAL CHECK
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/notifications/pending");
+  res.redirect(`${res.redirectUrlBase}/notifications/pending`);
 });
 
 router.get("/pending", function (req, res) {
@@ -97,18 +102,12 @@ router.post("/edit/:notificationID", function (req, res) {
   Notifications.editOne(notificationID, clientID, commID, send, subject, message)
   .then((notification) => {
     req.flash("success", "Edited notification.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  clientID + 
-                  "/notifications");
+    res.redirect(`${res.redirectUrlBase}/clients/client/${clientID}/notifications`);
   }).catch(error_500(res));
 });
 
 router.get("/create", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/notifications/create/sendto");
+  res.redirect(`${res.redirectUrlBase}/notifications/create/sendto`);
 });
 
 router.get("/create/sendto", function (req, res) {
@@ -174,11 +173,7 @@ router.post("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour", fu
   Notifications.create(userID, clientID, commID, subject, message, send)
   .then(() => {
     req.flash("success", "Created new notification.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  req.params.clientID + 
-                  "/notifications");
+    res.redirect(`${res.redirectUrlBase}/clients/client/${clientID}/notifications`);
   }).catch(error_500(res));
 });
 
@@ -186,9 +181,7 @@ router.get("/remove/:notificationID", function (req, res) {
   Notifications.removeOne(req.params.notificationID)
   .then(() => {
     req.flash("success", "Removed notification.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/notifications/pending");
+    res.redirect(`${res.redirectUrlBase}/notifications/pending`);
   }).catch(error_500(res));
 });
 

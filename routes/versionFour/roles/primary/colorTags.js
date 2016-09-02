@@ -25,6 +25,13 @@ var accessChecking  = require("../../utilities/accessChecking");
 var confirmMatch    = accessChecking.confirmMatch;
 
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary`;
+  next();
+});
+
 // GENERAL CHECK
 // Default pass-through check to make sure accounts are querying endpoints correctly
 router.use(function (req, res, next) {
@@ -54,9 +61,7 @@ router.post("/new", function (req, res) {
   ColorTags.addNewColorTag(req.user.cmid, req.body.color, req.body.name)
   .then(() => {
     req.flash("success", "New color tag created.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/colortags");
+    res.redirect(`${res.redirectUrlBase}/colortags`);
   }).catch(error_500(res));
 });
 
@@ -64,9 +69,7 @@ router.get("/:colorTagID/remove", function (req, res) {
   ColorTags.removeColorTag(req.params.colorTagID)
   .then(() => {
     req.flash("success", "Color tag removed.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/colortags");
+    res.redirect(`${res.redirectUrlBase}/colortags`);
   }).catch(error_500(res));
 });
 

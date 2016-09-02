@@ -33,6 +33,12 @@ var logging                 = require("../../utilities/logging");
 var logClientActivity       = logging.logClientActivity;
 var logConversationActivity = logging.logConversationActivity;
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary`;
+  next();
+});
 
 // MUST PASS THROUGH
 router.use(function (req, res, next) {
@@ -50,11 +56,7 @@ router.use(function (req, res, next) {
 
 // ROUTES
 router.get("/", function (req, res) {
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  req.params.clientID + 
-                  "/messages");
+  res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/messages`);
 });
 
 
@@ -63,9 +65,7 @@ router.get("/closecase", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Closed client case.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/open");
+    res.redirect(`${res.redirectUrlBase}/clients/open`);
   }).catch(error_500(res));
 });
 
@@ -75,9 +75,7 @@ router.get("/opencase", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Opened client case.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/open");
+    res.redirect(`${res.redirectUrlBase}/clients/open`);
   }).catch(error_500(res));
 });
 
@@ -98,12 +96,8 @@ router.post("/edit", function (req, res) {
   Client.editOne(clientID, first, middle, last, dob, uniqueID1, uniqueID2)
   .then(() => {
     logClientActivity(req.params.clientID);
-    req.flash("success", "Edited client.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  clientID + 
-                  "/");
+    req.flash("success", "Edited client.");
+    res.redirect(`${res.redirectUrlBase}/clients/client/${clientID}`);
   }).catch(error_500(res));
 });
 
@@ -116,9 +110,7 @@ router.get("/editcolortag", function (req, res) {
         colorTags: colorTags,
       });
     } else {
-      res.redirect( "/v4/users/" + 
-                    req.user.cmid + 
-                    "/primary/colortags");
+      res.redirect(`${res.redirectUrlBase}/colortags`);
     }
   }).catch(error_500(res));
 });
@@ -130,10 +122,8 @@ router.post("/editcolortag", function (req, res) {
   Client.udpateColorTag(req.params.clientID, colorTagID)
   .then(() => {
     logClientActivity(req.params.clientID);
-    req.flash("success", "Changed client color.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/open");
+    req.flash("success", "Changed client color.");
+    res.redirect(`${res.redirectUrlBase}/clients/open`);
   }).catch(error_500(res));
 });
 
@@ -166,9 +156,7 @@ router.post("/transfer", function (req, res) {
       Client.transfer(clientID, fromUserID, toUserID, bundleConversations)
       .then(() => {
         logClientActivity(req.params.clientID);
-        res.redirect( "/v4/users/" + 
-                      req.user.cmid + 
-                      "/primary/clients/open");
+        res.redirect(`${res.redirectUrlBase}/clients/open`);
       }).catch(error_500(res));
     } else {
       res.redirect("/404");
@@ -178,11 +166,7 @@ router.post("/transfer", function (req, res) {
 
 
 router.get("/messages", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/clients/client/" + 
-                req.params.clientID + 
-                "/messages/filter/all");
+  res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/messages/filter/all`);
 });
 
 router.get("/messages/filter/:method", function (req, res) {
@@ -227,7 +211,6 @@ router.post("/messages/create/infer_conversation", function (req, res) {
   const subject = "New Conversation";
   const content = req.body.content;
   const commID = req.body.commID;
-  const redirect = "/v4/users/" + userID + "/primary/clients/client/" + clientID + "/messages";
 
   Conversations.getMostRecentConversation(userID, clientID)
   .then((conversation) => {
@@ -244,7 +227,7 @@ router.post("/messages/create/infer_conversation", function (req, res) {
       .then(() => {
         logClientActivity(req.params.clientID);
         logConversationActivity(conversation.convid);
-        res.redirect(redirect);
+        res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/messages`);
       }).catch(error_500(res));
     
     //otherwise create a new conversation
@@ -254,7 +237,7 @@ router.post("/messages/create/infer_conversation", function (req, res) {
         return Messages.sendOne(commID, content, conversationID)
       }).then(() => {
         logClientActivity(req.params.clientID);
-        res.redirect(redirect);
+        res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/messages`);
       }).catch(error_500(res));
     }
   }).catch(error_500(res));
@@ -262,19 +245,12 @@ router.post("/messages/create/infer_conversation", function (req, res) {
 
 
 router.get("/conversations/create", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/clients/address/" + 
-                req.params.clientID);
+  res.redirect(`${res.redirectUrlBase}/clients/address/${req.params.clientID}`);
 });
 
 
 router.get("/notifications", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/clients/client/" + 
-                req.params.clientID + 
-                "/notifications/pending");
+  res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/notifications/pending`);
 });
 
 
@@ -310,28 +286,18 @@ router.get("/notifications/remove/:notificationID", function (req, res) {
   Notifications.removeOne(req.params.notificationID)
   .then(() => {
     req.flash("success", "Removed notification.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  req.params.clientID + 
-                  "/notifications");
+    res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/notifications`);
   }).catch(error_500(res));
 });
 
 
 router.get("/notifications/create", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/notifications/create/sendto");
+  res.redirect(`${res.redirectUrlBase}/notifications/create/sendto`);
 });
 
 
 router.get("/communications", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/clients/client/" + 
-                req.params.clientID + 
-                "/communications/filter/open");
+  res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications/filter/open`);
 });
 
 
@@ -356,19 +322,11 @@ router.get("/communications/remove/:communicationID", function (req, res) {
       Communications.removeOne(req.params.communicationID)
       .then((communications) => {
         req.flash("success", "Removed communication method.");
-        res.redirect( "/v4/users/" + 
-                      req.user.cmid + 
-                      "/primary/clients/client/" + 
-                      req.params.clientID + 
-                      "/communications/");
+        res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications`);
       }).catch(error_500(res));
     } else {
       req.flash("warning", "Can't remove the only remaining communication method.");
-      res.redirect( "/v4/users/" + 
-                    req.user.cmid + 
-                    "/primary/clients/client/" + 
-                    req.params.clientID + 
-                    "/communications");
+      res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications`);
     }
   })
 });
@@ -395,11 +353,7 @@ router.post("/communications/create", function (req, res) {
   CommConns.createOne(clientID, type, name, value)
   .then(() => {
     req.flash("success", "Created new communication method.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/clients/client/" + 
-                  req.params.clientID + 
-                  "/communications/");
+    res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications`);
   }).catch(error_500(res));
 });
 

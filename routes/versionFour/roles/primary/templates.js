@@ -19,6 +19,12 @@ var error_500       = errorHandling.error_500;
 var accessChecking  = require("../../utilities/accessChecking");
 var confirmMatch    = accessChecking.confirmMatch;
 
+// Create base URL for this page
+router.use((req, res, next) => {
+  res.locals.parameters = req.params;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary`;
+  next();
+});
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
@@ -38,9 +44,7 @@ router.get("/remove/:templateID", function (req, res) {
   Templates.removeOne(req.params.templateID)
   .then(() => {
     req.flash("success", "Removed template.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
+    res.redirect(`${res.redirectUrlBase}/templates`);
   }).catch(error_500(res));
 });
 
@@ -84,9 +88,7 @@ router.post("/edit/:templateID", function (req, res) {
   Templates.editOne(templateID, title, content)
   .then(() => {
     req.flash("success", "Template edited.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
+    res.redirect(`${res.redirectUrlBase}/templates`);
   }).catch(error_500(res));
 });
 

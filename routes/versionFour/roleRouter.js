@@ -66,7 +66,7 @@ router.use(function (req, res, next) {
 // Reroute from standard drop endpoint
 router.get("/", function (req, res) {
   if (["owner", "supervisor", "developer", "primary", "support"].indexOf(req.user.class) > -1) {
-    res.redirect("/v4/orgs/" + req.user.org + "/users/" + req.user.cmid + "/" + req.user.class);
+    res.redirect(`/v4/orgs/${req.user.org}/users/${req.user.cmid}/${req.user.class}`);
   } else {
     res.redirect("/404")
   }
