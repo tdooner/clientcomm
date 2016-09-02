@@ -39,29 +39,15 @@ router.get("/", function (req, res) {
 });
 
 
-router.get("/open", function (req, res) {
+router.get("/:clientActivity", function (req, res) {
+  const clientActivity = req.params.clientActivity == "open" ? true : false;
   const managerID = Number(req.user.cmid);
-  Clients.findByDepartment(req.user.department, true)
+  Clients.findByDepartment(req.user.department, clientActivity)
   .then((clients) => {
     res.render("v4/supervisorUser/clients/clients", {
       hub: {
         tab: "clients",
-        sel: "open"
-      },
-      clients: clients
-    });
-  }).catch(error_500(res));
-});
-
-
-router.get("/closed", function (req, res) {
-  const managerID = Number(req.params.userID);
-  Clients.findByDepartment(req.user.department, false)
-  .then((clients) => {
-    res.render("v4/supervisorUser/clients/clients", {
-      hub: {
-        tab: "clients",
-        sel: "closed"
+        sel: clientActivity ? "open" : "closed"
       },
       clients: clients
     });
