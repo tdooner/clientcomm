@@ -34,7 +34,6 @@ router.use((req, res, next) => {
 router.get("/open", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = true;
-console.log("HEHEH", managerID)
   Clients.findByUser(managerID, active)
   .then((clients) => {
     res.render("v4/primaryUser/clients", {

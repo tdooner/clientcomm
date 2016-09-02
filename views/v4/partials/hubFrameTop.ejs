@@ -1,3 +1,5 @@
+<% var baseHubFrameURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary` %>
+
 <% include ./navBarTop %>
 
 <!-- Load in addition CSS -->
@@ -6,29 +8,29 @@
 
   <div class="navSub">
     <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Clients</a></div>
-      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/open">Open</a></div>
-      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/closed">Closed</a></div>
+      <div class="title"><a href="<%=`${baseHubFrameURL}/clients/open`%>">Clients</a></div>
+      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`${baseHubFrameURL}/clients/open`%>">Open</a></div>
+      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`${baseHubFrameURL}/clients/closed`%>">Closed</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/notifications">Notifications</a></div>
-      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/pending">Pending</a></div>
-      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/notifications/sent">Sent</a></div>
+      <div class="title"><a href="<%=`${baseHubFrameURL}/notifications`%>">Notifications</a></div>
+      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`${baseHubFrameURL}/notifications/pending`%>">Pending</a></div>
+      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`${baseHubFrameURL}/notifications/sent`%>">Sent</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'templates' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/templates">Templates</a></div>
+      <div class="title"><a href="<%=`${baseHubFrameURL}/templates`%>">Templates</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'groups' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/groups">Groups</a></div>
-      <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/groups/current">Current</a></div>
-      <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/groups/deleted">Deleted</a></div>
+      <div class="title"><a href="<%=`${baseHubFrameURL}/groups`%>">Groups</a></div>
+      <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="<%=`${baseHubFrameURL}/groups/current`%>">Current</a></div>
+      <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="<%=`${baseHubFrameURL}/groups/deleted`%>">Deleted</a></div>
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/primary/groups/create">
+      <a href="<%=`${baseHubFrameURL}/groups/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-users fa-stack-1x fa-inverse"></i>
@@ -38,7 +40,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/primary/templates/create">
+      <a href="<%=`${baseHubFrameURL}/templates/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-clipboard fa-stack-1x fa-inverse"></i>
@@ -48,7 +50,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/primary/notifications/create">
+      <a href="<%=`${baseHubFrameURL}/notifications/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
@@ -58,7 +60,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/create">
+      <a href="<%=`${baseHubFrameURL}/clients/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-user fa-stack-1x fa-inverse"></i>

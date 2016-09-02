@@ -1,3 +1,5 @@
+<% var baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary/clients/client/${client.clid}`; %>
+
 <% include ./navBarTop %>
 
 <!-- Load in addition CSS -->
@@ -8,33 +10,33 @@
 
     <div class="leftTab">
       <div class="icon">
-        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/edit">
+        <a href="<%=`${baseURL}/edit`%>">
           <i class="fa fa-cog" aria-hidden="true"></i>
         </a>
       </div>
       <div class="title">
-        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>"><%= client.first + ' ' + client.last %></a>
+        <a href="<%=`${baseURL}`%>"><%= client.first + ' ' + client.last %></a>
       </div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'messages' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/all">Messages</a></div>
-      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/all">All</a></div>
-      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/texts">Texts</a></div>
+      <div class="title"><a href="<%=`${baseURL}/messages/filter/all`%>">Messages</a></div>
+      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="<%=`${baseURL}/messages/filter/all`%>">All</a></div>
+      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="<%=`${baseURL}/messages/filter/texts`%>">Texts</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/notifications">Notifications</a></div>
-      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/notifications/pending">Pending</a></div>
-      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/notifications/sent">Sent</a></div>
+      <div class="title"><a href="<%=`${baseURL}/notifications`%>">Notifications</a></div>
+      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`${baseURL}/notifications/pending`%>">Pending</a></div>
+      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`${baseURL}/notifications/sent`%>">Sent</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'contactMethods' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/communications">Methods</a></div>
+      <div class="title"><a href="<%=`${baseURL}/communications`%>">Methods</a></div>
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/communications/create">
+      <a href="<%=`${baseURL}/communications/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-whatsapp fa-stack-1x fa-inverse"></i>
@@ -44,7 +46,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/primary/notifications/create">
+      <a href="<%=`${baseURL}/notifications/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
@@ -54,7 +56,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/conversations/create">
+      <a href="<%=`${baseURL}/conversations/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-comments fa-stack-1x fa-inverse"></i>
