@@ -3,7 +3,7 @@
 <% include ../../partials/supervisorFrameTop %>
 
 <% if (limitByUser) { %>
-  <div class="limitedByBanner">Limiting by case manager ID <%= limitByUser.first + ' ' + limitByUser.last %>.</div>
+  <div class="limitedByBanner">Limiting clients by case manager <%= limitByUser.first + ' ' + limitByUser.last %>.</div>
 <% } %>
 
 <!-- Load in addition CSS -->
