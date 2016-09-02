@@ -69,13 +69,6 @@
   padding-top: 92px;
   background-color: #FFF; }
 
-.applicationFrame .viewingAsOtherBanner {
-  font-size: 12px;
-  line-height: 18px;
-  background-color: #4A90E2;
-  text-align: center;
-  color: #FFF; }
-
 .applicationFrame .emptyResultsGreeting {
   text-align: middle;
   background-color: #D3D3D3; }
@@ -96,3 +89,16 @@
     content: "";
     display: block;
     clear: both; }
+
+.applicationFrame .viewingAsOtherBanner {
+  font-size: 12px;
+  line-height: 18px;
+  background-color: #4A90E2;
+  text-align: center;
+  color: #FFF;
+  position: fixed;
+  top: 92px;
+  width: 1024px; }
+
+.applicationFrame .otherBannerBumber {
+  height: 18px; }

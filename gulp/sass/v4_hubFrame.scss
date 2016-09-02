@@ -129,14 +129,6 @@ $darkblue:    #344289;
     background-color: $white;
   }
 
-  .viewingAsOtherBanner {
-    font-size: 12px;
-    line-height: 18px;
-    background-color: $lightblue;
-    text-align: center;
-    color: $white;
-  }
-
   .emptyResultsGreeting {
     text-align: middle;
     background-color: $lightgrey;
@@ -168,3 +160,20 @@ $darkblue:    #344289;
   }
 
 }
+
+.applicationFrame {
+  .viewingAsOtherBanner {
+    font-size: 12px;
+    line-height: 18px;
+    background-color: $lightblue;
+    text-align: center;
+    color: $white;
+    position: fixed;
+    top: 92px;
+    width: 1024px;
+  }
+  .otherBannerBumber {
+    height: 18px;
+  }
+}
+
