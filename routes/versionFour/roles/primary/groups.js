@@ -30,7 +30,7 @@ router.use((req, res, next) => {
 
 // GENERAL CHECK
 router.get("/", function (req, res) {
-  res.redirect(`${res.redirectUrlBase}/groups/current`);
+  res.redirect(`${req.redirectUrlBase}/groups/current`);
 });
 
 router.get("/address/:groupID", function (req, res) {
@@ -50,7 +50,7 @@ router.post("/address/:groupID", function (req, res) {
   Groups.addressMembers(userID, groupID, title, content)
   .then(() => {
     req.flash("success", "Messaged group members.");
-    res.redirect(`${res.redirectUrlBase}/groups/current`);
+    res.redirect(`${req.redirectUrlBase}/groups/current`);
   }).catch(error_500(res));
 });
 
@@ -97,7 +97,7 @@ router.post("/create", function (req, res) {
   Groups.insertNew(userID, name, clientIDs)
   .then(() => {
     req.flash("success", "Created new group.");
-    res.redirect(`${res.redirectUrlBase}/groups/current`);
+    res.redirect(`${req.redirectUrlBase}/groups/current`);
   }).catch(error_500(res));
 });
 
@@ -135,7 +135,7 @@ router.post("/edit/:groupID", function (req, res) {
     Groups.editOne(userID, groupID, name, clientIDs)
     .then(() => {
       req.flash("success", "Edited group.");
-      res.redirect(`${res.redirectUrlBase}/groups/current`);
+      res.redirect(`${req.redirectUrlBase}/groups/current`);
     }).catch(error_500(res));
   } else {
     res.redirect("/404");
@@ -145,14 +145,14 @@ router.post("/edit/:groupID", function (req, res) {
 router.get("/remove/:groupID", function (req, res) {
   Groups.removeOne(Number(req.params.groupID))
   .then(() => {
-    res.redirect(`${res.redirectUrlBase}/groups/current`);
+    res.redirect(`${req.redirectUrlBase}/groups/current`);
   }).catch(error_500(res));
 });
 
 router.get("/activate/:groupID", function (req, res) {
   Groups.activateOne(Number(req.params.groupID))
   .then(() => {
-    res.redirect(`${res.redirectUrlBase}/groups/deleted`);
+    res.redirect(`${req.redirectUrlBase}/groups/deleted`);
   }).catch(error_500(res));
 });
 
