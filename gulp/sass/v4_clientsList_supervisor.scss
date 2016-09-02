@@ -59,6 +59,7 @@ $width_row9:  5%;
     }
     &:nth-child(2) {
       width: $width_row2;
+      text-align: center;
     }
     &:nth-child(3) {
       width: $width_row3;
@@ -146,9 +147,11 @@ $width_row9:  5%;
 
     &:nth-child(1) {
       width: $width_row1;
+      text-align: center;
     }
     &:nth-child(2) {
       width: $width_row2;
+      text-align: center;
     }
     &:nth-child(3) {
       width: $width_row3;

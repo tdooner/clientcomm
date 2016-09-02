@@ -195,55 +195,6 @@ router.get("/messages/filter/:method", function (req, res) {
   }).catch(error_500(res));
 });
 
-
-router.post("/messages/create/infer_conversation", function (req, res) {
-  const userID = req.user.cmid;
-  const clientID = Number(req.params.clientID);
-  const subject = "New Conversation";
-  const content = req.body.content;
-  const commID = req.body.commID;
-
-  Conversations.getMostRecentConversation(userID, clientID)
-  .then((conversation) => {
-    // use existing conversation if exists and recent (5 days)
-    var now, lastUpdated, recentOkay = false;
-    if (conversation) {
-      now = new Date().getTime() - (5 * 24 * 60 * 60 * 1000); // 5 days in past
-      lastUpdated = new Date(conversation.updated).getTime();
-      recentOkay = lastUpdated > now;
-    }
-
-    if (conversation && recentOkay) {
-      Messages.sendOne(commID, content, conversation.convid)
-      .then(() => {
-        logClientActivity(req.params.clientID);
-        logConversationActivity(conversation.convid);
-        res.redirect(`${req.redirectUrlBase}/messages`);
-      }).catch(error_500(res));
-    
-    //otherwise create a new conversation
-    } else {
-      Conversations.create(userID, clientID, subject, true)
-      .then((conversationID) => {
-        return Messages.sendOne(commID, content, conversationID)
-      }).then(() => {
-        logClientActivity(req.params.clientID);
-        res.redirect(`${req.redirectUrlBase}/messages`);
-      }).catch(error_500(res));
-    }
-  }).catch(error_500(res));
-});
-
-
-router.get("/conversations/create", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/department/" + req.user.department + 
-                "/clients/address/" + 
-                req.params.clientID);
-});
-
-
 router.get("/notifications", function (req, res) {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
