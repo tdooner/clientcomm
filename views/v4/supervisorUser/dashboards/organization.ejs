@@ -7,23 +7,43 @@
 
 <div class="leftBar">
   <div class="departments">
+    
     <div class="department">
       <div class="subject showAll">
         <a href="<%= `${baseURL}/dashboard/overview` %>">Show for all departments</a>
       </div>
     </div>
-    <% departments.forEach(function (department) { %>
-      <a href="<%= `${baseURL}/dashboard/overview?departmentID=${department.department_id}` %>">
-        <div class="department <% if (departmentFilterID == Number(department.department_id)) { %>selected<% } %>">
+    
+    <a href="<%= `${baseURL}/dashboard/overview` %>">
+      <div class="department <% if (!userFilterID) { %>selected<% } %>">
+        <div class="subject">
+          <%= department.name %>
+        </div>
+        <div class="date">
+          <div class="day">Created on <%= moment.tz(department.created, local_tz).format("MM/DD/YY") %></div>
+        </div>
+      </div>
+    </a>
+    
+    <div class="department">
+      <div class="subject showAll">
+        <small>Observe activity data by user</small>
+      </div>
+    </div>
+
+    <% users.forEach(function(user) { %>
+      <a href="<%= `${baseURL}/dashboard/overview?targetUserID=${user.cmid}` %>">
+        <div class="department <% if (userFilterID == user.cmid) { %>selected<% } %>">
           <div class="subject">
-            <%= department.name %>
+            <%= user.last + ', ' + user.first  %>
           </div>
           <div class="date">
-            <div class="day">Created on <%= moment.tz(department.updated, local_tz).format("DD/MM/YY") %></div>
+            <div class="day">Updated on <%= moment.tz(user.updated, local_tz).format("MM/DD/YY") %></div>
           </div>
         </div>
       </a>
     <% }) %>
+
   </div>
 </div>
 
@@ -95,7 +115,6 @@
     return dateArray;
   }
 
-  var departmentFilterID = <%= JSON.stringify(departmentFilterID) %>;
   var countsByWeek = <%- JSON.stringify(countsByWeek) %>;
   var countsByDay = <%- JSON.stringify(countsByDay) %>;
   buildPerformanceChart(countsByWeek, countsByDay);
@@ -145,13 +164,7 @@
 
   function buildUserActivityChart(users) {
     users = users.filter(function (ea) {
-      var f = ea["user.first"] !== "" && ea["user.first"] !== "Test Account" && ea["user.first"] !== "Kuan";
-      var l = ea["user.last"] !== "";
-      if (departmentFilterID) {
-        return ((departmentFilterID == ea["user.department"]) && (f && l))
-      } else {
-        return (f && l);
-      }
+      return Number(<%=department.department_id%>) == Number(ea["user.department"]);
     }).map(function (ea) {
       ea["User Activity"] = Math.ceil((ea.result/(1000*60*60))*100)/100; 
       ea.name = [ea["user.last"], ea["user.first"]].join(", ");

@@ -126,6 +126,31 @@ class Messages {
     });
   }
 
+  static countsByUser (orgID, userID, timeframe) {
+    return new Promise((fulfill, reject) => {
+      db("msgs")
+        .select(db.raw("date_trunc('" + timeframe + "', created) AS time_period , count(*) AS message_count"))
+        .leftJoin(
+          db("convos")
+            .select("convos.convid", "cms.org", "cms.cmid")
+            .leftJoin("cms", "cms.cmid", "convos.cm")
+            .as("convos"),
+          "convos.convid", "msgs.convo")
+        .whereRaw("msgs.created > now() - INTERVAL '12 months'")
+        .andWhere("convos.org", orgID)
+        .andWhere("convos.cmid", userID)
+        .groupBy(db.raw("1"))
+        .orderBy(db.raw("1"))
+      .then((counts) => {
+        counts = counts.map(function (count) {
+          count.time_period = moment(count.time_period).format("YYYY-MM-DD");
+          return count;
+        });
+        fulfill(counts);
+      }).catch(reject);
+    });
+  }
+
   static sendMultiple (userID, clientIDs, title, content) {
     return new Promise((fulfill, reject) => {
       clientIDs.forEach(function (clientID, i) {
