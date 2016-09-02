@@ -44,6 +44,7 @@
 
 
 <link rel="stylesheet" type="text/css" href="/components/c3/c3.min.css">
+<script src="/components/moment/min/moment.min.js"></script>
 <script src="/components/d3/d3.min.js"></script>
 <script src="/components/c3/c3.min.js"></script>
 
@@ -77,6 +78,23 @@
     $(".rightContent").height($(window).height() - 92);
   };
 
+  // Utility to facilitate adding of days
+  Date.prototype.addDays = function (days) {
+    var dat = new Date(this.valueOf())
+    dat.setDate(dat.getDate() + days);
+    return dat;
+  }
+
+  function getDatesArray (startDate, stopDate) {
+    var dateArray = new Array();
+    var currentDate = startDate;
+    while (currentDate <= stopDate) {
+        dateArray.push(moment(new Date(currentDate)).format("YYYY-MM-DD"));
+        currentDate = currentDate.addDays(1);
+    }
+    return dateArray;
+  }
+
   var departmentFilterID = <%= JSON.stringify(departmentFilterID) %>;
   var countsByWeek = <%- JSON.stringify(countsByWeek) %>;
   var countsByDay = <%- JSON.stringify(countsByDay) %>;
@@ -88,6 +106,16 @@
     var valsWeek = countsByWeek.map( function (count) { return Number(count.message_count); });
     var valsDay  = countsByDay.map(  function (count) { return Number(count.message_count); });
 
+    var firstDay = new Date(keysDay[0]);
+    var lastDay = new Date(keysDay[keysDay.length - 1]);
+    var newKeysDay = getDatesArray(firstDay, lastDay);
+    var newValsDay = [];
+    newKeysDay.forEach(function (day) {
+      var i = keysDay.indexOf(day);
+      if (i > -1) newValsDay.push(valsDay[i]);
+      else newValsDay.push(0);
+    });
+
     c3.generate({
       data: {
         xs:{
@@ -96,9 +124,9 @@
         },
         columns: [
             ["x1"].concat(keysWeek),
-            ["x2"].concat(keysDay),
+            ["x2"].concat(newKeysDay),
             ["Weekly Activity"].concat(valsWeek),
-            ["Daily Activity"].concat(valsDay)
+            ["Daily Activity"].concat(newValsDay)
         ],
         types: {"Weekly Activity": "area", "Daily Activity": "area"},
         colors: {
