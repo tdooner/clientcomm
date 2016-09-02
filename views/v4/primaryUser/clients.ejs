@@ -1,3 +1,5 @@
+<% var baseHubFrameURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary/clients/client/${client.clid}` %>
+
 <% include ../partials/hubFrameTop %>
 
 <!-- Load in addition CSS -->
@@ -39,19 +41,19 @@
 <% clients.forEach( function (client) { %>
   <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
     <div class="column" value="<%= client.color_name %>">
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/editcolortag">
+      <a href="<%=`${baseSubFrameURL}/editcolortag`%>">
         <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
       </a>
     </div>
     <div class="column">
       <% if (client.active) { %>
-        <a href="/v4/users/<%=user.cmid%>/primary/clients/address/<%=client.clid%>">
+        <a href="<%=`${baseSubFrameURL}/clients/address/${client.clid}`%>">
           <i class="fa highlight fa-send" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
       </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>">
+      <a href="<%=`${baseSubFrameURL}`%>">
         <span class="clientName"><%= client.last + ', ' + client.first + ' ' + client.middle %></span>
       </a>
     </div>
@@ -67,22 +69,22 @@
       </small>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/edit">
+      <a href="<%=`${baseSubFrameURL}/edit`%>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/transfer">
+      <a href="<%=`${baseSubFrameURL}/transfer`%>">
         <i class="fa highlight fa-mail-forward" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
       <% if (hub.sel === "open") { %>
-        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/closecase">
+        <a href="<%=`${baseSubFrameURL}/closecase`%>">
           <i class="fa highlight fa-book" aria-hidden="true"></i>
         </a>
       <% } else { %>
-        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/opencase">
+        <a href="<%=`${baseSubFrameURL}/opencase`%>">
           <i class="fa fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>
