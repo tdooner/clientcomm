@@ -38,19 +38,49 @@ router.get("/", function (req, res) {
   res.redirect(`${req.redirectUrlBase}/open`);
 });
 
+router.get("/open", (req, res) => {
+  var limitByUser = isNaN(req.query.limitByUser) ? "null" : Number(req.query.limitByUser);
+  res.redirect(`${req.redirectUrlBase}/list/open?limitByUser=${limitByUser}`);
+});
 
-router.get("/:clientActivity", function (req, res) {
+router.get("/closed", (req, res) => {
+  var limitByUser = isNaN(req.query.limitByUser) ? "null" : Number(req.query.limitByUser);
+  res.redirect(`${req.redirectUrlBase}/list/closed?limitByUser=${limitByUser}`);
+});
+
+router.get("/list/:clientActivity", function (req, res) {
   const clientActivity = req.params.clientActivity == "open" ? true : false;
-  const managerID = Number(req.user.cmid);
+  var limitByUser = Number(req.query.limitByUser);
+  if (isNaN(limitByUser)) limitByUser = false;
   Clients.findByDepartment(req.user.department, clientActivity)
   .then((clients) => {
-    res.render("v4/supervisorUser/clients/clients", {
+
+    // Filter by user if elected
+    if (limitByUser) {
+      clients = clients.filter((client) => {
+        return client.cm == limitByUser;
+      });
+    }
+
+    var renderObject = {
       hub: {
         tab: "clients",
         sel: clientActivity ? "open" : "closed"
       },
-      clients: clients
-    });
+      clients: clients,
+      limitByUser: null
+    };
+
+    if (limitByUser) {
+      Users.findByID(limitByUser)
+      .then((user) => {
+        renderObject.limitByUser = user;
+        res.render("v4/supervisorUser/clients/clients", renderObject);
+      }).catch(error_500(res));
+    } else {
+      res.render("v4/supervisorUser/clients/clients", renderObject);
+    }
+
   }).catch(error_500(res));
 });
 

@@ -32,6 +32,14 @@ $width_row9:  5%;
 }
 
 // SCSS
+.limitedByBanner {
+  font-size: 12px;
+  line-height: 18px;
+  background-color: $lightblue;
+  text-align: center;
+  color: $white;
+}
+
 .header {
   height: 20px;
   overflow: hidden;

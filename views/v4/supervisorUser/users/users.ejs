@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/v4_users_supervisor.css">
 
 <div class="header">
+  <div class="column">clients</div>
   <div class="column">name</div>
   <div class="column">email</div>
   <div class="column">class</div>
@@ -26,8 +27,13 @@
 <% users.forEach(function (targetUser) { %>
   <div class="notificationRow">
     <div class="column">
+      <a href="<%=`${baseURL}/clients/open?limitByUser=${targetUser.cmid}`%>">
+        <i class="fa highlight fa-users" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div class="column">
       <span class="clientName">
-        <%= targetUser.last + ', ' + targetUser.first %> <%= targetUser.middle %> 
+        <%= targetUser.last + ', ' + targetUser.first %> <%= targetUser.middle %>
       </span>
     </div>
     <div class="column">
