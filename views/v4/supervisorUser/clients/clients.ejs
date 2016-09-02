@@ -26,6 +26,9 @@
     unread
   </div>
   <div class="column">
+    transcript
+  </div>
+  <div class="column">
     last activity
   </div>
   <div class="column">
@@ -59,8 +62,10 @@
       <% } else { %>-<% } %>
       </div>
     <div class="column">
-      <a href="<%= `${baseURL}/users` %>">
-        <span class="clientName"><%= client.last + ', ' + client.first + ' ' + client.middle %></span>
+      <a href="">
+        <span class="clientName">
+          <%= client.last + ', ' + client.first + ' ' + client.middle %>
+        </span>
       </a>
     </div>
     <div class="column">
@@ -72,6 +77,11 @@
       <% if (client.unread > 0) { %>
         <span class="bigNumber"><%= client.unread %></span>
       <% } else { %>-<% } %>
+    </div>
+    <div class="column">
+      <a href="<%= `${baseURL}/clients/client/${client.clid}/transcript_between/${client.cm}` %>">
+        <i class="fa highlight fa-download" aria-hidden="true"></i>
+      </a>
     </div>
     <div class="column">
       <small>

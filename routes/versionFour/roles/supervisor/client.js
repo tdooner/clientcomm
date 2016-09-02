@@ -51,14 +51,14 @@ router.use(function (req, res, next) {
 // Create base URL for this page
 router.use((req, res, next) => {
   res.locals.parameters = req.params;
-  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients/client/${req.params.clientID}`;
+  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}`;
   next();
 });
 
 
 // ROUTES
 router.get("/", function (req, res) {
-    res.redirect(`${req.redirectUrlBase}/messages`);
+    res.redirect(`${req.redirectUrlBase}/clients/client/${req.params.clientID}/messages`);
 });
 
 
@@ -67,7 +67,7 @@ router.get("/closecase", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Closed client case.")
-    res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
+    res.redirect(`${req.redirectUrlBase}/clients`);
   }).catch(error_500(res));
 });
 
@@ -77,7 +77,7 @@ router.get("/opencase", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Opened client case.")
-    res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
+    res.redirect(`${req.redirectUrlBase}/clients`);
   }).catch(error_500(res));
 });
 
@@ -99,7 +99,7 @@ router.post("/edit", function (req, res) {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Edited client.")
-    res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
+    res.redirect(`${req.redirectUrlBase}/clients`);
   }).catch(error_500(res));
 });
 
@@ -147,7 +147,7 @@ router.post("/transfer", function (req, res) {
       .then(() => {
         logClientActivity(req.params.clientID);
         req.flash("success", "Client transferred.")
-        res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`);
+        res.redirect(`${req.redirectUrlBase}/clients`);
       }).catch(error_500(res));
     } else {
       res.redirect("/404");
@@ -156,183 +156,21 @@ router.post("/transfer", function (req, res) {
 });
 
 
-router.get("/messages", function (req, res) {
-  res.redirect(`${req.redirectUrlBase}/messages/filter/all`);
-});
-
-router.get("/messages/filter/:method", function (req, res) {
-  var methodFilter = "all";
-  if (req.params.method == "texts") methodFilter = "cell";
-
-  var conversationFilterID = Number(req.query.conversation);
-  if (isNaN(conversationFilterID)) conversationFilterID = null;
-
-  var conversations, messages;
-  Conversations.findByUserAndClient(req.user.cmid, req.params.clientID)
-  .then((convos) => {
-    conversations = convos;
-    return Messages.findByClientID(req.user.cmid, req.params.clientID)
-  }).then((msgs) => {
-    messages = msgs.filter(function (msg) {
-      if (msg.comm_type == methodFilter || methodFilter == "all") {
-        if (msg.convo == conversationFilterID || conversationFilterID == null) {
-          return true;
-        } else { return false; }
-      } else { return false; }
-    });
-    return CommConns.findByClientID(req.params.clientID)
-  }).then((communications) => {
-    res.render("v4/supervisorUser/client/messages", {
-      hub: {
-        tab: "messages",
-        sel: req.params.method
-      },
-      conversations: conversations,
-      messages: messages,
-      communications: communications,
-      conversationFilterID: conversationFilterID
-    });
-  }).catch(error_500(res));
-});
-
-router.get("/notifications", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/department/" + req.user.department + 
-                "/clients/client/" + 
-                req.params.clientID + 
-                "/notifications/pending");
-});
-
-
-router.get("/notifications/pending", function (req, res) {
-  Notifications.findByClientID(req.params.clientID, false)
-  .then((notifications) => {
-    res.render("v4/supervisorUser/client/notifications", {
-      hub: {
-        tab: "notifications",
-        sel: "pending"
-      },
-      notifications: notifications
-    });
-  }).catch(error_500(res));
-});
-
-
-router.get("/notifications/sent", function (req, res) {
-  Notifications.findByClientID(req.params.clientID, true)
-  .then((notifications) => {
-    res.render("v4/supervisorUser/client/notifications", {
-      hub: {
-        tab: "notifications",
-        sel: "sent"
-      },
-      notifications: notifications
-    });
-  }).catch(error_500(res));
-});
-
-
-router.get("/notifications/remove/:notificationID", function (req, res) {
-  Notifications.removeOne(req.params.notificationID)
-  .then(() => {
-    req.flash("success", "Removed notification.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/department/" + req.user.department + 
-                  "/clients/client/" + 
-                  req.params.clientID + 
-                  "/notifications");
-  }).catch(error_500(res));
-});
-
-
-router.get("/notifications/create", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/department/" + req.user.department + 
-                "/notifications/create/sendto");
-});
-
-
-router.get("/communications", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/supervisor/department/" + req.user.department + 
-                "/clients/client/" + 
-                req.params.clientID + 
-                "/communications/filter/open");
-});
-
-
-router.get("/communications/filter/open", function (req, res) {
-  CommConns.getClientCommunications(req.params.clientID)
-  .then((communications) => {
-    res.render("v4/supervisorUser/client/communications", {
-      hub: {
-        tab: "contactMethods",
-        sel: null
-      },
-      communications: communications
-    });
-  }).catch(error_500(res));
-});
-
-
-router.get("/communications/remove/:communicationID", function (req, res) {
-  CommConns.findByClientID(req.params.clientID)
-  .then((commConns) => {
-    if (commConns.length > 1) {
-      Communications.removeOne(req.params.communicationID)
-      .then((communications) => {
-        req.flash("success", "Removed communication method.");
-        res.redirect( "/v4/users/" + 
-                      req.user.cmid + 
-                      "/supervisor/department/" + req.user.department + 
-                      "/clients/client/" + 
-                      req.params.clientID + 
-                      "/communications/");
-      }).catch(error_500(res));
-    } else {
-      req.flash("warning", "Can't remove the only remaining communication method.");
-      res.redirect( "/v4/users/" + 
-                    req.user.cmid + 
-                    "/supervisor/department/" + req.user.department + 
-                    "/clients/client/" + 
-                    req.params.clientID + 
-                    "/communications");
-    }
-  })
-});
-
-
-router.get("/communications/create", function (req, res) {
-  res.render("v4/supervisorUser/client/createComm", {
-    commConn: {}
-  });
-});
-
-
-router.post("/communications/create", function (req, res) {
+router.get("/transcript_between/:targetUserID", function (req, res) {
   const clientID = req.params.clientID;
-  const name = req.body.description;
-  const type = req.body.type;
-  var   value = req.body.value;
-
-  // clean up numbers
-  if (type == "cell" || type == "landline") {
-    value = value.replace(/[^0-9.]/g, "");
-    if (value.length == 10) { value = "1" + value; }
-  }
-  CommConns.createOne(clientID, type, name, value)
-  .then(() => {
-    req.flash("success", "Created new communication method.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/supervisor/department/" + req.user.department + 
-                  "/clients/client/" + 
-                  req.params.clientID + 
-                  "/communications/");
+  const targetUserID = req.params.targetUserID;
+  Messages.findByClientID(targetUserID, clientID)
+  .then((messages) => {
+    // Format into a text string
+    messages = messages.map(function (m) {
+      var s = "";
+      Object.keys(m).forEach(function (k) {
+        s += `\n${k}: ${m[k]}`;
+      });
+      return s;
+    }).join("\n\n");
+    res.set({"Content-Disposition":"attachment; filename=transcript.txt"});
+    res.send(messages);
   }).catch(error_500(res));
 });
 
