@@ -31,14 +31,14 @@
       </div>
     </div>
 
-    <% users.forEach(function(user) { %>
-      <a href="<%= `${baseURL}/dashboard/overview?targetUserID=${user.cmid}` %>">
-        <div class="department <% if (userFilterID == user.cmid) { %>selected<% } %>">
+    <% users.forEach(function(targetUser) { %>
+      <a href="<%= `${baseURL}/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
+        <div class="department <% if (userFilterID == targetUser.cmid) { %>selected<% } %>">
           <div class="subject">
-            <%= user.last + ', ' + user.first  %>
+            <%= targetUser.last + ', ' + targetUser.first  %>
           </div>
           <div class="date">
-            <div class="day">Updated on <%= moment.tz(user.updated, local_tz).format("MM/DD/YY") %></div>
+            <div class="day">Updated on <%= moment.tz(targetUser.updated, local_tz).format("MM/DD/YY") %></div>
           </div>
         </div>
       </a>

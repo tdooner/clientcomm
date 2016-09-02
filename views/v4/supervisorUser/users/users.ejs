@@ -32,9 +32,11 @@
       </a>
     </div>
     <div class="column">
-      <span class="clientName">
-        <%= targetUser.last + ', ' + targetUser.first %> <%= targetUser.middle %>
-      </span>
+      <a href="<%= `${baseURL}/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
+        <span class="clientName">
+          <%= targetUser.last + ', ' + targetUser.first %> <%= targetUser.middle %>
+        </span>
+      </a>
     </div>
     <div class="column">
       <small><%= targetUser.email %></small>
