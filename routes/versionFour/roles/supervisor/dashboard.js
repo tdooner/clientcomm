@@ -36,7 +36,7 @@ router.get("/", function (req, res) {
 });
 
 router.get("/overview", function (req, res) {
-  var users, countsByWeek, countsByDay;
+  var users, clients, countsByWeek, countsByDay;
   var orgID = Number(req.params.orgID);
   var departmentID = Number(req.params.departmentID);
   var userFilterID = Number(req.query.targetUserID);
@@ -48,6 +48,15 @@ router.get("/overview", function (req, res) {
     return Users.findByDepartment(departmentID, true)
   }).then((usrs) => {
     users = usrs;
+    return Clients.findByDepartment(departmentID, true);
+  }).then((cls) => {
+    clients = cls;
+    if (userFilterID) {
+      clients.filter(function(client) {
+        return client.cm == userFilterID;
+      });
+    }
+
     if (userFilterID) return Messages.countsByUser(orgID, userFilterID, "day");
     else              return Messages.countsByDepartment(orgID, departmentID, "day");
   }).then((counts) => {
@@ -64,6 +73,7 @@ router.get("/overview", function (req, res) {
       department: department,
       users: users,
       userFilterID, userFilterID,
+      clients: clients,
       countsByWeek: countsByWeek,
       countsByDay: countsByDay
     });

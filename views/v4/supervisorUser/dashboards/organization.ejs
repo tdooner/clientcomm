@@ -3,7 +3,7 @@
 <% include ../../partials/supervisorFrameTop %>
 
 <!-- Load in addition CSS -->
-<link rel="stylesheet" type="text/css" href="/static/css/v4_ownerDashboard.css">
+<link rel="stylesheet" type="text/css" href="/static/css/v4_supervisorDashboard.css">
 
 <div class="leftBar">
   <div class="departments">
@@ -26,8 +26,8 @@
     </a>
     
     <div class="department">
-      <div class="subject showAll">
-        <small>Observe activity data by user</small>
+      <div class="subHeader">
+        Observe activity by manager
       </div>
     </div>
 
@@ -54,11 +54,14 @@
     <div class="title">Yearly Activity Log</div>
     <div class="graphic" id="overallGraph"></div>
   </div>
+
   <div class="chart">
     <div class="title">Previous 24 Hours' User Activity</div>
     <div class="loading"><i class="fa fa-spinner fa-pulse fa-3x fa-fw" aria-hidden="true"></i></div>
     <div class="graphic" id="userActivity"></div>
   </div>
+
+
 
 </div>
 
@@ -164,7 +167,8 @@
 
   function buildUserActivityChart(users) {
     users = users.filter(function (ea) {
-      return Number(<%=department.department_id%>) == Number(ea["user.department"]);
+      return true;
+      // return Number(<%=parameters.departmentID%>) == Number(ea["user.department"]);
     }).map(function (ea) {
       ea["User Activity"] = Math.ceil((ea.result/(1000*60*60))*100)/100; 
       ea.name = [ea["user.last"], ea["user.first"]].join(", ");
