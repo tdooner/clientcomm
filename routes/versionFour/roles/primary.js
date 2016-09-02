@@ -7,6 +7,7 @@ var router          = express.Router({mergeParams: true});
 
 // Models
 const modelsImport  = require("../../../models/models");
+const Users         = modelsImport.Users;
 const Client        = modelsImport.Client;
 const Clients       = modelsImport.Clients;
 const ColorTags     = modelsImport.ColorTags;
@@ -41,8 +42,18 @@ router.use(function (req, res, next) {
   const matchType1 = confirmMatch("number", [userID0, userID1]);
   const matchType2 = ["owner", "supervisor"].indexOf(req.user.class) > -1;
 
-  if (matchType1 || matchType2) next();
-  else res.redirect("/404");
+  if (matchType1) {
+    res.locals.viewingAsOther = null;
+    next();
+  } else if (matchType2) {
+    Users.findByID(userID0)
+    .then((user) => {
+      res.locals.viewingAsOther = user;
+      next();
+    }).catch(error_500(res));
+  } else {
+    res.redirect("/404")
+  }
 });
 
 

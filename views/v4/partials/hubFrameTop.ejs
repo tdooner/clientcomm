@@ -72,3 +72,9 @@
   </div>
 
   <div class="coreContent">
+
+  <% if (viewingAsOther) { %>
+    <div class="viewingAsOtherBanner">You are viewing 
+    <b><%= viewingAsOther.first + ' ' + viewingAsOther.last %>'s</b>
+    client dashboard.</div>
+  <% } %>
