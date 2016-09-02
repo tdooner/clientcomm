@@ -38,21 +38,18 @@ var confirmMatch    = accessChecking.confirmMatch;
 router.use(function (req, res, next) {
   const userID0 = Number(req.params.userID);
   const userID1 = Number(req.user.cmid);
-  if (confirmMatch("number", [userID0, userID1])) {
-    next();
-  } else {
-    res.redirect("/404");
-  }
+  const matchType1 = confirmMatch("number", [userID0, userID1]);
+  const matchType2 = ["owner", "supervisor"].indexOf(req.user.class) > -1;
+
+  if (matchType1 || matchType2) next();
+  else res.redirect("/404");
 });
 
 
-// ROUTES
 
 // Primary hub view, loads in active clients by default
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/primary/clients/open");
+  res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary/clients/open`);
 });
 
 

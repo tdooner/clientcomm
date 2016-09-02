@@ -53,16 +53,14 @@ router.get("/create", function (req, res) {
 });
 
 router.post("/create", function (req, res) {
-  const orgID   = req.user.org;
-  const userID  = req.user.cmid;
+  const orgID   = req.params.orgID;
+  const userID  = req.params.userID;
   const title   = req.body.title;
   const content = req.body.content;
   Templates.insertNew(orgID, userID, title, content)
   .then(() => {
     req.flash("success", "Created new template.")
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/primary/templates");
+    res.redirect(`${res.redirectUrlBase}/templates`);
   }).catch(error_500(res));
 });
 

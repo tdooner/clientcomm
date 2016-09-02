@@ -39,7 +39,7 @@ router.get("/", function (req, res) {
 });
 
 router.get("/pending", function (req, res) {
-  Notifications.findByUser(req.user.cmid, false)
+  Notifications.findByUser(req.params.userID, false)
   .then((notifications) => {
     res.render("v4/primaryUser/notifications/notifications", {
       hub: {
@@ -52,7 +52,7 @@ router.get("/pending", function (req, res) {
 });
 
 router.get("/sent", function (req, res) {
-  Notifications.findByUser(req.user.cmid, true)
+  Notifications.findByUser(req.params.userID, true)
   .then((notifications) => {
     res.render("v4/primaryUser/notifications/notifications", {
       hub: {
@@ -66,7 +66,7 @@ router.get("/sent", function (req, res) {
 
 router.get("/edit/:notificationID", function (req, res) {
   var clients;
-  Clients.findAllByUser(req.user.cmid)
+  Clients.findAllByUser(req.params.userID)
   .then((clientsReturned) => {
     clients = clientsReturned;
     return Notifications.findByID(Number(req.params.notificationID))
@@ -111,7 +111,7 @@ router.get("/create", function (req, res) {
 });
 
 router.get("/create/sendto", function (req, res) {
-  Clients.findByUser(req.user.cmid)
+  Clients.findByUser(req.params.userID)
   .then((clients) => {
     res.render("v4/primaryUser/notifications/sendto", {
       clients: clients
@@ -120,7 +120,7 @@ router.get("/create/sendto", function (req, res) {
 });
 
 router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selecttemplate", function (req, res) {
-  Templates.findByUser(req.user.cmid)
+  Templates.findByUser(req.params.userID)
   .then((templates) => {
     res.render("v4/primaryUser/notifications/selecttemplate", {
       templates: templates,
@@ -131,7 +131,7 @@ router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selec
 
 router.get("/create/sendto/:clientID/via/:commID/on/:sendDate/at/:sendHour/selecttemplate/:templateID", function (req, res) {
   const templateID = Number(req.params.templateID);
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   const clientID = Number(req.params.clientID);
 
   Templates.findByID(templateID)

@@ -34,7 +34,7 @@ router.use((req, res, next) => {
 router.get("/open", function (req, res) {
   const managerID = Number(req.params.userID);
   const active    = true;
-
+console.log("HEHEH", managerID)
   Clients.findByUser(managerID, active)
   .then((clients) => {
     res.render("v4/primaryUser/clients", {
@@ -71,7 +71,7 @@ router.get("/create", function (req, res) {
 
 
 router.post("/create", function (req, res) {
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   const first = req.body.first;
   const middle = req.body.middle ? req.body.middle : "";
   const last = req.body.last;
@@ -103,7 +103,7 @@ router.get("/address/:clientID", function (req, res) {
 
 
 router.get("/address/:clientID/selecttemplate", function (req, res) {
-  Templates.findByUser(req.user.cmid)
+  Templates.findByUser(req.params.userID)
   .then((templates) => {
     res.render("v4/primaryUser/client/selecttemplate", {
       templates: templates,
@@ -115,7 +115,7 @@ router.get("/address/:clientID/selecttemplate", function (req, res) {
 
 router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) {
   const templateID = Number(req.params.templateID);
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   const clientID = Number(req.params.clientID);
 
   Client.findByID(clientID)
@@ -144,7 +144,7 @@ router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) 
 
 
 router.post("/address/:clientID", function (req, res) {
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   const clientID = Number(req.params.clientID);
   const subject = req.body.subject;
   const content = req.body.content;

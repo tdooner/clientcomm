@@ -40,7 +40,7 @@ router.get("/address/:groupID", function (req, res) {
 });
 
 router.post("/address/:groupID", function (req, res) {
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   const groupID = Number(req.params.groupID);
   const title = req.body.title;
   const content = req.body.content;
@@ -55,7 +55,7 @@ router.post("/address/:groupID", function (req, res) {
 });
 
 router.get("/current", function (req, res) {
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   Groups.findByUser(userID, true)
   .then((groups) => {
     res.render("v4/primaryUser/groups/groups", {
@@ -119,7 +119,7 @@ router.get("/edit/:groupID", function (req, res) {
 });
 
 router.post("/edit/:groupID", function (req, res) {
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   const groupID = req.params.groupID;
   const name = req.body.name;
 

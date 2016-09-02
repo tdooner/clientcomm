@@ -103,7 +103,7 @@ router.post("/edit", function (req, res) {
 
 
 router.get("/editcolortag", function (req, res) {
-  ColorTags.selectAllByUser(req.user.cmid)
+  ColorTags.selectAllByUser(req.params.userID)
   .then((colorTags) => {
     if (colorTags.length > 0) {
       res.render("v4/primaryUser/client/selectcolor", {
@@ -129,12 +129,16 @@ router.post("/editcolortag", function (req, res) {
 
 
 router.get("/transfer", function (req, res) {
-  Users.findByOrg(req.user.org)
-  .then((users) => {
+  var user;
+  Users.findByID(req.params.userID)
+  .then((u) => {
+    user = u;
+    return Users.findByOrg(req.params.orgID)
+  }).then((users) => {
 
     // limit only to same department transfers
     users = users.filter(function (user) {
-      return user.department == req.user.department;
+      return user.department == user.department;
     });
 
     res.render("v4/primaryUser/client/transfer", {
@@ -146,7 +150,7 @@ router.get("/transfer", function (req, res) {
 
 
 router.post("/transfer", function (req, res) {
-  const fromUserID = req.user.cmid;
+  const fromUserID = req.params.userID;
   const toUserID = Number(req.body.userID);
   const clientID = Number(req.params.clientID);
   const bundleConversations = req.params.bundleConversations ? true : false;
@@ -177,10 +181,10 @@ router.get("/messages/filter/:method", function (req, res) {
   if (isNaN(conversationFilterID)) conversationFilterID = null;
 
   var conversations, messages;
-  Conversations.findByUserAndClient(req.user.cmid, req.params.clientID)
+  Conversations.findByUserAndClient(req.params.userID, req.params.clientID)
   .then((convos) => {
     conversations = convos;
-    return Messages.findByClientID(req.user.cmid, req.params.clientID)
+    return Messages.findByClientID(req.params.userID, req.params.clientID)
   }).then((msgs) => {
     messages = msgs.filter(function (msg) {
       if (msg.comm_type == methodFilter || methodFilter == "all") {
@@ -206,7 +210,7 @@ router.get("/messages/filter/:method", function (req, res) {
 
 
 router.post("/messages/create/infer_conversation", function (req, res) {
-  const userID = req.user.cmid;
+  const userID = req.params.userID;
   const clientID = Number(req.params.clientID);
   const subject = "New Conversation";
   const content = req.body.content;

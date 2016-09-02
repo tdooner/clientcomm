@@ -36,7 +36,7 @@ router.use((req, res, next) => {
 // Default pass-through check to make sure accounts are querying endpoints correctly
 router.use(function (req, res, next) {
   const userID0 = Number(req.params.userID);
-  const userID1 = Number(req.user.cmid);
+  const userID1 = Number(req.params.userID);
   if (confirmMatch("number", [userID0, userID1])) {
     next();
   } else {
@@ -49,7 +49,7 @@ router.use(function (req, res, next) {
 
 // Primary hub view, loads in active clients by default
 router.get("/", function (req, res) {
-  ColorTags.selectAllByUser(req.user.cmid)
+  ColorTags.selectAllByUser(req.params.userID)
   .then((colorTags) => {
     res.render("v4/primaryUser/colormanager", {
       colorTags: colorTags,
@@ -58,7 +58,7 @@ router.get("/", function (req, res) {
 });
 
 router.post("/new", function (req, res) {
-  ColorTags.addNewColorTag(req.user.cmid, req.body.color, req.body.name)
+  ColorTags.addNewColorTag(req.params.userID, req.body.color, req.body.name)
   .then(() => {
     req.flash("success", "New color tag created.");
     res.redirect(`${res.redirectUrlBase}/colortags`);
