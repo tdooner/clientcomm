@@ -32,6 +32,7 @@ if (TESTENV && TESTENV == "true") {
 const Conversations = require("./conversations");
 const Communications = require("./communications");
 const Client = require("./client");
+const CommConns = require("./commconns");
 
 
 // Class
@@ -137,11 +138,9 @@ class Messages {
 
   static smartSend (userID, clientID, title, content) {
     return new Promise((fulfill, reject) => {
-      console.log("PRE Got here", commID);
       Messages.getLatestNumber(userID, clientID)
       .then((commID) => {
         if (commID) {
-          console.log("Got here", commID);
           Messages.startNewConversation(userID, clientID, title, content, commID)
           .then(() => {
             fulfill();
@@ -156,7 +155,7 @@ class Messages {
 
   static getLatestNumber (userID, clientID) {
     return new Promise((fulfill, reject) => {
-      Communications.getClientCommunications(clientID)
+      CommConns.getClientCommunications(clientID)
       .then((comms) => {
         if (comms.length == 1) {
           fulfill(comms[0].comm);
