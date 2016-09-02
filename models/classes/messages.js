@@ -137,15 +137,17 @@ class Messages {
 
   static smartSend (userID, clientID, title, content) {
     return new Promise((fulfill, reject) => {
+      console.log("PRE Got here", commID);
       Messages.getLatestNumber(userID, clientID)
       .then((commID) => {
         if (commID) {
+          console.log("Got here", commID);
           Messages.startNewConversation(userID, clientID, title, content, commID)
           .then(() => {
             fulfill();
           }).catch(reject);
         } else {
-          // fail silently
+          // Issue: It will fail silently here.
           fulfill();
         }
       }).catch(reject);

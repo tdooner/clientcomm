@@ -170,7 +170,6 @@ router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) 
 
 
 router.post("/address/:clientID", function (req, res) {
-  var targetUserID;
   const clientID = Number(req.params.clientID);
   const subject = req.body.subject;
   const content = req.body.content;
@@ -179,9 +178,15 @@ router.post("/address/:clientID", function (req, res) {
   Client.findByID(clientID)
   .then((client) => {
     if (client) {
-      targetUserID = client.cm;
-      Messages.startNewConversation(targetUserID, clientID, subject, content, commID)
-      .then(() => {
+      
+      var strategy;
+      if (isNaN(commID)) {
+        strategy = Messages.smartSend(client.cm, clientID, subject, content);
+      } else {
+        strategy = Messages.startNewConversation(client.cm, clientID, subject, content, commID);
+      }
+
+      strategy.then(() => {
         logClientActivity(clientID);
         req.flash("success", "Message to client sent.");
         res.redirect(req.redirectUrlBase);
