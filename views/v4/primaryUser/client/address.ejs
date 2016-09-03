@@ -1,8 +1,10 @@
+<% var baseURLSubFrame = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary` %>
+
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>">
+  <a href="<%=`${baseURLSubFrame}/clients/client/${client.clid}`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -16,13 +18,13 @@
 <div class="cardBody">
   
   <div class="formRow">
-    <a href="/v4/users/<%=user.cmid%>/primary/clients/address/<%= client.clid %>/selecttemplate">
+    <a href="<%=`${baseURLSubFrame}/clients/address/${client.clid}/selecttemplate`%>">
       <input type="submit" id="useTemplate" class="formSubmit inverse" value="Load a template">
     </a>
   </div>
 
   <form method="post"
-        action="/v4/users/<%=user.cmid%>/primary/clients/address/<%= client.clid %>">
+        action="<%=`${baseURLSubFrame}/clients/address/${client.clid}`%>">
     <div class="formRow <% if (!template.title) { %>subdued<% } %>">
       <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
       <div class="formInput">

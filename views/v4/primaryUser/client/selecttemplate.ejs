@@ -1,8 +1,10 @@
+<% var baseURLSubFrame = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary` %>
+
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/clients">
+  <a href="<%=`${baseURLSubFrame}/clients`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -53,7 +55,7 @@
 
 
 <script type="text/javascript">
-  var baseURL = "/v4/users/<%=user.cmid%>/primary/clients/address/<%= parameters.clientID %>/selecttemplate/";
+  var baseURL = "<%=`${baseURLSubFrame}/clients/address/${parameters.clientID}/selecttemplate/`%>";
 
   $(".scrollListRow").click(function () {
     $(".scrollListRow").removeClass("selected");

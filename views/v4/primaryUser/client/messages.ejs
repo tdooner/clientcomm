@@ -1,3 +1,5 @@
+<% var baseURLSubFrame = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary` %>
+
 <% include ../../partials/clientHubFrameTop %>
 
 <!-- Load in addition CSS -->
@@ -7,11 +9,11 @@
   <div class="conversations">
     <div class="conversation">
       <div class="subject showAll">
-        <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/all">Show all conversations</a>
+        <a href="<%=`${baseURLSubFrame}/clients/client/${client.clid}/messages/filter/all`%>">Show all conversations</a>
       </div>
     </div>
     <% conversations.forEach(function (conversation) { %>
-      <a href="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/filter/all?conversation=<%= conversation.convid %>">
+      <a href="<%=`${baseURLSubFrame}/clients/client/${client.clid}/messages/filter/all?conversation=${conversation.convid}`%>">
         <div class="conversation <% if (conversationFilterID == Number(conversation.convid)) { %>selected<% } %>">
           <div class="subject">
             <%= conversation.subject ? conversation.subject : 'No Subject' %>
@@ -59,7 +61,7 @@
   <div class="responseBox">
     <form method="post"
           id="newMessage" 
-          action="/v4/users/<%=user.cmid%>/primary/clients/client/<%=client.clid%>/messages/create/infer_conversation">
+          action="<%=`${baseURLSubFrame}/clients/client/${client.clid}/messages/create/infer_conversation`%>">
       <div class="mini">
         <div class="messageInput">
           <div class="left">Start typing message...</div>

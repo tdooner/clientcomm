@@ -1,10 +1,10 @@
-<% var baseHubFrameURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary/clients/client/${client.clid}` %>
+<% var baseURLSubFrame = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary` %>
 
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/clients/open">
+  <a href="<%=`${baseURLSubFrame}/clients/open`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -19,7 +19,7 @@
 
   <form method = "post"
         id="createClient"
-        action = "/v4/users/<%=user.cmid%>/primary/clients/client/<%=parameters.clientID%>/transfer">
+        action = "<%=`${baseURLSubFrame}/clients/client/${parameters.clientID}/transfer`%>">
 
     <div class="formRow">
       <div class="formLabel">
@@ -32,10 +32,10 @@
 
         <datalist id="suggestionList">
             <% users.forEach(function (user) { %>
-              <option userName="<%= user.last + ', ' + user.first %>"
+              <option userName="<%=`${user.last}, ${user.first}`%>"
                       userID="<%= user.cmid %>"
                       department="<%= user.department %>">
-                <%= user.last + ', ' + user.first %>
+                <%=`${user.last}, ${user.first}`%>
               </option>
             <% }) %>
         </datalist>
