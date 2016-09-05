@@ -32,7 +32,7 @@ if (TESTENV && TESTENV == "true") {
 const Conversations = require("./conversations");
 const Communications = require("./communications");
 const Client = require("./client");
-const CommConns = require("./commconns");
+const CommConns = require("./commConns");
 
 
 // Class
