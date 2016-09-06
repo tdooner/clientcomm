@@ -144,7 +144,7 @@ var EMNOTIF = process.env.EMNOTIF;
 
 // EMNOTIF means run email notifications, including regular check up on text messages
 if (EMNOTIF && EMNOTIF == "true") {
-  var dailyTimer =     1000 * 60 * 60 * 24; 
+  var dailyTimer = 1000 * 60 * 60 * 24;
   var fifteenMinTimer = 1000 * 60 * 15; 
   var thirtySecTimer = 1000 * 60 * 0.5; 
 
