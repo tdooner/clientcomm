@@ -58,6 +58,14 @@ router.use(function (req, res, next) {
 router.use(function (req, res, next) {
   Departments.findByID(req.user.department)
   .then((department) => {
+    // if no department, provide some dummy attributes
+    if (!department) {
+      department = {
+        name: "Unassigned",
+        phone_number: null,
+        organization: req.user.org
+      }
+    }
     res.locals.department = department;
     next();
   }).catch(error_500(res));
