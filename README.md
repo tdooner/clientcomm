@@ -14,7 +14,7 @@ Need assistance setting up this tool? Questions about the application structure?
 
 While in the root directory of this repo, run `touch credentials.js`. For reference, you can also use the `exampleCredentials.js` as a guide for filling out your own `credentials.js` file. Note the need for two Twilio numbers - one for testing and the other for "production." Also note that, in the future, Twilio numbers will be provisioned on an organization-by-organization basis. Your credentials should resemble the below example:
 
-```
+```javascript
 module.exports = {
   accountSid:         "__________________________",
   authToken:          "__________________________",
