@@ -52,9 +52,7 @@ router.use(function (req, res, next) {
 
 // Primary hub view, loads in active clients by default
 router.get("/", function (req, res) {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/owner/dashboard");
+  res.redirect(`/v4/orgs/${req.params.orgID}/users/${req.params.userID}/owner/dashboard`);
 });
 
 
