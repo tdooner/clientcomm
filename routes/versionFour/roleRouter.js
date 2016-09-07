@@ -100,9 +100,9 @@ router.get("/dashboard", (req, res) => {
 
 
 
-// 
+// ***
 // NEW ROUTING STARTS HERE
-// 
+// ***
 
 router.get("/clients", (req, res) => {
   const managerID = Number(req.user.cmid);
@@ -118,7 +118,11 @@ router.get("/clients", (req, res) => {
       clients: clients
     });
   }).catch(error_500(res));
-})
+});
+
+router.get("/clients/create", function (req, res) {
+  res.render("v4/primary/client/create")
+});
 
 router.get("/notifications", (req, res) => {
   const status = req.query.status || "pending";
@@ -134,8 +138,7 @@ router.get("/notifications", (req, res) => {
       notifications: notifications
     });
   }).catch(error_500(res));
-
-})
+});
 
 router.get("/notifications/edit/:notificationID", (req, res) => {
   var clients;
@@ -199,14 +202,13 @@ router.get("/notifications/create/compose", (req, res) => {
   res.render("v4/primary/notifications/compose", {
     parameters: req.query
   });
-})
+});
 
 router.post("/notifications/create/compose", (req, res) => {
   res.render("v4/primary/notifications/compose", {
     parameters: req.body
   });
-})
-
+});
 
 router.get("/notifications/create/templates", (req, res) => {
   Templates.findByUser(req.user.cmid)
@@ -216,8 +218,7 @@ router.get("/notifications/create/templates", (req, res) => {
       parameters: req.query
     });
   }).catch(error_500(res));
-})
-
+});
 
 router.post("/notifications/create", (req, res) => {
   let userID   = req.user.cmid;
@@ -239,6 +240,14 @@ router.post("/notifications/create", (req, res) => {
                   send
   ).then(() => {
     req.flash("success", "Created new notification.");
+    res.redirect(`/v4/notifications`);
+  }).catch(error_500(res));
+});
+
+router.get("/notifications/remove/:notificationID", (req, res) => {
+  Notifications.removeOne(req.params.notificationID)
+  .then(() => {
+    req.flash("success", "Removed notification.");
     res.redirect(`/v4/notifications`);
   }).catch(error_500(res));
 });

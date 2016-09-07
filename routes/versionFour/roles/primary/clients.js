@@ -31,42 +31,10 @@ router.use((req, res, next) => {
 
 // ROUTES
 
-router.get("/open", function (req, res) {
-  const managerID = Number(req.params.userID);
-  const active    = true;
-  Clients.findByUser(managerID, active)
-  .then((clients) => {
-    res.render("v4/primaryUser/clients", {
-      hub: {
-        tab: "clients",
-        sel: "open"
-      },
-      clients: clients
-    });
-  }).catch(error_500(res));
-});
 
 
-router.get("/closed", function (req, res) {
-  const managerID = Number(req.params.userID);
-  const active    = false;
-
-  Clients.findByManager(managerID, active)
-  .then((clients) => {
-    res.render("v4/primaryUser/clients", {
-      hub: {
-        tab: "clients",
-        sel: "closed"
-      },
-      clients: clients
-    });
-  }).catch(error_500(res));
-});
 
 
-router.get("/create", function (req, res) {
-  res.render("v4/primaryUser/client/create")
-});
 
 
 router.post("/create", function (req, res) {
