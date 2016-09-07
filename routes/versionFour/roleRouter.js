@@ -253,7 +253,6 @@ router.post("/notifications/edit/:notificationID", (req, res) => {
                   message
   ).then(() => {
     req.flash("success", "Edited notification.");
-    console.log("works")
     res.redirect(`/v4/notifications`);
   }).catch(error_500(res));
 });
