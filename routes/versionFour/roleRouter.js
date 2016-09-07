@@ -321,20 +321,21 @@ router.get("/notifications/remove/:notificationID", (req, res) => {
 });
 
 
-// To do: Some sort of handling for the type of user
-// Then direct to the appropriate sub-directory of routes
+// ***
+// Old routing structure, should be removed
+// ***
 
-var owner = require("./roles/owner");
-router.use("/users/:userID/owner", owner);
+// var owner = require("./roles/owner");
+// router.use("/users/:userID/owner", owner);
 
-var supervisor = require("./roles/supervisor");
-router.use("/users/:userID/supervisor", supervisor);
+// var supervisor = require("./roles/supervisor");
+// router.use("/users/:userID/supervisor", supervisor);
 
-var primary = require("./roles/primary");
-router.use("/users/:userID/primary", primary);
+// var primary = require("./roles/primary");
+// router.use("/users/:userID/primary", primary);
 
-var alerts = require("./support/alerts");
-router.use("/alerts", alerts);
+// var alerts = require("./support/alerts");
+// router.use("/alerts", alerts);
 
 
 
