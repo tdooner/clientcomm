@@ -66,6 +66,9 @@ app.use(passport.session());
 var utils = require("../utils/utils.js");
 var auth = utils["pass"];
 
+// Error handlins
+const errorHandling = require("../routes/versionFour/utilities/errorHandling.js");
+const notFound = errorHandling.notFound;
 
 
 // ALL ROUTES
@@ -115,7 +118,7 @@ app.use("/v4/", auth.isLoggedIn, versionFourApp)
 
 // Redundant catch all
 app.get("/*", function (req, res) {
-  res.redirect("/404");
+  notFound(res);
 });
 
 

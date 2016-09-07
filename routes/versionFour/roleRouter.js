@@ -27,6 +27,11 @@ const twilio          = require("twilio");
 const twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 
+// Outside library requires
+var moment    = require("moment");
+var moment_tz = require("moment-timezone");
+
+
 // General error handling
 const errorHandling   = require("./utilities/errorHandling");
 const error_500       = errorHandling.error_500;
@@ -105,7 +110,7 @@ router.get("/clients", (req, res) => {
 
   Clients.findByUsers(managerID, state == "open")
   .then((clients) => {
-    res.render("v4/primaryUser/clients", {
+    res.render("v4/primary/clients", {
       hub: {
         tab: "clients",
         sel: state,
@@ -121,7 +126,7 @@ router.get("/notifications", (req, res) => {
 
   Notifications.findByUser(req.user.cmid, isSent)
   .then((notifications) => {
-    res.render("v4/primaryUser/notifications/notifications", {
+    res.render("v4/primary/notifications/notifications", {
       hub: {
         tab: "notifications",
         sel: status
@@ -138,14 +143,14 @@ router.get("/notifications/edit/:notificationID", (req, res) => {
   Clients.findAllByUser(req.user.cmid)
   .then((c) => {
     clients = c;
-    return Notifications.findByID(Number(req.params.notificationID))
 
-  }).then((notification) => {
+    return Notifications.findByID(Number(req.params.notificationID))
+  }).then((n) => {
     if (n) {
       // Remove all closed clients except for if matches with notification
       clients = clients.filter((c) => { return c.active || c.clid == n.client; });
 
-      res.render("v4/primaryUser/notifications/edit", {
+      res.render("v4/primary/notifications/edit", {
         notification: n,
         clients: clients
       });
@@ -157,49 +162,56 @@ router.get("/notifications/edit/:notificationID", (req, res) => {
 });
 
 router.post("/notifications/edit/:notificationID", (req, res) => {
-  const notificationID = req.params.notificationID;
-  const clientID       = req.body.clientID;
-  const commID         = req.body.commID ? req.body.commID : null;
-  const subject        = req.body.subject;
-  const message        = req.body.message;
-  const send           = moment(req.body.sendDate)
-                          .tz(res.locals.local_tz)
-                          .add(Number(req.body.sendHour) - 1, "hours")
-                          .format("YYYY-MM-DD HH:mm:ss");
+  let notificationID = req.params.notificationID;
+  let clientID       = req.body.clientID;
+  let commID         = req.body.commID ? req.body.commID : null;
+  let subject        = req.body.subject;
+  let message        = req.body.message;
+  let send           = moment(req.body.sendDate)
+                        .tz(res.locals.local_tz)
+                        .add(Number(req.body.sendHour) - 1, "hours")
+                        .format("YYYY-MM-DD HH:mm:ss");
 
-  Notifications.editOne(notificationID, clientID, commID, send, subject, message)
-  .then((notification) => {
+  Notifications.editOne(
+                  notificationID, 
+                  clientID, 
+                  commID, 
+                  send, 
+                  subject, 
+                  message
+  ).then(() => {
     req.flash("success", "Edited notification.");
-    res.redirect(`/notifications`);
+    console.log("works")
+    res.redirect(`/v4/notifications`);
   }).catch(error_500(res));
 });
 
 router.get("/notifications/create", (req, res) => {
   Clients.findByUser(req.user.cmid)
   .then((clients) => {
-    res.render("v4/primaryUser/notifications/sendto", {
+    res.render("v4/primary/notifications/create", {
       clients: clients
     })
   }).catch(error_500(res));
 });
 
 router.get("/notifications/create/compose", (req, res) => {
-  res.render("v4/primaryUser/notifications/create", {
+  res.render("v4/primary/notifications/compose", {
     parameters: req.query
   });
 })
 
 router.post("/notifications/create/compose", (req, res) => {
-  res.render("v4/primaryUser/notifications/create", {
+  res.render("v4/primary/notifications/compose", {
     parameters: req.body
   });
 })
 
 
-router.get("/notifications/create/selecttemplate", (req, res) => {
+router.get("/notifications/create/templates", (req, res) => {
   Templates.findByUser(req.user.cmid)
   .then((templates) => {
-    res.render("v4/primaryUser/notifications/selecttemplate", {
+    res.render("v4/primary/notifications/templates", {
       templates: templates,
       parameters: req.query
     });
@@ -208,26 +220,26 @@ router.get("/notifications/create/selecttemplate", (req, res) => {
 
 
 router.post("/notifications/create", (req, res) => {
-  const userID = req.user.cmid;
-  const clientID = req.body.clientID;
-  const commID = req.body.commID == "null" ? null : req.body.commID;
-  const subject = !req.body.subject ? "" : req.body.subject;
-  const message = req.body.message;
-  const send = moment(req.body.sendDate)
-              .tz(res.locals.local_tz)
-              .add(Number(req.params.sendHour) - 1, "hours")
-              .format("YYYY-MM-DD HH:mm:ss");
+  let userID   = req.user.cmid;
+  let clientID = req.body.clientID;
+  let commID   = req.body.commID == "" ? null : req.body.commID;
+  let subject  = !req.body.subject ? "" : req.body.subject;
+  let message  = req.body.message;
+  let send     = moment(req.body.sendDate)
+                  .tz(res.locals.local_tz)
+                  .add(Number(req.body.sendHour) - 1, "hours")
+                  .format("YYYY-MM-DD HH:mm:ss");
 
   Notifications.create(
-      userID, 
-      clientID, 
-      commID, 
-      subject, 
-      message, 
-      send
+                  userID, 
+                  clientID, 
+                  commID, 
+                  subject, 
+                  message, 
+                  send
   ).then(() => {
     req.flash("success", "Created new notification.");
-    res.redirect(`${req.redirectUrlBase}/clients/client/${clientID}/notifications`);
+    res.redirect(`/v4/notifications`);
   }).catch(error_500(res));
 });
 

@@ -16,9 +16,10 @@
 <div class="cardBody">
   
   <div class="formRow">
-    <form action="/v4/notifications/create/selecttemplate">
+    <form action="/v4/notifications/create/templates">
+      <!-- Hidden components hold the send information from previous card view -->
       <input type="hidden" name="clientID" value="<%= parameters.clientID %>" > 
-      <input type="hidden" name="commID" value="<%= parameters.commID %>" > 
+      <input type="hidden" name="commID"   value="<%= parameters.commID %>" > 
       <input type="hidden" name="sendDate" value="<%= parameters.sendDate %>" > 
       <input type="hidden" name="sendHour" value="<%= parameters.sendHour %>" > 
 
@@ -29,7 +30,7 @@
 
   <form method="post" action="/v4/notifications/create">
     <input type="hidden" name="clientID" value="<%= parameters.clientID %>" > 
-    <input type="hidden" name="commID" value="<%= parameters.commID %>" > 
+    <input type="hidden" name="commID"   value="<%= parameters.commID %>" > 
     <input type="hidden" name="sendDate" value="<%= parameters.sendDate %>" > 
     <input type="hidden" name="sendHour" value="<%= parameters.sendHour %>" > 
     <div class="formRow <% if (!parameters.title) { %>subdued<% } %>">
