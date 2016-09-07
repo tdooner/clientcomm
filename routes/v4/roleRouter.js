@@ -99,6 +99,100 @@ router.get("/", (req, res) => {
 
 
 // ***
+// NEW ROUTING UTILITIES
+// ***
+
+class NotificationsView {
+  
+  static show (req, res) {
+    let clientID = req.params.clientID;
+    let status = req.query.status || "pending";
+    let isSent = status == "sent";
+    let strategy;
+
+    if (clientID) {
+      strategy = Notifications.findByClientID(clientID, isSent)
+    } else {
+      strategy = Notifications.findByUser(req.user.cmid, isSent);
+    }
+    
+    strategy.then((notifications) => {
+      let toRender;
+      if (clientID) toRender = "v4/primary/client/notifications"
+      else          toRender = "v4/primary/notifications/notifications";;
+      res.render(toRender, {
+        hub: {
+          tab: "notifications",
+          sel: status
+        },
+        notifications: notifications
+      });
+    }).catch(error_500(res));
+  }
+
+  static remove (req, res) {
+    let clientID = req.params.clientID;
+    Notifications.removeOne(req.params.notificationID)
+    .then(() => {
+      req.flash("success", "Removed notification.");
+      if (clientID) toRedirect = res.redirect(`/v4/clients/${clientID}/notifications`);
+      else          toRedirect = res.redirect(`/v4/notifications`);
+    }).catch(error_500(res));
+  }
+
+  static editGet (req, res) {
+    var clients;
+    Clients.findAllByUser(req.user.cmid)
+    .then((c) => {
+      clients = c;
+
+      return Notifications.findByID(Number(req.params.notificationID))
+    }).then((n) => {
+      if (n) {
+        // Remove all closed clients except for if matches with notification
+        clients = clients.filter((c) => { return c.active || c.clid == n.client; });
+
+        res.render("v4/primary/notifications/edit", {
+          notification: n,
+          clients: clients
+        });
+
+      } else {
+        notFound(res);
+      }
+    }).catch(error_500(res));
+  }
+
+  static editPost (req, res) {
+    let notificationID = req.params.notificationID;
+    let clientID       = req.body.clientID;
+    let commID         = req.body.commID ? req.body.commID : null;
+    let subject        = req.body.subject;
+    let message        = req.body.message;
+    let send           = moment(req.body.sendDate)
+                          .tz(res.locals.local_tz)
+                          .add(Number(req.body.sendHour) - 1, "hours")
+                          .format("YYYY-MM-DD HH:mm:ss");
+
+    Notifications.editOne(
+                    notificationID, 
+                    clientID, 
+                    commID, 
+                    send, 
+                    subject, 
+                    message
+    ).then(() => {
+      req.flash("success", "Edited notification.");
+      if (req.params.clientID) toRedirect = res.redirect(`/v4/clients/${clientID}/notifications`);
+      else                     toRedirect = res.redirect(`/v4/notifications`);
+    }).catch(error_500(res));
+  }
+
+}
+
+
+
+// ***
 // NEW ROUTING STARTS HERE
 // ***
 
@@ -199,7 +293,7 @@ router.post("/clients/:clientID/address", (req, res) => {
   method.then(() => {
     logClientActivity(clientID);
     req.flash("success", "Message to client sent.");
-    res.redirect(`/v4/clients`);
+    res.redirect(`/v4/clients/${clientID}/messages`);
   }).catch(error_500(res));
 });
 
@@ -347,6 +441,14 @@ router.post("/clients/:clientID/messages", (req, res) => {
   }).catch(error_500(res));
 });
 
+router.get("/clients/:clientID/notifications", NotificationsView.show);
+
+router.get("/clients/:clientID/notifications/:notificationID/remove", NotificationsView.remove);
+
+router.get("/clients/:clientID/notifications/:notificationID/edit", NotificationsView.editGet);
+
+router.post("/clients/:clientID/notifications/:notificationID/edit", NotificationsView.editPost);
+
 router.get("/clients/:clientID/transfer", (req, res) => {
   let allDep = req.query.allDepartments == "true" ? true : false;
   Users.findByOrg(req.user.org)
@@ -407,69 +509,7 @@ router.get("/colors/:colorID/remove", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/notifications", (req, res) => {
-  let status = req.query.status || "pending";
-  let isSent = status == "sent";
-
-  Notifications.findByUser(req.user.cmid, isSent)
-  .then((notifications) => {
-    res.render("v4/primary/notifications/notifications", {
-      hub: {
-        tab: "notifications",
-        sel: status
-      },
-      notifications: notifications
-    });
-  }).catch(error_500(res));
-});
-
-router.get("/notifications/edit/:notificationID", (req, res) => {
-  var clients;
-
-  Clients.findAllByUser(req.user.cmid)
-  .then((c) => {
-    clients = c;
-
-    return Notifications.findByID(Number(req.params.notificationID))
-  }).then((n) => {
-    if (n) {
-      // Remove all closed clients except for if matches with notification
-      clients = clients.filter((c) => { return c.active || c.clid == n.client; });
-
-      res.render("v4/primary/notifications/edit", {
-        notification: n,
-        clients: clients
-      });
-
-    } else {
-      notFound(res);
-    }
-  }).catch(error_500(res));
-});
-
-router.post("/notifications/edit/:notificationID", (req, res) => {
-  let notificationID = req.params.notificationID;
-  let clientID       = req.body.clientID;
-  let commID         = req.body.commID ? req.body.commID : null;
-  let subject        = req.body.subject;
-  let message        = req.body.message;
-  let send           = moment(req.body.sendDate)
-                        .tz(res.locals.local_tz)
-                        .add(Number(req.body.sendHour) - 1, "hours")
-                        .format("YYYY-MM-DD HH:mm:ss");
-
-  Notifications.editOne(
-                  notificationID, 
-                  clientID, 
-                  commID, 
-                  send, 
-                  subject, 
-                  message
-  ).then(() => {
-    req.flash("success", "Edited notification.");
-    res.redirect(`/v4/notifications`);
-  }).catch(error_500(res));
-});
+router.get("/notifications", NotificationsView.show);
 
 router.get("/notifications/create", (req, res) => {
   Clients.findByUser(req.user.cmid)
@@ -526,13 +566,11 @@ router.post("/notifications/create", (req, res) => {
   }).catch(error_500(res));
 });
 
-router.get("/notifications/remove/:notificationID", (req, res) => {
-  Notifications.removeOne(req.params.notificationID)
-  .then(() => {
-    req.flash("success", "Removed notification.");
-    res.redirect(`/v4/notifications`);
-  }).catch(error_500(res));
-});
+router.get("/notifications/:notificationID/edit", NotificationsView.editGet);
+
+router.post("/notifications/:notificationID/edit", NotificationsView.editPost);
+
+router.get("/notifications/:notificationID/remove", NotificationsView.remove);
 
 router.get("/templates", (req, res) => {
   Templates.findByUser(Number(req.user.cmid))

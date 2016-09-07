@@ -24,17 +24,17 @@
     </div>
 
     <div class="rightTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-      <div class="title"><a href="<%=`/v4/notifications`%>">Notifications</a></div>
-      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`/v4/notifications/pending`%>">Pending</a></div>
-      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`/v4/notifications/sent`%>">Sent</a></div>
+      <div class="title"><a href="<%=`/v4/clients/${client.clid}/notifications`%>">Notifications</a></div>
+      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`/v4/clients/${client.clid}/notifications?status=pending`%>">Pending</a></div>
+      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`/v4/clients/${client.clid}/notifications?status=sent`%>">Sent</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'contactMethods' ? 'open' : 'closed' %>">
-      <div class="title"><a href="<%=`/v4/communications`%>">Methods</a></div>
+      <div class="title"><a href="<%=`/v4/clients/${client.clid}/communications`%>">Methods</a></div>
     </div>
 
     <div class="rightActions">
-      <a href="<%=`/v4/communications/create`%>">
+      <a href="<%=`/v4/clients/${client.clid}/communications/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-whatsapp fa-stack-1x fa-inverse"></i>
@@ -44,7 +44,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="<%=`/v4/notifications/create`%>">
+      <a href="<%=`/v4/clients/${client.clid}/notifications/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
@@ -54,7 +54,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="<%=`/v4/conversations/create`%>">
+      <a href="<%=`/v4/clients/${client.clid}/address`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-comments fa-stack-1x fa-inverse"></i>

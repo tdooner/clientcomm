@@ -13,6 +13,30 @@ const CommConns = require("./commConns");
 const Conversations = require("./conversations");
 
 
+
+class NotificationsView {
+
+  getNotifications() {
+
+  }
+
+  show(req, res) {
+    if (isOwner) {
+      return this._showOwnders()
+    }
+  }
+
+  _showOwnders()  {
+
+  }
+
+  edit(req, rest) {
+
+  }
+
+}
+
+
 // Class
 class Client {
 

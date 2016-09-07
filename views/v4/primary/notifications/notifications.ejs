@@ -39,13 +39,13 @@
     </div>
     <div class="column">
       <% if (hub.sel == "pending") { %>
-        <a href="/v4/notifications/edit/<%=n.notificationid%>">
+        <a href="/v4/notifications/<%=n.notificationid%>/edit">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="/v4/notifications/remove/<%=n.notificationid%>">
+      <a href="/v4/notifications/<%=n.notificationid%>/remove">
         <i class="fa highlight fa-trash" aria-hidden="true"></i>
       </a>
     </div>
