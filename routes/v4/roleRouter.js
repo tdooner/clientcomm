@@ -1,4 +1,4 @@
-'use strict'
+
 
 // (Sub) router
 const express         = require("express");
@@ -10,8 +10,11 @@ const modelsImport  = require("../../models/models");
 const Alerts        = modelsImport.Alerts;
 const Client        = modelsImport.Client;
 const Clients       = modelsImport.Clients;
+const ColorTags     = modelsImport.ColorTags;
 const Communication = modelsImport.Communication;
+const CommConns     = modelsImport.CommConns;
 const Convo         = modelsImport.Convo;
+const Conversations = modelsImport.Conversations;
 const Departments   = modelsImport.Departments;
 const Groups        = modelsImport.Groups;
 const Message       = modelsImport.Message;
@@ -19,6 +22,7 @@ const Messages      = modelsImport.Messages;
 const Notifications = modelsImport.Notifications;
 const Organizations = modelsImport.Organizations;
 const Templates     = modelsImport.Templates;
+const Users         = modelsImport.Users;
 
 
 // Twilio library tools and secrets
@@ -140,7 +144,20 @@ router.post("/clients/create", (req, res) => {
   }).catch(error_500(res));
 });
 
-router.get("/clients/client/:clientID/address", (req, res) => {
+// For all /clients/:clientID, include local obj. client
+router.use("/clients/:clientID", (req, res, next) => {
+  Client.findByID(req.params.clientID)
+  .then((c) => {
+    if (c) {
+      res.locals.client = c;
+      next();
+    } else {
+      notFound(res);
+    }
+  }).catch(error_500(res));
+});
+
+router.get("/clients/:clientID/address", (req, res) => {
   Client.findByID(req.params.clientID)
   .then((client) => {
     if (client) {
@@ -155,7 +172,7 @@ router.get("/clients/client/:clientID/address", (req, res) => {
   }).catch(error_500(res));
 });
 
-router.get("/clients/client/:clientID/address/templates", (req, res) => {
+router.get("/clients/:clientID/address/templates", (req, res) => {
   Templates.findByUser(req.user.cmid)
   .then((templates) => {
     res.render("v4/primary/client/templates", {
@@ -165,7 +182,7 @@ router.get("/clients/client/:clientID/address/templates", (req, res) => {
   }).catch(error_500(res));
 });
 
-router.post("/clients/client/:clientID/address", (req, res) => {
+router.post("/clients/:clientID/address", (req, res) => {
   let userID   = req.user.cmid;
   let clientID = Number(req.params.clientID);
   let subject  = req.body.subject;
@@ -180,12 +197,13 @@ router.post("/clients/client/:clientID/address", (req, res) => {
   }
 
   method.then(() => {
+    logClientActivity(clientID);
     req.flash("success", "Message to client sent.");
     res.redirect(`/v4/clients`);
   }).catch(error_500(res));
 });
 
-router.get("/clients/client/:clientID/alter/:activeStatus", (req, res) => {
+router.get("/clients/:clientID/alter/:activeStatus", (req, res) => {
   let activeStatus = req.params.activeStatus == "open";
   Client.alterCase(req.params.clientID, activeStatus)
   .then(() => {
@@ -195,9 +213,202 @@ router.get("/clients/client/:clientID/alter/:activeStatus", (req, res) => {
   }).catch(error_500(res));
 });
 
+router.get("/clients/:clientID/edit", (req, res) => {
+  Client.findByID(req.params.clientID)
+  .then((client) => {
+    if (client) {
+      res.render("v4/primary/client/edit", {
+        client: client
+      });
+    } else {
+      notFound(res);
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/clients/:clientID/edit", (req, res) => {
+  const clientID  = req.params.clientID;
+  const first     = req.body.first;
+  const middle    = req.body.middle;
+  const last      = req.body.last;
+  const dob       = req.body.dob;
+  const uniqueID1 = req.body.uniqueID1;
+  const uniqueID2 = req.body.uniqueID2;
+  Client.editOne(
+          clientID, 
+          first, 
+          middle, 
+          last, 
+          dob, 
+          uniqueID1, 
+          uniqueID2
+  ).then(() => {
+    logClientActivity(req.params.clientID);
+    req.flash("success", "Edited client.");
+    res.redirect(`/v4/clients`);
+  }).catch(error_500(res));
+});
+
+router.get("/clients/:clientID/edit/color", (req, res) => {
+  ColorTags.selectAllByUser(req.user.cmid)
+  .then((colors) => {
+    if (colors.length > 0) {
+      res.render("v4/primary/client/colors", {
+        colors: colors,
+        params: req.params
+      });
+    } else {
+      res.redirect(`/v4/colors`);
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/clients/:clientID/edit/color", (req, res) => {
+  let colorID = req.body.colorID == "" ? null : req.body.colorID;
+  Client.udpateColorTag(req.params.clientID, colorID)
+  .then(() => {
+    logClientActivity(req.params.clientID);
+    req.flash("success", "Changed client color.");
+    res.redirect(`/v4/clients`);
+  }).catch(error_500(res));
+});
+
+router.get("/clients/:clientID/messages", (req, res) => {
+  let methodFilter = "all";
+  if (req.query.method == "texts") methodFilter = "cell";
+
+  let convoFilter = Number(req.query.conversation);
+  if (isNaN(convoFilter)) convoFilter = null;
+
+  let conversations, messages;
+  Conversations.findByUserAndClient(req.user.cmid, req.params.clientID)
+  .then((convos) => {
+    conversations = convos;
+    return Messages.findByClientID(req.user.cmid, req.params.clientID)
+  }).then((msgs) => {
+    messages = msgs.filter((msg) => {
+      if (msg.comm_type == methodFilter || methodFilter == "all") {
+        if (msg.convo == convoFilter || convoFilter == null) return true;
+        else return false;
+
+      } else { 
+        return false; 
+      }
+    });
+    return CommConns.findByClientID(req.params.clientID)
+  }).then((communications) => {
+    res.render("v4/primary/client/messages", {
+      hub: {
+        tab: "messages",
+        sel: req.query.method ? req.query.method : "all"
+      },
+      conversations: conversations,
+      messages: messages,
+      communications: communications,
+      convoFilter: convoFilter
+    });
+  }).catch(error_500(res));
+});
+
+router.post("/clients/:clientID/messages", (req, res) => {
+  const clientID = req.params.clientID;
+  const subject  = "New Conversation";
+  const content  = req.body.content;
+  const commID   = req.body.commID;
+
+  Conversations.getMostRecentConversation(req.user.cmid, clientID)
+  .then((conversation) => {
+    // Use existing conversation if exists and recent (lt 5 days)
+    var now, lastUpdated, recentOkay = false;
+    if (conversation) {
+      now = new Date().getTime() - (5 * 24 * 60 * 60 * 1000); // 5 days in past
+      lastUpdated = new Date(conversation.updated).getTime();
+      recentOkay = lastUpdated > now;
+    }
+
+    if (conversation && recentOkay) {
+      Messages.sendOne(commID, content, conversation.convid)
+      .then(() => {
+        logClientActivity(clientID);
+        logConversationActivity(conversation.convid);
+        res.redirect(`/v4/clients/${clientID}/messages`);
+      }).catch(error_500(res));
+    
+    // Otherwise create a new conversation
+    } else {
+      Conversations.create(req.user.cmid, clientID, subject, true)
+      .then((conversationID) => {
+        return Messages.sendOne(commID, content, conversationID)
+      }).then(() => {
+        logClientActivity(clientID);
+        res.redirect(`/v4/clients/${clientID}/messages`);
+      }).catch(error_500(res));
+    }
+  }).catch(error_500(res));
+});
+
+router.get("/clients/:clientID/transfer", (req, res) => {
+  let allDep = req.query.allDepartments == "true" ? true : false;
+  Users.findByOrg(req.user.org)
+  .then((users) => {
+    // Limit only to same department transfers
+    if (!allDep) users = users.filter((u) => { return u.department == req.user.department });
+
+    res.render("v4/primary/client/transfer", {
+      users: users,
+      allDepartments: allDep
+    });
+  }).catch(error_500(res));
+});
+
+router.post("/clients/:clientID/transfer", (req, res) => {
+  const fromUserID = req.user.cmid;
+  const toUserID   = req.body.userID;
+  const clientID   = req.params.clientID;
+  const bundleConv = req.params.bundleConversations ? true : false;
+
+  Users.findByID(toUserID)
+  .then((user) => {
+    if (user && user.active) {
+      Client.transfer(clientID, fromUserID, toUserID, bundleConv)
+      .then(() => {
+        logClientActivity(clientID);
+        res.redirect(`/v4/clients`);
+      }).catch(error_500(res));
+
+    } else {
+      notFound(res);
+    }
+  }).catch(error_500(res));
+});
+
+router.get("/colors", function (req, res) {
+  ColorTags.selectAllByUser(req.user.cmid)
+  .then((colors) => {
+    res.render("v4/primary/colors", {
+      colors: colors,
+    });
+  }).catch(error_500(res));
+});
+
+router.post("/colors", function (req, res) {
+  ColorTags.addNewColorTag(req.user.cmid, req.body.color, req.body.name)
+  .then(() => {
+    req.flash("success", "New color tag created.");
+    res.redirect("/v4/colors");
+  }).catch(error_500(res));
+});
+
+router.get("/colors/:colorID/remove", function (req, res) {
+  ColorTags.removeColorTag(req.params.colorID)
+  .then(() => {
+    req.flash("success", "Color tag removed.");
+    res.redirect("/v4/colors");
+  }).catch(error_500(res));
+});
 
 router.get("/notifications", (req, res) => {
-  const status = req.query.status || "pending";
+  let status = req.query.status || "pending";
   let isSent = status == "sent";
 
   Notifications.findByUser(req.user.cmid, isSent)

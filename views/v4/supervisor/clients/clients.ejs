@@ -50,7 +50,7 @@
 <% clients.forEach( function (client) { %>
   <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
     <div class="column" value="<%= client.color_name %>">
-      <a href="<%= `/v4/clients/client/${client.clid}/editcolortag` %>">
+      <a href="<%= `/v4/clients/${client.clid}/editcolortag` %>">
         <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
       </a>
     </div>
@@ -79,7 +79,7 @@
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="<%= `/v4/clients/client/${client.clid}/transcript_between/${client.cm}` %>">
+      <a href="<%= `/v4/clients/${client.clid}/transcript_between/${client.cm}` %>">
         <i class="fa highlight fa-download" aria-hidden="true"></i>
       </a>
     </div>
@@ -90,22 +90,22 @@
       </small>
     </div>
     <div class="column">
-      <a href="<%= `/v4/clients/client/${client.clid}/edit` %>">
+      <a href="<%= `/v4/clients/${client.clid}/edit` %>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
-      <a href="<%= `/v4/clients/client/${client.clid}/transfer` %>">
+      <a href="<%= `/v4/clients/${client.clid}/transfer` %>">
         <i class="fa highlight fa-mail-forward" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
       <% if (hub.sel === "open") { %>
-        <a href="<%= `/v4/clients/client/${client.clid}/closecase` %>">
+        <a href="<%= `/v4/clients/${client.clid}/closecase` %>">
           <i class="fa highlight fa-book" aria-hidden="true"></i>
         </a>
       <% } else { %>
-        <a href="<%= `/v4/clients/client/${client.clid}/opencase` %>">
+        <a href="<%= `/v4/clients/${client.clid}/opencase` %>">
           <i class="fa fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>

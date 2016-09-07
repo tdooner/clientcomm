@@ -21,4 +21,5 @@ for subdir, dirs, files in os.walk(d):
             data = data.replace("users/<%=user.cmid%>/supervisor/", "")
             data = data.replace("users/<%=user.cmid%>/primary/", "")
             data = data.replace("${baseURL}", "/v4")
+            data = data.replace("/v4/clients/client", "/v4/clients")
             f.write(data)

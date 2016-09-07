@@ -1,5 +1,3 @@
-<% var baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary/clients/client/${client.clid}`; %>
-
 <% include ./navBarTop %>
 
 <!-- Load in addition CSS -->
@@ -15,14 +13,14 @@
         </a>
       </div>
       <div class="title">
-        <a href="<%=`/v4`%>"><%= client.first + ' ' + client.last %></a>
+        <a href="<%=`/v4/clients/${client.clid}/messages`%>"><%= client.first + ' ' + client.last %></a>
       </div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'messages' ? 'open' : 'closed' %>">
-      <div class="title"><a href="<%=`/v4/messages/filter/all`%>">Messages</a></div>
-      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="<%=`/v4/messages/filter/all`%>">All</a></div>
-      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="<%=`/v4/messages/filter/texts`%>">Texts</a></div>
+      <div class="title"><a href="<%=`/v4/clients/${client.clid}/messages?method=all`%>">Messages</a></div>
+      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="<%=`/v4/clients/${client.clid}/messages?method=all`%>">All</a></div>
+      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="<%=`/v4/clients/${client.clid}/messages?method=texts`%>">Texts</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">

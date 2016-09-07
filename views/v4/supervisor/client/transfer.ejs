@@ -1,5 +1,3 @@
-<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
-
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
@@ -22,11 +20,11 @@
 
   <div class="formRow">
     <% if (allDepartments) { %>
-      <a href="<%=`/v4/clients/client/${parameters.clientID}/transfer?allDepartments=false`%>">
+      <a href="<%=`/v4/clients/${parameters.clientID}/transfer?allDepartments=false`%>">
         <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer within your department">
       </a>
     <% } else { %>
-      <a href="<%=`/v4/clients/client/${parameters.clientID}/transfer?allDepartments=true`%>">
+      <a href="<%=`/v4/clients/${parameters.clientID}/transfer?allDepartments=true`%>">
         <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer outside of this department">
       </a>
     <% } %>
@@ -34,7 +32,7 @@
 
   <form method = "post"
         id="userSearch"
-        action = "<%=`/v4/clients/client/${parameters.clientID}/transfer`%>">
+        action = "<%=`/v4/clients/${parameters.clientID}/transfer`%>">
 
     <div class="formRow">
       <div class="formLabel">
