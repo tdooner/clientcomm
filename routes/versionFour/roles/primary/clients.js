@@ -1,4 +1,4 @@
-
+// ALL DONE
 
 // (Sub) router
 var express         = require("express");
@@ -37,93 +37,15 @@ router.use((req, res, next) => {
 
 
 
-router.post("/create", function (req, res) {
-  const userID = req.params.userID;
-  const first = req.body.first;
-  const middle = req.body.middle ? req.body.middle : "";
-  const last = req.body.last;
-  const dob = req.body.DOB;
-  const so = req.body.uniqueID1 ? req.body.otn : null;
-  const otn = req.body.uniqueID2 ? req.body.so : null;
-
-  Client.create(userID, first, middle, last, dob, otn, so)
-  .then((clientID) => {
-    res.redirect(`${res.redirectUrlBase}/clients/open`);
-  }).catch(error_500(res));
-});
 
 
-router.get("/address/:clientID", function (req, res) {
-  const clientID = Number(req.params.clientID);
-  Client.findByID(clientID)
-  .then((client) => {
-    if (client) {
-      res.render("v4/primaryUser/client/address", {
-        client: client,
-        template: {},
-      });
-    } else {
-      res.redirect("/404");
-    }
-  }).catch(error_500(res));
-});
 
 
-router.get("/address/:clientID/selecttemplate", function (req, res) {
-  Templates.findByUser(req.params.userID)
-  .then((templates) => {
-    res.render("v4/primaryUser/client/selecttemplate", {
-      templates: templates,
-      parameters: req.params
-    });
-  }).catch(error_500(res));
-});
 
 
-router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) {
-  const templateID = Number(req.params.templateID);
-  const userID = req.params.userID;
-  const clientID = Number(req.params.clientID);
-
-  Client.findByID(clientID)
-  .then((client) => {
-    Templates.findByID(templateID)
-    .then((template) => {
-      if (template) {
-        Templates.logUse(templateID, userID, clientID)
-        .then(() => {
-          req.params.subject = template.title;
-          req.params.message = template.content;
-          res.render("v4/primaryUser/client/address", {
-            client: client,
-            template: template,
-          });
-        }).catch(error_500(res));
-      } else {
-        res.render("v4/primaryUser/client/address", {
-          client: client,
-          template: {},
-        });
-      }
-    }).catch(error_500(res));
-  }).catch(error_500(res));
-});
 
 
-router.post("/address/:clientID", function (req, res) {
-  const userID = req.params.userID;
-  const clientID = Number(req.params.clientID);
-  const subject = req.body.subject;
-  const content = req.body.content;
-  const commID = req.body.commID;
 
-  Messages.startNewConversation(userID, clientID, subject, content, commID)
-  .then(() => {
-    req.flash("success", "Message to client sent.");
-    res.redirect(`${res.redirectUrlBase}/clients/client/${clientID}`);
-  }).catch(error_500(res));
-  
-});
 
 
 
