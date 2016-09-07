@@ -14,6 +14,7 @@ const Communication = modelsImport.Communication;
 const Convo         = modelsImport.Convo;
 const Departments   = modelsImport.Departments;
 const Message       = modelsImport.Message;
+const Messages      = modelsImport.Messages;
 const Notifications = modelsImport.Notifications;
 const Organizations = modelsImport.Organizations;
 const Templates     = modelsImport.Templates;
@@ -120,8 +121,75 @@ router.get("/clients", (req, res) => {
   }).catch(error_500(res));
 });
 
-router.get("/clients/create", function (req, res) {
-  res.render("v4/primary/client/create")
+router.get("/clients/create", (req, res) => {
+  res.render("v4/primary/client/create");
+});
+
+router.post("/clients/create", (req, res) => {
+  let userID = req.user.cmid;
+  let first  = req.body.first;
+  let middle = req.body.middle ? req.body.middle : "";
+  let last   = req.body.last;
+  let dob    = req.body.DOB;
+  let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;
+  let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
+
+  Client.create(
+          userID, 
+          first, 
+          middle, 
+          last, 
+          dob, 
+          otn, 
+          so
+  ).then(() => {
+    res.redirect(`/v4/clients`);
+  }).catch(error_500(res));
+});
+
+router.get("/clients/client/:clientID/address", (req, res) => {
+  Client.findByID(req.params.clientID)
+  .then((client) => {
+    if (client) {
+      res.render("v4/primary/client/address", {
+        client: client,
+        template: req.query
+      });
+
+    } else {
+      notFound(res);
+    }
+  }).catch(error_500(res));
+});
+
+router.get("/clients/client/:clientID/address/templates", (req, res) => {
+  Templates.findByUser(req.user.cmid)
+  .then((templates) => {
+    res.render("v4/primary/client/templates", {
+      templates: templates,
+      parameters: req.params
+    });
+  }).catch(error_500(res));
+});
+
+router.post("/clients/client/:clientID/address", (req, res) => {
+  let userID   = req.user.cmid;
+  let clientID = Number(req.params.clientID);
+  let subject  = req.body.subject;
+  let content  = req.body.content;
+  let commID   = req.body.commID == "null" ? null : req.body.commID;
+  let method;
+
+  if (commID) {
+    method = Messages.startNewConversation(userID, clientID, subject, content, commID);
+  } else {
+    method = Messages.smartSend(userID, clientID, subject, content);
+  }
+
+  method.then(() => {
+    req.flash("success", "Message to client sent.");
+    res.redirect(`/v4/clients`);
+  }).catch(error_500(res));
 });
 
 router.get("/notifications", (req, res) => {
@@ -315,20 +383,22 @@ router.post("/templates/edit/:templateID", (req, res) => {
 });
 
 
-// To do: Some sort of handling for the type of user
-// Then direct to the appropriate sub-directory of routes
 
-var owner = require("./roles/owner");
-router.use("/users/:userID/owner", owner);
+// ***
+// Old routing structure, should be removed
+// ***
 
-var supervisor = require("./roles/supervisor");
-router.use("/users/:userID/supervisor", supervisor);
+// var owner = require("./roles/owner");
+// router.use("/users/:userID/owner", owner);
 
-var primary = require("./roles/primary");
-router.use("/users/:userID/primary", primary);
+// var supervisor = require("./roles/supervisor");
+// router.use("/users/:userID/supervisor", supervisor);
 
-var alerts = require("./support/alerts");
-router.use("/alerts", alerts);
+// var primary = require("./roles/primary");
+// router.use("/users/:userID/primary", primary);
+
+// var alerts = require("./support/alerts");
+// router.use("/alerts", alerts);
 
 
 

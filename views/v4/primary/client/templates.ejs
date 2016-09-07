@@ -4,7 +4,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="<%=`${baseURLSubFrame}/clients`%>">
+  <a href="<%=`/v4/clients`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -19,7 +19,10 @@
   
   <div class="scrollListBox">
     <% for (var i=0; i < templates.length; i++) { %>
-      <div class="scrollListRow" templateID="<%= templates[i].template_id %>">
+      <div class="scrollListRow"
+        templateID="<%= templates[i].template_id %>"
+        data-title="<%= templates[i].title %>"
+        data-content="<%= templates[i].content %>">
         
         <div class="useCount">
           <%= templates[i].times_used %>
@@ -44,24 +47,29 @@
     <% } %>
   </div>
 
+  <form method="get" action="/v4/clients/client/<%=parameters.clientID%>/address">
+    <input type="hidden" name="title"   id="templateTitle">    
+    <input type="hidden" name="content" id="templateContent">
 
-  <div class="formRow">
-    <a id="templateID" href="">
+    <div class="formRow">
       <input type="submit" class="formSubmit" value="Select template">
-    </a>
-  </div>
+    </div>
+
+  </form>
 
 </div>
 
 
 <script type="text/javascript">
-  var baseURL = "<%=`${baseURLSubFrame}/clients/address/${parameters.clientID}/selecttemplate/`%>";
-
   $(".scrollListRow").click(function () {
     $(".scrollListRow").removeClass("selected");
     $(this).addClass("selected");
-    var templateID = $(this).attr("templateID")
-    $("#templateID").attr("href", baseURL + String(templateID))
+    $('#templateTitle').val(
+      $(this).data('title')
+    )
+    $('#templateContent').val(
+      $(this).data('content')
+    )
   });
 </script>
 
