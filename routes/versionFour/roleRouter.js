@@ -253,6 +253,68 @@ router.get("/notifications/remove/:notificationID", (req, res) => {
 });
 
 
+router.get("/templates", (req, res) => {
+  Templates.findByUser(Number(req.user.cmid))
+  .then((templates) => {
+    res.render("v4/primary/templates/templates", {
+      hub: {
+        tab: "templates",
+        sel: null
+      },
+      templates: templates
+    });
+  }).catch(error_500(res));
+});
+
+router.get("/templates/create", (req, res) => {
+  res.render("v4/primary/templates/create");
+});
+
+router.post("/templates/create", (req, res) => {
+  let orgID   = req.user.org;
+  let userID  = req.user.cmid;
+  let title   = req.body.title;
+  let content = req.body.content;
+  Templates.insertNew(orgID, userID, title, content)
+  .then(() => {
+    req.flash("success", "Created new template.")
+    res.redirect(`/v4/templates`);
+  }).catch(error_500(res));
+});
+
+router.get("/templates/remove/:templateID", (req, res) => {
+  Templates.removeOne(req.params.templateID)
+  .then(() => {
+    req.flash("success", "Removed template.")
+    res.redirect(`/v4/templates`);
+  }).catch(error_500(res));
+});
+
+router.get("/templates/edit/:templateID", (req, res) => {
+  Templates.findByID(req.params.templateID)
+  .then((template) => {
+    if (template) {
+      res.render("v4/primary/templates/edit", {
+        template: template
+      });
+    } else {
+      res.redirect("/404")
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/templates/edit/:templateID", (req, res) => {
+  const templateID = req.params.templateID;
+  const title   = req.body.title;
+  const content = req.body.content;
+  Templates.editOne(templateID, title, content)
+  .then(() => {
+    req.flash("success", "Template edited.")
+    res.redirect(`/v4/templates`);
+  }).catch(error_500(res));
+});
+
+
 // To do: Some sort of handling for the type of user
 // Then direct to the appropriate sub-directory of routes
 

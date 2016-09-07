@@ -27,12 +27,12 @@
       <%= template.content.length > 210 ? template.content.substr(0,210) + '...' : template.content %>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/templates/edit/<%=template.template_id%>">
+      <a href="/v4/templates/edit/<%=template.template_id%>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
-      <a href="/v4/users/<%=user.cmid%>/primary/templates/remove/<%=template.template_id%>">
+      <a href="/v4/templates/remove/<%=template.template_id%>">
         <i class="fa highlight fa-trash" aria-hidden="true"></i>
       </a>
     </div>
