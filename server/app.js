@@ -136,9 +136,8 @@ app.get("/*", function (req, res) {
 
 // START UP CLIENTCOMM
 var port = 4000;
-var server = app.listen(port, function () { 
-  let allClearMessage = "Listening on port " + String(port) + ".";
-  console.log(allClearMessage.green);
+var server = app.listen(port, function () {
+  console.log(`Listening on port ${port}.`.green);
 
   // Run super user check (after migrations)
   // TO DO: This method is hacky, there should be a callback at migrations completion

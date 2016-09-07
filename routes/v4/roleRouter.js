@@ -39,6 +39,11 @@ const errorHandling = require("./utilities/errorHandling");
 const error_500     = errorHandling.error_500;
 const notFound      = errorHandling.notFound;
 
+// Internal utilities
+var logging                 = require("./utilities/logging");
+var logClientActivity       = logging.logClientActivity;
+var logConversationActivity = logging.logConversationActivity;
+
 
 // Standard checks for every role, no matter
 // Add flash alerts
@@ -180,6 +185,17 @@ router.post("/clients/client/:clientID/address", (req, res) => {
   }).catch(error_500(res));
 });
 
+router.get("/clients/client/:clientID/alter/:activeStatus", (req, res) => {
+  let activeStatus = req.params.activeStatus == "open";
+  Client.alterCase(req.params.clientID, activeStatus)
+  .then(() => {
+    logClientActivity(req.params.clientID);
+    req.flash("success", "Client case status changed.")
+    res.redirect(`/v4/clients`);
+  }).catch(error_500(res));
+});
+
+
 router.get("/notifications", (req, res) => {
   const status = req.query.status || "pending";
   let isSent = status == "sent";
@@ -306,7 +322,6 @@ router.get("/notifications/remove/:notificationID", (req, res) => {
     res.redirect(`/v4/notifications`);
   }).catch(error_500(res));
 });
-
 
 router.get("/templates", (req, res) => {
   Templates.findByUser(Number(req.user.cmid))
@@ -481,24 +496,6 @@ router.get("/groups/activate/:groupID", (req, res) => {
     res.redirect(`/v4/groups`);
   }).catch(error_500(res));
 });
-
-// ***
-// Old routing structure, should be removed
-// ***
-
-// var owner = require("./roles/owner");
-// router.use("/users/:userID/owner", owner);
-
-// var supervisor = require("./roles/supervisor");
-// router.use("/users/:userID/supervisor", supervisor);
-
-// var primary = require("./roles/primary");
-// router.use("/users/:userID/primary", primary);
-
-// var alerts = require("./support/alerts");
-// router.use("/alerts", alerts);
-
-
 
 
 // EXPORT ROUTER OBJECt

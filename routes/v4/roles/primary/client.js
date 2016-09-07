@@ -1,91 +1,12 @@
 
 
-// (Sub) router
-var express         = require("express");
-var router          = express.Router({mergeParams: true});
 
-
-// Models
-const modelsImport   = require("../../../../models/models");
-const Client         = modelsImport.Client;
-const ColorTags      = modelsImport.ColorTags;
-const Conversations  = modelsImport.Conversations;
-const Communications = modelsImport.Communications;
-const Users          = modelsImport.Users;
-const Notifications  = modelsImport.Notifications;
-const Messages       = modelsImport.Messages;
-const CommConns      = modelsImport.CommConns;
-
-
-// Twilio library tools and secrets
-var credentials     = require("../../../../credentials");
-var ACCOUNT_SID     = credentials.accountSid;
-var AUTH_TOKEN      = credentials.authToken;
-var twilio          = require("twilio");
-var twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
-
-
-// General error handling
-var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
-
-var logging                 = require("../../utilities/logging");
-var logClientActivity       = logging.logClientActivity;
-var logConversationActivity = logging.logConversationActivity;
-
-// Create base URL for this page
-router.use((req, res, next) => {
-  res.locals.parameters = req.params;
-  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/primary`;
-  next();
-});
-
-// MUST PASS THROUGH
-router.use(function (req, res, next) {
-  Client.findByID(req.params.clientID)
-  .then((client) => {
-    if (client) {
-      res.locals.client = client;
-      next();
-    } else {
-      res.redirect("/404");
-    }
-  }).catch(error_500(res));
-});
-
-
-// ROUTES
-router.get("/", function (req, res) {
-  res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/messages`);
-});
-
-
-router.get("/closecase", function (req, res) {
-  Client.alterCase(req.params.clientID, false)
-  .then(() => {
-    logClientActivity(req.params.clientID);
-    req.flash("success", "Closed client case.")
-    res.redirect(`${res.redirectUrlBase}/clients/open`);
-  }).catch(error_500(res));
-});
-
-
-router.get("/opencase", function (req, res) {
-  Client.alterCase(req.params.clientID, true)
-  .then(() => {
-    logClientActivity(req.params.clientID);
-    req.flash("success", "Opened client case.")
-    res.redirect(`${res.redirectUrlBase}/clients/open`);
-  }).catch(error_500(res));
-});
-
-
-router.get("/edit", function (req, res) {
+router.get("/edit", (req, res) => {
   res.render("v4/primaryUser/client/edit");
 });
 
 
-router.post("/edit", function (req, res) {
+router.post("/edit", (req, res) => {
   const clientID = req.params.clientID;
   const first = req.body.first;
   const middle = req.body.middle;
@@ -102,7 +23,7 @@ router.post("/edit", function (req, res) {
 });
 
 
-router.get("/editcolortag", function (req, res) {
+router.get("/editcolortag", (req, res) => {
   ColorTags.selectAllByUser(req.params.userID)
   .then((colorTags) => {
     if (colorTags.length > 0) {
@@ -116,7 +37,7 @@ router.get("/editcolortag", function (req, res) {
 });
 
 
-router.post("/editcolortag", function (req, res) {
+router.post("/editcolortag", (req, res) => {
   var colorTagID = req.body.colorTagID;
   if (colorTagID == "") colorTagID = null
   Client.udpateColorTag(req.params.clientID, colorTagID)
@@ -128,7 +49,7 @@ router.post("/editcolortag", function (req, res) {
 });
 
 
-router.get("/transfer", function (req, res) {
+router.get("/transfer", (req, res) => {
   var user;
   Users.findByID(req.params.userID)
   .then((u) => {
@@ -137,7 +58,7 @@ router.get("/transfer", function (req, res) {
   }).then((users) => {
 
     // limit only to same department transfers
-    users = users.filter(function (user) {
+    users = users.filter((user) {
       return user.department == user.department;
     });
 
@@ -149,7 +70,7 @@ router.get("/transfer", function (req, res) {
 });
 
 
-router.post("/transfer", function (req, res) {
+router.post("/transfer", (req, res) => {
   const fromUserID = req.params.userID;
   const toUserID = Number(req.body.userID);
   const clientID = Number(req.params.clientID);
@@ -169,11 +90,11 @@ router.post("/transfer", function (req, res) {
 });
 
 
-router.get("/messages", function (req, res) {
+router.get("/messages", (req, res) => {
   res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/messages/filter/all`);
 });
 
-router.get("/messages/filter/:method", function (req, res) {
+router.get("/messages/filter/:method", (req, res) => {
   var methodFilter = "all";
   if (req.params.method == "texts") methodFilter = "cell";
 
@@ -186,7 +107,7 @@ router.get("/messages/filter/:method", function (req, res) {
     conversations = convos;
     return Messages.findByClientID(req.params.userID, req.params.clientID)
   }).then((msgs) => {
-    messages = msgs.filter(function (msg) {
+    messages = msgs.filter((msg) {
       if (msg.comm_type == methodFilter || methodFilter == "all") {
         if (msg.convo == conversationFilterID || conversationFilterID == null) {
           return true;
@@ -209,7 +130,7 @@ router.get("/messages/filter/:method", function (req, res) {
 });
 
 
-router.post("/messages/create/infer_conversation", function (req, res) {
+router.post("/messages/create/infer_conversation", (req, res) => {
   const userID = req.params.userID;
   const clientID = Number(req.params.clientID);
   const subject = "New Conversation";
@@ -248,17 +169,17 @@ router.post("/messages/create/infer_conversation", function (req, res) {
 });
 
 
-router.get("/conversations/create", function (req, res) {
+router.get("/conversations/create", (req, res) => {
   res.redirect(`${res.redirectUrlBase}/clients/address/${req.params.clientID}`);
 });
 
 
-router.get("/notifications", function (req, res) {
+router.get("/notifications", (req, res) => {
   res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/notifications/pending`);
 });
 
 
-router.get("/notifications/pending", function (req, res) {
+router.get("/notifications/pending", (req, res) => {
   Notifications.findByClientID(req.params.clientID, false)
   .then((notifications) => {
     res.render("v4/primaryUser/client/notifications", {
@@ -272,7 +193,7 @@ router.get("/notifications/pending", function (req, res) {
 });
 
 
-router.get("/notifications/sent", function (req, res) {
+router.get("/notifications/sent", (req, res) => {
   Notifications.findByClientID(req.params.clientID, true)
   .then((notifications) => {
     res.render("v4/primaryUser/client/notifications", {
@@ -286,7 +207,7 @@ router.get("/notifications/sent", function (req, res) {
 });
 
 
-router.get("/notifications/remove/:notificationID", function (req, res) {
+router.get("/notifications/remove/:notificationID", (req, res) => {
   Notifications.removeOne(req.params.notificationID)
   .then(() => {
     req.flash("success", "Removed notification.");
@@ -295,17 +216,17 @@ router.get("/notifications/remove/:notificationID", function (req, res) {
 });
 
 
-router.get("/notifications/create", function (req, res) {
+router.get("/notifications/create", (req, res) => {
   res.redirect(`${res.redirectUrlBase}/notifications/create/sendto`);
 });
 
 
-router.get("/communications", function (req, res) {
+router.get("/communications", (req, res) => {
   res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications/filter/open`);
 });
 
 
-router.get("/communications/filter/open", function (req, res) {
+router.get("/communications/filter/open", (req, res) => {
   CommConns.getClientCommunications(req.params.clientID)
   .then((communications) => {
     res.render("v4/primaryUser/client/communications", {
@@ -319,7 +240,7 @@ router.get("/communications/filter/open", function (req, res) {
 });
 
 
-router.get("/communications/remove/:communicationID", function (req, res) {
+router.get("/communications/remove/:communicationID", (req, res) => {
   CommConns.findByClientID(req.params.clientID)
   .then((commConns) => {
     if (commConns.length > 1) {
@@ -336,14 +257,14 @@ router.get("/communications/remove/:communicationID", function (req, res) {
 });
 
 
-router.get("/communications/create", function (req, res) {
+router.get("/communications/create", (req, res) => {
   res.render("v4/primaryUser/client/createComm", {
     commConn: {}
   });
 });
 
 
-router.post("/communications/create", function (req, res) {
+router.post("/communications/create", (req, res) => {
   const clientID = req.params.clientID;
   const name = req.body.description;
   const type = req.body.type;

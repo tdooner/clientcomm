@@ -78,11 +78,11 @@
     </div>
     <div class="column">
       <% if (hub.sel === "open") { %>
-        <a href="<%=`/v4/clients/client/${client.clid}/status/close`%>">
+        <a href="<%=`/v4/clients/client/${client.clid}/alter/close`%>">
           <i class="fa highlight fa-book" aria-hidden="true"></i>
         </a>
       <% } else { %>
-        <a href="<%=`/v4/clients/client/${client.clid}/status.open`%>">
+        <a href="<%=`/v4/clients/client/${client.clid}/alter/open`%>">
           <i class="fa fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>
