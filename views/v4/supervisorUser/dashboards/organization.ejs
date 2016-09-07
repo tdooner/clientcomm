@@ -10,11 +10,11 @@
     
     <div class="department">
       <div class="subject showAll">
-        <a href="<%= `${baseURL}/dashboard/overview` %>">Show for all departments</a>
+        <a href="<%= `/v4/dashboard/overview` %>">Show for all departments</a>
       </div>
     </div>
     
-    <a href="<%= `${baseURL}/dashboard/overview` %>">
+    <a href="<%= `/v4/dashboard/overview` %>">
       <div class="department <% if (!userFilterID) { %>selected<% } %>">
         <div class="subject">
           <%= department.name %>
@@ -32,7 +32,7 @@
     </div>
 
     <% users.forEach(function(targetUser) { %>
-      <a href="<%= `${baseURL}/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
+      <a href="<%= `/v4/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
         <div class="department <% if (userFilterID == targetUser.cmid) { %>selected<% } %>">
           <div class="subject">
             <%= targetUser.last + ', ' + targetUser.first  %>

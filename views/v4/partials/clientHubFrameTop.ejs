@@ -10,33 +10,33 @@
 
     <div class="leftTab">
       <div class="icon">
-        <a href="<%=`${baseURL}/edit`%>">
+        <a href="<%=`/v4/edit`%>">
           <i class="fa fa-cog" aria-hidden="true"></i>
         </a>
       </div>
       <div class="title">
-        <a href="<%=`${baseURL}`%>"><%= client.first + ' ' + client.last %></a>
+        <a href="<%=`/v4`%>"><%= client.first + ' ' + client.last %></a>
       </div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'messages' ? 'open' : 'closed' %>">
-      <div class="title"><a href="<%=`${baseURL}/messages/filter/all`%>">Messages</a></div>
-      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="<%=`${baseURL}/messages/filter/all`%>">All</a></div>
-      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="<%=`${baseURL}/messages/filter/texts`%>">Texts</a></div>
+      <div class="title"><a href="<%=`/v4/messages/filter/all`%>">Messages</a></div>
+      <div class="option <%= hub.sel == 'all' ? 'selected' : '' %>"><a href="<%=`/v4/messages/filter/all`%>">All</a></div>
+      <div class="option <%= hub.sel == 'texts' ? 'selected' : '' %>"><a href="<%=`/v4/messages/filter/texts`%>">Texts</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-      <div class="title"><a href="<%=`${baseURL}/notifications`%>">Notifications</a></div>
-      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`${baseURL}/notifications/pending`%>">Pending</a></div>
-      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`${baseURL}/notifications/sent`%>">Sent</a></div>
+      <div class="title"><a href="<%=`/v4/notifications`%>">Notifications</a></div>
+      <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`/v4/notifications/pending`%>">Pending</a></div>
+      <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`/v4/notifications/sent`%>">Sent</a></div>
     </div>
 
     <div class="rightTab <%= hub.tab == 'contactMethods' ? 'open' : 'closed' %>">
-      <div class="title"><a href="<%=`${baseURL}/communications`%>">Methods</a></div>
+      <div class="title"><a href="<%=`/v4/communications`%>">Methods</a></div>
     </div>
 
     <div class="rightActions">
-      <a href="<%=`${baseURL}/communications/create`%>">
+      <a href="<%=`/v4/communications/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-whatsapp fa-stack-1x fa-inverse"></i>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="<%=`${baseURL}/notifications/create`%>">
+      <a href="<%=`/v4/notifications/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
@@ -56,7 +56,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="<%=`${baseURL}/conversations/create`%>">
+      <a href="<%=`/v4/conversations/create`%>">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-comments fa-stack-1x fa-inverse"></i>

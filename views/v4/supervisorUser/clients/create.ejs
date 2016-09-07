@@ -4,7 +4,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="<%= `${baseURL}/clients` %>">
+  <a href="<%= `/v4/clients` %>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -19,7 +19,7 @@
 
   <form method = "post"
         id="createClient"
-        action="<%= `${baseURL}/clients/create` %>">
+        action="<%= `/v4/clients/create` %>">
 
     <div class="formRow">
       <div class="formLabel"> First </div>

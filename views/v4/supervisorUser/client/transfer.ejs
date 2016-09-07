@@ -4,7 +4,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="<%=`${baseURL}/clients`%>">
+  <a href="<%=`/v4/clients`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -22,11 +22,11 @@
 
   <div class="formRow">
     <% if (allDepartments) { %>
-      <a href="<%=`${baseURL}/clients/client/${parameters.clientID}/transfer?allDepartments=false`%>">
+      <a href="<%=`/v4/clients/client/${parameters.clientID}/transfer?allDepartments=false`%>">
         <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer within your department">
       </a>
     <% } else { %>
-      <a href="<%=`${baseURL}/clients/client/${parameters.clientID}/transfer?allDepartments=true`%>">
+      <a href="<%=`/v4/clients/client/${parameters.clientID}/transfer?allDepartments=true`%>">
         <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer outside of this department">
       </a>
     <% } %>
@@ -34,7 +34,7 @@
 
   <form method = "post"
         id="userSearch"
-        action = "<%=`${baseURL}/clients/client/${parameters.clientID}/transfer`%>">
+        action = "<%=`/v4/clients/client/${parameters.clientID}/transfer`%>">
 
     <div class="formRow">
       <div class="formLabel">

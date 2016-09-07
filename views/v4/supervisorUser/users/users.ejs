@@ -27,12 +27,12 @@
 <% users.forEach(function (targetUser) { %>
   <div class="notificationRow">
     <div class="column">
-      <a href="<%=`${baseURL}/clients/open?limitByUser=${targetUser.cmid}`%>">
+      <a href="<%=`/v4/clients/open?limitByUser=${targetUser.cmid}`%>">
         <i class="fa highlight fa-users" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
-      <a href="<%= `${baseURL}/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
+      <a href="<%= `/v4/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
         <span class="clientName">
           <%= targetUser.last + ', ' + targetUser.first %> <%= targetUser.middle %>
         </span>
@@ -57,14 +57,14 @@
     </div>
     <div class="column">
       <% if (targetUser.active) { %>
-        <a href="<%= `${baseURL}/users/edit/${targetUser.cmid}` %>">
+        <a href="<%= `/v4/users/edit/${targetUser.cmid}` %>">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
     </div>
     <div class="column">
       <% if (user.cmid !== targetUser.cmid && ["primary", "support"].indexOf(targetUser.class) > -1) { %>
-        <a href="<%= `${baseURL}/users/transfer/${targetUser.cmid}` %>">
+        <a href="<%= `/v4/users/transfer/${targetUser.cmid}` %>">
           <i class="fa highlight fa-mail-forward" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
@@ -72,12 +72,12 @@
     <div class="column">
       <% if (hub.sel == "active") { %>
         <% if (user.cmid !== targetUser.cmid && ["primary", "support"].indexOf(targetUser.class) > -1) { %>
-          <a href="<%= `${baseURL}/users/deactivate/${targetUser.cmid}` %>">
+          <a href="<%= `/v4/users/deactivate/${targetUser.cmid}` %>">
             <i class="fa highlight fa-book" aria-hidden="true"></i>
           </a>
         <% } else { %>-<% } %>
       <% } else { %>
-        <a href="<%= `${baseURL}/users/activate/${targetUser.cmid}` %>">
+        <a href="<%= `/v4/users/activate/${targetUser.cmid}` %>">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>
