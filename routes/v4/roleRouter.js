@@ -35,12 +35,13 @@ var moment_tz = require("moment-timezone");
 
 
 // General error handling
-const errorHandling   = require("./utilities/errorHandling");
-const error_500       = errorHandling.error_500;
-const notFound        = errorHandling.notFound;
+const errorHandling = require("./utilities/errorHandling");
+const error_500     = errorHandling.error_500;
+const notFound      = errorHandling.notFound;
 
 
 // Standard checks for every role, no matter
+// Add flash alerts
 router.use((req, res, next) => {
   Alerts.findByUser(req.user.cmid)
   .then((alerts) => {
@@ -65,7 +66,7 @@ router.use((req, res, next) => {
     // if no department, provide some dummy attributes
     if (!department) {
       department = {
-        name: "Unassigned",
+        name:         "Unassigned",
         phone_number: null,
         organization: req.user.org
       }
@@ -77,16 +78,7 @@ router.use((req, res, next) => {
 
 // Reroute from standard drop endpoint
 router.get("/", (req, res) => {
-  if (["owner", "supervisor", "developer", "primary", "support"].indexOf(req.user.class) > -1) {
-    res.redirect(`/v4/orgs/${req.user.org}/users/${req.user.cmid}/${req.user.class}`);
-  } else {
-    res.redirect("/404")
-  }
-});
-
-
-// Reroute from standard drop endpoint
-router.get("/", (req, res) => {
+  console.log("HIHI");
   if (["owner", "supervisor", "support"].indexOf(req.user.class) > -1) {
     res.redirect(`/v4/dashboard`);
   } else if (["developer", "primary"].indexOf(req.user.class) > -1) {
@@ -95,11 +87,6 @@ router.get("/", (req, res) => {
     notFound(res);
   }
 });
-
-router.get("/dashboard", (req, res) => {
-  
-})
-
 
 
 // ***
