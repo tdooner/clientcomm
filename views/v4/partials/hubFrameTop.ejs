@@ -25,8 +25,8 @@
 
     <div class="leftTab <%= hub.tab == 'groups' ? 'open' : 'closed' %>">
       <div class="title"><a href="<%=`/v4/groups`%>">Groups</a></div>
-      <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="<%=`/v4/groups/current`%>">Current</a></div>
-      <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="<%=`/v4/groups/deleted`%>">Deleted</a></div>
+      <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="<%=`/v4/groups?status=current`%>">Current</a></div>
+      <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="<%=`/v4/groups?status=deleted`%>">Deleted</a></div>
     </div>
 
     <div class="rightActions">

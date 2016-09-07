@@ -2,7 +2,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/groups">
+  <a href="/v4/groups">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -17,7 +17,7 @@
 
   <form method = "post"
         id="createGroup"
-        action = "/v4/users/<%=user.cmid%>/primary/groups/create">
+        action = "/v4/groups/create">
 
     <div class="formRow">
       <div class="formLabel"> Name of group </div>

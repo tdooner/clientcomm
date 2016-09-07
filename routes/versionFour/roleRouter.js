@@ -13,6 +13,7 @@ const Clients       = modelsImport.Clients;
 const Communication = modelsImport.Communication;
 const Convo         = modelsImport.Convo;
 const Departments   = modelsImport.Departments;
+const Groups        = modelsImport.Groups;
 const Message       = modelsImport.Message;
 const Messages      = modelsImport.Messages;
 const Notifications = modelsImport.Notifications;
@@ -382,7 +383,118 @@ router.post("/templates/edit/:templateID", (req, res) => {
   }).catch(error_500(res));
 });
 
+router.get("/groups/address/:groupID", (req, res) => {
+  res.render("v4/primary/groups/address", {
+    parameters: req.params
+  });
+});
 
+router.post("/groups/address/:groupID", (req, res) => {
+  let userID = req.user.cmid;
+  let groupID = Number(req.params.groupID);
+  let title = req.body.title;
+  let content = req.body.content;
+
+  if (title == "") title = "New Conversation";
+
+  Groups.addressMembers(userID, groupID, title, content)
+  .then(() => {
+    req.flash("success", "Messaged group members.");
+    res.redirect(`${req.redirectUrlBase}/groups/current`);
+  }).catch(error_500(res));
+});
+
+router.get("/groups", (req, res) => {
+  let userID = req.user.cmid;
+  let status = req.query.status || "current"
+  let isCurrent = status == "current"
+
+  Groups.findByUser(userID, isCurrent)
+  .then((groups) => {
+    res.render("v4/primary/groups/groups", {
+      hub: {
+        tab: "groups",
+        sel: status
+      },
+      groups: groups
+    });
+  }).catch(error_500(res));
+});
+
+router.get("/groups/create", (req, res) => {
+  Clients.findByUser(Number(req.user.cmid), true)
+  .then((clients) => {
+      res.render("v4/primary/groups/create", {
+        clients: clients
+      });
+  }).catch(error_500(res));
+});
+
+router.post("/groups/create", (req, res) => {
+  let userID = Number(req.user.cmid);
+  let name = req.body.name;
+  let clientIDs = req.body.clientIDs;
+  Groups.insertNew(userID, name, clientIDs)
+  .then(() => {
+    req.flash("success", "Created new group.");
+    res.redirect(`${req.redirectUrlBase}/groups/current`);
+  }).catch(error_500(res));
+});
+
+router.get("/groups/edit/:groupID", (req, res) => {
+  Groups.findByID(Number(req.params.groupID))
+  .then((group) => {
+    if (group) {
+      Clients.findByUser(Number(req.user.cmid), true)
+      .then((clients) => {
+        res.render("v4/primary/groups/edit", {
+          group: group,
+          clients: clients
+        });
+      }).catch(error_500(res));
+    } else {
+      res.redirect("/404");
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/groups/edit/:groupID", (req, res) => {
+  let userID = req.user.cmid;
+  let groupID = req.params.groupID;
+  let name = req.body.name;
+
+  // Clean clientIDs
+  let clientIDs = req.body.clientIDs;
+  if (!clientIDs) clientIDs = [];
+  if (typeof clientIDs == "string") clientIDs = isNaN(Number(clientIDs)) ? [] : Number(clientIDs);
+  if (typeof clientIDs == "number") clientIDs = [clientIDs];
+  if (Array.isArray(clientIDs)) {
+    clientIDs
+    .map(function (ID) { return Number(ID); })
+    .filter(function (ID) { return !(isNaN(ID)); });
+    Groups.editOne(userID, groupID, name, clientIDs)
+    .then(() => {
+      req.flash("success", "Edited group.");
+      res.redirect(`/v4/groups`);
+    }).catch(error_500(res));
+  } else {
+    res.redirect("/404");
+  }
+});
+
+router.get("/groups/remove/:groupID", (req, res) => {
+  Groups.removeOne(Number(req.params.groupID))
+  .then(() => {
+    res.redirect(`/v4/groups`);
+  }).catch(error_500(res));
+});
+
+router.get("/groups/activate/:groupID", (req, res) => {
+  Groups.activateOne(Number(req.params.groupID))
+  .then(() => {
+    res.redirect(`/v4/groups`);
+  }).catch(error_500(res));
+});
 
 // ***
 // Old routing structure, should be removed
