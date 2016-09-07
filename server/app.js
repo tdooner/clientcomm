@@ -132,9 +132,9 @@ require("../routes/catchall")(app);
 app.get("/v4", function (req, res) {
   res.redirect("/v4/orgs/" + req.user.org);
 });
-var versionFourApp = require("../routes/versionFour/roleRouter");
-// app.use("/v4/orgs/:orgID", auth.isLoggedIn, versionFourApp)
-app.use("/v4/", auth.isLoggedIn, versionFourApp)
+var v4App = require("../routes/v4/roleRouter");
+// app.use("/v4/orgs/:orgID", auth.isLoggedIn, v4App)
+app.use("/v4/", auth.isLoggedIn, v4App)
 
 // Redundant catch all
 app.get("/*", function (req, res) {
