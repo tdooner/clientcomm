@@ -1,4 +1,4 @@
-
+'use strict'
 
 // (Sub) router
 const express         = require("express");
@@ -33,35 +33,26 @@ const error_500       = errorHandling.error_500;
 const notFound        = errorHandling.notFound;
 
 
-// ROUTES
-// General style notes:
-// 1. camelCase throughout
-// 2. new naming conventions to "generalize" and influence future database changes
-
-
 // Standard checks for every role, no matter
-router.use(function (req, res, next) {
+router.use((req, res, next) => {
   Alerts.findByUser(req.user.cmid)
   .then((alerts) => {
     res.locals.ALERTS_FEED = alerts;
-    console.log("kuan's standard checks")
     next();
   }).catch(error_500(res));
 });
 
 // Add organization
-router.use(function (req, res, next) {
+router.use((req, res, next) => {
   Organizations.findByID(req.user.org)
   .then((org) => {
     res.locals.organization = org;
-    console.log("kuan's add org")
     next();
   }).catch(error_500(res));
 });
 
 // Add department
-router.use(function (req, res, next) {
-  console.log("I'm after")
+router.use((req, res, next) => {
   Departments.findByID(req.user.department)
   .then((department) => {
     // if no department, provide some dummy attributes
@@ -72,14 +63,13 @@ router.use(function (req, res, next) {
         organization: req.user.org
       }
     }
-    console.log("kuan's department")
     res.locals.department = department;
     next();
   }).catch(error_500(res));
 });
 
 // Reroute from standard drop endpoint
-router.get("/", function (req, res) {
+router.get("/", (req, res) => {
   if (["owner", "supervisor", "developer", "primary", "support"].indexOf(req.user.class) > -1) {
     res.redirect(`/v4/orgs/${req.user.org}/users/${req.user.cmid}/${req.user.class}`);
   } else {
@@ -89,7 +79,7 @@ router.get("/", function (req, res) {
 
 
 // Reroute from standard drop endpoint
-router.get("/", function (req, res) {
+router.get("/", (req, res) => {
   if (["owner", "supervisor", "support"].indexOf(req.user.class) > -1) {
     res.redirect(`/v4/dashboard`);
   } else if (["developer", "primary"].indexOf(req.user.class) > -1) {
@@ -103,12 +93,17 @@ router.get("/dashboard", (req, res) => {
   
 })
 
-router.get("/clients", (req, res) => {
 
+
+// 
+// NEW ROUTING STARTS HERE
+// 
+
+router.get("/clients", (req, res) => {
   const managerID = Number(req.user.cmid);
   const state = req.query.state || "open";
 
-  Clients.findByUsers(managerID, state=="open")
+  Clients.findByUsers(managerID, state == "open")
   .then((clients) => {
     res.render("v4/primaryUser/clients", {
       hub: {
@@ -121,10 +116,9 @@ router.get("/clients", (req, res) => {
 })
 
 router.get("/notifications", (req, res) => {
+  const status = req.query.status || "pending";
+  let isSent = status == "sent";
 
-  const status = req.query.status || "pending"
-
-  let isSent = status=="sent"
   Notifications.findByUser(req.user.cmid, isSent)
   .then((notifications) => {
     res.render("v4/primaryUser/notifications/notifications", {
@@ -138,31 +132,31 @@ router.get("/notifications", (req, res) => {
 
 })
 
-router.get("/notifications/edit/:notificationID", function (req, res) {
+router.get("/notifications/edit/:notificationID", (req, res) => {
   var clients;
-  Clients.findAllByUser(req.user.cmid)
-  .then((clientsReturned) => {
-    clients = clientsReturned;
-    return Notifications.findByID(Number(req.params.notificationID))
-  }).then((notification) => {
-    if (notification) {
 
-      // remove all closed clients except for if matches with notification
-      clients = clients.filter(function (client) {
-        return client.active || client.clid == notification.client;
-      });
+  Clients.findAllByUser(req.user.cmid)
+  .then((c) => {
+    clients = c;
+    return Notifications.findByID(Number(req.params.notificationID))
+
+  }).then((notification) => {
+    if (n) {
+      // Remove all closed clients except for if matches with notification
+      clients = clients.filter((c) => { return c.active || c.clid == n.client; });
 
       res.render("v4/primaryUser/notifications/edit", {
-        notification: notification,
+        notification: n,
         clients: clients
       });
+
     } else {
       notFound(res)
     }
   }).catch(error_500(res));
 });
 
-router.post("/notifications/edit/:notificationID", function (req, res) {
+router.post("/notifications/edit/:notificationID", (req, res) => {
   const notificationID = req.params.notificationID;
   const clientID       = req.body.clientID;
   const commID         = req.body.commID ? req.body.commID : null;
@@ -180,7 +174,7 @@ router.post("/notifications/edit/:notificationID", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/notifications/create", function (req, res) {
+router.get("/notifications/create", (req, res) => {
   Clients.findByUser(req.user.cmid)
   .then((clients) => {
     res.render("v4/primaryUser/notifications/sendto", {
@@ -189,13 +183,13 @@ router.get("/notifications/create", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/notifications/create/compose", function (req, res) {
+router.get("/notifications/create/compose", (req, res) => {
   res.render("v4/primaryUser/notifications/create", {
     parameters: req.query
   });
 })
 
-router.post("/notifications/create/compose", function (req, res) {
+router.post("/notifications/create/compose", (req, res) => {
   res.render("v4/primaryUser/notifications/create", {
     parameters: req.body
   });
@@ -213,7 +207,7 @@ router.get("/notifications/create/selecttemplate", (req, res) => {
 })
 
 
-router.post("/notifications/create", function (req, res) {
+router.post("/notifications/create", (req, res) => {
   const userID = req.user.cmid;
   const clientID = req.body.clientID;
   const commID = req.body.commID == "null" ? null : req.body.commID;
