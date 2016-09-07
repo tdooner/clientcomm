@@ -2,7 +2,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/users/<%=user.cmid%>/primary/notifications">
+  <a href="/v4/notifications">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -16,19 +16,28 @@
 <div class="cardBody">
   
   <div class="formRow">
-    <a href="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>/selecttemplate">
-      <input type="submit" id="useTemplate" class="formSubmit inverse" value="Load a template">
+    <form action="/v4/notifications/create/selecttemplate">
+      <input type="hidden" name="clientID" value="<%= parameters.clientID %>" > 
+      <input type="hidden" name="commID" value="<%= parameters.commID %>" > 
+      <input type="hidden" name="sendDate" value="<%= parameters.sendDate %>" > 
+      <input type="hidden" name="sendHour" value="<%= parameters.sendHour %>" > 
+
+      <input type="submit" id="useTemplate" class="formSubmit inverse" value="Load a template">      
+    </form>
     </a>
   </div>
 
-  <form method="post"
-        action="/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>">
-    <div class="formRow <% if (!parameters.subject) { %>subdued<% } %>">
+  <form method="post" action="/v4/notifications/create">
+    <input type="hidden" name="clientID" value="<%= parameters.clientID %>" > 
+    <input type="hidden" name="commID" value="<%= parameters.commID %>" > 
+    <input type="hidden" name="sendDate" value="<%= parameters.sendDate %>" > 
+    <input type="hidden" name="sendHour" value="<%= parameters.sendHour %>" > 
+    <div class="formRow <% if (!parameters.title) { %>subdued<% } %>">
       <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
       <div class="formInput">
         <input  type="text" 
                 name="subject" 
-                value="<%= parameters.subject %>" 
+                value="<%= parameters.title %>" 
                 placeholder="Enter a subject for the notification here" 
                 maxlength="100">
       </div>
@@ -37,13 +46,14 @@
     <div class="formRow">
       <div class="formLabel"> Message Body </div>
       <div class="formInput">
-        <textarea name="message" rows="5" maxlength="160" required><%= parameters.message %></textarea>
+        <textarea name="message" rows="5" maxlength="160" required><%= parameters.content %></textarea>
       </div>
     </div>
 
-    <input  type="submit" 
-            class="formSubmit" 
-            value="Submit Notification Message">
+    <input 
+      type="submit" 
+      class="formSubmit" 
+      value="Submit Notification Message">
   </form>
 
 </div>

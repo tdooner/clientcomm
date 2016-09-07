@@ -18,76 +18,80 @@
 </div>
 
 <div class="cardBody">
-
-  <div class="formRow">
-    <div class="formLabel"> Which client to notify  </div>
-    <select class="blueSelect" 
-            id="clientID" 
-            required>
-      <option value="" disabled selected> Client </option>
-      <% clients.forEach(function (client) { %>
-        <option value="<%= client.clid %>">
-          <%= client.last + ', ' + client.first + ' ' + client.middle %> 
-        </option>
-      <% }); %>
-    </select>
-  </div>
-
-  <div class="formRow">
-    <div class="formLabel"> Which device to send to </div>
-    <select class="blueSelect" 
-            id="commConn" 
-            required>
-      <option value="" disabled selected> Contact Options </option>
-    </select>
-  </div>
-
-  <div class="formRow">
-    <div class="formLabel"> Date to send <small>(YYYY-MM-DD)</small></div>
-    <div class="formInput">
-      <input  type="date" 
-              id="sendDate" 
-              value="<%= moment().add(1, 'weeks').format('YYYY-MM-DD') %>" 
+  <form action="/v4/notifications/create/compose">
+      <div class="formRow">
+      <div class="formLabel"> Which client to notify  </div>
+      <select class="blueSelect" 
+              id="clientID" 
+              name="clientID" 
               required>
-      </div>
-  </div>
-
-  <div class="formRow">
-    <div class="formLabel"> Time to send <small>(Organization timezone: <%= local_tz %>)</small></div>
-
-    <div class="formInput">
-      <select class="blueSelect" id="sendHour" required>
-        <option value="00"> 12:00 AM (Midnight) </option>
-        <option value="01"> 01:00 AM </option>
-        <option value="02"> 02:00 AM </option>
-        <option value="03"> 03:00 AM </option>
-        <option value="04"> 04:00 AM </option>
-        <option value="05"> 05:00 AM </option>
-        <option value="06" selected> 06:00 AM </option>
-        <option value="07"> 07:00 AM </option>
-        <option value="08"> 08:00 AM </option>
-        <option value="09"> 09:00 AM </option>
-        <option value="10"> 10:00 AM </option>
-        <option value="11"> 11:00 AM </option>
-        <option value="12"> 12:00 PM (Noon) </option>
-        <option value="13"> 01:00 PM </option>
-        <option value="14"> 02:00 PM </option>
-        <option value="15"> 03:00 PM  </option>
-        <option value="16"> 04:00 PM  </option>
-        <option value="17"> 05:00 PM  </option>
-        <option value="18"> 06:00 PM  </option>
-        <option value="19"> 07:00 PM  </option>
-        <option value="20"> 08:00 PM  </option>
-        <option value="21"> 09:00 PM  </option>
-        <option value="22"> 10:00 PM  </option>
-        <option value="23"> 11:00 PM  </option>
+        <option value="" disabled selected> Client </option>
+        <% clients.forEach(function (client) { %>
+          <option value="<%= client.clid %>">
+            <%= client.last + ', ' + client.first + ' ' + client.middle %> 
+          </option>
+        <% }); %>
       </select>
     </div>
-  </div>
 
-  <input  type="submit" 
-          class="formSubmit" 
-          value="Craft Notification Message">
+    <div class="formRow">
+      <div class="formLabel"> Which device to send to </div>
+      <select class="blueSelect" 
+              id="commConn" 
+              name="commConn" 
+              required>
+        <option value="" disabled selected> Contact Options </option>
+      </select>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Date to send <small>(YYYY-MM-DD)</small></div>
+      <div class="formInput">
+        <input  type="date" 
+                id="sendDate" 
+                name="sendDate" 
+                value="<%= moment().add(1, 'weeks').format('YYYY-MM-DD') %>" 
+                required>
+        </div>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel"> Time to send <small>(Organization timezone: <%= local_tz %>)</small></div>
+
+      <div class="formInput">
+        <select class="blueSelect" id="sendHour" name="sendHour" required>
+          <option value="00"> 12:00 AM (Midnight) </option>
+          <option value="01"> 01:00 AM </option>
+          <option value="02"> 02:00 AM </option>
+          <option value="03"> 03:00 AM </option>
+          <option value="04"> 04:00 AM </option>
+          <option value="05"> 05:00 AM </option>
+          <option value="06" selected> 06:00 AM </option>
+          <option value="07"> 07:00 AM </option>
+          <option value="08"> 08:00 AM </option>
+          <option value="09"> 09:00 AM </option>
+          <option value="10"> 10:00 AM </option>
+          <option value="11"> 11:00 AM </option>
+          <option value="12"> 12:00 PM (Noon) </option>
+          <option value="13"> 01:00 PM </option>
+          <option value="14"> 02:00 PM </option>
+          <option value="15"> 03:00 PM  </option>
+          <option value="16"> 04:00 PM  </option>
+          <option value="17"> 05:00 PM  </option>
+          <option value="18"> 06:00 PM  </option>
+          <option value="19"> 07:00 PM  </option>
+          <option value="20"> 08:00 PM  </option>
+          <option value="21"> 09:00 PM  </option>
+          <option value="22"> 10:00 PM  </option>
+          <option value="23"> 11:00 PM  </option>
+        </select>
+      </div>
+    </div>
+
+    <input  type="submit" 
+            class="formSubmit"
+            value="Craft Notification Message">
+  </form>
 </div>
 
 
@@ -122,22 +126,6 @@
     });
   };
 
-  $(".formSubmit").click(function () {
-    var clientID = $("#clientID").val();
-    var commID = $("#commConn").val();
-    var sendDate = $("#sendDate").val();
-    var sendHour = Number($("#sendHour").val());
-
-    // only continue if client supplied
-    if (clientID !== null) {
-      var redirectURL = "/v4/users/" + encodeURIComponent("<%= user.cmid %>") + 
-                        "/primary/notifications/create/sendto/" + encodeURIComponent(clientID) +
-                        "/via/" + encodeURIComponent(commID) + 
-                        "/on/" + encodeURIComponent(sendDate) + 
-                        "/at/" + encodeURIComponent(sendHour);
-      window.location.replace(redirectURL);
-    }
-  });
 </script>
 
 <% include ../../partials/cardFrameBottom %>

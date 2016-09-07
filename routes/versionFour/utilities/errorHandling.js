@@ -21,7 +21,10 @@ module.exports = {
       // Produce a response to the client
       res.status(500).send(String(err))
     }
-  }
+  },
+  notFound: (res) => {
+    res.status(404).send('v4/general/404')
+  } 
 
 }
 

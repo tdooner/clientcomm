@@ -21,7 +21,7 @@ class Organizations {
         .where("orgid", orgID)
         .limit(1)
       .then((orgs) => {
-        fulfill(orgs[0]);
+        return fulfill(orgs[0]);
       }).catch(reject);
     });
   }

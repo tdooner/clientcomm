@@ -17,7 +17,12 @@
   
   <div class="scrollListBox">
     <% for (var i=0; i < templates.length; i++) { %>
-      <div class="scrollListRow" templateID="<%= templates[i].template_id %>">
+      <div 
+        class="scrollListRow" 
+        templateID="<%= templates[i].template_id %>"
+        data-title="<%= templates[i].title %>"
+        data-content="<%= templates[i].content %>"
+        >
         
         <div class="useCount">
           <%= templates[i].times_used %>
@@ -42,24 +47,35 @@
     <% } %>
   </div>
 
+  <form method="post" action="/v4/notifications/create/compose">
+    <input type="hidden" name="clientID" value="<%= parameters.clientID %>" > 
+    <input type="hidden" name="commID" value="<%= parameters.commID %>" > 
+    <input type="hidden" name="sendDate" value="<%= parameters.sendDate %>" > 
+    <input type="hidden" name="sendHour" value="<%= parameters.sendHour %>" >     
+    <input type="hidden" name="title" id="templateTitle">    
+    <input type="hidden" name="content" id="templateContent">
 
-  <div class="formRow">
-    <a id="templateID" href="">
+    <div class="formRow">
       <input type="submit" class="formSubmit" value="Select template">
-    </a>
-  </div>
+    </div>
+
+  </form>
 
 </div>
 
 
 <script type="text/javascript">
-  var baseURL = "/v4/users/<%=user.cmid%>/primary/notifications/create/sendto/<%= parameters.clientID %>/via/<%= parameters.commID %>/on/<%= parameters.sendDate %>/at/<%= parameters.sendHour %>/selecttemplate/";
 
   $(".scrollListRow").click(function () {
     $(".scrollListRow").removeClass("selected");
     $(this).addClass("selected");
-    var templateID = $(this).attr("templateID")
-    $("#templateID").attr("href", baseURL + String(templateID))
+    $('#templateTitle').val(
+      $(this).data('title')
+    )
+    $('#templateContent').val(
+      $(this).data('content')
+    )
+    var templateID = $(this).find()
   });
 </script>
 

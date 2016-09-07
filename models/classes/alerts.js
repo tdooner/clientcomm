@@ -21,7 +21,7 @@ class Alerts {
         .where("user", userID)
         .andWhere("open", true)
       .then((alerts) => {
-        fulfill(alerts);
+        return fulfill(alerts);
       }).catch(reject);
     });
   }

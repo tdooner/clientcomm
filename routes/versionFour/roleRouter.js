@@ -1,8 +1,8 @@
 
 
 // (Sub) router
-var express         = require("express");
-var router          = express.Router({mergeParams: true});
+const express         = require("express");
+const router          = express.Router({mergeParams: true});
 
 
 // Models
@@ -10,24 +10,27 @@ const modelsImport  = require("../../models/models");
 const Alerts        = modelsImport.Alerts;
 const Client        = modelsImport.Client;
 const Clients       = modelsImport.Clients;
-const Convo         = modelsImport.Convo;
-const Message       = modelsImport.Message;
 const Communication = modelsImport.Communication;
-const Organizations = modelsImport.Organizations;
+const Convo         = modelsImport.Convo;
 const Departments   = modelsImport.Departments;
+const Message       = modelsImport.Message;
+const Notifications = modelsImport.Notifications;
+const Organizations = modelsImport.Organizations;
+const Templates     = modelsImport.Templates;
 
 
 // Twilio library tools and secrets
-var credentials     = require("../../credentials");
-var ACCOUNT_SID     = credentials.accountSid;
-var AUTH_TOKEN      = credentials.authToken;
-var twilio          = require("twilio");
-var twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
+const credentials     = require("../../credentials");
+const ACCOUNT_SID     = credentials.accountSid;
+const AUTH_TOKEN      = credentials.authToken;
+const twilio          = require("twilio");
+const twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 
 // General error handling
-var errorHandling   = require("./utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+const errorHandling   = require("./utilities/errorHandling");
+const error_500       = errorHandling.error_500;
+const notFound        = errorHandling.notFound;
 
 
 // ROUTES
@@ -41,6 +44,7 @@ router.use(function (req, res, next) {
   Alerts.findByUser(req.user.cmid)
   .then((alerts) => {
     res.locals.ALERTS_FEED = alerts;
+    console.log("kuan's standard checks")
     next();
   }).catch(error_500(res));
 });
@@ -50,12 +54,14 @@ router.use(function (req, res, next) {
   Organizations.findByID(req.user.org)
   .then((org) => {
     res.locals.organization = org;
+    console.log("kuan's add org")
     next();
   }).catch(error_500(res));
 });
 
 // Add department
 router.use(function (req, res, next) {
+  console.log("I'm after")
   Departments.findByID(req.user.department)
   .then((department) => {
     // if no department, provide some dummy attributes
@@ -66,6 +72,7 @@ router.use(function (req, res, next) {
         organization: req.user.org
       }
     }
+    console.log("kuan's department")
     res.locals.department = department;
     next();
   }).catch(error_500(res));
@@ -78,6 +85,156 @@ router.get("/", function (req, res) {
   } else {
     res.redirect("/404")
   }
+});
+
+
+// Reroute from standard drop endpoint
+router.get("/", function (req, res) {
+  if (["owner", "supervisor", "support"].indexOf(req.user.class) > -1) {
+    res.redirect(`/v4/dashboard`);
+  } else if (["developer", "primary"].indexOf(req.user.class) > -1) {
+    res.redirect(`/v4/clients`);
+  } else {
+    notFound(res);
+  }
+});
+
+router.get("/dashboard", (req, res) => {
+  
+})
+
+router.get("/clients", (req, res) => {
+
+  const managerID = Number(req.user.cmid);
+  const state = req.query.state || "open";
+
+  Clients.findByUsers(managerID, state=="open")
+  .then((clients) => {
+    res.render("v4/primaryUser/clients", {
+      hub: {
+        tab: "clients",
+        sel: state,
+      },
+      clients: clients
+    });
+  }).catch(error_500(res));
+})
+
+router.get("/notifications", (req, res) => {
+
+  const status = req.query.status || "pending"
+
+  let isSent = status=="sent"
+  Notifications.findByUser(req.user.cmid, isSent)
+  .then((notifications) => {
+    res.render("v4/primaryUser/notifications/notifications", {
+      hub: {
+        tab: "notifications",
+        sel: status
+      },
+      notifications: notifications
+    });
+  }).catch(error_500(res));
+
+})
+
+router.get("/notifications/edit/:notificationID", function (req, res) {
+  var clients;
+  Clients.findAllByUser(req.user.cmid)
+  .then((clientsReturned) => {
+    clients = clientsReturned;
+    return Notifications.findByID(Number(req.params.notificationID))
+  }).then((notification) => {
+    if (notification) {
+
+      // remove all closed clients except for if matches with notification
+      clients = clients.filter(function (client) {
+        return client.active || client.clid == notification.client;
+      });
+
+      res.render("v4/primaryUser/notifications/edit", {
+        notification: notification,
+        clients: clients
+      });
+    } else {
+      notFound(res)
+    }
+  }).catch(error_500(res));
+});
+
+router.post("/notifications/edit/:notificationID", function (req, res) {
+  const notificationID = req.params.notificationID;
+  const clientID       = req.body.clientID;
+  const commID         = req.body.commID ? req.body.commID : null;
+  const subject        = req.body.subject;
+  const message        = req.body.message;
+  const send           = moment(req.body.sendDate)
+                          .tz(res.locals.local_tz)
+                          .add(Number(req.body.sendHour) - 1, "hours")
+                          .format("YYYY-MM-DD HH:mm:ss");
+
+  Notifications.editOne(notificationID, clientID, commID, send, subject, message)
+  .then((notification) => {
+    req.flash("success", "Edited notification.");
+    res.redirect(`/notifications`);
+  }).catch(error_500(res));
+});
+
+router.get("/notifications/create", function (req, res) {
+  Clients.findByUser(req.user.cmid)
+  .then((clients) => {
+    res.render("v4/primaryUser/notifications/sendto", {
+      clients: clients
+    })
+  }).catch(error_500(res));
+});
+
+router.get("/notifications/create/compose", function (req, res) {
+  res.render("v4/primaryUser/notifications/create", {
+    parameters: req.query
+  });
+})
+
+router.post("/notifications/create/compose", function (req, res) {
+  res.render("v4/primaryUser/notifications/create", {
+    parameters: req.body
+  });
+})
+
+
+router.get("/notifications/create/selecttemplate", (req, res) => {
+  Templates.findByUser(req.user.cmid)
+  .then((templates) => {
+    res.render("v4/primaryUser/notifications/selecttemplate", {
+      templates: templates,
+      parameters: req.query
+    });
+  }).catch(error_500(res));
+})
+
+
+router.post("/notifications/create", function (req, res) {
+  const userID = req.user.cmid;
+  const clientID = req.body.clientID;
+  const commID = req.body.commID == "null" ? null : req.body.commID;
+  const subject = !req.body.subject ? "" : req.body.subject;
+  const message = req.body.message;
+  const send = moment(req.body.sendDate)
+              .tz(res.locals.local_tz)
+              .add(Number(req.params.sendHour) - 1, "hours")
+              .format("YYYY-MM-DD HH:mm:ss");
+
+  Notifications.create(
+      userID, 
+      clientID, 
+      commID, 
+      subject, 
+      message, 
+      send
+  ).then(() => {
+    req.flash("success", "Created new notification.");
+    res.redirect(`${req.redirectUrlBase}/clients/client/${clientID}/notifications`);
+  }).catch(error_500(res));
 });
 
 

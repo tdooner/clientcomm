@@ -1,6 +1,6 @@
 {
   "name": "ClientComm",
-  "version": "3.0.2",
+  "version": "3.5.4",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -21,6 +21,11 @@
       "version": "2.2.1",
       "from": "ansi-styles@>=2.2.1 <3.0.0",
       "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz"
+    },
+    "ap": {
+      "version": "0.2.0",
+      "from": "ap@>=0.2.0 <0.3.0",
+      "resolved": "https://registry.npmjs.org/ap/-/ap-0.2.0.tgz"
     },
     "archy": {
       "version": "1.0.0",
@@ -265,6 +270,11 @@
       "from": "buffer-shims@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/buffer-shims/-/buffer-shims-1.0.0.tgz"
     },
+    "buffer-writer": {
+      "version": "1.0.1",
+      "from": "buffer-writer@1.0.1",
+      "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-1.0.1.tgz"
+    },
     "builtin-modules": {
       "version": "1.1.1",
       "from": "builtin-modules@>=1.0.0 <2.0.0",
@@ -309,6 +319,11 @@
       "version": "1.0.0",
       "from": "code-point-at@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/code-point-at/-/code-point-at-1.0.0.tgz"
+    },
+    "colors": {
+      "version": "1.1.2",
+      "from": "colors@latest",
+      "resolved": "https://registry.npmjs.org/colors/-/colors-1.1.2.tgz"
     },
     "combined-stream": {
       "version": "1.0.5",
@@ -908,6 +923,11 @@
       "from": "generate-object-property@>=1.1.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/generate-object-property/-/generate-object-property-1.2.0.tgz"
     },
+    "generic-pool": {
+      "version": "2.1.1",
+      "from": "generic-pool@2.1.1",
+      "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-2.1.1.tgz"
+    },
     "get-stdin": {
       "version": "4.0.1",
       "from": "get-stdin@>=4.0.1 <5.0.0",
@@ -998,6 +1018,33 @@
       "version": "1.0.1",
       "from": "graceful-readlink@>=1.0.0",
       "resolved": "https://registry.npmjs.org/graceful-readlink/-/graceful-readlink-1.0.1.tgz"
+    },
+    "gulp": {
+      "version": "3.9.1",
+      "from": "gulp@3.9.1",
+      "resolved": "https://registry.npmjs.org/gulp/-/gulp-3.9.1.tgz"
+    },
+    "gulp-sass": {
+      "version": "2.3.2",
+      "from": "gulp-sass@2.3.2",
+      "resolved": "https://registry.npmjs.org/gulp-sass/-/gulp-sass-2.3.2.tgz",
+      "dependencies": {
+        "isarray": {
+          "version": "1.0.0",
+          "from": "isarray@>=1.0.0 <1.1.0",
+          "resolved": "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
+        },
+        "readable-stream": {
+          "version": "2.0.6",
+          "from": "readable-stream@>=2.0.0 <2.1.0",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz"
+        },
+        "through2": {
+          "version": "2.0.1",
+          "from": "through2@>=2.0.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/through2/-/through2-2.0.1.tgz"
+        }
+      }
     },
     "gulp-util": {
       "version": "3.0.7",
@@ -3652,6 +3699,11 @@
       "from": "osenv@>=0.0.0 <1.0.0",
       "resolved": "https://registry.npmjs.org/osenv/-/osenv-0.1.3.tgz"
     },
+    "packet-reader": {
+      "version": "0.2.0",
+      "from": "packet-reader@0.2.0",
+      "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-0.2.0.tgz"
+    },
     "parse-json": {
       "version": "2.2.0",
       "from": "parse-json@>=2.2.0 <3.0.0",
@@ -3707,94 +3759,24 @@
       "resolved": "https://registry.npmjs.org/path-type/-/path-type-1.1.0.tgz"
     },
     "pg": {
-      "version": "4.5.1",
-      "from": "pg@>=4.4.6 <5.0.0",
-      "resolved": "https://registry.npmjs.org/pg/-/pg-4.5.1.tgz",
-      "dependencies": {
-        "buffer-writer": {
-          "version": "1.0.1",
-          "from": "buffer-writer@1.0.1",
-          "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-1.0.1.tgz"
-        },
-        "generic-pool": {
-          "version": "2.1.1",
-          "from": "generic-pool@2.1.1",
-          "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-2.1.1.tgz"
-        },
-        "packet-reader": {
-          "version": "0.2.0",
-          "from": "packet-reader@0.2.0",
-          "resolved": "https://registry.npmjs.org/packet-reader/-/packet-reader-0.2.0.tgz"
-        },
-        "pg-connection-string": {
-          "version": "0.1.3",
-          "from": "pg-connection-string@0.1.3",
-          "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-0.1.3.tgz"
-        },
-        "pg-types": {
-          "version": "1.10.0",
-          "from": "pg-types@>=1.0.0 <2.0.0",
-          "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-1.10.0.tgz",
-          "dependencies": {
-            "ap": {
-              "version": "0.2.0",
-              "from": "ap@>=0.2.0 <0.3.0",
-              "resolved": "https://registry.npmjs.org/ap/-/ap-0.2.0.tgz"
-            },
-            "postgres-array": {
-              "version": "1.0.0",
-              "from": "postgres-array@>=1.0.0 <1.1.0",
-              "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-1.0.0.tgz"
-            },
-            "postgres-bytea": {
-              "version": "1.0.0",
-              "from": "postgres-bytea@>=1.0.0 <1.1.0",
-              "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-1.0.0.tgz"
-            },
-            "postgres-date": {
-              "version": "1.0.1",
-              "from": "postgres-date@>=1.0.0 <1.1.0",
-              "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-1.0.1.tgz"
-            },
-            "postgres-interval": {
-              "version": "1.0.1",
-              "from": "postgres-interval@>=1.0.0 <1.1.0",
-              "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-1.0.1.tgz",
-              "dependencies": {
-                "xtend": {
-                  "version": "4.0.1",
-                  "from": "xtend@>=4.0.0 <5.0.0",
-                  "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz"
-                }
-              }
-            }
-          }
-        },
-        "pgpass": {
-          "version": "0.0.3",
-          "from": "pgpass@0.0.3",
-          "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-0.0.3.tgz",
-          "dependencies": {
-            "split": {
-              "version": "0.3.3",
-              "from": "split@>=0.3.0 <0.4.0",
-              "resolved": "https://registry.npmjs.org/split/-/split-0.3.3.tgz",
-              "dependencies": {
-                "through": {
-                  "version": "2.3.8",
-                  "from": "through@>=2.0.0 <3.0.0",
-                  "resolved": "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
-                }
-              }
-            }
-          }
-        },
-        "semver": {
-          "version": "4.3.6",
-          "from": "semver@>=4.1.0 <5.0.0",
-          "resolved": "https://registry.npmjs.org/semver/-/semver-4.3.6.tgz"
-        }
-      }
+      "version": "4.5.5",
+      "from": "pg@4.5.5",
+      "resolved": "https://registry.npmjs.org/pg/-/pg-4.5.5.tgz"
+    },
+    "pg-connection-string": {
+      "version": "0.1.3",
+      "from": "pg-connection-string@0.1.3",
+      "resolved": "https://registry.npmjs.org/pg-connection-string/-/pg-connection-string-0.1.3.tgz"
+    },
+    "pg-types": {
+      "version": "1.11.0",
+      "from": "pg-types@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/pg-types/-/pg-types-1.11.0.tgz"
+    },
+    "pgpass": {
+      "version": "0.0.3",
+      "from": "pgpass@0.0.3",
+      "resolved": "https://registry.npmjs.org/pgpass/-/pgpass-0.0.3.tgz"
     },
     "pify": {
       "version": "2.3.0",
@@ -3822,6 +3804,26 @@
           "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.0.tgz"
         }
       }
+    },
+    "postgres-array": {
+      "version": "1.0.0",
+      "from": "postgres-array@>=1.0.0 <1.1.0",
+      "resolved": "https://registry.npmjs.org/postgres-array/-/postgres-array-1.0.0.tgz"
+    },
+    "postgres-bytea": {
+      "version": "1.0.0",
+      "from": "postgres-bytea@>=1.0.0 <1.1.0",
+      "resolved": "https://registry.npmjs.org/postgres-bytea/-/postgres-bytea-1.0.0.tgz"
+    },
+    "postgres-date": {
+      "version": "1.0.3",
+      "from": "postgres-date@>=1.0.0 <1.1.0",
+      "resolved": "https://registry.npmjs.org/postgres-date/-/postgres-date-1.0.3.tgz"
+    },
+    "postgres-interval": {
+      "version": "1.0.2",
+      "from": "postgres-interval@>=1.0.0 <1.1.0",
+      "resolved": "https://registry.npmjs.org/postgres-interval/-/postgres-interval-1.0.2.tgz"
     },
     "pretty-hrtime": {
       "version": "1.0.2",
@@ -3999,6 +4001,11 @@
       "from": "spin.js@>=2.0.1 <3.0.0",
       "resolved": "https://registry.npmjs.org/spin.js/-/spin.js-2.3.2.tgz"
     },
+    "split": {
+      "version": "0.3.3",
+      "from": "split@>=0.3.0 <0.4.0",
+      "resolved": "https://registry.npmjs.org/split/-/split-0.3.3.tgz"
+    },
     "sshpk": {
       "version": "1.8.3",
       "from": "sshpk@>=1.7.0 <2.0.0",
@@ -4058,6 +4065,11 @@
         }
       }
     },
+    "supertest": {
+      "version": "1.2.0",
+      "from": "supertest@1.2.0",
+      "resolved": "https://registry.npmjs.org/supertest/-/supertest-1.2.0.tgz"
+    },
     "supports-color": {
       "version": "2.0.0",
       "from": "supports-color@>=2.0.0 <3.0.0",
@@ -4072,6 +4084,11 @@
       "version": "2.2.1",
       "from": "tar@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/tar/-/tar-2.2.1.tgz"
+    },
+    "through": {
+      "version": "2.3.8",
+      "from": "through@>=2.0.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
     },
     "through2": {
       "version": "0.6.3",

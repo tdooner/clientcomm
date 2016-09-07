@@ -12,6 +12,8 @@ const undefinedValuesCheck = utilities.undefinedValuesCheck;
 const CommConns = require("./commConns");
 const Users     = require("./users");
 
+const colors = require("colors")
+
 
 // Class
 class Clients {
@@ -24,7 +26,7 @@ class Clients {
         const userIDs = users.map(function (user) { return user.cmid; });
         return Clients.findByUsers(userIDs, activeStatus)
       }).then((clients) => {
-        fulfill(clients);
+        return fulfill(clients);
       }).catch(reject);
     });
   }
@@ -36,7 +38,7 @@ class Clients {
     return new Promise((fulfill, reject) => {
       Clients.findAllByUsers(userIDs, active)
       .then((clients) => {
-        fulfill(clients);
+        return fulfill(clients);
       }).catch(reject);
     });
   }
@@ -47,7 +49,7 @@ class Clients {
     return new Promise((fulfill, reject) => {
       Clients.findAllByUsers(userIDs)
       .then((clients) => {
-        fulfill(clients);
+        return fulfill(clients);
       }).catch(reject);
     });
   }
@@ -61,17 +63,17 @@ class Clients {
         clientsOpen = clients;
         return Clients.findByUsers(userIDs, false)
       }).then((clientsClosed) => {
-        fulfill(clientsOpen.concat(clientsClosed));
+        return fulfill(clientsOpen.concat(clientsClosed));
       }).catch(reject);
     });
   }
 
   static findByUser (userIDs, active) {
-    console.log("Warning! Clients method findAllByUser() deprecated, use findByUsers()");
+    console.log("Warning! Clients method findAllByUser() deprecated, use findByUsers()".red);
     return new Promise((fulfill, reject) => {
       Clients.findByUsers(userIDs, active)
       .then((clients) => {
-        fulfill(clients);
+        return fulfill(clients);
       }).catch(reject);
     });
   }
@@ -144,7 +146,7 @@ class Clients {
           });
           return client;
         });
-        fulfill(finalClientsObject);
+        return fulfill(finalClientsObject);
       }).catch(reject);
     });
   }
@@ -159,7 +161,7 @@ class Clients {
         .andWhere("msgs.read", false)
         .groupBy("convos.client")
       .then(function (unreads) {
-        fulfill(unreads)
+        return fulfill(unreads)
       }).catch(reject);
     })
   }

@@ -69,7 +69,6 @@ var numbers = require("./owner/numbers");
 router.use("/numbers", numbers);
 
 
-// EXPORT ROUTER OBJECt
 module.exports = router;
 
 

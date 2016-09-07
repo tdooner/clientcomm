@@ -1,5 +1,3 @@
-<% var baseURLSubFrame = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary` %>
-
 <% include ../../partials/clientHubFrameTop %>
 
 <!-- Load in addition CSS -->
@@ -48,13 +46,13 @@
     </div>
     <div class="column">
       <% if (hub.sel == "pending") { %>
-        <a href="<%=`${baseURLSubFrame}/notification/edit/${notification.notificationid}`%>">
+        <a href="<%=`/notifications/edit/${notification.notificationid}`%>">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="<%=`${baseURLSubFrame}/clients/client/${client.clid}/notifications/remove/${notification.notificationid}`%>">
+      <a href="<%=`/clients/client/${client.clid}/notifications/remove/${notification.notificationid}`%>">
         <i class="fa highlight fa-trash" aria-hidden="true"></i>
       </a>
     </div>
