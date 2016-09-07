@@ -1,38 +1,38 @@
 
 
 // (Sub) router
-var express         = require("express");
-var router          = express.Router({mergeParams: true});
+let express         = require("express");
+let router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport   = require("../../../../models/models");
-const Client         = modelsImport.Client;
-const ColorTags      = modelsImport.ColorTags;
-const Conversations  = modelsImport.Conversations;
-const Communications = modelsImport.Communications;
-const Users          = modelsImport.Users;
-const Notifications  = modelsImport.Notifications;
-const Messages       = modelsImport.Messages;
-const CommConns      = modelsImport.CommConns;
-const Clients        = modelsImport.Clients;
+let modelsImport   = require("../../../../models/models");
+let Client         = modelsImport.Client;
+let ColorTags      = modelsImport.ColorTags;
+let Conversations  = modelsImport.Conversations;
+let Communications = modelsImport.Communications;
+let Users          = modelsImport.Users;
+let Notifications  = modelsImport.Notifications;
+let Messages       = modelsImport.Messages;
+let CommConns      = modelsImport.CommConns;
+let Clients        = modelsImport.Clients;
 
 
 // Twilio library tools and secrets
-var credentials     = require("../../../../credentials");
-var ACCOUNT_SID     = credentials.accountSid;
-var AUTH_TOKEN      = credentials.authToken;
-var twilio          = require("twilio");
-var twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
+let credentials     = require("../../../../credentials");
+let ACCOUNT_SID     = credentials.accountSid;
+let AUTH_TOKEN      = credentials.authToken;
+let twilio          = require("twilio");
+let twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 
 // General error handling
-var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+let errorHandling   = require("../../utilities/errorHandling");
+let error_500       = errorHandling.error_500;
 
-var logging                 = require("../../utilities/logging");
-var logClientActivity       = logging.logClientActivity;
-var logConversationActivity = logging.logConversationActivity;
+let logging                 = require("../../utilities/logging");
+let logClientActivity       = logging.logClientActivity;
+let logConversationActivity = logging.logConversationActivity;
 
 
 // MUST PASS THROUGH
@@ -51,78 +51,78 @@ router.use(function (req, res, next) {
 // Create base URL for this page
 router.use((req, res, next) => {
   res.locals.parameters = req.params;
-  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}`;
+  req.redirectUrlBase = `/v4/orgs/${req.user.org}/users/${req.user.cmid}/supervisor/department/${req.params.departmentID}`;
   next();
 });
 
 
 // ROUTES
-router.get("/", function (req, res) {
-    res.redirect(`${req.redirectUrlBase}/clients/client/${req.params.clientID}/messages`);
+router.get("/client/", (req, res) => {
+    res.redirect(`/v4/clients/client/${req.params.clientID}/messages`);
 });
 
 
-router.get("/closecase", function (req, res) {
+router.get("/client/closecase", (req, res) => {
   Client.alterCase(req.params.clientID, false)
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Closed client case.")
-    res.redirect(`${req.redirectUrlBase}/clients`);
+    res.redirect(`/v4/clients`);
   }).catch(error_500(res));
 });
 
 
-router.get("/opencase", function (req, res) {
+router.get("/client/opencase", (req, res) => {
   Client.alterCase(req.params.clientID, true)
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Opened client case.")
-    res.redirect(`${req.redirectUrlBase}/clients`);
+    res.redirect(`/v4/clients`);
   }).catch(error_500(res));
 });
 
 
-router.get("/edit", function (req, res) {
-  res.render("v4/supervisorUser/client/edit");
+router.get("/client/edit", (req, res) => {
+  res.render("v4/supervisor/client/edit");
 });
 
 
-router.post("/edit", function (req, res) {
-  const clientID = req.params.clientID;
-  const first = req.body.first;
-  const middle = req.body.middle;
-  const last = req.body.last;
-  const dob = req.body.dob;
-  const uniqueID1 = req.body.uniqueID1;
-  const uniqueID2 = req.body.uniqueID2;
+router.post("/client/edit", (req, res) => {
+  let clientID = req.params.clientID;
+  let first = req.body.first;
+  let middle = req.body.middle;
+  let last = req.body.last;
+  let dob = req.body.dob;
+  let uniqueID1 = req.body.uniqueID1;
+  let uniqueID2 = req.body.uniqueID2;
   Client.editOne(clientID, first, middle, last, dob, uniqueID1, uniqueID2)
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Edited client.")
-    res.redirect(`${req.redirectUrlBase}/clients`);
+    res.redirect(`/v4/clients`);
   }).catch(error_500(res));
 });
 
 
-router.get("/editcolortag", function (req, res) {
+router.get("/client/editcolortag", (req, res) => {
   ColorTags.selectAllByUser(res.locals.client.cm)
   .then((colorTags) => {
-    res.render("v4/supervisorUser/client/selectcolor", {
+    res.render("v4/supervisor/client/selectcolor", {
       colorTags: colorTags,
     });
   }).catch(error_500(res));
 });
 
 
-router.get("/transfer", function (req, res) {
-  var allDepartments = req.query.allDepartments == "true" ? true : false;
+router.get("/client/transfer", (req, res) => {
+  let allDepartments = req.query.allDepartments == "true" ? true : false;
   Users.findByOrg(req.user.org)
   .then((users) => {
     users = users.filter(function (user) {
       return allDepartments || user.department == req.user.department;
     });
 
-    res.render("v4/supervisorUser/client/transfer", {
+    res.render("v4/supervisor/client/transfer", {
       users: users,
       parameters: req.params,
       allDepartments: allDepartments
@@ -131,11 +131,11 @@ router.get("/transfer", function (req, res) {
 });
 
 
-router.post("/transfer", function (req, res) {
-  var fromUserID = null;
-  const toUserID = Number(req.body.userID);
-  const clientID = Number(req.params.clientID);
-  const bundleConversations = req.params.bundleConversations ? true : false;
+router.post("/client/transfer", (req, res) => {
+  let fromUserID = null;
+  let toUserID = Number(req.body.userID);
+  let clientID = Number(req.params.clientID);
+  let bundleConversations = req.params.bundleConversations ? true : false;
 
   Client.findByID(clientID)
   .then((client) => {
@@ -147,7 +147,7 @@ router.post("/transfer", function (req, res) {
       .then(() => {
         logClientActivity(req.params.clientID);
         req.flash("success", "Client transferred.")
-        res.redirect(`${req.redirectUrlBase}/clients`);
+        res.redirect(`/v4/clients`);
       }).catch(error_500(res));
     } else {
       res.redirect("/404");
@@ -156,14 +156,14 @@ router.post("/transfer", function (req, res) {
 });
 
 
-router.get("/transcript_between/:targetUserID", function (req, res) {
-  const clientID = req.params.clientID;
-  const targetUserID = req.params.targetUserID;
+router.get("/client/transcript_between/:targetUserID", (req, res) => {
+  let clientID = req.params.clientID;
+  let targetUserID = req.params.targetUserID;
   Messages.findByClientID(targetUserID, clientID)
   .then((messages) => {
     // Format into a text string
     messages = messages.map(function (m) {
-      var s = "";
+      let s = "";
       Object.keys(m).forEach(function (k) {
         s += `\n${k}: ${m[k]}`;
       });

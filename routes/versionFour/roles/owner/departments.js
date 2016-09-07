@@ -1,41 +1,41 @@
 
 
 // (Sub) router
-var express         = require("express");
-var router          = express.Router({mergeParams: true});
+let express         = require("express");
+let router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport  = require("../../../../models/models");
-const Client        = modelsImport.Client;
-const Clients       = modelsImport.Clients;
-const ColorTags     = modelsImport.ColorTags;
-const Convo         = modelsImport.Convo;
-const Users         = modelsImport.Users;
-const Message       = modelsImport.Message;
-const Messages      = modelsImport.Messages;
-const Communication = modelsImport.Communication;
-const Departments   = modelsImport.Departments;
-const DepartmentSupervisors = modelsImport.DepartmentSupervisors;
-const PhoneNumbers  = modelsImport.PhoneNumbers;
+let modelsImport  = require("../../../../models/models");
+let Client        = modelsImport.Client;
+let Clients       = modelsImport.Clients;
+let ColorTags     = modelsImport.ColorTags;
+let Convo         = modelsImport.Convo;
+let Users         = modelsImport.Users;
+let Message       = modelsImport.Message;
+let Messages      = modelsImport.Messages;
+let Communication = modelsImport.Communication;
+let Departments   = modelsImport.Departments;
+let DepartmentSupervisors = modelsImport.DepartmentSupervisors;
+let PhoneNumbers  = modelsImport.PhoneNumbers;
 
 
 // General error handling
-var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+let errorHandling   = require("../../utilities/errorHandling");
+let error_500       = errorHandling.error_500;
 
 
 
 // ROUTES
 
-router.get("/", function (req, res) {
+router.get("/departments/", (req, res) => {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
                 "/owner/departments/filter/active");
 });
 
-router.get("/filter/:activeStatus", function (req, res) {
-  var activeStatus;
+router.get("/departments/filter/:activeStatus", (req, res) => {
+  let activeStatus;
   if (req.params.activeStatus == "active") {
     activeStatus = true;
   } else { 
@@ -44,7 +44,7 @@ router.get("/filter/:activeStatus", function (req, res) {
 
   Departments.selectByOrgID(req.user.org, activeStatus)
   .then((departments) => {
-    res.render("v4/ownerUser/departments/departments", {
+    res.render("v4/owner/departments/departments", {
       hub: {
         tab: "departments",
         sel: activeStatus ? "active" : "inactive"
@@ -54,16 +54,16 @@ router.get("/filter/:activeStatus", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/create", function (req, res) {
+router.get("/departments/create", (req, res) => {
   PhoneNumbers.findByOrgID(req.user.org)
   .then((phoneNumbers) => {
-    res.render("v4/ownerUser/departments/create", {
+    res.render("v4/owner/departments/create", {
       phoneNumbers: phoneNumbers
     });
   }).catch(error_500(res));
 });
 
-router.post("/create", function (req, res) {
+router.post("/departments/create", (req, res) => {
   Departments.createOne(req.user.org, req.body.name, req.body.phoneNumber, req.user.cmid)
   .then(() => {
     req.flash("success", "Made new department.");
@@ -73,13 +73,13 @@ router.post("/create", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/edit/:departmentID", function (req, res) {
+router.get("/departments/edit/:departmentID", (req, res) => {
   Departments.findByID(req.params.departmentID)
   .then((department) => {
     if (department) {
       PhoneNumbers.findByOrgID(req.user.org)
       .then((phoneNumbers) => {
-        res.render("v4/ownerUser/departments/edit", {
+        res.render("v4/owner/departments/edit", {
           department: department,
           phoneNumbers: phoneNumbers
         });
@@ -90,10 +90,10 @@ router.get("/edit/:departmentID", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.post("/edit/:departmentID", function (req, res) {
-  const departmentID = req.params.departmentID;
-  const name = req.body.name;
-  const phoneNumber = req.body.phoneNumber;
+router.post("/departments/edit/:departmentID", (req, res) => {
+  let departmentID = req.params.departmentID;
+  let name = req.body.name;
+  let phoneNumber = req.body.phoneNumber;
   Departments.editOne(departmentID, name, phoneNumber)
   .then(() => {
     req.flash("success", "Updated department.");
@@ -103,20 +103,20 @@ router.post("/edit/:departmentID", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/edit/:departmentID/supervisors", function (req, res) {
-  var supervisors;
-  const departmentID = req.params.departmentID;
+router.get("/departments/edit/:departmentID/supervisors", (req, res) => {
+  let supervisors;
+  let departmentID = req.params.departmentID;
   DepartmentSupervisors.findByDepartmentIDs(req.params.departmentID)
   .then((supers) => {
     supervisors = supers;
     return Users.findByOrg(req.user.org)
   }).then((users) => {
     // limit only to same department
-    const members = users.filter(function (user) {
+    let members = users.filter(function (user) {
       return user.department == departmentID;
     });
 
-    res.render("v4/ownerUser/departments/editSupervisors", {
+    res.render("v4/owner/departments/editSupervisors", {
       supervisors: supervisors,
       members: members,
       parameters: req.params
@@ -124,10 +124,10 @@ router.get("/edit/:departmentID/supervisors", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.post("/edit/:departmentID/supervisors", function (req, res) {
-  const revertClass = req.body.revertClass;
-  const departmentID = req.params.departmentID;
-  var supervisorIDs = req.body.supervisorIDs;
+router.post("/departments/edit/:departmentID/supervisors", (req, res) => {
+  let revertClass = req.body.revertClass;
+  let departmentID = req.params.departmentID;
+  let supervisorIDs = req.body.supervisorIDs;
   if (!Array.isArray(supervisorIDs)) supervisorIDs = [req.body.supervisorIDs];
   DepartmentSupervisors.updateSupervisors(departmentID, supervisorIDs, revertClass)
   .then(() => {
@@ -138,7 +138,7 @@ router.post("/edit/:departmentID/supervisors", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/deactivate/:departmentID", function (req, res) {
+router.get("/departments/deactivate/:departmentID", (req, res) => {
   Departments.findMembers(req.params.departmentID)
   .then((members) => {
     if (members.length == 0) {
@@ -158,7 +158,7 @@ router.get("/deactivate/:departmentID", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/activate/:departmentID", function (req, res) {
+router.get("/departments/activate/:departmentID", (req, res) => {
   Departments.activate(req.params.departmentID)
   .then(() => {
     req.flash("success", "Activated department.");

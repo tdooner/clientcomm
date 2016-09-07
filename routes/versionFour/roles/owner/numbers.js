@@ -1,45 +1,45 @@
 
 
 // (Sub) router
-var express         = require("express");
-var router          = express.Router({mergeParams: true});
+let express         = require("express");
+let router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport  = require("../../../../models/models");
-const Client        = modelsImport.Client;
-const Clients       = modelsImport.Clients;
-const ColorTags     = modelsImport.ColorTags;
-const Convo         = modelsImport.Convo;
-const Message       = modelsImport.Message;
-const Messages      = modelsImport.Messages;
-const Communication = modelsImport.Communication;
-const Departments   = modelsImport.Departments;
-const PhoneNumbers  = modelsImport.PhoneNumbers;
-const Organizations = modelsImport.Organizations; 
-const Users         = modelsImport.Users; 
+let modelsImport  = require("../../../../models/models");
+let Client        = modelsImport.Client;
+let Clients       = modelsImport.Clients;
+let ColorTags     = modelsImport.ColorTags;
+let Convo         = modelsImport.Convo;
+let Message       = modelsImport.Message;
+let Messages      = modelsImport.Messages;
+let Communication = modelsImport.Communication;
+let Departments   = modelsImport.Departments;
+let PhoneNumbers  = modelsImport.PhoneNumbers;
+let Organizations = modelsImport.Organizations; 
+let Users         = modelsImport.Users; 
 
 
 // General error handling
-var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
-var emailAlerts     = require("../../utilities/emailAlerts");
-var alertOfAccountActivation = emailAlerts.alertOfAccountActivation;
+let errorHandling   = require("../../utilities/errorHandling");
+let error_500       = errorHandling.error_500;
+let emailAlerts     = require("../../utilities/emailAlerts");
+let alertOfAccountActivation = emailAlerts.alertOfAccountActivation;
 
 
 
 // ROUTES
 
-router.get("/", function (req, res) {
+router.get("/numbers/", (req, res) => {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
                 "/owner/numbers/all");
 });
 
-router.get("/all", function (req, res) {
+router.get("/numbers/all", (req, res) => {
   PhoneNumbers.findByOrgID(req.user.org)
   .then((numbers) => {
-    res.render("v4/ownerUser/numbers/numbers", {
+    res.render("v4/owner/numbers/numbers", {
       hub: {
         tab: "numbers",
         sel: null

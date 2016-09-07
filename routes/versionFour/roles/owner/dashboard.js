@@ -1,38 +1,38 @@
 
 
 // (Sub) router
-var express         = require("express");
-var router          = express.Router({mergeParams: true});
+let express         = require("express");
+let router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport  = require("../../../../models/models");
-const Client        = modelsImport.Client;
-const Clients       = modelsImport.Clients;
-const ColorTags     = modelsImport.ColorTags;
-const Convo         = modelsImport.Convo;
-const Message       = modelsImport.Message;
-const Messages      = modelsImport.Messages;
-const Departments   = modelsImport.Departments;
+let modelsImport  = require("../../../../models/models");
+let Client        = modelsImport.Client;
+let Clients       = modelsImport.Clients;
+let ColorTags     = modelsImport.ColorTags;
+let Convo         = modelsImport.Convo;
+let Message       = modelsImport.Message;
+let Messages      = modelsImport.Messages;
+let Departments   = modelsImport.Departments;
 
 
 // General error handling
-var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+let errorHandling   = require("../../utilities/errorHandling");
+let error_500       = errorHandling.error_500;
 
 
 
 // ROUTES
 
-router.get("/", function (req, res) {
+router.get("/dashboard/", (req, res) => {
   res.redirect( "/v4/users/" + 
                 req.user.cmid + 
                 "/owner/dashboard/overview");
 });
 
-router.get("/overview", function (req, res) {
-  var departments, countsByWeek, countsByDay;
-  var departmentFilterID = Number(req.query.departmentID);
+router.get("/dashboard/overview", (req, res) => {
+  let departments, countsByWeek, countsByDay;
+  let departmentFilterID = Number(req.query.departmentID);
   if (isNaN(departmentFilterID)) departmentFilterID = null;
 
   Departments.selectByOrgID(req.user.org, true)
@@ -54,7 +54,7 @@ router.get("/overview", function (req, res) {
     }
   }).then((counts) => {
     countsByWeek = counts;
-    res.render("v4/ownerUser/dashboards/organization", {
+    res.render("v4/owner/dashboards/organization", {
       hub: {
         tab: "dashboard",
         sel: null

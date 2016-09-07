@@ -1,56 +1,56 @@
 
 
 // (Sub) router
-var express         = require("express");
-var router          = express.Router({mergeParams: true});
+let express         = require("express");
+let router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport  = require("../../../../models/models");
-const Client        = modelsImport.Client;
-const Clients       = modelsImport.Clients;
-const ColorTags     = modelsImport.ColorTags;
-const Convo         = modelsImport.Convo;
-const Message       = modelsImport.Message;
-const Messages      = modelsImport.Messages;
-const Communication = modelsImport.Communication;
-const Templates     = modelsImport.Templates;
-const Users         = modelsImport.Users;
+let modelsImport  = require("../../../../models/models");
+let Client        = modelsImport.Client;
+let Clients       = modelsImport.Clients;
+let ColorTags     = modelsImport.ColorTags;
+let Convo         = modelsImport.Convo;
+let Message       = modelsImport.Message;
+let Messages      = modelsImport.Messages;
+let Communication = modelsImport.Communication;
+let Templates     = modelsImport.Templates;
+let Users         = modelsImport.Users;
 
 
 // General error handling
-var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+let errorHandling   = require("../../utilities/errorHandling");
+let error_500       = errorHandling.error_500;
 
-var logging                 = require("../../utilities/logging");
-var logClientActivity       = logging.logClientActivity;
-var logConversationActivity = logging.logConversationActivity;
+let logging                 = require("../../utilities/logging");
+let logClientActivity       = logging.logClientActivity;
+let logConversationActivity = logging.logConversationActivity;
 
 // Create base URL for this page
 router.use((req, res, next) => {
   res.locals.parameters = req.params;
-  req.redirectUrlBase = `/v4/orgs/${req.params.orgID}/users/${req.params.userID}/supervisor/department/${req.params.departmentID}/clients`;
+  req.redirectUrlBase = `/v4/orgs/${req.user.org}/users/${req.user.cmid}/supervisor/department/${req.params.departmentID}/clients`;
   next();
 });
 
 // ROUTES
-router.get("/", function (req, res) {
-  res.redirect(`${req.redirectUrlBase}/open`);
+router.get("/clients/", (req, res) => {
+  res.redirect(`/v4/open`);
 });
 
-router.get("/open", (req, res) => {
-  var limitByUser = isNaN(req.query.limitByUser) ? "null" : Number(req.query.limitByUser);
-  res.redirect(`${req.redirectUrlBase}/list/open?limitByUser=${limitByUser}`);
+router.get("/clients/open", (req, res) => {
+  let limitByUser = isNaN(req.query.limitByUser) ? "null" : Number(req.query.limitByUser);
+  res.redirect(`/v4/list/open?limitByUser=${limitByUser}`);
 });
 
-router.get("/closed", (req, res) => {
-  var limitByUser = isNaN(req.query.limitByUser) ? "null" : Number(req.query.limitByUser);
-  res.redirect(`${req.redirectUrlBase}/list/closed?limitByUser=${limitByUser}`);
+router.get("/clients/closed", (req, res) => {
+  let limitByUser = isNaN(req.query.limitByUser) ? "null" : Number(req.query.limitByUser);
+  res.redirect(`/v4/list/closed?limitByUser=${limitByUser}`);
 });
 
-router.get("/list/:clientActivity", function (req, res) {
-  const clientActivity = req.params.clientActivity == "open" ? true : false;
-  var limitByUser = Number(req.query.limitByUser);
+router.get("/clients/list/:clientActivity", (req, res) => {
+  let clientActivity = req.params.clientActivity == "open" ? true : false;
+  let limitByUser = Number(req.query.limitByUser);
   if (isNaN(limitByUser)) limitByUser = false;
   Clients.findByDepartment(req.user.department, clientActivity)
   .then((clients) => {
@@ -62,7 +62,7 @@ router.get("/list/:clientActivity", function (req, res) {
       });
     }
 
-    var renderObject = {
+    let renderObject = {
       hub: {
         tab: "clients",
         sel: clientActivity ? "open" : "closed"
@@ -75,34 +75,34 @@ router.get("/list/:clientActivity", function (req, res) {
       Users.findByID(limitByUser)
       .then((user) => {
         renderObject.limitByUser = user;
-        res.render("v4/supervisorUser/clients/clients", renderObject);
+        res.render("v4/supervisor/clients/clients", renderObject);
       }).catch(error_500(res));
     } else {
-      res.render("v4/supervisorUser/clients/clients", renderObject);
+      res.render("v4/supervisor/clients/clients", renderObject);
     }
 
   }).catch(error_500(res));
 });
 
 
-router.get("/create", function (req, res) {
+router.get("/clients/create", (req, res) => {
   Users.findByDepartment(req.user.department, true)
   .then((users) => {
-    res.render("v4/supervisorUser/clients/create", {
+    res.render("v4/supervisor/clients/create", {
       users: users
     })
   }).catch(error_500(res));
 });
 
 
-router.post("/create", function (req, res) {
-  const userID = req.body.targetUserID;
-  const first = req.body.first;
-  const middle = req.body.middle ? req.body.middle : "";
-  const last = req.body.last;
-  const dob = req.body.DOB;
-  const so = req.body.uniqueID1 ? req.body.otn : null;
-  const otn = req.body.uniqueID2 ? req.body.so : null;
+router.post("/clients/create", (req, res) => {
+  let userID = req.body.targetUserID;
+  let first = req.body.first;
+  let middle = req.body.middle ? req.body.middle : "";
+  let last = req.body.last;
+  let dob = req.body.DOB;
+  let so = req.body.uniqueID1 ? req.body.otn : null;
+  let otn = req.body.uniqueID2 ? req.body.so : null;
 
   Client.create(userID, first, middle, last, dob, otn, so)
   .then(() => {
@@ -111,12 +111,12 @@ router.post("/create", function (req, res) {
 });
 
 
-router.get("/address/:clientID", function (req, res) {
-  const clientID = Number(req.params.clientID);
+router.get("/clients/address/:clientID", (req, res) => {
+  let clientID = Number(req.params.clientID);
   Client.findByID(clientID)
   .then((client) => {
     if (client) {
-      res.render("v4/supervisorUser/clients/address", {
+      res.render("v4/supervisor/clients/address", {
         client: client,
         template: {},
       });
@@ -127,10 +127,10 @@ router.get("/address/:clientID", function (req, res) {
 });
 
 
-router.get("/address/:clientID/selecttemplate", function (req, res) {
+router.get("/clients/address/:clientID/selecttemplate", (req, res) => {
   Templates.findByUser(req.user.cmid)
   .then((templates) => {
-    res.render("v4/supervisorUser/clients/selecttemplate", {
+    res.render("v4/supervisor/clients/selecttemplate", {
       templates: templates,
       parameters: req.params
     });
@@ -138,10 +138,10 @@ router.get("/address/:clientID/selecttemplate", function (req, res) {
 });
 
 
-router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) {
-  const templateID = Number(req.params.templateID);
-  const userID = req.user.cmid;
-  const clientID = Number(req.params.clientID);
+router.get("/clients/address/:clientID/selecttemplate/:templateID", (req, res) => {
+  let templateID = Number(req.params.templateID);
+  let userID = req.user.cmid;
+  let clientID = Number(req.params.clientID);
 
   Client.findByID(clientID)
   .then((client) => {
@@ -153,13 +153,13 @@ router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) 
           .then(() => {
             req.params.subject = template.title;
             req.params.message = template.content;
-            res.render("v4/supervisorUser/clients/address", {
+            res.render("v4/supervisor/clients/address", {
               client: client,
               template: template,
             });
           }).catch(error_500(res));
         } else {
-          res.redirect(`${req.redirectUrlBase}/address/${clientID}`);
+          res.redirect(`/v4/address/${clientID}`);
         }
       }).catch(error_500(res));
     } else {
@@ -169,17 +169,17 @@ router.get("/address/:clientID/selecttemplate/:templateID", function (req, res) 
 });
 
 
-router.post("/address/:clientID", function (req, res) {
-  const clientID = Number(req.params.clientID);
-  const subject = req.body.subject;
-  const content = req.body.content;
-  const commID = req.body.commID;
+router.post("/clients/address/:clientID", (req, res) => {
+  let clientID = Number(req.params.clientID);
+  let subject = req.body.subject;
+  let content = req.body.content;
+  let commID = req.body.commID;
 
   Client.findByID(clientID)
   .then((client) => {
     if (client) {
       
-      var strategy;
+      let strategy;
       if (isNaN(commID)) {
         strategy = Messages.smartSend(client.cm, clientID, subject, content);
       } else {
