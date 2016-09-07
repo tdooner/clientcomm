@@ -151,7 +151,7 @@ router.get("/notifications/edit/:notificationID", (req, res) => {
       });
 
     } else {
-      notFound(res)
+      notFound(res);
     }
   }).catch(error_500(res));
 });
