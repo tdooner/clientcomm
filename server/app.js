@@ -16,12 +16,10 @@ var credentials = require("../credentials");
 var SESS_SECRET = credentials.sessionSecret;
 
 
-
 // APP INITIATE
 var express = require("express");
 var app = express();
 var db  = require("./db");
-
 
 
 // APP DEPENDENCIES
@@ -39,12 +37,10 @@ app.use("/modules", express.static("node_modules"));
 app.use(cookieParser());
 
 
-
 // PASSPORT SESSIONS, USERS
 var bcrypt = require("bcrypt-nodejs");
 var passport = require("passport");
 require("./passport")(passport);
-
 
 
 // CONFIGURATION 2
@@ -138,11 +134,11 @@ app.get("/*", function (req, res) {
 });
 
 
-
 // START UP CLIENTCOMM
 var port = 4000;
 var server = app.listen(port, function () { 
-  console.log("Listening on port", port);
+  let allClearMessage = "Listening on port " + String(port) + ".";
+  console.log(allClearMessage.green);
 
   // Run super user check (after migrations)
   // TO DO: This method is hacky, there should be a callback at migrations completion
@@ -150,11 +146,8 @@ var server = app.listen(port, function () {
 });
 
 
-
-
 // EXPORT SERVER
 module.exports = server;
-
 
 
 // SCHEDULER
