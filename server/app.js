@@ -29,6 +29,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require("cookie-parser");
 var session = require("cookie-session");
 var flash = require("connect-flash");
+var colors = require("colors");
 
 // CONFIGURATION 1
 app.set("view engine", "ejs");
@@ -61,14 +62,34 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+// Logging
+
+app.use((req, res, next) => {
+  let start = new Date()
+  res.on('finish', () => {
+    let milliseconds = new Date().getTime() - start.getTime()
+    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    let timestamp = start.toUTCString()
+    let method = req.method
+    let path = req.originalUrl
+    let statusCode = res.statusCode
+    let contentLength = res.header()._headers['content-length'] || 0
+    let userAgent = req.headers['user-agent']
+    console.log(
+      `${ip} -- [${timestamp}] `+
+      `${method} ${path} ${statusCode} `.magenta +
+      `${contentLength} ${milliseconds}ms `.cyan +
+      `"${userAgent}"`
+    )
+  });
+  return next();
+});
+
 
 // UTILITIES
 var utils = require("../utils/utils.js");
 var auth = utils["pass"];
 
-// Error handlins
-const errorHandling = require("../routes/versionFour/utilities/errorHandling.js");
-const notFound = errorHandling.notFound;
 
 
 // ALL ROUTES
@@ -118,7 +139,7 @@ app.use("/v4/", auth.isLoggedIn, versionFourApp)
 
 // Redundant catch all
 app.get("/*", function (req, res) {
-  notFound(res);
+  res.redirect("/404");
 });
 
 
@@ -132,6 +153,7 @@ var server = app.listen(port, function () {
   // TO DO: This method is hacky, there should be a callback at migrations completion
   setTimeout(function () { require("../utils/superuser-check.js")(); }, 5000);
 });
+
 
 
 
