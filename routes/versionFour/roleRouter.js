@@ -121,11 +121,11 @@ router.get("/clients", (req, res) => {
   }).catch(error_500(res));
 });
 
-router.get("/clients/create", function (req, res) {
+router.get("/clients/create", (req, res) => {
   res.render("v4/primary/client/create");
 });
 
-router.post("/clients/create", function (req, res) {
+router.post("/clients/create", (req, res) => {
   let userID = req.user.cmid;
   let first  = req.body.first;
   let middle = req.body.middle ? req.body.middle : "";
@@ -147,7 +147,7 @@ router.post("/clients/create", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/clients/client/:clientID/address", function (req, res) {
+router.get("/clients/client/:clientID/address", (req, res) => {
   Client.findByID(req.params.clientID)
   .then((client) => {
     if (client) {
@@ -162,7 +162,7 @@ router.get("/clients/client/:clientID/address", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.get("/clients/client/:clientID/address/templates", function (req, res) {
+router.get("/clients/client/:clientID/address/templates", (req, res) => {
   Templates.findByUser(req.user.cmid)
   .then((templates) => {
     res.render("v4/primary/client/templates", {
@@ -172,7 +172,7 @@ router.get("/clients/client/:clientID/address/templates", function (req, res) {
   }).catch(error_500(res));
 });
 
-router.post("/clients/client/:clientID/address", function (req, res) {
+router.post("/clients/client/:clientID/address", (req, res) => {
   let userID   = req.user.cmid;
   let clientID = Number(req.params.clientID);
   let subject  = req.body.subject;
