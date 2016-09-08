@@ -1,15 +1,17 @@
-var env = "production";
+var env = "development";
 
 // Update environment to use testing tools when applicable
-var TESTENV = process.env.TESTENV;
-if (TESTENV && TESTENV == "true") {
-  env = "development";
-
+var CCENV = process.env.CCENV;
+if (CCENV) {
+  env = CCENV;
   console.log("Knex configuration environment: " + env);
 }
 
 var config = require('../knexfile');
 var knex = require("knex")(config[env]);
 
+if (env == "testing") {
+    knex.migrate.latest([config]); 
+}
+
 module.exports = knex;
-// knex.migrate.latest([config]); 
