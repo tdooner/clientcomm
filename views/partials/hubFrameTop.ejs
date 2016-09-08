@@ -5,62 +5,59 @@
 
 
   <div class="navSub">
-    
-    <!-- dep, org -->
-    <% if (level == "org") { -%>
+
+  <!-- Organization and department-level tabs -->
+    <% if (level == "org") { %>
       <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/org`%>">Metrics Dashboard</a></div>
+        <div class="title"><a href="/org">Metrics Dashboard</a></div>
       </div>
 
-      <% if (user.class == "owner") { -%>
+      <% if (user.class == "owner") { %>
         <div class="leftTab <%= hub.tab == 'departments' ? 'open' : 'closed' %>">
           <div class="title"><a href="/org/departments">Departments</a></div>
           <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/org/departments?status=active">Active</a></div>
           <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/org/departments?status=inactive">Inactive</a></div>
         </div>
-      <% } -%>
+      <% } %>
 
       <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/org/users`%>">Users</a></div>
-        <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="<%=`/org/users/?status=active`%>">Active</a></div>
-        <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="<%=`/org/users?status=inactive`%>">Inactive</a></div>
+        <div class="title"><a href="/org/users">Users</a></div>
+        <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/org/users?status=active">Active</a></div>
+        <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/org/users?status=inactive">Inactive</a></div>
       </div> 
-    <% } -%>     
+    <% } %>     
 
-    <% if (level == "org") { -%>
-      <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/org/clients`%>">Clients</a></div>
-        <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`/org/clients/?status=open`%>">Open</a></div>
-        <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`/org/clients/?status=closed`%>">Closed</a></div>
-      </div>
-    <% } else { -%>
-      <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/clients`%>">Clients</a></div>
-        <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`/clients/?state=open`%>">Open</a></div>
-        <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`/clients/?state=closed`%>">Closed</a></div>
-      </div>
-    <% } -%>
+    <!-- Clients decision "switch", tab available for all levels -->
+    <% let clientsLinkBase = "/clients" %>
+    <% if (level == "org") { clientsLinkBase = "/org/clients" } %>
+    <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
+      <div class="title"><a href="<%=`${clientsLinkBase}`%>">Clients</a></div>
+      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`${clientsLinkBase}?status=open`%>">Open</a></div>
+      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`${clientsLinkBase}?status=closed`%>">Closed</a></div>
+    </div>
 
-    <!-- primary -->
-    <% if (level == "user") { -%>
+    <!-- Primary user level tabs -->
+    <% if (level == "user") { %>
       <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/notifications`%>">Notifications</a></div>
-        <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`/notifications/?status=pending`%>">Pending</a></div>
-        <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`/notifications/?status=sent`%>">Sent</a></div>
+        <div class="title"><a href="/notifications">Notifications</a></div>
+        <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="/notifications?status=pending">Pending</a></div>
+        <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="/notifications?status=sent">Sent</a></div>
       </div>      
       
       <div class="leftTab <%= hub.tab == 'templates' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/templates`%>">Templates</a></div>
+        <div class="title"><a href="/templates">Templates</a></div>
       </div>      
       
       <div class="leftTab <%= hub.tab == 'groups' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/groups`%>">Groups</a></div>
-        <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="<%=`/groups?status=current`%>">Current</a></div>
-        <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="<%=`/groups?status=deleted`%>">Deleted</a></div>
+        <div class="title"><a href="/groups">Groups</a></div>
+        <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="/groups?status=current">Current</a></div>
+        <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="/groups?status=deleted">Deleted</a></div>
       </div>                  
-    <% } -%>
+    <% } %>
 
-    <% if (level =="org") { -%>
+
+    <!-- Right "action" buttons -->
+    <% if (level =="org") { %>
       <div class="rightActions">
         <a href="">
           <span class="fa-stack fa-lg">
@@ -72,7 +69,7 @@
       </div>
 
       <div class="rightActions">
-        <a href="/departments/create">
+        <a href="/org/departments/create">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-building fa-stack-1x fa-inverse"></i>
@@ -80,12 +77,9 @@
           <span class="text">New Department</span>
         </a>
       </div>
-    <% } -%>
 
-    <!-- dep, org -->
-    <% if (level == "org") { -%>
       <div class="rightActions">
-        <a href="<%=`/users/create`%>">
+        <a href="/org/users/create">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-user-plus fa-stack-1x fa-inverse"></i>
@@ -93,12 +87,12 @@
           <span class="text">New User</span>
         </a>
       </div>      
-    <% } -%>
+    <% } %>
 
     <!-- primary -->
-    <% if (level == "primary") { -%>
+    <% if (level == "primary") { %>
       <div class="rightActions">
-        <a href="<%=`/groups/create`%>">
+        <a href="/groups/create">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-users fa-stack-1x fa-inverse"></i>
@@ -108,7 +102,7 @@
       </div>      
 
       <div class="rightActions">
-        <a href="<%=`/templates/create`%>">
+        <a href="/templates/create">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-clipboard fa-stack-1x fa-inverse"></i>
@@ -117,7 +111,7 @@
         </a>
       </div>      
       <div class="rightActions">
-        <a href="<%=`/notifications/create`%>">
+        <a href="/notifications/create">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
@@ -125,12 +119,14 @@
           <span class="text">New Notification</span>
         </a>
       </div>      
-    <% } -%>
-    
+    <% } %>
+
     <!-- primary, dep -->
-    <% if (true) { -%>
+    <!-- TODO: Figure out how to know when to add to another user or yourself -->
+    <!--       Idea: Org level folks are just always offered the option, else assume to primary -->
+    <% if (true) { %>
       <div class="rightActions">
-        <a href="<%=`/clients/create`%>">
+        <a href="/clients/create">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-user fa-stack-1x fa-inverse"></i>
@@ -138,7 +134,7 @@
           <span class="text">New Client</span>
         </a>
       </div>
-    <% } -%>
+    <% } %>
       
   </div>
 

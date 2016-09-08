@@ -19,44 +19,45 @@
 <% } %>
 
 
-<% departments.forEach(function (department) { %>
+<% departments.forEach((d) => { %>
   <div class="notificationRow">
     <div class="column">
       <span class="clientName">
-        <%= department.name %>
+        <%= d.name %>
       </span>
     </div>
     <div class="column">
-      <%= department.value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4') %>
+      <%= d.value.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '$1 ($2) $3-$4') %>
     </div>
     <div class="column">
-      <span class="bigNumber"><%= department.members ? department.members : '0' %></span>
+      <span class="bigNumber"><%= d.members ? d.members : '0' %></span>
     </div>
     <div class="column">
-      <% if (department.supervisors.length == 0) { %><b>No supervisors</b><% } %>
-      <%= department.supervisors.map(function (d) { return d.first + ' ' + d.last }).join(', '); %>
+      <% if (d.supervisors.length == 0) { %><b>No supervisors</b><% } %>
+      <%= d.supervisors.map((s) => {return `${s.first} ${s.last}`}).join(', '); %>
     </div>
     <div class="column">
       <span class="time">
-        <%= moment.tz(department.send, local_tz).format('MMM. Do, YYYY hh:mmA') %>
+        <%= moment.tz(d.send, local_tz).format('MMM. Do, YYYY hh:mm A') %>
       </span>
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>
-        <a href="/departments/edit/<%=department.department_id%>">
+        <a href="/org/departments/<%=d.department_id%>/edit">
           <i class="fa highlight fa-pencil" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>
-        <% if (department.members && Number(department.members) == 0) { %>
-          <a href="/departments/deactivate/<%=department.department_id%>">
+        <!-- Can only deactivate a department if all clients and supers are removed -->
+        <% if (!d.members) { %>
+          <a href="/org/departments/<%=d.department_id%>/deactivate">
             <i class="fa highlight fa-book" aria-hidden="true"></i>
           </a>
         <% } else { %>-<% } %>
       <% } else { %>
-        <a href="/departments/activate/<%=department.department_id%>">
+        <a href="/org/departments/<%=d.department_id%>/activate">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>

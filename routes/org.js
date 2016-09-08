@@ -5,24 +5,26 @@ const express         = require("express");
 const router          = express.Router({mergeParams: true});
 
 // Models
-const modelsImport   = require("../models/models");
-const Alerts         = modelsImport.Alerts;
-const Client         = modelsImport.Client;
-const Clients        = modelsImport.Clients;
-const ColorTags      = modelsImport.ColorTags;
-const Communication  = modelsImport.Communication;
-const Communications = modelsImport.Communications;
-const CommConns      = modelsImport.CommConns;
-const Convo          = modelsImport.Convo;
-const Conversations  = modelsImport.Conversations;
-const Departments    = modelsImport.Departments;
-const Groups         = modelsImport.Groups;
-const Message        = modelsImport.Message;
-const Messages       = modelsImport.Messages;
-const Notifications  = modelsImport.Notifications;
-const Organizations  = modelsImport.Organizations;
-const Templates      = modelsImport.Templates;
-const Users          = modelsImport.Users;
+const modelsImport          = require("../models/models");
+const Alerts                = modelsImport.Alerts;
+const Client                = modelsImport.Client;
+const Clients               = modelsImport.Clients;
+const ColorTags             = modelsImport.ColorTags;
+const Communication         = modelsImport.Communication;
+const Communications        = modelsImport.Communications;
+const CommConns             = modelsImport.CommConns;
+const Convo                 = modelsImport.Convo;
+const Conversations         = modelsImport.Conversations;
+const DepartmentSupervisors = modelsImport.DepartmentSupervisors;
+const Departments           = modelsImport.Departments;
+const Groups                = modelsImport.Groups;
+const Message               = modelsImport.Message;
+const Messages              = modelsImport.Messages;
+const Notifications         = modelsImport.Notifications;
+const Organizations         = modelsImport.Organizations;
+const PhoneNumbers          = modelsImport.PhoneNumbers;
+const Templates             = modelsImport.Templates;
+const Users                 = modelsImport.Users;
 
 
 // Twilio library tools and secrets
@@ -89,7 +91,6 @@ router.use((req, res, next) => {
   res.locals.level = "org"
   next();
 });
-
 
 router.get("/org", (req, res) => {
   if (req.user.class === "supervisor") {
@@ -188,6 +189,89 @@ router.get("/org/departments", (req, res) => {
       },
       departments: departments
     });
+  }).catch(error500(res));
+});
+
+router.get("/org/departments/create", (req, res) => {
+  PhoneNumbers.findByOrgID(req.user.org)
+  .then((phoneNumbers) => {
+    res.render("departments/create", {
+      phoneNumbers: phoneNumbers
+    });
+  }).catch(error500(res));
+});
+
+router.post("/org/departments/create", (req, res) => {
+  Departments.createOne(
+                req.user.org,    // organization
+                req.body.name,   // new dep't name
+                req.body.number, // associated number
+                req.user.cmid    // created by
+  ).then(() => {
+    req.flash("success", "Made new department.");
+    res.redirect("/org/departments");
+  }).catch(error500(res));
+});
+
+router.get("/org/departments/:departmentId/edit", (req, res) => {
+  Departments.findByID(req.params.departmentId)
+  .then((department) => {
+    if (department) {
+      PhoneNumbers.findByOrgID(req.user.org)
+      .then((phoneNumbers) => {
+        res.render("departments/edit", {
+          department: department,
+          phoneNumbers: phoneNumbers
+        });
+      }).catch(error500(res));
+
+    } else {
+      notFound(res);
+    }
+  }).catch(error500(res));
+});
+
+router.post("/org/departments/:departmentId/edit", (req, res) => {
+  Departments.editOne(
+    req.params.departmentId, // department
+    req.body.name,           // new name
+    req.body.number          // new associated number
+  ).then(() => {
+    req.flash("success", "Updated department.");
+    res.redirect("/org/departments");
+  }).catch(error500(res));
+});
+
+router.get("/org/departments/:departmentId/supervisors", (req, res) => {
+  let supervisors;
+  DepartmentSupervisors.findByDepartmentIDs(req.params.departmentId)
+  .then((s) => {
+    supervisors = s;
+    return Users.findByOrg(req.user.org)
+  }).then((users) => {
+
+    // Limit options to only users already added to the department
+    // "Promote from within" concept
+    let members = users.filter(function (u) {
+      return Number(u.department) == Number(req.params.departmentId);
+    });
+
+    res.render("departments/supervisors", {
+      supervisors: supervisors,
+      members: members
+    });
+  }).catch(error500(res));
+});
+
+router.post("/org/departments/:departmentId/supervisors", (req, res) => {
+  if (!Array.isArray(supervisorIDs)) supervisorIDs = [req.body.supervisorIDs];
+  DepartmentSupervisors.updateSupervisors(
+    req.params.departmentId, 
+    req.body.supervisorIds, 
+    req.body.revertClass
+  ).then(() => {
+    req.flash("success", "Updated department supervisors.");
+    res.redirect("/org/departments");
   }).catch(error500(res));
 });
 

@@ -1,0 +1,70 @@
+<% include ../partials/cardFrameTop %>
+
+<div class="cardHead">
+  <a href="/org/departments/edit"><% include ../partials/cardExit %></a>
+  <div class="cardTitle">Select Supervisors</div>
+  <div class="cardSubtitle">Use departments to organize your workforce.</div>
+</div>
+
+<% var supervisorIds = supervisors.map(function (s) { return s.cmid }) %>
+
+<div class="cardBody">
+  <form method="post" id="updateSupervisors">
+
+    <div class="scrollListBox">
+      <% members.forEach(function (m) { %>
+        <div class="scrollListRow 
+            <% if (supervisorIds.indexOf(m.cmid) > -1) { %>selected<% } %>" 
+            data-supervisorId="<%= m.cmid %>">
+
+          <div class="scrollListContent">
+            <div class="clientName"><%=`${m.last}, ${m.first} ${m.middle}`%></div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="formRow">
+      <div class="formLabel">Make removed supervisors to the following class</div>
+      <select class="blueSelect" name="revertClass" required>
+        <% ["primary", "support"].forEach(function (className) { %>
+            <option value="<%= className %>" <% if (className == "primary") { %>selected<% } %>>
+              <%= className.charAt(0).toUpperCase() + className.slice(1) %> User
+            </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <input  type="submit" 
+            class="formSubmit" 
+            value="Save Department">
+  </form>
+</div>
+
+
+<script type="text/javascript">
+  // Method that highlights or deselects a div when clicked
+  $(".scrollListRow").click(function () {
+    var selected = 0;
+    $(".scrollListRow").each(function () {
+      if ($(this).hasClass("selected")) selected += 1;
+    });
+    var currentlySelected = $(this).hasClass("selected");
+    if (selected !== 1 || (selected == 1 && !currentlySelected)) {
+      $(this).toggleClass("selected");
+    }
+  });
+
+  // Before submit, add a hidden field with the selected supervisorId
+  $("#updateSupervisors").submit(function () {
+    $(".scrollListRow").each(function () {
+      if ($(this).hasClass("selected")) {
+        var supervisorId = $(this).attr("data-supervisorId");
+        $(".scrollListBox").append("<input type='hidden' name='supervisorIds' value='" + supervisorId + "'>");
+      }
+    });
+    return true;
+  });
+</script>
+
+<% include ../partials/cardFrameBottom %>

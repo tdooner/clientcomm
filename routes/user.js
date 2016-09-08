@@ -110,10 +110,7 @@ class NotificationsView {
     }
     
     strategy.then((n) => {
-      let toRender;
-      if (clientID) toRender = "v4/primary/client/notifications"
-      else          toRender = "v4/primary/notifications/notifications";;
-      res.render(toRender, {
+      res.render("notifications", {
         hub: {
           tab: "notifications",
           sel: status
@@ -196,15 +193,14 @@ router.use((req, res, next) => {
 })
 
 router.get("/clients", (req, res) => {
-  const managerID = Number(req.user.cmid);
-  const state = req.query.state || "open";
+  let status = req.query.status === "closed" ? false : true;
 
-  Clients.findByUsers(managerID, state === "open")
+  Clients.findByUsers(req.user.cmid, status)
   .then((clients) => {
-    res.render("v4/primary/clients", {
+    res.render("clients", {
       hub: {
         tab: "clients",
-        sel: state,
+        sel: status ? "open" : "closed",
       },
       clients: clients
     });
@@ -605,9 +601,9 @@ router.post("/notifications/:notificationID/edit", NotificationsView.editPost);
 router.get("/notifications/:notificationID/remove", NotificationsView.remove);
 
 router.get("/templates", (req, res) => {
-  Templates.findByUser(Number(req.user.cmid))
+  Templates.findByUser(req.user.cmid)
   .then((templates) => {
-    res.render("v4/primary/templates/templates", {
+    res.render("templates", {
       hub: {
         tab: "templates",
         sel: null
@@ -671,6 +667,21 @@ router.get("/groups/address/:groupID", (req, res) => {
   });
 });
 
+router.get("/groups", (req, res) => {
+  let status = req.query.status === "deleted" ? false : true;
+
+  Groups.findByUser(req.user.cmid, status)
+  .then((groups) => {
+    res.render("groups", {
+      hub: {
+        tab: "groups",
+        sel: status ? "current" : "deleted"
+      },
+      groups: groups
+    });
+  }).catch(error500(res));
+});
+
 router.post("/groups/address/:groupID", (req, res) => {
   let userID = req.user.cmid;
   let groupID = Number(req.params.groupID);
@@ -683,23 +694,6 @@ router.post("/groups/address/:groupID", (req, res) => {
   .then(() => {
     req.flash("success", "Messaged group members.");
     res.redirect(`${req.redirectUrlBase}/groups/current`);
-  }).catch(error500(res));
-});
-
-router.get("/groups", (req, res) => {
-  let userID = req.user.cmid;
-  let status = req.query.status || "current"
-  let isCurrent = status == "current"
-
-  Groups.findByUser(userID, isCurrent)
-  .then((groups) => {
-    res.render("v4/primary/groups/groups", {
-      hub: {
-        tab: "groups",
-        sel: status
-      },
-      groups: groups
-    });
   }).catch(error500(res));
 });
 
