@@ -37,7 +37,8 @@
     "twilio": "~3.3.0-edge"
   },
   "scripts": {
-    "start": "./node_modules/.bin/nodemon server/server.js --ignore node_modules/"
+    "start": "./node_modules/.bin/nodemon server/server.js --ignore node_modules/",
+    "coverage": "istanbul cover _mocha ./test/app/ -- -R spec; open coverage/lcov-report/index.html"
   },
   "devDependencies": {
     "gulp": "3.9.1",
