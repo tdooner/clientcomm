@@ -74,90 +74,21 @@ router.use((req, res, next) => {
     // if no department, provide some dummy attributes
     if (!department) {
       department = {
-        name:         "Unassigned",
-        phone_number: null,
-        organization: req.user.org
-      }
+        name:          "Unassigned",
+        organization:  req.user.org,
+        phone_number:  null,
+        department_id: null
+      };
     }
     res.locals.department = department;
     next();
   }).catch(error500(res));
 });
 
-
 router.use((req, res, next) => {
   res.locals.level = "org"
   next();
-})
-
-
-// router.get("/org/clients", (req, res) => {
-//   let clientActivity = req.params.clientActivity == "open" ? true : false;
-//   let limitByUser = Number(req.query.limitByUser);
-//   if (isNaN(limitByUser)) limitByUser = false;
-//   Clients.findByDepartment(req.params.departmentId, clientActivity)
-//   .then((clients) => {
-
-//     // Filter by user if elected
-//     if (limitByUser) {
-//       clients = clients.filter((client) => {
-//         return client.cm == limitByUser;
-//       });
-//     }
-
-//     let renderObject = {
-//       hub: {
-//         tab: "clients",
-//         sel: clientActivity ? "open" : "closed"
-//       },
-//       clients: clients,
-//       limitByUser: null
-//     };
-
-//     if (limitByUser) {
-//       Users.findByID(limitByUser)
-//       .then((user) => {
-//         renderObject.limitByUser = user;
-//         res.render("v4/supervisor/clients/clients", renderObject);
-//       }).catch(error500(res));
-//     } else {
-//       res.render("v4/supervisor/clients/clients", renderObject);
-//     }
-
-//   }).catch(error500(res));
-// })
-
-
-
-router.get("/org/users", (req, res) => {
-  if (req.user.class === "owner" || req.user.class === "supervisor") {
-    let status = true;
-    if (req.query.status !== "active") status = false;
-
-    let department = req.user.department || req.query.departmentID;
-
-    Users.findByOrg(req.user.org, status)
-    .then((users) => {
-
-      if (department) {
-        users = users.filter(function (user) {
-          return req.user.department == Number(department);
-        });        
-      }
-
-      res.render("users", {
-        hub: {
-          tab: "users",
-          sel: status ? "active" : "inactive"
-        },
-        users: users
-      });
-    }).catch(error500(res));
-
-  } else {
-    notFound(res);
-  }
-})
+});
 
 
 router.get("/org", (req, res) => {
@@ -243,6 +174,79 @@ router.get("/org", (req, res) => {
   } else {
     notFound(res)
   }
-})
+});
+
+router.get("/org/departments", (req, res) => {
+  let status = req.query.status === "inactive" ? false : true;
+
+  Departments.selectByOrgID(req.user.org, status)
+  .then((departments) => {
+    res.render("departments", {
+      hub: {
+        tab: "departments",
+        sel: status ? "active" : "inactive"
+      },
+      departments: departments
+    });
+  }).catch(error500(res));
+});
+
+router.get("/org/users", (req, res) => {
+  let status = req.query.status === "inactive" ? false : true;
+  let department = req.user.department || req.query.departmentId;
+
+  // Controls against a case where the owner would accidentally have a department
+  if (req.user.class === "owner" && !req.query.departmentId) {
+    department = null;
+  }
+
+  Users.findByOrg(req.user.org, status)
+  .then((users) => {
+
+    // Limit by department if supervisor, or specified in query
+    if (department) {
+      users = users.filter((user) => {
+        return Number(req.user.department) === Number(user.department);
+      });        
+    }
+
+    res.render("users", {
+      hub: {
+        tab: "users",
+        sel: status ? "active" : "inactive"
+      },
+      users: users
+    });
+  }).catch(error500(res));
+});
+
+// TODO: Issue with clients overlap on Nav, accidentally built this one out so it renders
+router.get("/org/clients", (req, res) => {
+  let status = req.query.status == "closed" ? false : true;
+  let department = req.user.department || req.query.departmentId;
+
+  // Controls against a case where the owner would accidentally have a department
+  if (req.user.class === "owner" && !req.query.departmentId) {
+    department = null;
+  }
+
+  let method;
+  if (department) {
+    method = Clients.findByOrg(req.user.org, status);
+  } else {
+    method = Clients.findByDepartment(department, status);
+  }
+
+  method.then((clients) => {
+    res.render("clients", {
+      hub: {
+        tab: "clients",
+        sel: status ? "open" : "closed"
+      },
+      clients: clients,
+      limitByUser: null
+    });
+  }).catch(error500(res));
+});
 
 module.exports = router;

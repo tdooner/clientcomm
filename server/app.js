@@ -1,6 +1,5 @@
 'use strict';
 
-
 // New Relic monitoring ONLY if not test environ
 var TESTENV = process.env.TESTENV;
 if (TESTENV && TESTENV == "true") {

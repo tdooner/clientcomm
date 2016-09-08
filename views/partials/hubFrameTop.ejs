@@ -15,23 +15,23 @@
       <% if (user.class == "owner") { -%>
         <div class="leftTab <%= hub.tab == 'departments' ? 'open' : 'closed' %>">
           <div class="title"><a href="/org/departments">Departments</a></div>
-          <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/departments/filter/active">Active</a></div>
-          <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/departments/filter/inactive">Inactive</a></div>
+          <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/org/departments?status=active">Active</a></div>
+          <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/org/departments?status=inactive">Inactive</a></div>
         </div>
       <% } -%>
 
       <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">
         <div class="title"><a href="<%=`/org/users`%>">Users</a></div>
-        <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="<%=`/users/filter/active`%>">Active</a></div>
-        <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="<%=`/users/filter/inactive`%>">Inactive</a></div>
+        <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="<%=`/org/users/?status=active`%>">Active</a></div>
+        <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="<%=`/org/users?status=inactive`%>">Inactive</a></div>
       </div> 
     <% } -%>     
 
     <% if (level == "org") { -%>
       <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
         <div class="title"><a href="<%=`/org/clients`%>">Clients</a></div>
-        <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`/clients/?state=open`%>">Open</a></div>
-        <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`/clients/?state=closed`%>">Closed</a></div>
+        <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`/org/clients/?status=open`%>">Open</a></div>
+        <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`/org/clients/?status=closed`%>">Closed</a></div>
       </div>
     <% } else { -%>
       <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">

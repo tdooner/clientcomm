@@ -28,31 +28,7 @@ let error500       = errorHandling.error500;
 
 // ROUTES
 
-router.get("/departments/", (req, res) => {
-  res.redirect( "/v4/users/" + 
-                req.user.cmid + 
-                "/owner/departments/filter/active");
-});
 
-router.get("/departments/filter/:activeStatus", (req, res) => {
-  let activeStatus;
-  if (req.params.activeStatus == "active") {
-    activeStatus = true;
-  } else { 
-    activeStatus = false;
-  }
-
-  Departments.selectByOrgID(req.user.org, activeStatus)
-  .then((departments) => {
-    res.render("v4/owner/departments/departments", {
-      hub: {
-        tab: "departments",
-        sel: activeStatus ? "active" : "inactive"
-      },
-      departments: departments
-    });
-  }).catch(error500(res));
-});
 
 router.get("/departments/create", (req, res) => {
   PhoneNumbers.findByOrgID(req.user.org)

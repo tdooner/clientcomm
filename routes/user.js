@@ -4,7 +4,6 @@
 const express         = require("express");
 const router          = express.Router({mergeParams: true});
 
-
 // Models
 const modelsImport   = require("../models/models");
 const Alerts         = modelsImport.Alerts;
