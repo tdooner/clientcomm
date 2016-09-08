@@ -2,33 +2,6 @@
 
 
 
-
-
-
-router.get("/notifications/create", (req, res) => {
-  res.redirect(`${res.redirectUrlBase}/notifications/create/sendto`);
-});
-
-
-router.get("/communications", (req, res) => {
-  res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications/filter/open`);
-});
-
-
-router.get("/communications/filter/open", (req, res) => {
-  CommConns.getClientCommunications(req.params.clientID)
-  .then((communications) => {
-    res.render("v4/primaryUser/client/communications", {
-      hub: {
-        tab: "contactMethods",
-        sel: null
-      },
-      communications: communications
-    });
-  }).catch(error_500(res));
-});
-
-
 router.get("/communications/remove/:communicationID", (req, res) => {
   CommConns.findByClientID(req.params.clientID)
   .then((commConns) => {

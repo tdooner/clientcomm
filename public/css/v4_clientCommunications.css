@@ -12,11 +12,12 @@
     .header .column:nth-child(1) {
       width: 30%; }
     .header .column:nth-child(2) {
-      width: 30%; }
+      width: 45%; }
     .header .column:nth-child(3) {
-      width: 15%; }
+      width: 10%; }
     .header .column:nth-child(4) {
-      width: 15%; }
+      width: 5%;
+      text-align: center; }
     .header .column:nth-child(5) {
       width: 5%;
       text-align: center; }
@@ -59,12 +60,13 @@
     .communicationRow .column:nth-child(1) {
       width: 30%; }
     .communicationRow .column:nth-child(2) {
-      width: 30%;
+      width: 45%;
       text-align: left; }
     .communicationRow .column:nth-child(3) {
-      width: 15%; }
+      width: 10%; }
     .communicationRow .column:nth-child(4) {
-      width: 15%; }
+      width: 5%;
+      text-align: center; }
     .communicationRow .column:nth-child(5) {
       width: 5%;
       text-align: center; }

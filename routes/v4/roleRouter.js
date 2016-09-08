@@ -6,23 +6,24 @@ const router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport  = require("../../models/models");
-const Alerts        = modelsImport.Alerts;
-const Client        = modelsImport.Client;
-const Clients       = modelsImport.Clients;
-const ColorTags     = modelsImport.ColorTags;
-const Communication = modelsImport.Communication;
-const CommConns     = modelsImport.CommConns;
-const Convo         = modelsImport.Convo;
-const Conversations = modelsImport.Conversations;
-const Departments   = modelsImport.Departments;
-const Groups        = modelsImport.Groups;
-const Message       = modelsImport.Message;
-const Messages      = modelsImport.Messages;
-const Notifications = modelsImport.Notifications;
-const Organizations = modelsImport.Organizations;
-const Templates     = modelsImport.Templates;
-const Users         = modelsImport.Users;
+const modelsImport   = require("../../models/models");
+const Alerts         = modelsImport.Alerts;
+const Client         = modelsImport.Client;
+const Clients        = modelsImport.Clients;
+const ColorTags      = modelsImport.ColorTags;
+const Communication  = modelsImport.Communication;
+const Communications = modelsImport.Communications;
+const CommConns      = modelsImport.CommConns;
+const Convo          = modelsImport.Convo;
+const Conversations  = modelsImport.Conversations;
+const Departments    = modelsImport.Departments;
+const Groups         = modelsImport.Groups;
+const Message        = modelsImport.Message;
+const Messages       = modelsImport.Messages;
+const Notifications  = modelsImport.Notifications;
+const Organizations  = modelsImport.Organizations;
+const Templates      = modelsImport.Templates;
+const Users          = modelsImport.Users;
 
 
 // Twilio library tools and secrets
@@ -116,7 +117,7 @@ class NotificationsView {
       strategy = Notifications.findByUser(req.user.cmid, isSent);
     }
     
-    strategy.then((notifications) => {
+    strategy.then((n) => {
       let toRender;
       if (clientID) toRender = "v4/primary/client/notifications"
       else          toRender = "v4/primary/notifications/notifications";;
@@ -125,7 +126,7 @@ class NotificationsView {
           tab: "notifications",
           sel: status
         },
-        notifications: notifications
+        notifications: n
       });
     }).catch(error_500(res));
   }
@@ -441,11 +442,44 @@ router.post("/clients/:clientID/messages", (req, res) => {
   }).catch(error_500(res));
 });
 
+router.get("/clients/:clientID/communications", (req, res) => {
+  CommConns.getClientCommunications(req.params.clientID)
+  .then((c) => {
+    res.render("v4/primary/client/communications", {
+      hub: {
+        tab: "contactMethods",
+        sel: null
+      },
+      communications: c
+    });
+  }).catch(error_500(res));
+});
+
+router.get("/clients/:clientID/communications/:communicationID/remove", (req, res) => {
+  let clientID = req.params.clientID;
+  CommConns.findByClientID(clientID)
+  .then((commConns) => {
+    if (commConns.length > 1) {
+      Communications.removeOne(req.params.communicationID)
+      .then(() => {
+        req.flash("success", "Removed communication method.");
+        res.redirect(`/v4/clients/${clientID}/communications`);
+      }).catch(error_500(res));
+
+    } else {
+      req.flash("warning", "Can't remove the only remaining communication method.");
+      res.redirect(`/v4/clients/${clientID}/communications`);
+    }
+  })
+});
+
 router.get("/clients/:clientID/notifications", NotificationsView.show);
 
 router.get("/clients/:clientID/notifications/:notificationID/remove", NotificationsView.remove);
 
 router.get("/clients/:clientID/notifications/:notificationID/edit", NotificationsView.editGet);
+
+router.post("/clients/:clientID/notifications/:notificationID/edit", NotificationsView.editPost);
 
 router.post("/clients/:clientID/notifications/:notificationID/edit", NotificationsView.editPost);
 

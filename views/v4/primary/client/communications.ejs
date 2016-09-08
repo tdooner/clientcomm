@@ -1,5 +1,3 @@
-<% var baseURLSubFrame = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/primary` %>
-
 <% include ../../partials/clientHubFrameTop %>
 
 <!-- Load in addition CSS -->
@@ -20,25 +18,17 @@
 <% } %>
 
 
-<% communications.forEach(function (communication) { %>
+<% communications.forEach(function (c) { %>
   <div class="communicationRow">
     <div class="column">
-      <span class="name"><%= communication.name %></span>
+      <span class="name"><%= c.name %></span>
     </div>
+    <div class="column"><%= c.value %></div>
+    <div class="column"><%= c.type %></div>
+    <div class="column"><span class="bigNumber"><%= c.useCount %></span></div>
+    <div class="column">-</div>
     <div class="column">
-      <%= communication.value %>
-    </div>
-    <div class="column">
-      <%= communication.type %>
-    </div>
-    <div class="column">
-      <span class="bigNumber"><%= communication.useCount %></span>
-    </div>
-    <div class="column">
-      -
-    </div>
-    <div class="column">
-      <a href="<%=`${baseURLSubFrame}/clients/client/${client.clid}/communications/remove/${communication.commconnid}`%>">
+      <a href="<%=`/v4/clients/${client.clid}/communications/${c.commconnid}/remove`%>">
         <i class="fa highlight fa-trash" aria-hidden="true"></i>
       </a>
     </div>

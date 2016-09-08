@@ -14,9 +14,9 @@ $blue:        #3F69B6;
 $darkblue:    #344289;
 
 $width_row1:  30%;
-$width_row2:  30%;
-$width_row3:  15%;
-$width_row4:  15%;
+$width_row2:  45%;
+$width_row3:  10%;
+$width_row4:  5%;
 $width_row5:  5%;
 $width_row6:  5%;
 
@@ -53,6 +53,7 @@ $width_row6:  5%;
     }
     &:nth-child(4) {
       width: $width_row4;
+      text-align: center;
     }
     &:nth-child(5) {
       width: $width_row5;
@@ -125,6 +126,7 @@ $width_row6:  5%;
     }
     &:nth-child(4) {
       width: $width_row4;
+      text-align: center;
     }
     &:nth-child(5) {
       width: $width_row5;
