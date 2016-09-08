@@ -25,7 +25,7 @@ router.get("/orgs/:orgid/cms", function (req, res) {
   var orgID = Number(req.params.orgid);
 
   if (isNaN(orgID)) {
-    res.redirect("/404");
+    notFound(res);
   } else {
     db("cms")
     .where("org", orgID)
@@ -109,7 +109,7 @@ router.get("/orgs/:orgid/cms/:cmid/ghostlogin", function (req, res) {
 //   .then(function (orgs) {
 
 //     // Redirect if no organization found with that id
-//     if (orgs.length == 0) { res.redirect("/404"); }
+//     if (orgs.length == 0) { notFound(res); }
 //     else {
 
 //       var org = orgs[0];

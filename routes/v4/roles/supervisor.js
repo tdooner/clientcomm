@@ -41,7 +41,7 @@ router.use(function (req, res, next) {
   if (confirmMatch("number", [userID0, userID1])) {
     next();
   } else {
-    res.redirect("/404");
+    notFound(res);
   }
 });
 

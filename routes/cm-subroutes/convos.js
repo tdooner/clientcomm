@@ -53,7 +53,7 @@ router.use(function (req, res, next){
 
   // Error if either id is not an integer
   if (isNaN(cmid) || isNaN(clid)) {
-    res.redirect("/404"); 
+    notFound(res); 
 
   // Search away
   } else {
@@ -64,7 +64,7 @@ router.use(function (req, res, next){
 
       // Make sure that client with that cm actually exists
       if (clients.length == 0) { 
-        res.redirect("/404"); 
+        notFound(res); 
 
       // Then proceed to gather current conversations
       } else { 
@@ -178,7 +178,7 @@ router.post("/new/selecttemplate", function (req, res) {
 
   // Make sure a valid template has been submitted
   if (isNaN(templateID)) {
-    res.redirect("/404"); 
+    notFound(res); 
 
   // If it has, re-query for its contents
   } else {
@@ -189,7 +189,7 @@ router.post("/new/selecttemplate", function (req, res) {
 
       // Make sure there is a valid response
       if (templates.length == 0) {
-        res.redirect("/404"); 
+        notFound(res); 
 
       } else {
         db("comms")
@@ -363,7 +363,7 @@ router.get("/:convid", function (req, res) {
 
     }).catch(function (err) {
       if (err == "404") { 
-        res.redirect("/404"); 
+        notFound(res); 
       } else { 
         res.redirect("/500"); 
       }
@@ -485,7 +485,7 @@ router.post("/:convid", function (req, res) {
           }
         });
       } else {
-        res.redirect("/404")
+        notFound(res)
       }
     }).catch(errorRedirect);
   }
@@ -520,7 +520,7 @@ router.post("/:convid/close", function (req, res) {
 
     }).catch(function (err) {
       if (err == "404") {
-        res.redirect("/404");
+        notFound(res);
       } else {
         res.redirect("/500");
       }
@@ -569,7 +569,7 @@ router.post("/:convid/open", function (req, res) {
 
         }).catch(function (err) {
           if (err == "404") {
-            res.redirect("/404");
+            notFound(res);
           } else {
             res.redirect("/500");
           }
@@ -609,7 +609,7 @@ router.post("/:convid/accept", function (req, res) {
 
     }).catch(function (err) {
       if (err == "404") {
-        res.redirect("/404");
+        notFound(res);
       } else {
         res.redirect("/500");
       }

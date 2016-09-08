@@ -237,7 +237,7 @@ router.get("/:cmid/cls/:clid", function (req, res) {
 
       // Make sure that the case manager actually owns this client
       // TO DO: Superuser needs to be limited by organization
-      if (cmid !== Number(cl.cm) && !req.user.superuser) { res.redirect("/404"); }
+      if (cmid !== Number(cl.cm) && !req.user.superuser) { notFound(res); }
       else { 
 
         // Query 2: Get all convos with a client
@@ -428,7 +428,7 @@ router.get("/:cmid/cls/:clid/archive", function (req, res) {
 
   // If no good client ID, then 404
   } else {
-    res.redirect("/404");
+    notFound(res);
   }
 
 
@@ -529,7 +529,7 @@ router.get("/:cmid/cls/:clid/comm", function (req, res) {
   var cmid2 = Number(req.user.cmid);
 
   // Make sure that cmid queried for is same as user
-  if (cmid !== cmid2) { res.redirect("/404"); }
+  if (cmid !== cmid2) { notFound(res); }
   else {
 
     // Query for client with case manager's ID
@@ -538,7 +538,7 @@ router.get("/:cmid/cls/:clid/comm", function (req, res) {
     .andWhere("clid", req.params.clid)
     .then(function (clients) {
       if (clients.length > 0) { res.render("casemanagers/client/clientcontact", {client: clients[0]}); } 
-      else { res.redirect("/404"); }
+      else { notFound(res); }
 
     }).catch(errorRedirect);
   }
@@ -677,7 +677,7 @@ router.get("/:cmid/cls/:clid/comms", function (req, res) {
     .then(function (cls) {
 
       // Make sure that the client exists under the CM
-      if (cls.length == 0) { res.redirect("/404"); }
+      if (cls.length == 0) { notFound(res); }
       else { 
         var cl = cls[0];
 
@@ -727,7 +727,7 @@ router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
 
   // All IDs should be numbers
   } else if (isNaN(commconnid) || isNaN(clid) || isNaN(cmid)) {
-    res.redirect("/404");
+    notFound(res);
   
   // Proceed if all is clear
   // TO DO: Confirm that SQL vulnerabilities do not exist
@@ -747,7 +747,7 @@ router.get("/:cmid/cls/:clid/comms/:commconnid", function (req, res) {
         commconn = commconns.rows[0];
         res.render("casemanagers/client/clientcontactedit", { commconn: commconn });
 
-      } else { res.redirect("/404"); }
+      } else { notFound(res); }
     }).catch(errorRedirect);
   }
 });

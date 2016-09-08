@@ -1,5 +1,3 @@
-<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
-
 <% include ../../partials/supervisorFrameTop %>
 
 <% if (limitByUser) { %>
@@ -50,7 +48,7 @@
 <% clients.forEach( function (client) { %>
   <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
     <div class="column" value="<%= client.color_name %>">
-      <a href="<%= `/v4/clients/${client.clid}/editcolortag` %>">
+      <a href="">
         <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
       </a>
     </div>

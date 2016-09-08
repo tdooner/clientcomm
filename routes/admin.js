@@ -27,7 +27,7 @@ router.get("/", function (req, res) {
   .then(function (orgs) {
 
     // Redirect if no organization found with that id
-    if (orgs.length == 0) { res.redirect("/404"); }
+    if (orgs.length == 0) { notFound(res); }
     else {
 
       var org = orgs[0];
@@ -190,7 +190,7 @@ router.get("/cms/:cmid", function (req, res) {
   .then(function (cms) {
 
     // If no results, this client does not exist
-    if (cms.length == 0) { res.redirect("/404"); } 
+    if (cms.length == 0) { notFound(res); } 
     else {
 
       var cm = cms[0];

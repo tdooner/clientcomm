@@ -118,7 +118,7 @@ router.get("/users/edit/:targetUserID", (req, res) => {
         targetUser: targetUser
       })
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });
@@ -155,7 +155,7 @@ router.get("/users/transfer/:targetUserID", (req, res) => {
         departments: departments
       })
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });

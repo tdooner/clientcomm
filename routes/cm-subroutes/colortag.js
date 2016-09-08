@@ -46,7 +46,7 @@ router.get("/", function (req, res) {
 
     // Otherwise 404
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
 
   }).catch(errorRedirect);

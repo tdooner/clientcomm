@@ -85,7 +85,7 @@ router.get("/departments/edit/:departmentID", (req, res) => {
         });
       }).catch(error_500(res));
     } else {
-      res.redirect("/404")
+      notFound(res)
     }
   }).catch(error_500(res));
 });

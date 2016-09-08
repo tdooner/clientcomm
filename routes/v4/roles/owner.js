@@ -39,9 +39,9 @@ router.use(function (req, res, next) {
   const userID0 = Number(req.params.userID);
   const userID1 = Number(req.user.cmid);
   if (!confirmMatch("number", [userID0, userID1])) {
-    res.redirect("/404");
+    notFound(res);
   } else if (req.user.class !== "owner") {
-    res.redirect("/404");
+    notFound(res);
   } else {
     next();
   }

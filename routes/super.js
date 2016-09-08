@@ -71,7 +71,7 @@ router.get("/:orgid", function (req, res) {
       });
 
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
 
   }).catch(function (err) {

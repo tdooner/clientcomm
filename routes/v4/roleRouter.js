@@ -86,9 +86,29 @@ router.use((req, res, next) => {
   }).catch(error_500(res));
 });
 
+// Determine View Level
+router.use((req, res, next) => {
+  res.locals.level = "primary"
+  res.locals.user = req.user
+  next()
+})
+router.use("/department", (req, res, next) => {
+  res.locals.level = "department"
+  next()
+})
+router.use("/organization", (req, res, next) => {
+  res.locals.level = "organization"
+  next()
+})
+
+router.use((req, res, next) => {
+  res.locals.frameTop = `/partials/${req.user.class}FrameTop`;
+  res.locals.frameBottom = `/partials/${req.user.class}FrameBottom`;
+  next();
+})
+
 // Reroute from standard drop endpoint
-router.get("/", (req, res) => {
-  console.log("HIHI");
+router.get("/", (req, res, next) => {
   if (["owner", "supervisor", "support"].indexOf(req.user.class) > -1) {
     res.redirect(`/v4/dashboard`);
   } else if (["developer", "primary"].indexOf(req.user.class) > -1) {
@@ -108,7 +128,7 @@ class NotificationsView {
   static show (req, res) {
     let clientID = req.params.clientID;
     let status = req.query.status || "pending";
-    let isSent = status == "sent";
+    let isSent = status === "sent";
     let strategy;
 
     if (clientID) {
@@ -151,7 +171,7 @@ class NotificationsView {
     }).then((n) => {
       if (n) {
         // Remove all closed clients except for if matches with notification
-        clients = clients.filter((c) => { return c.active || c.clid == n.client; });
+        clients = clients.filter((c) => { return c.active || c.clid === n.client; });
 
         res.render("v4/primary/notifications/edit", {
           notification: n,
@@ -184,8 +204,11 @@ class NotificationsView {
                     message
     ).then(() => {
       req.flash("success", "Edited notification.");
-      if (req.params.clientID) toRedirect = res.redirect(`/v4/clients/${clientID}/notifications`);
-      else                     toRedirect = res.redirect(`/v4/notifications`);
+      if (req.params.clientID) {
+        res.redirect(`/v4/clients/${clientID}/notifications`);
+      } else {
+        res.redirect(`/v4/notifications`);
+      }
     }).catch(error_500(res));
   }
 
@@ -201,7 +224,7 @@ router.get("/clients", (req, res) => {
   const managerID = Number(req.user.cmid);
   const state = req.query.state || "open";
 
-  Clients.findByUsers(managerID, state == "open")
+  Clients.findByUsers(managerID, state === "open")
   .then((clients) => {
     res.render("v4/primary/clients", {
       hub: {
@@ -651,7 +674,7 @@ router.get("/templates/edit/:templateID", (req, res) => {
         template: template
       });
     } else {
-      res.redirect("/404")
+      notFound(res)
     }
   }).catch(error_500(res));
 });
@@ -737,7 +760,7 @@ router.get("/groups/edit/:groupID", (req, res) => {
         });
       }).catch(error_500(res));
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });
@@ -762,7 +785,7 @@ router.post("/groups/edit/:groupID", (req, res) => {
       res.redirect(`/v4/groups`);
     }).catch(error_500(res));
   } else {
-    res.redirect("/404");
+    notFound(res);
   }
 });
 
@@ -780,6 +803,163 @@ router.get("/groups/activate/:groupID", (req, res) => {
   }).catch(error_500(res));
 });
 
+
+router.get("/departments/:departmentId/clients", (req, res) => {
+  let clientActivity = req.params.clientActivity == "open" ? true : false;
+  let limitByUser = Number(req.query.limitByUser);
+  if (isNaN(limitByUser)) limitByUser = false;
+  Clients.findByDepartment(req.params.departmentId, clientActivity)
+  .then((clients) => {
+
+    // Filter by user if elected
+    if (limitByUser) {
+      clients = clients.filter((client) => {
+        return client.cm == limitByUser;
+      });
+    }
+
+    let renderObject = {
+      hub: {
+        tab: "clients",
+        sel: clientActivity ? "open" : "closed"
+      },
+      clients: clients,
+      limitByUser: null
+    };
+
+    if (limitByUser) {
+      Users.findByID(limitByUser)
+      .then((user) => {
+        renderObject.limitByUser = user;
+        res.render("v4/supervisor/clients/clients", renderObject);
+      }).catch(error_500(res));
+    } else {
+      res.render("v4/supervisor/clients/clients", renderObject);
+    }
+
+  }).catch(error_500(res));
+})
+
+let usersView = (req, res) => {
+  if (req.user.class === "owner" || req.user.class === "supervisor") {
+    let status = true;
+    if (req.query.status !== "active") status = false;
+
+    let department = req.user.department || req.query.departmentID;
+
+    Users.findByOrg(req.user.org, status)
+    .then((users) => {
+
+      if (department) {
+        users = users.filter(function (user) {
+          return req.user.department == Number(department);
+        });        
+      }
+
+      res.render("users", {
+        hub: {
+          tab: "users",
+          sel: status ? "active" : "inactive"
+        },
+        users: users
+      });
+    }).catch(error_500(res));
+
+  } else {
+    notFound(res);
+  }
+}
+
+router.get("/organization/users", usersView)
+router.get("/department/users", usersView)
+
+
+router.get("/dashboard", (req, res) => {
+  if (req.user.class === "supervisor") {
+    res.locals.level = "department"
+    let users, clients, countsByWeek, countsByDay;
+    let orgID = Number(req.user.org);
+    let departmentID = Number(req.user.department);
+    let userFilterID = Number(req.query.targetUserID);
+    if (isNaN(userFilterID)) userFilterID = null;
+
+    Departments.findByID(orgID, true)
+    .then((dept) => {
+      department = dept;
+      return Users.findByDepartment(departmentID, true)
+    }).then((usrs) => {
+      users = usrs;
+      return Clients.findByDepartment(departmentID, true);
+    }).then((cls) => {
+      clients = cls;
+      if (userFilterID) {
+        clients.filter(function(client) {
+          return client.cm == userFilterID;
+        });
+      }
+
+      if (userFilterID) return Messages.countsByUser(orgID, userFilterID, "day");
+      else              return Messages.countsByDepartment(orgID, departmentID, "day");
+    }).then((counts) => {
+      countsByDay = counts;
+      if (userFilterID) return Messages.countsByUser(orgID, userFilterID, "week");
+      else              return Messages.countsByDepartment(orgID, departmentID, "week");
+    }).then((counts) => {
+      countsByWeek = counts;
+      res.render("dashboard", {
+        hub: {
+          tab: "dashboard",
+          sel: null
+        },
+        departments: [department],
+        users: users,
+        userFilterID, userFilterID,
+        clients: clients,
+        countsByWeek: countsByWeek,
+        departmentFilterID: department.department_id,
+        countsByDay: countsByDay
+      });
+    }).catch(error_500(res));    
+  } else if (req.user.class === "owner") {
+    res.locals.level = "organization"
+    let departments, countsByWeek, countsByDay;
+    let departmentFilterID = Number(req.query.departmentID);
+    if (isNaN(departmentFilterID)) departmentFilterID = null;
+
+    Departments.selectByOrgID(req.user.org, true)
+    .then((depts) => {
+      departments = depts;
+
+      if (departmentFilterID) {
+        return Messages.countsByDepartment(req.user.org, departmentFilterID, "day")
+      } else {
+        return Messages.countsByOrg(req.user.org, "day")
+      }
+    }).then((counts) => {
+      countsByDay = counts;
+
+      if (departmentFilterID) {
+        return Messages.countsByDepartment(req.user.org, departmentFilterID, "week")
+      } else {
+        return Messages.countsByOrg(req.user.org, "week")
+      }
+    }).then((counts) => {
+      countsByWeek = counts;
+      res.render("dashboard", {
+        hub: {
+          tab: "dashboard",
+          sel: null
+        },
+        departments: departments,
+        departmentFilterID: departmentFilterID,
+        countsByWeek: countsByWeek,
+        countsByDay: countsByDay
+      });
+    }).catch(error_500(res));
+  } else {
+    notFound(res)
+  }
+})
 
 // EXPORT ROUTER OBJECt
 module.exports = router;

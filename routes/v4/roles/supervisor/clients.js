@@ -121,7 +121,7 @@ router.get("/clients/address/:clientID", (req, res) => {
         template: {},
       });
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });
@@ -163,7 +163,7 @@ router.get("/clients/address/:clientID/selecttemplate/:templateID", (req, res) =
         }
       }).catch(error_500(res));
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });
@@ -192,7 +192,7 @@ router.post("/clients/address/:clientID", (req, res) => {
         res.redirect(req.redirectUrlBase);
       }).catch(error_500(res));
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));  
 });

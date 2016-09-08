@@ -124,7 +124,7 @@ router.get("/users/edit/:targetUserID", (req, res) => {
         departments: departments
       })
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });

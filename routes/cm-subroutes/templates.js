@@ -66,7 +66,7 @@ router.get("/send/:templateID", function (req, res) {
 
     // Make sure that there is indeed a result
     if (templates.length == 0) {
-      res.redirect("/404");
+      notFound(res);
 
     // Continue if returned one
     } else {
@@ -122,7 +122,7 @@ router.get("/send/:templateID/to/:clientID", function (req, res) {
 
       // Make sure that there is indeed a result
       if (templates.length == 0) {
-        res.redirect("/404");
+        notFound(res);
 
       // Continue if returned one
       } else {
@@ -134,7 +134,7 @@ router.get("/send/:templateID/to/:clientID", function (req, res) {
 
           // Make sure that client with that cm actually exists
           if (clients.length == 0) { 
-            res.redirect("/404"); 
+            notFound(res); 
 
           // Then proceed to gather current conversations
           } else { 
@@ -242,7 +242,7 @@ router.get("/:templateID/edit", function (req, res) {
   .then(function (templates) {
 
     if (templates.length == 0) {
-      res.redirect("/404");
+      notFound(res);
     } else {
 
       db("clients")

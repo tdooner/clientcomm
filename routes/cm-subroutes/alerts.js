@@ -30,7 +30,7 @@ router.get("/", function (req, res) {
 
   // Makes sure necessary values are integers
   if (isNaN(cmid)) {
-    res.redirect("/404");
+    notFound(res);
 
   } else {
     db("msgs")
@@ -64,7 +64,7 @@ router.get("/convos/:convid", function (req, res) {
 
   // If convid is not a number, then can't query
   if (isNaN(convid)) {
-    res.redirect("/404");
+    notFound(res);
 
   } else {
     db("msgs")

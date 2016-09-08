@@ -22,6 +22,9 @@ var app = express();
 var db  = require("./db");
 
 
+// Error Handling
+const notFound = require("../routes/v4/utilities/errorHandling").notFound
+
 // APP DEPENDENCIES
 var bodyParser = require('body-parser');
 var cookieParser = require("cookie-parser");
@@ -130,7 +133,7 @@ app.use("/v4", auth.isLoggedIn, v4App)
 
 // Redundant catch all
 app.get("/*", function (req, res) {
-  res.redirect("/404");
+  notFound(res);
 });
 
 

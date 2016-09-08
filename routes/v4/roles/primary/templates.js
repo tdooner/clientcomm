@@ -73,7 +73,7 @@ router.get("/edit/:templateID", function (req, res) {
         template: template
       });
     } else {
-      res.redirect("/404")
+      notFound(res)
     }
   }).catch(error_500(res));
 });

@@ -160,7 +160,7 @@ router.post("/new/craftmessage", function (req, res) {
 
           // Make sure there is a valid response
           if (templates.length == 0) {
-            res.redirect("/404"); 
+            notFound(res); 
 
           } else {
             n.notiSubj = templates[0].title;
@@ -553,8 +553,8 @@ function newNotificationRequestSpecificCard (res, org, cmid, cardNumber, notific
       } else if (cardNumber == 3) {
         res.render("casemanagers/notifications/craftmessage", included);
 
-      } else { res.redirect("/404"); }
-    } else { res.redirect("/404"); }
+      } else { notFound(res); }
+    } else { notFound(res); }
   });
 };
 

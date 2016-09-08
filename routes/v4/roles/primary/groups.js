@@ -113,7 +113,7 @@ router.get("/edit/:groupID", function (req, res) {
         });
       }).catch(error_500(res));
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });
@@ -138,7 +138,7 @@ router.post("/edit/:groupID", function (req, res) {
       res.redirect(`${req.redirectUrlBase}/groups/current`);
     }).catch(error_500(res));
   } else {
-    res.redirect("/404");
+    notFound(res);
   }
 });
 

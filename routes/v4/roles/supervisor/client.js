@@ -43,7 +43,7 @@ router.use(function (req, res, next) {
       res.locals.client = client;
       next();
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });
@@ -150,7 +150,7 @@ router.post("/client/transfer", (req, res) => {
         res.redirect(`/v4/clients`);
       }).catch(error_500(res));
     } else {
-      res.redirect("/404");
+      notFound(res);
     }
   }).catch(error_500(res));
 });

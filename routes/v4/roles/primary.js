@@ -52,7 +52,7 @@ router.use(function (req, res, next) {
       next();
     }).catch(error_500(res));
   } else {
-    res.redirect("/404")
+    notFound(res)
   }
 });
 

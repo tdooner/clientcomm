@@ -53,7 +53,7 @@ router.get("/:convid", function (req, res) {
     var rawQuery = "SELECT * FROM convos WHERE convos.client IS NULL AND convos.convid = " + String(convid) + " LIMIT 1;";
     
     db.raw(rawQuery).then(function (convos) {
-      if (convos.rows.length !== 1) { res.redirect("/404"); }
+      if (convos.rows.length !== 1) { notFound(res); }
       else {
 
         db("clients").where("clients.cm", req.user.cmid).andWhere("clients.active", true)
