@@ -23,7 +23,7 @@ let DepartmentSupervisors = modelsImport.DepartmentSupervisors;
 
 // General error handling
 let errorHandling   = require("../../utilities/errorHandling");
-let error_500       = errorHandling.error_500;
+let error500       = errorHandling.error500;
 let emailAlerts     = require("../../utilities/emailAlerts");
 let alertOfAccountActivation = emailAlerts.alertOfAccountActivation;
 
@@ -63,7 +63,7 @@ router.get("/users/filter/:activeStatus", (req, res) => {
       },
       users: users
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/deactivate/:targetUserID", (req, res) => {
@@ -71,7 +71,7 @@ router.get("/users/deactivate/:targetUserID", (req, res) => {
   .then(() => {
     req.flash("success", "Deactivated user.");
     res.redirect(req.redirectUrlBase);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/activate/:targetUserID", (req, res) => {
@@ -79,7 +79,7 @@ router.get("/users/activate/:targetUserID", (req, res) => {
   .then(() => {
     req.flash("success", "Activated user.");
     res.redirect(req.redirectUrlBase);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/create", (req, res) => {
@@ -100,14 +100,14 @@ router.post("/users/create", (req, res) => {
     alertOfAccountActivation(email, autoCreatedPassword);
     req.flash("success", "Created new user.");
     res.redirect(req.redirectUrlBase);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/create/check_email/:email", (req, res) => {
   Users.findByEmail(decodeURIComponent(req.params.email))
   .then((user) => {
     res.json({ user: user });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/edit/:targetUserID", (req, res) => {
@@ -120,7 +120,7 @@ router.get("/users/edit/:targetUserID", (req, res) => {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/users/edit/:targetUserID", (req, res) => {
@@ -139,7 +139,7 @@ router.post("/users/edit/:targetUserID", (req, res) => {
   }).then(() => {
     req.flash("success", "Updated user.");
     res.redirect(req.redirectUrlBase);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/transfer/:targetUserID", (req, res) => {
@@ -157,7 +157,7 @@ router.get("/users/transfer/:targetUserID", (req, res) => {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/users/transfer/:targetUserID", (req, res) => {
@@ -167,7 +167,7 @@ router.post("/users/transfer/:targetUserID", (req, res) => {
   .then(() => {
     req.flash("success", "Transfered user.");
     res.redirect(req.redirectUrlBase);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

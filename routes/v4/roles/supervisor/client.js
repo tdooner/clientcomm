@@ -28,7 +28,7 @@ let twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 // General error handling
 let errorHandling   = require("../../utilities/errorHandling");
-let error_500       = errorHandling.error_500;
+let error500       = errorHandling.error500;
 
 let logging                 = require("../../utilities/logging");
 let logClientActivity       = logging.logClientActivity;
@@ -45,7 +45,7 @@ router.use(function (req, res, next) {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 // Create base URL for this page
@@ -68,7 +68,7 @@ router.get("/client/closecase", (req, res) => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Closed client case.")
     res.redirect(`/v4/clients`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -78,7 +78,7 @@ router.get("/client/opencase", (req, res) => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Opened client case.")
     res.redirect(`/v4/clients`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -100,7 +100,7 @@ router.post("/client/edit", (req, res) => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Edited client.")
     res.redirect(`/v4/clients`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -110,7 +110,7 @@ router.get("/client/editcolortag", (req, res) => {
     res.render("v4/supervisor/client/selectcolor", {
       colorTags: colorTags,
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -127,7 +127,7 @@ router.get("/client/transfer", (req, res) => {
       parameters: req.params,
       allDepartments: allDepartments
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -148,11 +148,11 @@ router.post("/client/transfer", (req, res) => {
         logClientActivity(req.params.clientID);
         req.flash("success", "Client transferred.")
         res.redirect(`/v4/clients`);
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -171,7 +171,7 @@ router.get("/client/transcript_between/:targetUserID", (req, res) => {
     }).join("\n\n");
     res.set({"Content-Disposition":"attachment; filename=transcript.txt"});
     res.send(messages);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

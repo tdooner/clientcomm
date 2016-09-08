@@ -14,7 +14,7 @@ const Clients       = modelsImport.Clients;
 
 // General error handling
 var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+var error500       = errorHandling.error500;
 
 
 // Access utilities

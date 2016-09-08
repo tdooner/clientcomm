@@ -26,7 +26,7 @@ var twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 // General error handling
 var errorHandling   = require("../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+var error500       = errorHandling.error500;
 
 
 // Access utilities
@@ -50,7 +50,7 @@ router.use(function (req, res, next) {
     .then((user) => {
       res.locals.viewingAsOther = user;
       next();
-    }).catch(error_500(res));
+    }).catch(error500(res));
   } else {
     notFound(res)
   }

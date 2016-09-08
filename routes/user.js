@@ -1,4 +1,4 @@
-
+'use strict';
 
 // (Sub) router
 const express         = require("express");
@@ -6,7 +6,7 @@ const router          = express.Router({mergeParams: true});
 
 
 // Models
-const modelsImport   = require("../../models/models");
+const modelsImport   = require("../models/models");
 const Alerts         = modelsImport.Alerts;
 const Client         = modelsImport.Client;
 const Clients        = modelsImport.Clients;
@@ -27,7 +27,7 @@ const Users          = modelsImport.Users;
 
 
 // Twilio library tools and secrets
-const credentials     = require("../../credentials");
+const credentials     = require("../credentials");
 const ACCOUNT_SID     = credentials.accountSid;
 const AUTH_TOKEN      = credentials.authToken;
 const twilio          = require("twilio");
@@ -40,84 +40,20 @@ var moment_tz = require("moment-timezone");
 
 
 // General error handling
-const errorHandling = require("./utilities/errorHandling");
-const error_500     = errorHandling.error_500;
+const errorHandling = require("./errorHandling");
+const error500     = errorHandling.error500;
 const notFound      = errorHandling.notFound;
 
 // Internal utilities
-var logging                 = require("./utilities/logging");
+var logging                 = require("./logging");
 var logClientActivity       = logging.logClientActivity;
 var logConversationActivity = logging.logConversationActivity;
 
 
-// Standard checks for every role, no matter
-// Add flash alerts
 router.use((req, res, next) => {
-  Alerts.findByUser(req.user.cmid)
-  .then((alerts) => {
-    res.locals.ALERTS_FEED = alerts;
-    next();
-  }).catch(error_500(res));
-});
-
-// Add organization
-router.use((req, res, next) => {
-  Organizations.findByID(req.user.org)
-  .then((org) => {
-    res.locals.organization = org;
-    next();
-  }).catch(error_500(res));
-});
-
-// Add department
-router.use((req, res, next) => {
-  Departments.findByID(req.user.department)
-  .then((department) => {
-    // if no department, provide some dummy attributes
-    if (!department) {
-      department = {
-        name:         "Unassigned",
-        phone_number: null,
-        organization: req.user.org
-      }
-    }
-    res.locals.department = department;
-    next();
-  }).catch(error_500(res));
-});
-
-// Determine View Level
-router.use((req, res, next) => {
-  res.locals.level = "primary"
-  res.locals.user = req.user
-  next()
-})
-router.use("/department", (req, res, next) => {
-  res.locals.level = "department"
-  next()
-})
-router.use("/organization", (req, res, next) => {
-  res.locals.level = "organization"
-  next()
-})
-
-router.use((req, res, next) => {
-  res.locals.frameTop = `/partials/${req.user.class}FrameTop`;
-  res.locals.frameBottom = `/partials/${req.user.class}FrameBottom`;
+  res.locals.level = "user"
   next();
 })
-
-// Reroute from standard drop endpoint
-router.get("/", (req, res, next) => {
-  if (["owner", "supervisor", "support"].indexOf(req.user.class) > -1) {
-    res.redirect(`/v4/dashboard`);
-  } else if (["developer", "primary"].indexOf(req.user.class) > -1) {
-    res.redirect(`/v4/clients`);
-  } else {
-    notFound(res);
-  }
-});
-
 
 // ***
 // NEW ROUTING UTILITIES
@@ -148,7 +84,7 @@ class NotificationsView {
         },
         notifications: n
       });
-    }).catch(error_500(res));
+    }).catch(error500(res));
   }
 
   static remove (req, res) {
@@ -156,9 +92,9 @@ class NotificationsView {
     Notifications.removeOne(req.params.notificationID)
     .then(() => {
       req.flash("success", "Removed notification.");
-      if (clientID) toRedirect = res.redirect(`/v4/clients/${clientID}/notifications`);
-      else          toRedirect = res.redirect(`/v4/notifications`);
-    }).catch(error_500(res));
+      if (clientID) toRedirect = res.redirect(`/clients/${clientID}/notifications`);
+      else          toRedirect = res.redirect(`/notifications`);
+    }).catch(error500(res));
   }
 
   static editGet (req, res) {
@@ -181,7 +117,7 @@ class NotificationsView {
       } else {
         notFound(res);
       }
-    }).catch(error_500(res));
+    }).catch(error500(res));
   }
 
   static editPost (req, res) {
@@ -205,20 +141,23 @@ class NotificationsView {
     ).then(() => {
       req.flash("success", "Edited notification.");
       if (req.params.clientID) {
-        res.redirect(`/v4/clients/${clientID}/notifications`);
+        res.redirect(`/clients/${clientID}/notifications`);
       } else {
-        res.redirect(`/v4/notifications`);
+        res.redirect(`/notifications`);
       }
-    }).catch(error_500(res));
+    }).catch(error500(res));
   }
 
 }
 
-
-
-// ***
-// NEW ROUTING STARTS HERE
-// ***
+// Ensure user exists
+router.use((req, res, next) => {
+  if (!req.hasOwnProperty("user")) { 
+    res.status(400).send("not allowed") 
+  } else {
+    next()
+  }
+})
 
 router.get("/clients", (req, res) => {
   const managerID = Number(req.user.cmid);
@@ -233,7 +172,7 @@ router.get("/clients", (req, res) => {
       },
       clients: clients
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));  
 });
 
 router.get("/clients/create", (req, res) => {
@@ -258,8 +197,8 @@ router.post("/clients/create", (req, res) => {
           otn, 
           so
   ).then(() => {
-    res.redirect(`/v4/clients`);
-  }).catch(error_500(res));
+    res.redirect(`/clients`);
+  }).catch(error500(res));
 });
 
 // For all /clients/:clientID, include local obj. client
@@ -272,7 +211,7 @@ router.use("/clients/:clientID", (req, res, next) => {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/address", (req, res) => {
@@ -287,7 +226,7 @@ router.get("/clients/:clientID/address", (req, res) => {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/address/templates", (req, res) => {
@@ -297,7 +236,7 @@ router.get("/clients/:clientID/address/templates", (req, res) => {
       templates: templates,
       parameters: req.params
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/clients/:clientID/address", (req, res) => {
@@ -317,8 +256,8 @@ router.post("/clients/:clientID/address", (req, res) => {
   method.then(() => {
     logClientActivity(clientID);
     req.flash("success", "Message to client sent.");
-    res.redirect(`/v4/clients/${clientID}/messages`);
-  }).catch(error_500(res));
+    res.redirect(`/clients/${clientID}/messages`);
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/alter/:activeStatus", (req, res) => {
@@ -327,8 +266,8 @@ router.get("/clients/:clientID/alter/:activeStatus", (req, res) => {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Client case status changed.")
-    res.redirect(`/v4/clients`);
-  }).catch(error_500(res));
+    res.redirect(`/clients`);
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/edit", (req, res) => {
@@ -341,7 +280,7 @@ router.get("/clients/:clientID/edit", (req, res) => {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/clients/:clientID/edit", (req, res) => {
@@ -363,8 +302,8 @@ router.post("/clients/:clientID/edit", (req, res) => {
   ).then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Edited client.");
-    res.redirect(`/v4/clients`);
-  }).catch(error_500(res));
+    res.redirect(`/clients`);
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/edit/color", (req, res) => {
@@ -376,9 +315,9 @@ router.get("/clients/:clientID/edit/color", (req, res) => {
         params: req.params
       });
     } else {
-      res.redirect(`/v4/colors`);
+      res.redirect(`/colors`);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/clients/:clientID/edit/color", (req, res) => {
@@ -387,8 +326,8 @@ router.post("/clients/:clientID/edit/color", (req, res) => {
   .then(() => {
     logClientActivity(req.params.clientID);
     req.flash("success", "Changed client color.");
-    res.redirect(`/v4/clients`);
-  }).catch(error_500(res));
+    res.redirect(`/clients`);
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/messages", (req, res) => {
@@ -425,7 +364,7 @@ router.get("/clients/:clientID/messages", (req, res) => {
       communications: communications,
       convoFilter: convoFilter
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/clients/:clientID/messages", (req, res) => {
@@ -449,8 +388,8 @@ router.post("/clients/:clientID/messages", (req, res) => {
       .then(() => {
         logClientActivity(clientID);
         logConversationActivity(conversation.convid);
-        res.redirect(`/v4/clients/${clientID}/messages`);
-      }).catch(error_500(res));
+        res.redirect(`/clients/${clientID}/messages`);
+      }).catch(error500(res));
     
     // Otherwise create a new conversation
     } else {
@@ -459,10 +398,10 @@ router.post("/clients/:clientID/messages", (req, res) => {
         return Messages.sendOne(commID, content, conversationID)
       }).then(() => {
         logClientActivity(clientID);
-        res.redirect(`/v4/clients/${clientID}/messages`);
-      }).catch(error_500(res));
+        res.redirect(`/clients/${clientID}/messages`);
+      }).catch(error500(res));
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/communications", (req, res) => {
@@ -475,7 +414,7 @@ router.get("/clients/:clientID/communications", (req, res) => {
       },
       communications: c
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/clients/:clientID/communications/:communicationID/remove", (req, res) => {
@@ -486,12 +425,12 @@ router.get("/clients/:clientID/communications/:communicationID/remove", (req, re
       Communications.removeOne(req.params.communicationID)
       .then(() => {
         req.flash("success", "Removed communication method.");
-        res.redirect(`/v4/clients/${clientID}/communications`);
-      }).catch(error_500(res));
+        res.redirect(`/clients/${clientID}/communications`);
+      }).catch(error500(res));
 
     } else {
       req.flash("warning", "Can't remove the only remaining communication method.");
-      res.redirect(`/v4/clients/${clientID}/communications`);
+      res.redirect(`/clients/${clientID}/communications`);
     }
   })
 });
@@ -517,7 +456,7 @@ router.get("/clients/:clientID/transfer", (req, res) => {
       users: users,
       allDepartments: allDep
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/clients/:clientID/transfer", (req, res) => {
@@ -532,13 +471,13 @@ router.post("/clients/:clientID/transfer", (req, res) => {
       Client.transfer(clientID, fromUserID, toUserID, bundleConv)
       .then(() => {
         logClientActivity(clientID);
-        res.redirect(`/v4/clients`);
-      }).catch(error_500(res));
+        res.redirect(`/clients`);
+      }).catch(error500(res));
 
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/colors", function (req, res) {
@@ -547,23 +486,23 @@ router.get("/colors", function (req, res) {
     res.render("v4/primary/colors", {
       colors: colors,
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/colors", function (req, res) {
   ColorTags.addNewColorTag(req.user.cmid, req.body.color, req.body.name)
   .then(() => {
     req.flash("success", "New color tag created.");
-    res.redirect("/v4/colors");
-  }).catch(error_500(res));
+    res.redirect("/colors");
+  }).catch(error500(res));
 });
 
 router.get("/colors/:colorID/remove", function (req, res) {
   ColorTags.removeColorTag(req.params.colorID)
   .then(() => {
     req.flash("success", "Color tag removed.");
-    res.redirect("/v4/colors");
-  }).catch(error_500(res));
+    res.redirect("/colors");
+  }).catch(error500(res));
 });
 
 router.get("/notifications", NotificationsView.show);
@@ -574,7 +513,7 @@ router.get("/notifications/create", (req, res) => {
     res.render("v4/primary/notifications/create", {
       clients: clients
     })
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/notifications/create/compose", (req, res) => {
@@ -596,7 +535,7 @@ router.get("/notifications/create/templates", (req, res) => {
       templates: templates,
       parameters: req.query
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/notifications/create", (req, res) => {
@@ -619,8 +558,8 @@ router.post("/notifications/create", (req, res) => {
                   send
   ).then(() => {
     req.flash("success", "Created new notification.");
-    res.redirect(`/v4/notifications`);
-  }).catch(error_500(res));
+    res.redirect(`/notifications`);
+  }).catch(error500(res));
 });
 
 router.get("/notifications/:notificationID/edit", NotificationsView.editGet);
@@ -639,7 +578,7 @@ router.get("/templates", (req, res) => {
       },
       templates: templates
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/templates/create", (req, res) => {
@@ -654,16 +593,16 @@ router.post("/templates/create", (req, res) => {
   Templates.insertNew(orgID, userID, title, content)
   .then(() => {
     req.flash("success", "Created new template.")
-    res.redirect(`/v4/templates`);
-  }).catch(error_500(res));
+    res.redirect(`/templates`);
+  }).catch(error500(res));
 });
 
 router.get("/templates/remove/:templateID", (req, res) => {
   Templates.removeOne(req.params.templateID)
   .then(() => {
     req.flash("success", "Removed template.")
-    res.redirect(`/v4/templates`);
-  }).catch(error_500(res));
+    res.redirect(`/templates`);
+  }).catch(error500(res));
 });
 
 router.get("/templates/edit/:templateID", (req, res) => {
@@ -676,7 +615,7 @@ router.get("/templates/edit/:templateID", (req, res) => {
     } else {
       notFound(res)
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/templates/edit/:templateID", (req, res) => {
@@ -686,8 +625,8 @@ router.post("/templates/edit/:templateID", (req, res) => {
   Templates.editOne(templateID, title, content)
   .then(() => {
     req.flash("success", "Template edited.")
-    res.redirect(`/v4/templates`);
-  }).catch(error_500(res));
+    res.redirect(`/templates`);
+  }).catch(error500(res));
 });
 
 router.get("/groups/address/:groupID", (req, res) => {
@@ -708,7 +647,7 @@ router.post("/groups/address/:groupID", (req, res) => {
   .then(() => {
     req.flash("success", "Messaged group members.");
     res.redirect(`${req.redirectUrlBase}/groups/current`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/groups", (req, res) => {
@@ -725,7 +664,7 @@ router.get("/groups", (req, res) => {
       },
       groups: groups
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/groups/create", (req, res) => {
@@ -734,7 +673,7 @@ router.get("/groups/create", (req, res) => {
       res.render("v4/primary/groups/create", {
         clients: clients
       });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/groups/create", (req, res) => {
@@ -745,7 +684,7 @@ router.post("/groups/create", (req, res) => {
   .then(() => {
     req.flash("success", "Created new group.");
     res.redirect(`${req.redirectUrlBase}/groups/current`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/groups/edit/:groupID", (req, res) => {
@@ -758,11 +697,11 @@ router.get("/groups/edit/:groupID", (req, res) => {
           group: group,
           clients: clients
         });
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/groups/edit/:groupID", (req, res) => {
@@ -782,8 +721,8 @@ router.post("/groups/edit/:groupID", (req, res) => {
     Groups.editOne(userID, groupID, name, clientIDs)
     .then(() => {
       req.flash("success", "Edited group.");
-      res.redirect(`/v4/groups`);
-    }).catch(error_500(res));
+      res.redirect(`/groups`);
+    }).catch(error500(res));
   } else {
     notFound(res);
   }
@@ -792,176 +731,19 @@ router.post("/groups/edit/:groupID", (req, res) => {
 router.get("/groups/remove/:groupID", (req, res) => {
   Groups.removeOne(Number(req.params.groupID))
   .then(() => {
-    res.redirect(`/v4/groups`);
-  }).catch(error_500(res));
+    res.redirect(`/groups`);
+  }).catch(error500(res));
 });
 
 router.get("/groups/activate/:groupID", (req, res) => {
   Groups.activateOne(Number(req.params.groupID))
   .then(() => {
-    res.redirect(`/v4/groups`);
-  }).catch(error_500(res));
+    res.redirect(`/groups`);
+  }).catch(error500(res));
 });
 
 
-router.get("/departments/:departmentId/clients", (req, res) => {
-  let clientActivity = req.params.clientActivity == "open" ? true : false;
-  let limitByUser = Number(req.query.limitByUser);
-  if (isNaN(limitByUser)) limitByUser = false;
-  Clients.findByDepartment(req.params.departmentId, clientActivity)
-  .then((clients) => {
 
-    // Filter by user if elected
-    if (limitByUser) {
-      clients = clients.filter((client) => {
-        return client.cm == limitByUser;
-      });
-    }
-
-    let renderObject = {
-      hub: {
-        tab: "clients",
-        sel: clientActivity ? "open" : "closed"
-      },
-      clients: clients,
-      limitByUser: null
-    };
-
-    if (limitByUser) {
-      Users.findByID(limitByUser)
-      .then((user) => {
-        renderObject.limitByUser = user;
-        res.render("v4/supervisor/clients/clients", renderObject);
-      }).catch(error_500(res));
-    } else {
-      res.render("v4/supervisor/clients/clients", renderObject);
-    }
-
-  }).catch(error_500(res));
-})
-
-let usersView = (req, res) => {
-  if (req.user.class === "owner" || req.user.class === "supervisor") {
-    let status = true;
-    if (req.query.status !== "active") status = false;
-
-    let department = req.user.department || req.query.departmentID;
-
-    Users.findByOrg(req.user.org, status)
-    .then((users) => {
-
-      if (department) {
-        users = users.filter(function (user) {
-          return req.user.department == Number(department);
-        });        
-      }
-
-      res.render("users", {
-        hub: {
-          tab: "users",
-          sel: status ? "active" : "inactive"
-        },
-        users: users
-      });
-    }).catch(error_500(res));
-
-  } else {
-    notFound(res);
-  }
-}
-
-router.get("/organization/users", usersView)
-router.get("/department/users", usersView)
-
-
-router.get("/dashboard", (req, res) => {
-  if (req.user.class === "supervisor") {
-    res.locals.level = "department"
-    let users, clients, countsByWeek, countsByDay;
-    let orgID = Number(req.user.org);
-    let departmentID = Number(req.user.department);
-    let userFilterID = Number(req.query.targetUserID);
-    if (isNaN(userFilterID)) userFilterID = null;
-
-    Departments.findByID(orgID, true)
-    .then((dept) => {
-      department = dept;
-      return Users.findByDepartment(departmentID, true)
-    }).then((usrs) => {
-      users = usrs;
-      return Clients.findByDepartment(departmentID, true);
-    }).then((cls) => {
-      clients = cls;
-      if (userFilterID) {
-        clients.filter(function(client) {
-          return client.cm == userFilterID;
-        });
-      }
-
-      if (userFilterID) return Messages.countsByUser(orgID, userFilterID, "day");
-      else              return Messages.countsByDepartment(orgID, departmentID, "day");
-    }).then((counts) => {
-      countsByDay = counts;
-      if (userFilterID) return Messages.countsByUser(orgID, userFilterID, "week");
-      else              return Messages.countsByDepartment(orgID, departmentID, "week");
-    }).then((counts) => {
-      countsByWeek = counts;
-      res.render("dashboard", {
-        hub: {
-          tab: "dashboard",
-          sel: null
-        },
-        departments: [department],
-        users: users,
-        userFilterID, userFilterID,
-        clients: clients,
-        countsByWeek: countsByWeek,
-        departmentFilterID: department.department_id,
-        countsByDay: countsByDay
-      });
-    }).catch(error_500(res));    
-  } else if (req.user.class === "owner") {
-    res.locals.level = "organization"
-    let departments, countsByWeek, countsByDay;
-    let departmentFilterID = Number(req.query.departmentID);
-    if (isNaN(departmentFilterID)) departmentFilterID = null;
-
-    Departments.selectByOrgID(req.user.org, true)
-    .then((depts) => {
-      departments = depts;
-
-      if (departmentFilterID) {
-        return Messages.countsByDepartment(req.user.org, departmentFilterID, "day")
-      } else {
-        return Messages.countsByOrg(req.user.org, "day")
-      }
-    }).then((counts) => {
-      countsByDay = counts;
-
-      if (departmentFilterID) {
-        return Messages.countsByDepartment(req.user.org, departmentFilterID, "week")
-      } else {
-        return Messages.countsByOrg(req.user.org, "week")
-      }
-    }).then((counts) => {
-      countsByWeek = counts;
-      res.render("dashboard", {
-        hub: {
-          tab: "dashboard",
-          sel: null
-        },
-        departments: departments,
-        departmentFilterID: departmentFilterID,
-        countsByWeek: countsByWeek,
-        countsByDay: countsByDay
-      });
-    }).catch(error_500(res));
-  } else {
-    notFound(res)
-  }
-})
-
-// EXPORT ROUTER OBJECt
 module.exports = router;
 
 

@@ -20,7 +20,7 @@ let Users         = modelsImport.Users;
 
 // General error handling
 let errorHandling   = require("../../utilities/errorHandling");
-let error_500       = errorHandling.error_500;
+let error500       = errorHandling.error500;
 
 let logging                 = require("../../utilities/logging");
 let logClientActivity       = logging.logClientActivity;
@@ -76,12 +76,12 @@ router.get("/clients/list/:clientActivity", (req, res) => {
       .then((user) => {
         renderObject.limitByUser = user;
         res.render("v4/supervisor/clients/clients", renderObject);
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       res.render("v4/supervisor/clients/clients", renderObject);
     }
 
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -91,7 +91,7 @@ router.get("/clients/create", (req, res) => {
     res.render("v4/supervisor/clients/create", {
       users: users
     })
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -107,7 +107,7 @@ router.post("/clients/create", (req, res) => {
   Client.create(userID, first, middle, last, dob, otn, so)
   .then(() => {
     res.redirect(req.redirectUrlBase);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -123,7 +123,7 @@ router.get("/clients/address/:clientID", (req, res) => {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -134,7 +134,7 @@ router.get("/clients/address/:clientID/selecttemplate", (req, res) => {
       templates: templates,
       parameters: req.params
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -157,15 +157,15 @@ router.get("/clients/address/:clientID/selecttemplate/:templateID", (req, res) =
               client: client,
               template: template,
             });
-          }).catch(error_500(res));
+          }).catch(error500(res));
         } else {
           res.redirect(`/v4/address/${clientID}`);
         }
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -190,11 +190,11 @@ router.post("/clients/address/:clientID", (req, res) => {
         logClientActivity(clientID);
         req.flash("success", "Message to client sent.");
         res.redirect(req.redirectUrlBase);
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));  
+  }).catch(error500(res));  
 });
 
 

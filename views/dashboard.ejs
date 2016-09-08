@@ -14,13 +14,13 @@
     <% if (user.class == "owner") { -%>
       <div class="department">
         <div class="subject showAll">
-          <a href="<%= `/v4/dashboard` %>">Show for all departments</a>
+          <a href="<%= `/org` %>">Show for all departments</a>
         </div>
       </div>
     <% } -%>
     
     <% departments.forEach(function (department) { %>
-      <a href="/v4/dashboard?departmentID=<%= department.department_id %>">
+      <a href="/org?departmentID=<%= department.department_id %>">
         <div class="department <% if (departmentFilterID == Number(department.department_id)) { %>selected<% } %>">
           <div class="subject">
             <%= department.name %>
@@ -39,7 +39,7 @@
         </div>
       </div>
       <% users.forEach(function(targetUser) { %>
-        <a href="<%= `/v4/dashboard?targetUserID=${targetUser.cmid}` %>">
+        <a href="<%= `/org?targetUserID=${targetUser.cmid}` %>">
           <div class="department <% if (userFilterID == targetUser.cmid) { %>selected<% } %>">
             <div class="subject">
               <%= targetUser.last + ', ' + targetUser.first  %>

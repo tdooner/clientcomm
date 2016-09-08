@@ -14,7 +14,7 @@ const Messages      = modelsImport.Messages;
 
 // General error handling
 var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+var error500       = errorHandling.error500;
 
 
 // Access utilities
@@ -51,7 +51,7 @@ router.post("/address/:groupID", function (req, res) {
   .then(() => {
     req.flash("success", "Messaged group members.");
     res.redirect(`${req.redirectUrlBase}/groups/current`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/current", function (req, res) {
@@ -65,7 +65,7 @@ router.get("/current", function (req, res) {
       },
       groups: groups
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/deleted", function (req, res) {
@@ -78,7 +78,7 @@ router.get("/deleted", function (req, res) {
       },
       groups: groups
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/create", function (req, res) {
@@ -87,7 +87,7 @@ router.get("/create", function (req, res) {
       res.render("v4/primaryUser/groups/create", {
         clients: clients
       });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/create", function (req, res) {
@@ -98,7 +98,7 @@ router.post("/create", function (req, res) {
   .then(() => {
     req.flash("success", "Created new group.");
     res.redirect(`${req.redirectUrlBase}/groups/current`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/edit/:groupID", function (req, res) {
@@ -111,11 +111,11 @@ router.get("/edit/:groupID", function (req, res) {
           group: group,
           clients: clients
         });
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/edit/:groupID", function (req, res) {
@@ -136,7 +136,7 @@ router.post("/edit/:groupID", function (req, res) {
     .then(() => {
       req.flash("success", "Edited group.");
       res.redirect(`${req.redirectUrlBase}/groups/current`);
-    }).catch(error_500(res));
+    }).catch(error500(res));
   } else {
     notFound(res);
   }
@@ -146,14 +146,14 @@ router.get("/remove/:groupID", function (req, res) {
   Groups.removeOne(Number(req.params.groupID))
   .then(() => {
     res.redirect(`${req.redirectUrlBase}/groups/current`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/activate/:groupID", function (req, res) {
   Groups.activateOne(Number(req.params.groupID))
   .then(() => {
     res.redirect(`${req.redirectUrlBase}/groups/deleted`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 // EXPORT ROUTER OBJECt

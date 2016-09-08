@@ -2,7 +2,7 @@ const colors = require('colors')
 
 module.exports = {
 
-  error_500: function (res) { 
+  error500: function (res) { 
     // In the future, note that this could cause a performance issue if product on non-human actions
     return function (err) {
       // Clean up error if one is provided

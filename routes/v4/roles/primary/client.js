@@ -10,7 +10,7 @@ router.get("/communications/remove/:communicationID", (req, res) => {
       .then((communications) => {
         req.flash("success", "Removed communication method.");
         res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications`);
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       req.flash("warning", "Can't remove the only remaining communication method.");
       res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications`);
@@ -41,7 +41,7 @@ router.post("/communications/create", (req, res) => {
   .then(() => {
     req.flash("success", "Created new communication method.");
     res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

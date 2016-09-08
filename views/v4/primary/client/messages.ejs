@@ -7,11 +7,11 @@
   <div class="conversations">
     <div class="conversation">
       <div class="subject showAll">
-        <a href="<%=`/v4/clients/${client.clid}/messages`%>">Show all conversations</a>
+        <a href="<%=`/clients/${client.clid}/messages`%>">Show all conversations</a>
       </div>
     </div>
     <% conversations.forEach(function (conversation) { %>
-      <a href="<%=`/v4/clients/${client.clid}/messages?conversation=${conversation.convid}`%>">
+      <a href="<%=`/clients/${client.clid}/messages?conversation=${conversation.convid}`%>">
         <div class="conversation <% if (convoFilter == Number(conversation.convid)) { %>selected<% } %>">
           <div class="subject">
             <%= conversation.subject ? conversation.subject : 'No Subject' %>
@@ -59,7 +59,7 @@
   <div class="responseBox">
     <form method="post"
           id="newMessage" 
-          action="<%=`/v4/clients/${client.clid}/messages`%>">
+          action="<%=`/clients/${client.clid}/messages`%>">
       <div class="mini">
         <div class="messageInput">
           <div class="left">Start typing message...</div>

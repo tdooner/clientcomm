@@ -6,7 +6,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="<%=`/v4/clients/open`%>">
+  <a href="<%=`/clients/open`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -19,7 +19,7 @@
 
 <div class="cardBody">
 
-  <a href="/v4/colors">
+  <a href="/colors">
     <div class="manageColorsLink">
       <i class="fa fa-th-large" aria-hidden="true"></i>
       Manage colors
@@ -60,7 +60,7 @@
 
   <center>
     <form method="POST" 
-          action="<%=`/v4/clients/${client.clid}/edit/color`%>">
+          action="<%=`/clients/${client.clid}/edit/color`%>">
       <input  type="hidden" 
               id="chosenColorID"
               name="colorID"

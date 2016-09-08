@@ -7,23 +7,23 @@
   <div class="navSub">
 
     <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/dashboard">Metrics Dashboard</a></div>
+      <div class="title"><a href="/dashboard">Metrics Dashboard</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'departments' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/departments">Departments</a></div>
-      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/v4/departments/filter/active">Active</a></div>
-      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/departments/filter/inactive">Inactive</a></div>
+      <div class="title"><a href="/departments">Departments</a></div>
+      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/departments/filter/active">Active</a></div>
+      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/departments/filter/inactive">Inactive</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/users">Users</a></div>
-      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/v4/users/filter/active">Active</a></div>
-      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/users/filter/inactive">Inactive</a></div>
+      <div class="title"><a href="/users">Users</a></div>
+      <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/users/filter/active">Active</a></div>
+      <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/users/filter/inactive">Inactive</a></div>
     </div>
 
     <div class="leftTab <%= hub.tab == 'numbers' ? 'open' : 'closed' %>">
-      <div class="title"><a href="/v4/numbers">Phone Numbers</a></div>
+      <div class="title"><a href="/numbers">Phone Numbers</a></div>
     </div>
 
     <div class="rightActions">
@@ -37,7 +37,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/departments/create">
+      <a href="/departments/create">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-building fa-stack-1x fa-inverse"></i>
@@ -47,7 +47,7 @@
     </div>
 
     <div class="rightActions">
-      <a href="/v4/users/create">
+      <a href="/users/create">
         <span class="fa-stack fa-lg">
           <i class="fa fa-circle fa-stack-2x"></i>
           <i class="fa fa-user-plus fa-stack-1x fa-inverse"></i>

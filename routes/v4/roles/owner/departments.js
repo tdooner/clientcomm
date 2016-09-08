@@ -22,7 +22,7 @@ let PhoneNumbers  = modelsImport.PhoneNumbers;
 
 // General error handling
 let errorHandling   = require("../../utilities/errorHandling");
-let error_500       = errorHandling.error_500;
+let error500       = errorHandling.error500;
 
 
 
@@ -51,7 +51,7 @@ router.get("/departments/filter/:activeStatus", (req, res) => {
       },
       departments: departments
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/departments/create", (req, res) => {
@@ -60,7 +60,7 @@ router.get("/departments/create", (req, res) => {
     res.render("v4/owner/departments/create", {
       phoneNumbers: phoneNumbers
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/departments/create", (req, res) => {
@@ -70,7 +70,7 @@ router.post("/departments/create", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/departments");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/departments/edit/:departmentID", (req, res) => {
@@ -83,11 +83,11 @@ router.get("/departments/edit/:departmentID", (req, res) => {
           department: department,
           phoneNumbers: phoneNumbers
         });
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       notFound(res)
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/departments/edit/:departmentID", (req, res) => {
@@ -100,7 +100,7 @@ router.post("/departments/edit/:departmentID", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/departments");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/departments/edit/:departmentID/supervisors", (req, res) => {
@@ -121,7 +121,7 @@ router.get("/departments/edit/:departmentID/supervisors", (req, res) => {
       members: members,
       parameters: req.params
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/departments/edit/:departmentID/supervisors", (req, res) => {
@@ -135,7 +135,7 @@ router.post("/departments/edit/:departmentID/supervisors", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/departments");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/departments/deactivate/:departmentID", (req, res) => {
@@ -148,14 +148,14 @@ router.get("/departments/deactivate/:departmentID", (req, res) => {
         res.redirect( "/v4/users/" + 
                       req.user.cmid + 
                       "/owner/departments");
-      }).catch(error_500(res));
+      }).catch(error500(res));
     } else {
       req.flash("warning", "Need to remove or close out members first.");
       res.redirect( "/v4/users/" + 
                     req.user.cmid + 
                     "/owner/departments");
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/departments/activate/:departmentID", (req, res) => {
@@ -165,7 +165,7 @@ router.get("/departments/activate/:departmentID", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/departments");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

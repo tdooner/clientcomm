@@ -45,19 +45,19 @@
       </span>
     </div>
     <div class="column">
-      <a href="/v4/users/edit/<%=targetUser.cmid%>">
+      <a href="/users/edit/<%=targetUser.cmid%>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
       <% if (hub.sel == "active") { %>
         <% if (user.cmid !== targetUser.cmid) { %>
-          <a href="/v4/users/deactivate/<%=targetUser.cmid%>">
+          <a href="/users/deactivate/<%=targetUser.cmid%>">
             <i class="fa highlight fa-book" aria-hidden="true"></i>
           </a>
         <% } else { %>-<% } %>
       <% } else { %>
-        <a href="/v4/users/activate/<%=targetUser.cmid%>">
+        <a href="/users/activate/<%=targetUser.cmid%>">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>

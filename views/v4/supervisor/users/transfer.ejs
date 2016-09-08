@@ -1,10 +1,10 @@
-<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+<% const baseURL = `/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
 
 <% include ../../partials/cardFrameTop %>
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="<%= `/v4/users` %>">
+  <a href="<%= `/users` %>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -18,7 +18,7 @@
 <div class="cardBody">
 
   <form method="post"
-        action="<%= `/v4/users/transfer/${targetUser.cmid}` %>">
+        action="<%= `/users/transfer/${targetUser.cmid}` %>">
     <div class="formRow">
       <div class="formLabel"> Transfer <%= targetUser.first %> to </div>
       <select class="blueSelect" 

@@ -6,7 +6,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/clients">
+  <a href="/clients">
     <% include ../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -24,7 +24,7 @@
     <div class="formRow listedColor">
       <div class="colorBox" style="background-color:<%=tag.color%>"></div>
       <div class="colorName""><%=tag.name%></div>
-      <a href="/v4/colors/<%=tag.color_tag_id%>/remove">
+      <a href="/colors/<%=tag.color_tag_id%>/remove">
         <div class="colorTagRemove">
           <i class="fa fa-minus-square" aria-hidden="true"></i>
         </div>
@@ -35,7 +35,7 @@
   <div class="formRow createNewColor">
     <form id="addNewColorTagForm"
           method="post" 
-          action="/v4/colors">
+          action="/colors">
       <div class="colorTagAdd">
         <i class="fa fa-plus-square" aria-hidden="true"></i>
       </div>

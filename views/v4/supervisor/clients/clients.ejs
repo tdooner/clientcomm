@@ -54,7 +54,7 @@
     </div>
     <div class="column">
       <% if (client.active) { %>
-        <a href="<%= `/v4/clients/address/${client.clid}` %>">
+        <a href="<%= `/clients/address/${client.clid}` %>">
           <i class="fa highlight fa-send" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
@@ -67,7 +67,7 @@
       </a>
     </div>
     <div class="column">
-      <a href="<%= `/v4/dashboard/overview?targetUserID=${client.user_id}` %>">
+      <a href="<%= `/dashboard/overview?targetUserID=${client.user_id}` %>">
         <span class="clientName"><%= client.user_last + ', ' + client.user_first %></span>
       </a>
     </div>
@@ -77,7 +77,7 @@
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="<%= `/v4/clients/${client.clid}/transcript_between/${client.cm}` %>">
+      <a href="<%= `/clients/${client.clid}/transcript_between/${client.cm}` %>">
         <i class="fa highlight fa-download" aria-hidden="true"></i>
       </a>
     </div>
@@ -88,22 +88,22 @@
       </small>
     </div>
     <div class="column">
-      <a href="<%= `/v4/clients/${client.clid}/edit` %>">
+      <a href="<%= `/clients/${client.clid}/edit` %>">
         <i class="fa highlight fa-pencil" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
-      <a href="<%= `/v4/clients/${client.clid}/transfer` %>">
+      <a href="<%= `/clients/${client.clid}/transfer` %>">
         <i class="fa highlight fa-mail-forward" aria-hidden="true"></i>
       </a>
     </div>
     <div class="column">
       <% if (hub.sel === "open") { %>
-        <a href="<%= `/v4/clients/${client.clid}/closecase` %>">
+        <a href="<%= `/clients/${client.clid}/closecase` %>">
           <i class="fa highlight fa-book" aria-hidden="true"></i>
         </a>
       <% } else { %>
-        <a href="<%= `/v4/clients/${client.clid}/opencase` %>">
+        <a href="<%= `/clients/${client.clid}/opencase` %>">
           <i class="fa fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>

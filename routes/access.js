@@ -18,33 +18,16 @@ var isLoggedIn = pass.isLoggedIn;
 
 module.exports = function (app, passport) {
 
-
-
-  // MAIN PAGE CURRENTLY ROUTES STRAIGHT TO LOGIN
-  // TO DO: Make a splash page (GH Issue: https://github.com/slco-2016/clientcomm/issues/72)
-  app.get("/", function (req, res) {
-    res.redirect("/login");
-  });
-
-
-
-  // LOGIN PAGE RENDER
   app.get("/login", function (req, res) {
     // check if the user is already logged in
     if (req.hasOwnProperty("user")) { res.redirect("/cms"); } 
     else { res.render("access/login"); }
   });
 
-
-
-  // FORGOT LOGIN PAGE RENDER
   app.get("/login/reset", function (req, res) {
     res.render("access/loginreset");
   });
 
-
-
-  // SUBMIT REQUEST FOR PASSWORD RESET EMAIL
   app.post("/login/reset", function (req, res) {
     var em = req.body.email;
 

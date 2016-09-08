@@ -2,7 +2,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="<%=`/v4/clients/${client.clid}`%>">
+  <a href="<%=`/clients/${client.clid}`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -16,13 +16,13 @@
 <div class="cardBody">
   
   <div class="formRow">
-    <a href="<%=`/v4/clients/${client.clid}/address/templates`%>">
+    <a href="<%=`/clients/${client.clid}/address/templates`%>">
       <input type="submit" id="useTemplate" class="formSubmit inverse" value="Load a template">
     </a>
   </div>
 
   <form method="post"
-        action="<%=`/v4/clients/${client.clid}/address`%>">
+        action="<%=`/clients/${client.clid}/address`%>">
     <div class="formRow <% if (!template.title) { %>subdued<% } %>">
       <div class="formLabel"> Subject <small>(optional, not visible to clients)</small></div>
       <div class="formInput">

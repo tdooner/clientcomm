@@ -2,7 +2,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="/v4/departments">
+  <a href="/departments">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -17,7 +17,7 @@
 
   <form method = "post"
         id="updateSupervisors"
-        action = "/v4/departments/edit/<%=parameters.departmentID%>/supervisors">
+        action = "/departments/edit/<%=parameters.departmentID%>/supervisors">
 
     <div class="scrollListBox">
       <% var supervisorIDs = supervisors.map(function (s) { return s.cmid }) %>

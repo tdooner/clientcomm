@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 
 // New Relic monitoring ONLY if not test environ
@@ -23,7 +23,8 @@ var db  = require("./db");
 
 
 // Error Handling
-const notFound = require("../routes/v4/utilities/errorHandling").notFound
+const notFound = require("../routes/errorHandling").notFound
+const error500 = require("../routes/errorHandling").error500
 
 // APP DEPENDENCIES
 var bodyParser = require('body-parser');
@@ -97,10 +98,6 @@ require("../routes/request-defaults")(app);
 // Login and session management
 require("../routes/access")(app, passport);
 
-// Case manager workflow
-var cmview = require("../routes/cmview");
-app.use("/cms", auth.isLoggedIn, cmview)
-
 // CM-Subroutes here
 // TO DO: Discuss if these should be rolled in under cmview itself
 // Capture view
@@ -111,25 +108,63 @@ app.use("/capture", auth.isLoggedIn, captureRoutes);
 require("../routes/sms")(app);
 require("../routes/voice")(app);
 
-// Admin routes
-var adminManagement = require("../routes/admin");
-app.use("/admin", auth.isAdmin, adminManagement)
+const modelsImport   = require("../models/models");
+const Alerts = modelsImport.Alerts;
+const Organizations  = modelsImport.Organizations;
+const Departments    = modelsImport.Departments;
 
-// Account management GUI routes
-var accountManagement = require("../routes/accountmanagement");
-app.use("/accounts", auth.isSuper, accountManagement)
+// Standard checks for every role, no matter
+// Add flash alerts
+app.use((req, res, next) => {
+  Alerts.findByUser(req.user.cmid)
+  .then((alerts) => {
+    res.locals.ALERTS_FEED = alerts;
+    next();
+  }).catch(error500(res));
+});
 
-// Superuser routes
-var supermgmt = require("../routes/super");
-app.use("/orgs", auth.isSuper, supermgmt)
+// Add organization
+app.use((req, res, next) => {
+  Organizations.findByID(req.user.org)
+  .then((org) => {
+    res.locals.organization = org;
+    next();
+  }).catch(error500(res));
+});
 
-// Catch-alls
-require("../routes/catchall")(app);
+// Add department
+app.use((req, res, next) => {
+  Departments.findByID(req.user.department)
+  .then((department) => {
+    // if no department, provide some dummy attributes
+    if (!department) {
+      department = {
+        name:         "Unassigned",
+        phone_number: null,
+        organization: req.user.org
+      }
+    }
+    res.locals.department = department;
+    next();
+  }).catch(error500(res));
+});
 
+// Reroute from standard drop endpoint
+app.get("/", (req, res, next) => {
+  if (!req.hasOwnProperty("user")) {
+    res.redirect('/login');
+  } else if (["owner", "supervisor", "support"].indexOf(req.user.class) > -1) {
+    res.redirect(`/org`);
+  } else if (["developer", "primary"].indexOf(req.user.class) > -1) {
+    res.redirect(`/clients`);
+  } else {
+    // TODO: Who hits this? Seems like this would never hit
+    notFound(res);
+  }
+});
 
-// V4 Route Structure
-var v4App = require("../routes/v4/roleRouter");
-app.use("/v4", auth.isLoggedIn, v4App)
+app.use("/", require("../routes/user"))
+app.use("/", require("../routes/org"))
 
 // Redundant catch all
 app.get("/*", function (req, res) {

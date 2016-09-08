@@ -7,55 +7,60 @@
   <div class="navSub">
     
     <!-- dep, org -->
-    <% if (level == "department" || level == "organization" ) { -%>
+    <% if (level == "org") { -%>
       <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/v4/dashboard`%>">Metrics Dashboard</a></div>
+        <div class="title"><a href="<%=`/org`%>">Metrics Dashboard</a></div>
       </div>
 
-      <% if (level == "organization") { -%>
+      <% if (user.class == "owner") { -%>
         <div class="leftTab <%= hub.tab == 'departments' ? 'open' : 'closed' %>">
-          <div class="title"><a href="/v4/departments">Departments</a></div>
-          <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/v4/departments/filter/active">Active</a></div>
-          <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/v4/departments/filter/inactive">Inactive</a></div>
+          <div class="title"><a href="/org/departments">Departments</a></div>
+          <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/departments/filter/active">Active</a></div>
+          <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/departments/filter/inactive">Inactive</a></div>
         </div>
       <% } -%>
 
       <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/v4/users`%>">Users</a></div>
-        <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="<%=`/v4/users/filter/active`%>">Active</a></div>
-        <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="<%=`/v4/users/filter/inactive`%>">Inactive</a></div>
+        <div class="title"><a href="<%=`/org/users`%>">Users</a></div>
+        <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="<%=`/users/filter/active`%>">Active</a></div>
+        <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="<%=`/users/filter/inactive`%>">Inactive</a></div>
       </div> 
     <% } -%>     
 
-    <!-- dep, org, primary -->
-    <% if (level == "department" || level =="organization" || level == "primary") { -%>
+    <% if (level == "org") { -%>
       <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/v4/clients`%>">Clients</a></div>
-        <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`/v4/clients/?state=open`%>">Open</a></div>
-        <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`/v4/clients/?state=closed`%>">Closed</a></div>
+        <div class="title"><a href="<%=`/org/clients`%>">Clients</a></div>
+        <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`/clients/?state=open`%>">Open</a></div>
+        <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`/clients/?state=closed`%>">Closed</a></div>
+      </div>
+    <% } else { -%>
+      <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
+        <div class="title"><a href="<%=`/clients`%>">Clients</a></div>
+        <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`/clients/?state=open`%>">Open</a></div>
+        <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`/clients/?state=closed`%>">Closed</a></div>
       </div>
     <% } -%>
 
     <!-- primary -->
-    <% if (level == "primary") { -%>
+    <% if (level == "user") { -%>
       <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/v4/notifications`%>">Notifications</a></div>
-        <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`/v4/notifications/?status=pending`%>">Pending</a></div>
-        <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`/v4/notifications/?status=sent`%>">Sent</a></div>
+        <div class="title"><a href="<%=`/notifications`%>">Notifications</a></div>
+        <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="<%=`/notifications/?status=pending`%>">Pending</a></div>
+        <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="<%=`/notifications/?status=sent`%>">Sent</a></div>
       </div>      
       
       <div class="leftTab <%= hub.tab == 'templates' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/v4/templates`%>">Templates</a></div>
+        <div class="title"><a href="<%=`/templates`%>">Templates</a></div>
       </div>      
       
       <div class="leftTab <%= hub.tab == 'groups' ? 'open' : 'closed' %>">
-        <div class="title"><a href="<%=`/v4/groups`%>">Groups</a></div>
-        <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="<%=`/v4/groups?status=current`%>">Current</a></div>
-        <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="<%=`/v4/groups?status=deleted`%>">Deleted</a></div>
+        <div class="title"><a href="<%=`/groups`%>">Groups</a></div>
+        <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="<%=`/groups?status=current`%>">Current</a></div>
+        <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="<%=`/groups?status=deleted`%>">Deleted</a></div>
       </div>                  
     <% } -%>
 
-    <% if (level =="organization") { -%>
+    <% if (level =="org") { -%>
       <div class="rightActions">
         <a href="">
           <span class="fa-stack fa-lg">
@@ -67,7 +72,7 @@
       </div>
 
       <div class="rightActions">
-        <a href="/v4/departments/create">
+        <a href="/departments/create">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-building fa-stack-1x fa-inverse"></i>
@@ -78,9 +83,9 @@
     <% } -%>
 
     <!-- dep, org -->
-    <% if (level == "department" || level =="organization") { -%>
+    <% if (level == "org") { -%>
       <div class="rightActions">
-        <a href="<%=`/v4/users/create`%>">
+        <a href="<%=`/users/create`%>">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-user-plus fa-stack-1x fa-inverse"></i>
@@ -93,7 +98,7 @@
     <!-- primary -->
     <% if (level == "primary") { -%>
       <div class="rightActions">
-        <a href="<%=`/v4/groups/create`%>">
+        <a href="<%=`/groups/create`%>">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-users fa-stack-1x fa-inverse"></i>
@@ -103,7 +108,7 @@
       </div>      
 
       <div class="rightActions">
-        <a href="<%=`/v4/templates/create`%>">
+        <a href="<%=`/templates/create`%>">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-clipboard fa-stack-1x fa-inverse"></i>
@@ -112,7 +117,7 @@
         </a>
       </div>      
       <div class="rightActions">
-        <a href="<%=`/v4/notifications/create`%>">
+        <a href="<%=`/notifications/create`%>">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
@@ -123,9 +128,9 @@
     <% } -%>
     
     <!-- primary, dep -->
-    <% if (level == "department" || level == "primary") { -%>
+    <% if (true) { -%>
       <div class="rightActions">
-        <a href="<%=`/v4/clients/create`%>">
+        <a href="<%=`/clients/create`%>">
           <span class="fa-stack fa-lg">
             <i class="fa fa-circle fa-stack-2x"></i>
             <i class="fa fa-user fa-stack-1x fa-inverse"></i>

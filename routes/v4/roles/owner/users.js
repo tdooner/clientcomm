@@ -22,7 +22,7 @@ let Users         = modelsImport.Users;
 
 // General error handling
 let errorHandling   = require("../../utilities/errorHandling");
-let error_500       = errorHandling.error_500;
+let error500       = errorHandling.error500;
 let emailAlerts     = require("../../utilities/emailAlerts");
 let alertOfAccountActivation = emailAlerts.alertOfAccountActivation;
 
@@ -53,7 +53,7 @@ router.get("/users/filter/:activeStatus", (req, res) => {
       },
       users: users
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/deactivate/:targetUserID", (req, res) => {
@@ -63,7 +63,7 @@ router.get("/users/deactivate/:targetUserID", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/users");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/activate/:targetUserID", (req, res) => {
@@ -73,7 +73,7 @@ router.get("/users/activate/:targetUserID", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/users");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/create", (req, res) => {
@@ -82,7 +82,7 @@ router.get("/users/create", (req, res) => {
     res.render("v4/owner/users/create", {
       departments: departments
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/users/create", (req, res) => {
@@ -101,14 +101,14 @@ router.post("/users/create", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/users");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/create/check_email/:email", (req, res) => {
   Users.findByEmail(decodeURIComponent(req.params.email))
   .then((user) => {
     res.json({ user: user });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/users/edit/:targetUserID", (req, res) => {
@@ -126,7 +126,7 @@ router.get("/users/edit/:targetUserID", (req, res) => {
     } else {
       notFound(res);
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.post("/users/edit/:targetUserID", (req, res) => {
@@ -144,7 +144,7 @@ router.post("/users/edit/:targetUserID", (req, res) => {
     res.redirect( "/v4/users/" + 
                   req.user.cmid + 
                   "/owner/users");
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

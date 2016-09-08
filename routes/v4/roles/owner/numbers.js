@@ -22,7 +22,7 @@ let Users         = modelsImport.Users;
 
 // General error handling
 let errorHandling   = require("../../utilities/errorHandling");
-let error_500       = errorHandling.error_500;
+let error500       = errorHandling.error500;
 let emailAlerts     = require("../../utilities/emailAlerts");
 let alertOfAccountActivation = emailAlerts.alertOfAccountActivation;
 
@@ -46,7 +46,7 @@ router.get("/numbers/all", (req, res) => {
       },
       numbers: numbers
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

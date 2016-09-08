@@ -19,7 +19,7 @@ let Departments   = modelsImport.Departments;
 
 // General error handling
 let errorHandling   = require("../../utilities/errorHandling");
-let error_500       = errorHandling.error_500;
+let error500       = errorHandling.error500;
 
 // Create base URL for this page
 router.use((req, res, next) => {
@@ -77,7 +77,7 @@ router.get("/dashboard/overview", (req, res) => {
       countsByWeek: countsByWeek,
       countsByDay: countsByDay
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

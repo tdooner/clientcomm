@@ -1,4 +1,4 @@
-<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+<% const baseURL = `/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
 
 <% include ../../partials/supervisorFrameTop %>
 
@@ -10,11 +10,11 @@
     
     <div class="department">
       <div class="subject showAll">
-        <a href="<%= `/v4/dashboard/overview` %>">Show for all departments</a>
+        <a href="<%= `/dashboard/overview` %>">Show for all departments</a>
       </div>
     </div>
     
-    <a href="<%= `/v4/dashboard/overview` %>">
+    <a href="<%= `/dashboard/overview` %>">
       <div class="department <% if (!userFilterID) { %>selected<% } %>">
         <div class="subject">
           <%= department.name %>
@@ -32,7 +32,7 @@
     </div>
 
     <% users.forEach(function(targetUser) { %>
-      <a href="<%= `/v4/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
+      <a href="<%= `/dashboard/overview?targetUserID=${targetUser.cmid}` %>">
         <div class="department <% if (userFilterID == targetUser.cmid) { %>selected<% } %>">
           <div class="subject">
             <%= targetUser.last + ', ' + targetUser.first  %>

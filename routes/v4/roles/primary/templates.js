@@ -12,7 +12,7 @@ const Templates     = modelsImport.Templates;
 
 // General error handling
 var errorHandling   = require("../../utilities/errorHandling");
-var error_500       = errorHandling.error_500;
+var error500       = errorHandling.error500;
 
 
 // Access utilities
@@ -37,7 +37,7 @@ router.get("/", function (req, res) {
       },
       templates: templates
     });
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/remove/:templateID", function (req, res) {
@@ -45,7 +45,7 @@ router.get("/remove/:templateID", function (req, res) {
   .then(() => {
     req.flash("success", "Removed template.")
     res.redirect(`${res.redirectUrlBase}/templates`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 router.get("/create", function (req, res) {
@@ -61,7 +61,7 @@ router.post("/create", function (req, res) {
   .then(() => {
     req.flash("success", "Created new template.")
     res.redirect(`${res.redirectUrlBase}/templates`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -75,7 +75,7 @@ router.get("/edit/:templateID", function (req, res) {
     } else {
       notFound(res)
     }
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 
@@ -87,7 +87,7 @@ router.post("/edit/:templateID", function (req, res) {
   .then(() => {
     req.flash("success", "Template edited.")
     res.redirect(`${res.redirectUrlBase}/templates`);
-  }).catch(error_500(res));
+  }).catch(error500(res));
 });
 
 

@@ -1,4 +1,4 @@
-<% const baseURL = `/v4/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
+<% const baseURL = `/orgs/${parameters.orgID}/users/${parameters.userID}/supervisor/department/${parameters.departmentID}`%>
 
 <% include ../../partials/cardFrameTop %>
 
@@ -8,7 +8,7 @@
 
 <div class="cardHead">
   <!-- exit button -->
-  <a href="<%=`/v4/clients`%>">
+  <a href="<%=`/clients`%>">
     <% include ../../partials/cardExit %>
   </a>
   <div class="cardTitle">
@@ -37,7 +37,7 @@
   </div>
 
 
-  <a href="<%=`/v4/clients`%>">
+  <a href="<%=`/clients`%>">
     <input  type="submit" 
             class="formSubmit" 
             value="Back">
