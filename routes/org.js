@@ -48,6 +48,42 @@ var logging                 = require("./logging");
 var logClientActivity       = logging.logClientActivity;
 var logConversationActivity = logging.logConversationActivity;
 
+// Standard checks for every role, no matter
+// Add flash alerts
+router.use((req, res, next) => {
+  Alerts.findByUser(req.user.cmid)
+  .then((alerts) => {
+    res.locals.ALERTS_FEED = alerts;
+    next();
+  }).catch(error500(res));
+});
+
+// Add organization
+router.use((req, res, next) => {
+  Organizations.findByID(req.user.org)
+  .then((org) => {
+    res.locals.organization = org;
+    next();
+  }).catch(error500(res));
+});
+
+// Add department
+router.use((req, res, next) => {
+  Departments.findByID(req.user.department)
+  .then((department) => {
+    // if no department, provide some dummy attributes
+    if (!department) {
+      department = {
+        name:         "Unassigned",
+        phone_number: null,
+        organization: req.user.org
+      }
+    }
+    res.locals.department = department;
+    next();
+  }).catch(error500(res));
+});
+
 
 router.use((req, res, next) => {
   res.locals.level = "org"

@@ -37,12 +37,15 @@
     "twilio": "~3.3.0-edge"
   },
   "scripts": {
-    "start": "./node_modules/.bin/nodemon server/app.js --ignore node_modules/"
+    "start": "./node_modules/.bin/nodemon server/server.js --ignore node_modules/"
   },
   "devDependencies": {
     "gulp": "3.9.1",
     "gulp-sass": "2.3.2",
+    "mocha": "^3.0.2",
+    "node-mocks-http": "^1.5.3",
     "node-sass": "3.7.0",
+    "should": "^11.1.0",
     "supertest": "1.2.0"
   },
   "repository": {

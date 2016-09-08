@@ -113,42 +113,6 @@ const Alerts = modelsImport.Alerts;
 const Organizations  = modelsImport.Organizations;
 const Departments    = modelsImport.Departments;
 
-// Standard checks for every role, no matter
-// Add flash alerts
-app.use((req, res, next) => {
-  Alerts.findByUser(req.user.cmid)
-  .then((alerts) => {
-    res.locals.ALERTS_FEED = alerts;
-    next();
-  }).catch(error500(res));
-});
-
-// Add organization
-app.use((req, res, next) => {
-  Organizations.findByID(req.user.org)
-  .then((org) => {
-    res.locals.organization = org;
-    next();
-  }).catch(error500(res));
-});
-
-// Add department
-app.use((req, res, next) => {
-  Departments.findByID(req.user.department)
-  .then((department) => {
-    // if no department, provide some dummy attributes
-    if (!department) {
-      department = {
-        name:         "Unassigned",
-        phone_number: null,
-        organization: req.user.org
-      }
-    }
-    res.locals.department = department;
-    next();
-  }).catch(error500(res));
-});
-
 // Reroute from standard drop endpoint
 app.get("/", (req, res, next) => {
   if (!req.hasOwnProperty("user")) {
@@ -172,36 +136,4 @@ app.get("/*", function (req, res) {
 });
 
 
-// START UP CLIENTCOMM
-var port = 4000;
-var server = app.listen(port, function () {
-  console.log(`Listening on port ${port}.`.green);
-
-  // Run super user check (after migrations)
-  // TO DO: This method is hacky, there should be a callback at migrations completion
-  setTimeout(function () { require("../utils/superuser-check.js")(); }, 5000);
-});
-
-
-// EXPORT SERVER
-module.exports = server;
-
-
-// SCHEDULER
-// TO DO: Make anything here a CRON job
-//        Get rid of need for these arbitrary env vars
-// Process environment indicator
-var EMNOTIF = process.env.EMNOTIF;
-
-// EMNOTIF means run email notifications, including regular check up on text messages
-if (EMNOTIF && EMNOTIF == "true") {
-  var dailyTimer = 1000 * 60 * 60 * 24;
-  var fifteenMinTimer = 1000 * 60 * 15; 
-  var thirtySecTimer = 1000 * 60 * 0.5; 
-
-  // Set activities
-  setInterval(function () { require("../utils/em-notify").runEmailUpdates(); }, dailyTimer); 
-  setInterval(function () { require("../utils/sms-status-check").checkSMSstatus(); }, thirtySecTimer); 
-  setInterval(function () { require("../utils/timed-notification").checkAndSendNotifications(); }, fifteenMinTimer); 
-}
-
+module.exports = app;

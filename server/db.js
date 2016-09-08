@@ -4,6 +4,7 @@ var env = "production";
 var TESTENV = process.env.TESTENV;
 if (TESTENV && TESTENV == "true") {
   env = "development";
+
   console.log("Knex configuration environment: " + env);
 }
 
