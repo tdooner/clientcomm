@@ -36,8 +36,8 @@ const twilioClient    = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 
 // Outside library requires
-var moment    = require("moment");
-var moment_tz = require("moment-timezone");
+let moment    = require("moment");
+let moment_tz = require("moment-timezone");
 
 
 // General error handling
@@ -46,9 +46,10 @@ const error500     = errorHandling.error500;
 const notFound      = errorHandling.notFound;
 
 // Internal utilities
-var logging                 = require("./logging");
-var logClientActivity       = logging.logClientActivity;
-var logConversationActivity = logging.logConversationActivity;
+let logging                 = require("./logging");
+let logClientActivity       = logging.logClientActivity;
+let logConversationActivity = logging.logConversationActivity;
+let emailer                 = require("./emailer");
 
 // Standard checks for every role, no matter
 // Add flash alerts
@@ -133,7 +134,7 @@ router.get("/org", (req, res) => {
         userFilterID, userFilterID,
         clients: clients,
         countsByWeek: countsByWeek,
-        departmentFilterID: department.department_id,
+        
         countsByDay: countsByDay
       });
     }).catch(error500(res));    
@@ -182,7 +183,7 @@ router.get("/org/departments", (req, res) => {
 
   Departments.selectByOrgID(req.user.org, status)
   .then((departments) => {
-    res.render("departments", {
+    res.render("departments/index", {
       hub: {
         tab: "departments",
         sel: status ? "active" : "inactive"
@@ -313,7 +314,7 @@ router.get("/org/users", (req, res) => {
       });        
     }
 
-    res.render("users", {
+    res.render("users/index", {
       hub: {
         tab: "users",
         sel: status ? "active" : "inactive"
@@ -323,10 +324,117 @@ router.get("/org/users", (req, res) => {
   }).catch(error500(res));
 });
 
-// TODO: Issue with clients overlap on Nav, accidentally built this one out so it renders
+router.get("/org/users/create", (req, res) => {
+  res.render("users/create");
+});
+
+router.post("/org/users/create", (req, res) => {
+  Users.findByEmail(decodeURIComponent(req.body.email))
+  .then((u) => {
+    if (u) {
+      req.flash("warning", "That email already exists in the system.");
+      res.redirect("/org/users/create");
+    } else {
+      Users.createOne(
+        req.body.first, 
+        req.body.middle, 
+        req.body.last, 
+        req.body.email, 
+        req.user.org, 
+        req.user.department, 
+        req.body.position, 
+        req.body.className
+      ).then((generatedPass) => {
+        emailer.activationAlert(req.body.email, generatedPass);
+        req.flash("success", "Created new user, sent invite email.");
+        res.redirect("/org/users");
+      }).catch(error500(res));
+    }
+  }).catch(error500(res));
+});
+
+router.get("/org/users/create/check/:email", (req, res) => {
+  Users.findByEmail(decodeURIComponent(req.params.email))
+  .then((u) => {
+    res.json({user: u});
+  }).catch(error500(res));
+});
+
+router.get("/org/users/:targetUserID/alter/:case", (req, res) => {
+  let state = req.params.case === "close" ? false : true;
+
+  Users.changeActivityStatus(req.params.targetUserID, state)
+  .then(() => {
+    req.flash("success", "Updated user activity state.");
+    res.redirect("/org/users");
+  }).catch(error500(res));
+});
+
+router.get("/org/users/:targetUser/edit", (req, res) => {
+  let departments;
+  Departments.selectByOrgID(req.user.org)
+  .then((depts) => {
+    departments = depts;
+    return Users.findByID(req.params.targetUser)
+  }).then((targetUser) => {
+    if (targetUser) {
+      res.render("users/edit", {
+        targetUser: targetUser,
+        departments: departments
+      })
+    } else {
+      notFound(res);
+    }
+  }).catch(error500(res));
+});
+
+router.post("/org/users/:targetUser/edit", (req, res) => {
+  Users.updateOne(
+          req.params.targetUser, 
+          req.body.first, 
+          req.body.middle, 
+          req.body.last, 
+          req.body.email, 
+          req.body.department, 
+          req.body.position, 
+          req.body.className
+  ).then(() => {
+    req.flash("success", "Updated user.");
+    res.redirect("/org/users");
+  }).catch(error500(res));
+});
+
+router.get("/org/users/:targetUser/transfer", (req, res) => {
+  let departments;
+  Departments.selectByOrgID(req.user.org)
+  .then((d) => {
+    departments = d;
+    return Users.findByID(req.params.targetUser)
+  }).then((u) => {
+    if (u) {
+      res.render("users/transfer", {
+        targetUser: u,
+        departments: departments
+      })
+    } else {
+      notFound(res);
+    }
+  }).catch(error500(res));
+});
+
+router.post("/org/users/:targetUser/transfer", (req, res) => {
+  Users.transferOne(
+    req.params.targetUser, 
+    req.body.department
+  ).then(() => {
+    req.flash("success", "Transfered user.");
+    res.redirect("/org/users");
+  }).catch(error500(res));
+});
+
 router.get("/org/clients", (req, res) => {
-  let status = req.query.status == "closed" ? false : true;
-  let department = req.user.department || req.query.departmentId;
+  let status      = req.query.status == "closed" ? false : true;
+  let department  = req.user.department || req.query.departmentId;
 
   // Controls against a case where the owner would accidentally have a department
   if (req.user.class === "owner" && !req.query.departmentId) {
@@ -341,7 +449,14 @@ router.get("/org/clients", (req, res) => {
   }
 
   method.then((clients) => {
-    res.render("clients", {
+
+    if (req.query.limitByUser) {
+      clients = clients.filter((c) => {
+        return Number(c.cm) === Number(req.query.limitByUser);
+      });
+    }
+
+    res.render("clients/index", {
       hub: {
         tab: "clients",
         sel: status ? "open" : "closed"

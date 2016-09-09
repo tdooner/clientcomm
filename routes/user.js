@@ -142,7 +142,7 @@ class NotificationsView {
         // Remove all closed clients except for if matches with notification
         clients = clients.filter((c) => { return c.active || c.clid === n.client; });
 
-        res.render("v4/primary/notifications/edit", {
+        res.render("notifications/edit", {
           notification: n,
           clients: clients
         });
@@ -197,7 +197,7 @@ router.get("/clients", (req, res) => {
 
   Clients.findByUsers(req.user.cmid, status)
   .then((clients) => {
-    res.render("clients", {
+    res.render("clients/index", {
       hub: {
         tab: "clients",
         sel: status ? "open" : "closed",
@@ -207,8 +207,10 @@ router.get("/clients", (req, res) => {
   }).catch(error500(res));  
 });
 
+// TODO: If owner, show a list of all users to attribute client to
+//       Same for supervisor, but limit only within department
 router.get("/clients/create", (req, res) => {
-  res.render("v4/primary/client/create");
+  res.render("clients/create");
 });
 
 router.post("/clients/create", (req, res) => {
@@ -233,9 +235,9 @@ router.post("/clients/create", (req, res) => {
   }).catch(error500(res));
 });
 
-// For all /clients/:clientID, include local obj. client
-router.use("/clients/:clientID", (req, res, next) => {
-  Client.findByID(req.params.clientID)
+// For all /clients/:clientId, include local obj. client
+router.use("/clients/:clientId", (req, res, next) => {
+  Client.findByID(req.params.clientId)
   .then((c) => {
     if (c) {
       res.locals.client = c;
@@ -246,11 +248,15 @@ router.use("/clients/:clientID", (req, res, next) => {
   }).catch(error500(res));
 });
 
-router.get("/clients/:clientID/address", (req, res) => {
-  Client.findByID(req.params.clientID)
+router.get("/clients/:clientId", (req, res) => {
+  res.redirect(`/clients/${req.params.clientId}/messages`);
+});
+
+router.get("/clients/:clientId/address", (req, res) => {
+  Client.findByID(req.params.clientId)
   .then((client) => {
     if (client) {
-      res.render("v4/primary/client/address", {
+      res.render("clients/address", {
         client: client,
         template: req.query
       });
@@ -261,12 +267,11 @@ router.get("/clients/:clientID/address", (req, res) => {
   }).catch(error500(res));
 });
 
-router.get("/clients/:clientID/address/templates", (req, res) => {
+router.get("/clients/:clientId/address/templates", (req, res) => {
   Templates.findByUser(req.user.cmid)
   .then((templates) => {
-    res.render("v4/primary/client/templates", {
-      templates: templates,
-      parameters: req.params
+    res.render("clients/templates", {
+      templates: templates
     });
   }).catch(error500(res));
 });
@@ -306,7 +311,7 @@ router.get("/clients/:clientID/edit", (req, res) => {
   Client.findByID(req.params.clientID)
   .then((client) => {
     if (client) {
-      res.render("v4/primary/client/edit", {
+      res.render("clients/edit", {
         client: client
       });
     } else {
@@ -342,7 +347,7 @@ router.get("/clients/:clientID/edit/color", (req, res) => {
   ColorTags.selectAllByUser(req.user.cmid)
   .then((colors) => {
     if (colors.length > 0) {
-      res.render("v4/primary/client/colors", {
+      res.render("clients/colors", {
         colors: colors,
         params: req.params
       });
@@ -386,7 +391,7 @@ router.get("/clients/:clientID/messages", (req, res) => {
     });
     return CommConns.findByClientID(req.params.clientID)
   }).then((communications) => {
-    res.render("v4/primary/client/messages", {
+    res.render("clients/messages", {
       hub: {
         tab: "messages",
         sel: req.query.method ? req.query.method : "all"
@@ -439,7 +444,7 @@ router.post("/clients/:clientID/messages", (req, res) => {
 router.get("/clients/:clientID/communications", (req, res) => {
   CommConns.getClientCommunications(req.params.clientID)
   .then((c) => {
-    res.render("v4/primary/client/communications", {
+    res.render("clients/communications", {
       hub: {
         tab: "contactMethods",
         sel: null
@@ -484,25 +489,43 @@ router.get("/clients/:clientID/transfer", (req, res) => {
     // Limit only to same department transfers
     if (!allDep) users = users.filter((u) => { return u.department == req.user.department });
 
-    res.render("v4/primary/client/transfer", {
+    res.render("clients/transfer", {
       users: users,
       allDepartments: allDep
     });
   }).catch(error500(res));
 });
 
-router.post("/clients/:clientID/transfer", (req, res) => {
+router.get("/clients/:clientId/transcript", (req, res) => {
+  let withUser = req.query.with || null;
+  Messages.findByClientID(withUser, req.params.clientId)
+  .then((messages) => {
+    
+    // Format into a text string
+    messages = messages.map(function (m) {
+      let s = "";
+      Object.keys(m).forEach(function (k) { s += `\n${k}: ${m[k]}`; });
+      return s;
+    }).join("\n\n");
+
+    // Note: this does not render a new page, just initiates a download
+    res.set({"Content-Disposition":"attachment; filename=transcript.txt"});
+    res.send(messages);
+  }).catch(error500(res));
+});
+
+router.post("/clients/:clientId/transfer", (req, res) => {
   const fromUserID = req.user.cmid;
   const toUserID   = req.body.userID;
-  const clientID   = req.params.clientID;
+  const clientId   = req.params.clientId;
   const bundleConv = req.params.bundleConversations ? true : false;
 
   Users.findByID(toUserID)
   .then((user) => {
     if (user && user.active) {
-      Client.transfer(clientID, fromUserID, toUserID, bundleConv)
+      Client.transfer(clientId, fromUserID, toUserID, bundleConv)
       .then(() => {
-        logClientActivity(clientID);
+        logClientActivity(clientId);
         res.redirect(`/clients`);
       }).catch(error500(res));
 
@@ -515,7 +538,7 @@ router.post("/clients/:clientID/transfer", (req, res) => {
 router.get("/colors", function (req, res) {
   ColorTags.selectAllByUser(req.user.cmid)
   .then((colors) => {
-    res.render("v4/primary/colors", {
+    res.render("colors", {
       colors: colors,
     });
   }).catch(error500(res));
@@ -542,20 +565,20 @@ router.get("/notifications", NotificationsView.show);
 router.get("/notifications/create", (req, res) => {
   Clients.findByUser(req.user.cmid)
   .then((clients) => {
-    res.render("v4/primary/notifications/create", {
+    res.render("notifications/create", {
       clients: clients
     })
   }).catch(error500(res));
 });
 
 router.get("/notifications/create/compose", (req, res) => {
-  res.render("v4/primary/notifications/compose", {
+  res.render("notifications/compose", {
     parameters: req.query
   });
 });
 
 router.post("/notifications/create/compose", (req, res) => {
-  res.render("v4/primary/notifications/compose", {
+  res.render("notifications/compose", {
     parameters: req.body
   });
 });
@@ -563,7 +586,7 @@ router.post("/notifications/create/compose", (req, res) => {
 router.get("/notifications/create/templates", (req, res) => {
   Templates.findByUser(req.user.cmid)
   .then((templates) => {
-    res.render("v4/primary/notifications/templates", {
+    res.render("notifications/templates", {
       templates: templates,
       parameters: req.query
     });
@@ -614,7 +637,7 @@ router.get("/templates", (req, res) => {
 });
 
 router.get("/templates/create", (req, res) => {
-  res.render("v4/primary/templates/create");
+  res.render("templates/create");
 });
 
 router.post("/templates/create", (req, res) => {
@@ -641,7 +664,7 @@ router.get("/templates/edit/:templateID", (req, res) => {
   Templates.findByID(req.params.templateID)
   .then((template) => {
     if (template) {
-      res.render("v4/primary/templates/edit", {
+      res.render("templates/edit", {
         template: template
       });
     } else {
@@ -662,7 +685,7 @@ router.post("/templates/edit/:templateID", (req, res) => {
 });
 
 router.get("/groups/address/:groupID", (req, res) => {
-  res.render("v4/primary/groups/address", {
+  res.render("groups/address", {
     parameters: req.params
   });
 });
@@ -700,7 +723,7 @@ router.post("/groups/address/:groupID", (req, res) => {
 router.get("/groups/create", (req, res) => {
   Clients.findByUser(Number(req.user.cmid), true)
   .then((clients) => {
-      res.render("v4/primary/groups/create", {
+      res.render("groups/create", {
         clients: clients
       });
   }).catch(error500(res));
@@ -723,7 +746,7 @@ router.get("/groups/edit/:groupID", (req, res) => {
     if (group) {
       Clients.findByUser(Number(req.user.cmid), true)
       .then((clients) => {
-        res.render("v4/primary/groups/edit", {
+        res.render("groups/edit", {
           group: group,
           clients: clients
         });

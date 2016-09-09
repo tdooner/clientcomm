@@ -157,21 +157,7 @@ router.post("/client/transfer", (req, res) => {
 
 
 router.get("/client/transcript_between/:targetUserID", (req, res) => {
-  let clientID = req.params.clientID;
-  let targetUserID = req.params.targetUserID;
-  Messages.findByClientID(targetUserID, clientID)
-  .then((messages) => {
-    // Format into a text string
-    messages = messages.map(function (m) {
-      let s = "";
-      Object.keys(m).forEach(function (k) {
-        s += `\n${k}: ${m[k]}`;
-      });
-      return s;
-    }).join("\n\n");
-    res.set({"Content-Disposition":"attachment; filename=transcript.txt"});
-    res.send(messages);
-  }).catch(error500(res));
+
 });
 
 

@@ -1,23 +1,14 @@
-<% include ../../partials/cardFrameTop %>
+<% include ../partials/cardFrameTop %>
 
 <div class="cardHead">
-  <!-- exit button -->
-  <a href="/users">
-    <% include ../../partials/cardExit %>
-  </a>
-  <div class="cardTitle">
-    Edit User
-  </div>
-  <div class="cardSubtitle">
-    Keep user information reflective of organization structure.
-  </div>
+  <a href="/org/users"><% include ../partials/cardExit %></a>
+  <div class="cardTitle">Edit User</div>
+  <div class="cardSubtitle">Keep user information reflective of organization structure.</div>
 </div>
 
 <div class="cardBody">
 
-  <form method = "post"
-        id="createGroup"
-        action = "/users/edit/<%=targetUser.cmid%>">
+  <form method = "post">
 
     <div class="formRow">
       <div class="formLabel"> First Name </div>
@@ -110,4 +101,4 @@
 
 
 
-<% include ../../partials/cardFrameBottom %>
+<% include ../partials/cardFrameBottom %>

@@ -1,4 +1,4 @@
-<% include ./partials/hubFrameTop %>
+<% include ../partials/hubFrameTop %>
 
 <!-- Load in addition CSS -->
 <link rel="stylesheet" type="text/css" href="/static/css/v4_clientsList_supervisor.css">
@@ -37,28 +37,28 @@
 </div>
 
 <% if (clients.length == 0) { %>
-  <% include ./partials/emptyResultsGreeting %>
+  <% include ../partials/emptyResultsGreeting %>
 <% } %>
 
 
 <% clients.forEach( function (client) { %>
   <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
     <div class="column" value="<%= client.color_name %>">
-      <a href="">
+      <a href="<%=`/clients/${client.clid}/edit/color`%>">
         <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
       </a>
     </div>
     <div class="column">
       <% if (client.active) { %>
-        <a href="<%= `/clients/address/${client.clid}` %>">
+        <a href="<%=`/clients/${client.clid}/address`%>">
           <i class="fa highlight fa-send" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
       </div>
     <div class="column">
-      <a href="">
+      <a href="<%=`/clients/${client.clid}`%>">
         <span class="clientName">
-          <%= client.last + ', ' + client.first + ' ' + client.middle %>
+          <%=`${client.last}, ${client.first} ${client.middle}`%>
         </span>
       </a>
     </div>
@@ -73,7 +73,7 @@
       <% } else { %>-<% } %>
     </div>
     <div class="column">
-      <a href="<%= `/clients/${client.clid}/transcript_between/${client.cm}` %>">
+      <a href="<%= `/clients/${client.clid}/transcript?with=${client.cm}` %>">
         <i class="fa highlight fa-download" aria-hidden="true"></i>
       </a>
     </div>
@@ -123,4 +123,4 @@
     );
 </script>
 
-<% include ./partials/hubFrameBottom %>
+<% include ../partials/hubFrameBottom %>
