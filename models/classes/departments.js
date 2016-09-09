@@ -15,7 +15,7 @@ const DepartmentSupervisors = require("./departmentSupervisors");
 // Class
 class Departments {
 
-  static selectByOrgID (orgID, activeStatus) {
+  static findByOrg (orgID, activeStatus) {
     if (typeof activeStatus == "undefined") activeStatus = true;
     return new Promise((fulfill, reject) => {
       var departmentsAll;

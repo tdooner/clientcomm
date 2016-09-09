@@ -20,7 +20,7 @@
     
     <% departments.forEach(function (department) { %>
       <a href="/org?departmentID=<%= department.department_id %>">
-        <div class="department <% if (departmentFilterID == Number(department.department_id)) { %>selected<% } %>">
+        <div class="department <% if (departmentFilter == Number(department.department_id)) { %>selected<% } %>">
           <div class="subject">
             <%= department.name %>
           </div>
@@ -186,8 +186,8 @@
       <% } else if (user.class == "supervisor") { %>
         var f = ea["user.first"] !== "" && ea["user.first"] !== "Test Account" && ea["user.first"] !== "Kuan";
         var l = ea["user.last"] !== "";
-        if (departmentFilterID) {
-          return ((departmentFilterID == ea["user.department"]) && (f && l))
+        if (departmentFilter) {
+          return ((departmentFilter == ea["user.department"]) && (f && l))
         } else {
           return (f && l);
         }

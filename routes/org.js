@@ -94,7 +94,41 @@ router.use((req, res, next) => {
 });
 
 router.get("/org", (req, res) => {
-  if (req.user.class === "supervisor") {
+    let departments;
+    let departmentFilter = req.user.department || req.query.departmentFilter || null;
+
+    Departments.findByOrg(req.user.org, true)
+    .then((depts) => {
+      departments = depts;
+
+      if (departmentFilter) {
+        return Messages.countsByDepartment(req.user.org, departmentFilter, "day")
+      } else {
+        return Messages.countsByOrg(req.user.org, "day")
+      }
+    }).then((counts) => {
+      countsByDay = counts;
+
+      if (departmentFilter) {
+        return Messages.countsByDepartment(req.user.org, departmentFilter, "week")
+      } else {
+        return Messages.countsByOrg(req.user.org, "week")
+      }
+    }).then((counts) => {
+      countsByWeek = counts;
+      res.render("dashboard", {
+        hub: {
+          tab: "dashboard",
+          sel: null
+        },
+        departments: departments,
+        departmentFilter: departmentFilter,
+        countsByWeek: countsByWeek,
+        countsByDay: countsByDay
+      });
+    }).catch(error500(res));
+
+  if (false && req.user.class === "supervisor") {
     let clients, countsByDay, countsByWeek, department, users;
     let orgID = Number(req.user.org);
     let departmentID = Number(req.user.department);
@@ -138,25 +172,25 @@ router.get("/org", (req, res) => {
         countsByDay: countsByDay
       });
     }).catch(error500(res));    
-  } else if (req.user.class === "owner") {
+  } else if (false && req.user.class === "owner") {
     let departments, countsByWeek, countsByDay;
-    let departmentFilterID = Number(req.query.departmentID);
-    if (isNaN(departmentFilterID)) departmentFilterID = null;
+    let departmentFilter = Number(req.query.departmentID);
+    if (isNaN(departmentFilter)) departmentFilter = null;
 
-    Departments.selectByOrgID(req.user.org, true)
+    Departments.findByOrg(req.user.org, true)
     .then((depts) => {
       departments = depts;
 
-      if (departmentFilterID) {
-        return Messages.countsByDepartment(req.user.org, departmentFilterID, "day")
+      if (departmentFilter) {
+        return Messages.countsByDepartment(req.user.org, departmentFilter, "day")
       } else {
         return Messages.countsByOrg(req.user.org, "day")
       }
     }).then((counts) => {
       countsByDay = counts;
 
-      if (departmentFilterID) {
-        return Messages.countsByDepartment(req.user.org, departmentFilterID, "week")
+      if (departmentFilter) {
+        return Messages.countsByDepartment(req.user.org, departmentFilter, "week")
       } else {
         return Messages.countsByOrg(req.user.org, "week")
       }
@@ -168,7 +202,7 @@ router.get("/org", (req, res) => {
           sel: null
         },
         departments: departments,
-        departmentFilterID: departmentFilterID,
+        departmentFilter: departmentFilter,
         countsByWeek: countsByWeek,
         countsByDay: countsByDay
       });
@@ -181,7 +215,7 @@ router.get("/org", (req, res) => {
 router.get("/org/departments", (req, res) => {
   let status = req.query.status === "inactive" ? false : true;
 
-  Departments.selectByOrgID(req.user.org, status)
+  Departments.findByOrg(req.user.org, status)
   .then((departments) => {
     res.render("departments/index", {
       hub: {
@@ -372,7 +406,7 @@ router.get("/org/users/:targetUserID/alter/:case", (req, res) => {
 
 router.get("/org/users/:targetUser/edit", (req, res) => {
   let departments;
-  Departments.selectByOrgID(req.user.org)
+  Departments.findByOrg(req.user.org)
   .then((depts) => {
     departments = depts;
     return Users.findByID(req.params.targetUser)
@@ -406,7 +440,7 @@ router.post("/org/users/:targetUser/edit", (req, res) => {
 
 router.get("/org/users/:targetUser/transfer", (req, res) => {
   let departments;
-  Departments.selectByOrgID(req.user.org)
+  Departments.findByOrg(req.user.org)
   .then((d) => {
     departments = d;
     return Users.findByID(req.params.targetUser)
@@ -443,13 +477,12 @@ router.get("/org/clients", (req, res) => {
 
   let method;
   if (department) {
-    method = Clients.findByOrg(req.user.org, status);
-  } else {
     method = Clients.findByDepartment(department, status);
+  } else {
+    method = Clients.findByOrg(req.user.org, status);
   }
 
   method.then((clients) => {
-
     if (req.query.limitByUser) {
       clients = clients.filter((c) => {
         return Number(c.cm) === Number(req.query.limitByUser);
@@ -462,7 +495,7 @@ router.get("/org/clients", (req, res) => {
         sel: status ? "open" : "closed"
       },
       clients: clients,
-      limitByUser: null
+      limitByUser: req.query.limitByUser || null
     });
   }).catch(error500(res));
 });

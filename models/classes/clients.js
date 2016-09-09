@@ -18,15 +18,30 @@ const colors = require("colors")
 // Class
 class Clients {
 
-  static findByDepartment (departmentID, activeStatus) {
-    if (typeof activeStatus == "undefined") activeStatus = true;
+  static findByOrg (orgId, status) {
+    if (typeof status == "undefined") status = true;
+
     return new Promise((fulfill, reject) => {
-      Users.findAllByDepartment(departmentID)
+      Users.findByOrg(orgId)
       .then((users) => {
-        const userIDs = users.map(function (user) { return user.cmid; });
-        return Clients.findByUsers(userIDs, activeStatus)
-      }).then((clients) => {
-        return fulfill(clients);
+        let userIds = users.map(function (u) { return u.cmid; });
+        return Clients.findByUsers(userIds, status)
+      }).then((c) => {
+        return fulfill(c);
+      }).catch(reject);
+    });
+  }
+
+  static findByDepartment (departmentId, status) {
+    if (typeof status == "undefined") status = true;
+
+    return new Promise((fulfill, reject) => {
+      Users.findAllByDepartment(departmentId)
+      .then((users) => {
+        let userIds = users.map(function (u) { return u.cmid; });
+        return Clients.findByUsers(userIds, status)
+      }).then((c) => {
+        return fulfill(c);
       }).catch(reject);
     });
   }
