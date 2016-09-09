@@ -176,7 +176,7 @@ module.exports = function (app, passport) {
 
   // LOGIN REQUEST & PASSPORT LOGIN LOGIC
   app.post("/login", passport.authenticate("local-login", {
-      successRedirect: "/cms",
+      successRedirect: "/",
       failureRedirect: "/login-fail"
     })
   );
