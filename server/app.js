@@ -126,6 +126,38 @@ app.get("/", (req, res, next) => {
   }
 });
 
+app.use((req, res, next) => {
+  res.locals.leftTab = (name, hub, level, showOptions) => {
+    let capitalized = name.charAt(0).toUpperCase() + name.slice(1)
+
+    let url = `/${name}`
+    if (level == "org") {
+      url = `/org${url}`
+    }
+
+    let options = ``
+    if (showOptions) {
+     options = `
+        <div class="option ${hub.sel == 'active' ? 'selected' : ''}">
+          <a href="${url}?status=active">Active</a>
+        </div>
+        <div class="option ${hub.sel == 'inactive' ? 'selected' : ''}">
+          <a href="${url}?status=inactive">Inactive</a>
+        </div>    
+      `  
+    }
+
+    return `
+      <div class="leftTab ${hub.tab == name ? 'open' : 'closed'}">
+        <div class="title"><a href="${url}">${capitalized}</a></div>
+        ${options}
+      </div>
+    `
+  }   
+  next();
+})
+
+
 app.use("/", require("../routes/user"))
 app.use("/", require("../routes/org"))
 

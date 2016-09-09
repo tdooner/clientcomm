@@ -1,65 +1,68 @@
-var assert = require('assert');
-process.env.TESTENV = true
-http_mocks = require('node-mocks-http')
-should = require('should')
 
-function buildResponse() {
-  return http_mocks.createResponse(
-    {
-      eventEmitter: require('events').EventEmitter
-    }
-  )
-}
+const assert = require('assert');
+const session = require('supertest-session');
+
+process.env.TESTENV = true
+should = require('should')
 
 const APP = require('../../server/app')
 
+request = session(APP)
 
-let responseTest = function(requestData, callback) {
-  return function(done) {
-    var res = buildResponse()
-    var req  = http_mocks.createRequest(requestData)
-
-    res.on('end', () => {
-      callback(res, req, done)
-    })
-
-    APP.handle(req, res)
-  }
-}
+// http://mherman.org/blog/2016/04/28/test-driven-development-with-node/
 
 describe('Basic http req tests', function() {
 
-  it('should redirect from root', responseTest({
-      method: 'GET',
-      url: '/',
-    }, (res, req, done) => {
-      res.statusCode.should.equal(302);
-      done()      
-    })
-  )
 
-  it('should be able to view login page', responseTest({
-      method: 'GET',
-      url: '/login',
-    }, (res, req, done) => {
-      res.statusCode.should.equal(200);
-      done()      
-    })
-  )
+  it('should redirect from root', function(done) {
+    request.get('/')
+      .expect(302)
+      .expect('Location', '/login')
+      .end(function(err, res) {
+        done(err);
+      });
+  })
 
-  it('should fail login with incorrect creds', responseTest({
-      method: 'POST',
-      url: '/login',
-      query: {
-        email: "kuas@gm", 
-        pass: "nah",
-      },
-    }, (res, req, done) => {
-      res.statusCode.should.equal(302);
-      res._getRedirectUrl().should.equal('/login-fail')
-      done()      
-    })
-  )
+  it('should be able to view login page', function(done) {
+    request.get('/login')
+      .expect(200)
+      .end(function(err, res) {
+        done(err);
+      });
+  })
+
+  it('should redirect from root', function(done) {
+    request.post('/login')
+      .field('email', 'af@sadf')
+      .field('pass', 'pass')
+      .expect(302)
+      .expect('Location', '/login-fail')
+      .end(function(err, res) {
+        done(err);
+      });
+  })
+
+  it('should login with real creds', function(done) {
+    request.post('/login')
+      .type('form')
+      .send({'email':''})
+      .send({'pass':''})
+      .expect(302)
+      .expect('Location', '/')
+      .end(function(err, res) {
+        done(err);
+      });
+  })
+
+  it('logged in user should redirect to org', function(done) {
+    request.get('/')
+      .expect(302)
+      .expect('Location', '/org')
+      .end(function(err, res) {
+        done(err);
+      });
+  })
+
 })
 
 

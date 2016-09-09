@@ -13,11 +13,7 @@
       </div>
 
       <% if (user.class == "owner") { %>
-        <div class="leftTab <%= hub.tab == 'departments' ? 'open' : 'closed' %>">
-          <div class="title"><a href="/org/departments">Departments</a></div>
-          <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/org/departments?status=active">Active</a></div>
-          <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/org/departments?status=inactive">Inactive</a></div>
-        </div>
+        <%- leftTab('departments', hub, level, true) %>
       <% } %>
 
       <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">

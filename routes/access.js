@@ -21,11 +21,11 @@ module.exports = function (app, passport) {
   app.get("/login", function (req, res) {
     // check if the user is already logged in
     if (req.hasOwnProperty("user")) { res.redirect("/cms"); } 
-    else { res.render("access/login"); }
+    else { res.render("login"); }
   });
 
   app.get("/login/reset", function (req, res) {
-    res.render("access/loginreset");
+    res.render("loginreset");
   });
 
   app.post("/login/reset", function (req, res) {
@@ -175,7 +175,7 @@ module.exports = function (app, passport) {
 
 
   // LOGIN REQUEST & PASSPORT LOGIN LOGIC
-  app.post("/login", passport.authenticate("local-login", {
+  app.post(/\/(login|login-fail)/, passport.authenticate("local-login", {
       successRedirect: "/",
       failureRedirect: "/login-fail"
     })
@@ -188,7 +188,7 @@ module.exports = function (app, passport) {
   //        there is likely better way to do this without reroute
   app.get("/login-fail", function (req, res) {
     req.flash("warning", "Email password combination did not work.");
-    res.redirect("/login");
+    res.render("login");
   });
 
 

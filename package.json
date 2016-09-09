@@ -34,6 +34,7 @@
     "passport": "~0.3.2",
     "passport-local": "~1.0.0",
     "pg": "~4.5.5",
+    "supertest-session": "^2.0.1",
     "twilio": "~3.3.0-edge"
   },
   "scripts": {
@@ -43,11 +44,11 @@
   "devDependencies": {
     "gulp": "3.9.1",
     "gulp-sass": "2.3.2",
+    "knex-seed-file": "^0.1.4",
     "mocha": "^3.0.2",
-    "node-mocks-http": "^1.5.3",
     "node-sass": "3.7.0",
-    "should": "^11.1.0",
-    "supertest": "1.2.0"
+    "supertest": "1.2.0",
+    "supertest-session": "https://registry.npmjs.org/supertest-session/-/supertest-session-2.0.1.tgz"
   },
   "repository": {
     "type": "git",
