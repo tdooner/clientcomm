@@ -94,7 +94,7 @@ router.use((req, res, next) => {
 
 router.get("/org", (req, res) => {
   if (req.user.class === "supervisor") {
-    let users, clients, countsByWeek, countsByDay;
+    let clients, countsByDay, countsByWeek, department, users;
     let orgID = Number(req.user.org);
     let departmentID = Number(req.user.department);
     let userFilterID = Number(req.query.targetUserID);
@@ -264,7 +264,8 @@ router.get("/org/departments/:departmentId/supervisors", (req, res) => {
 });
 
 router.post("/org/departments/:departmentId/supervisors", (req, res) => {
-  if (!Array.isArray(supervisorIDs)) supervisorIDs = [req.body.supervisorIDs];
+  if (!Array.isArray(req.body.supervisorIds)) req.body.supervisorIds = [req.body.supervisorIds];
+
   DepartmentSupervisors.updateSupervisors(
     req.params.departmentId, 
     req.body.supervisorIds, 
@@ -272,6 +273,24 @@ router.post("/org/departments/:departmentId/supervisors", (req, res) => {
   ).then(() => {
     req.flash("success", "Updated department supervisors.");
     res.redirect("/org/departments");
+  }).catch(error500(res));
+});
+
+router.get("/org/departments/:departmentID/alter/:case", (req, res) => {
+  let state = req.params.case === "close" ? false : true;
+
+  Departments.findMembers(req.params.departmentID)
+  .then((members) => {
+    if (members.length == 0) {
+      Departments.alterCase(req.params.departmentID, state)
+      .then(() => {
+        req.flash("success", "Changed department activity status.");
+        res.redirect("/org/departments");
+      }).catch(error500(res));
+    } else {
+      req.flash("warning", "Need to remove or close out members first.");
+      res.redirect("/org/departments");
+    }
   }).catch(error500(res));
 });
 

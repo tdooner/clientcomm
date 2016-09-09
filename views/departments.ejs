@@ -52,12 +52,12 @@
       <% if (hub.sel == "active") { %>
         <!-- Can only deactivate a department if all clients and supers are removed -->
         <% if (!d.members) { %>
-          <a href="/org/departments/<%=d.department_id%>/deactivate">
+          <a href="/org/departments/<%=d.department_id%>/alter/close">
             <i class="fa highlight fa-book" aria-hidden="true"></i>
           </a>
         <% } else { %>-<% } %>
       <% } else { %>
-        <a href="/org/departments/<%=d.department_id%>/activate">
+        <a href="/org/departments/<%=d.department_id%>/alter/open">
           <i class="fa highlight fa-undo" aria-hidden="true"></i>
         </a>
       <% } %>

@@ -119,22 +119,13 @@ class Departments {
     });
   }
 
-  static activate (departmentID) {
-    return new Promise((fulfill, reject) => {
-      db("departments")
-        .where("department_id", departmentID)
-        .update({ active: true })
-      .then(() => {
-        fulfill();
-      }).catch(reject);
-    });
-  }
+  static alterCase (departmentID, active) {
+    if (typeof active == "undefined") active = true;
 
-  static deactivate (departmentID) {
     return new Promise((fulfill, reject) => {
       db("departments")
         .where("department_id", departmentID)
-        .update({ active: false })
+        .update({active: active})
       .then(() => {
         fulfill();
       }).catch(reject);

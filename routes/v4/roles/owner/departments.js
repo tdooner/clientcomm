@@ -41,35 +41,7 @@ let error500       = errorHandling.error500;
 
 
 
-router.get("/departments/deactivate/:departmentID", (req, res) => {
-  Departments.findMembers(req.params.departmentID)
-  .then((members) => {
-    if (members.length == 0) {
-      Departments.deactivate(req.params.departmentID)
-      .then(() => {
-        req.flash("success", "Deactivated department.");
-        res.redirect( "/v4/users/" + 
-                      req.user.cmid + 
-                      "/owner/departments");
-      }).catch(error500(res));
-    } else {
-      req.flash("warning", "Need to remove or close out members first.");
-      res.redirect( "/v4/users/" + 
-                    req.user.cmid + 
-                    "/owner/departments");
-    }
-  }).catch(error500(res));
-});
 
-router.get("/departments/activate/:departmentID", (req, res) => {
-  Departments.activate(req.params.departmentID)
-  .then(() => {
-    req.flash("success", "Activated department.");
-    res.redirect( "/v4/users/" + 
-                  req.user.cmid + 
-                  "/owner/departments");
-  }).catch(error500(res));
-});
 
 
 
