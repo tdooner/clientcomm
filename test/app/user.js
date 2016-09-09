@@ -29,7 +29,7 @@ let responseTest = function(requestData, callback) {
 
 describe('Basic http req tests', function() {
 
-  it('root', responseTest({
+  it('should redirect from root', responseTest({
       method: 'GET',
       url: '/',
     }, (res, req, done) => {
@@ -38,7 +38,7 @@ describe('Basic http req tests', function() {
     })
   )
 
-  it('login', responseTest({
+  it('should be able to view login page', responseTest({
       method: 'GET',
       url: '/login',
     }, (res, req, done) => {
@@ -47,6 +47,19 @@ describe('Basic http req tests', function() {
     })
   )
 
+  it('should fail login with incorrect creds', responseTest({
+      method: 'POST',
+      url: '/login',
+      query: {
+        email: "kuas@gm", 
+        pass: "nah",
+      },
+    }, (res, req, done) => {
+      res.statusCode.should.equal(302);
+      res._getRedirectUrl().should.equal('/login-fail')
+      done()      
+    })
+  )
 })
 
 
