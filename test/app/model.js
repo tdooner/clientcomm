@@ -1,0 +1,70 @@
+const assert = require('assert');
+const session = require('supertest-session');
+
+const BaseModel = require('../../models/base').BaseModel
+
+require('colors');
+const should = require('should');
+
+
+// http://mherman.org/blog/2016/04/28/test-driven-development-with-node/
+
+class TestModel extends BaseModel {
+  constructor(data) {
+    super({
+      data: data,
+      columns: ["cmid","org"],
+    })
+  }
+}
+
+describe('BaseModel checks', function() {
+  
+  it('BaseModel should correctly assign props', function(done) {
+    let testModel = new TestModel({cmid: 3, org: "org name"})
+    testModel.cmid.should.be.exactly(3)
+    testModel.org.should.be.exactly("org name")
+
+    done();
+  })
+
+  it("BaseModel should be angry if we "+
+    "don't have all the correct attributes", function(done) {
+      
+      should.not.exist(TestModel.tableName)
+      should.not.exist(TestModel.primaryId)
+
+      assert.throws(() => {TestModel.findByID()})
+
+      TestModel.tableName = "foo"
+      assert.throws(() => {TestModel.findByID()})
+
+      TestModel.tableName = null
+      TestModel.primaryId = "foo"
+      assert.throws(() => {TestModel.findByID()})
+
+      done()
+  })
+
+  it("BaseModel getSingle response should handle edge cases", function(done) {
+    let reject = (err) => {
+      err.message.should.be.exactly("nothing returned from db")
+    }
+
+    TestModel._getSingleResponse(undefined, null, reject)
+    TestModel._getSingleResponse([], null, reject)
+    done()
+  })
+
+  it("BaseModel getSingle response should" +
+    "return valid instance", function(done) {
+
+    let fulfill = (instance) => {
+      instance.should.have.property('_info')
+      instance.cmid.should.be.exactly(1)
+    }
+    TestModel._getSingleResponse([{cmid: 1, ord: "Org Name"}], fulfill, null)
+    done()
+  })
+
+})

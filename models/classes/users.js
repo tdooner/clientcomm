@@ -6,6 +6,7 @@ const Promise = require("bluebird");
 
 // Utilities
 const utilities = require("../utilities")
+const BaseModel = require("../base").BaseModel
 const undefinedValuesCheck = utilities.undefinedValuesCheck;
 const bcrypt = require("bcrypt-nodejs");
 
@@ -14,7 +15,19 @@ const CommConns = require("./commConns");
 
 
 // Class
-class Users {
+class Users extends BaseModel {
+
+  constructor(data) {
+    super({
+      data: data,
+      columns: [
+        "cmid","org", "first",
+        "last","email","position",
+        "admin","active","superuser",
+        "class","department"
+      ],
+    })
+  }
 
   static findByOrg (orgID, activeStatus) {
     if (typeof activeStatus == "undefined") activeStatus = true;
@@ -54,28 +67,6 @@ class Users {
         .orderBy("last", "asc")
       .then((users) => {
         fulfill(users);
-      }).catch(reject);
-    })
-  }
-
-  static findByID (userID) {
-    return new Promise((fulfill, reject) => {
-      db("cms")
-        .where("cmid", userID)
-        .limit(1)
-      .then((users) => {
-        fulfill(users[0]);
-      }).catch(reject);
-    })
-  }
-
-  static findByEmail (email) {
-    return new Promise((fulfill, reject) => {
-      db("cms")
-        .where("email", email)
-        .limit(1)
-      .then((users) => {
-        fulfill(users[0]);
       }).catch(reject);
     })
   }
@@ -156,5 +147,8 @@ class Users {
   }
   
 }
+
+Users.primaryId = "cmid"
+Users.tableName = "cms"
 
 module.exports = Users;
