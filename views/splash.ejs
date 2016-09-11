@@ -1,1 +1,387 @@
-here is a test page
+<!DOCTYPE HTML>
+<html lang="en">
+
+  <head>
+
+    <!-- Invoke New Relic before all else -->
+    <% if (newrelic !== null) { %>
+      <%- newrelic.getBrowserTimingHeader() %>
+    <% } %>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ClientComm</title>
+
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/favicons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/favicons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicons/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/static/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/static/favicons/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/static/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/static/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/static/favicons/manifest.json">
+    <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/static/favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/static/favicons/mstile-144x144.png">
+    <meta name="msapplication-config" content="/static/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+  </head>
+
+  
+  <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,900" rel="stylesheet"> -->
+  <link rel="stylesheet" type="text/css" href="/modules/font-awesome/css/font-awesome.min.css">
+
+  <style type="text/css">
+    body {
+      background-color: white;
+      font-family: Raleway, Arial, sans-serif;
+      color: #34438A;
+      padding: 0px;
+      margin: 0px;
+      text-align: center;
+    }
+
+    .block {
+      padding: 10px;
+      text-align: center;
+      font-size: 18px;
+      min-height: 32px;
+      line-height: 32px;
+    }
+
+    .grey {
+      background-color: #E5E5E5;
+    }
+
+    .left {
+      float: left;
+      font-size: 12px;
+    }
+
+    .right {
+      float: right;
+      padding: 5px;
+      background-color: red;
+      padding: 0px 20px 0px 20px;
+      background-color: #32A2DB;
+      color: #FFF;
+      cursor: pointer;
+    }
+
+    .signup:hover, .right:hover {
+      background-color: #34438A;
+    }
+
+    .icon {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 120px;
+      width: 200px;
+    }
+
+    .icon path {
+      fill: #34438A;
+    }
+
+    .inside {
+      width: 1050px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .signup { 
+      width: 410px;
+      height: 35px;
+      padding: 1px 10px 2px 4px;
+      background-color: #32A2DB;
+      overflow: hidden;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .outsideSU {
+      border: 1px dashed #34438A;
+      padding: 3px;
+      width: 424px;
+      margin-top: 50px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .signup input {
+      display: inline;
+      height: 20px;
+      line-height: 20px;
+      width: 290px;
+      padding: 5px;
+      margin: 0px 0px 0px 0px;
+      border: 0px solid #999;
+    }
+
+    .signup .button {
+      display: inline;
+      line-height: 24px;
+      font-size: 18px;
+      padding: 5px 20px 5px 20px;
+      margin: 0px 0px 0px 0px;
+      color: #FFF;
+      cursor: pointer;
+    }
+
+    .bottom {
+      width: 1000px;
+      padding-top: 25px;
+      font-size: 12px;
+      min-height: 75px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .bottomBlock {
+      float: left;
+      width: 250px;
+    }
+
+    .bottomBlock .name {
+      font-weight: 600;
+    }
+
+    .circleImg {
+      background-color: #FFF;
+      border-radius: 100%;
+      width: 100px;
+      height: 100px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-bottom: 10px;
+    }
+
+    .circleImg img {
+      width: 50%;
+      margin-right: auto;
+      margin-left: auto;
+      padding-bottom: 7%;
+    }
+
+  </style>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css">
+
+  <body>
+
+    <div class="block grey">
+      <div class="inside">
+        <span class="left">
+          Email the team at 
+          <a href="mailto:slco@codeforamerica.org?Subject=NAPSA%20Interest">
+            slco@codeforamerica.org
+          </a>
+        </span>
+        <a href="/login">
+          <span class="right">Login</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="block" style="padding: 50px;">
+      <div class="inside">
+        <div class="icon">
+          <% include ../public/icons/logo.svg %>
+          <br>
+          <% include ../public/icons/logotext.svg %>
+        </div>
+
+        <br>
+        
+        <div>
+          ClientComm makes it quick and easy to communicate with supervision clients. 
+        </div>
+        <div>
+          This helps them navigate their requirements and graduate from probation successfully.
+        </div>
+      </div>
+
+      <div class="outsideSU">
+        <div class="signup">
+          <input type="email"></input>
+          <div class="button">
+            Sign Up
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block grey">
+      <div class="inside">
+
+      <center style="font-size: 28px; padding: 20px; margin-bottom: 30px">
+        ClientComm Features
+      </center>
+
+      <div style="display: block; clear: both; position: relative; height: 150px; color: #34438A; padding-bottom: 50px">
+
+        <div style="width: 20%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <div class="circleImg">
+              <img src="/static/icons/png/telephone.png"></img>
+            </div>
+          </span>
+          <center><b>End Phone Tag</b></center>
+          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+            Communicate at your convenience.
+          </center>
+        </div>
+
+        <div style="width: 20%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <div class="circleImg">
+              <img src="/static/icons/png/padlock-1.png"></img>
+            </div>
+          </span>
+          <center><b>Security</b></center>
+          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+            ClientComm’s data is held to Salt Lake County’s email security standard.
+          </center>
+        </div>
+
+        <div style="width: 20%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <div class="circleImg">
+              <img src="/static/icons/png/alarm-clock.png"></img>
+            </div>
+          </span>
+          <center><b>Notifications</b></center>
+          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+            Schedule reminders for court dates and other appointments in advance.
+          </center>
+        </div>
+
+        <div style="width: 20%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <div class="circleImg">
+              <img src="/static/icons/png/user-list.png"></img>
+            </div>
+          </span>
+          <center><b>Save Multiple Numbers</b></center>
+          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+            Quickly contact clients in the way they prefer.
+          </center>
+        </div>
+
+        <div style="width: 20%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <div class="circleImg">
+              <img src="/static/icons/png/interface.png"></img>
+            </div>
+          </span>
+          <center><b>Templates</b></center>
+          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+            Save common messages for re-use.
+          </center>
+        </div>
+
+      </div>
+
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="inside">
+
+      <center style="font-size: 28px; padding: 20px; padding-bottom: 5px">
+        ClientComm pilot usage data
+      </center>
+      <center style="font-size: 14px; padding: 0px; margin-bottom: 25px;">
+        Salt Lake County Criminal Justice Services 
+      </center>
+
+      <div style="display: block; clear: both; position: relative; height: 150px; color: #898989">
+        <div style="width: 33%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <%= overall.msgs %>
+          </span>
+          <center>Sent Messages</center>
+        </div>
+
+        <div style="width: 33%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <%= overall.convos %>
+          </span>
+          <center>Live Conversations</center>
+        </div>
+
+        <div style="width: 33%; float: left; text-align: center;">
+          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+            <%= overall.clients %>
+          </span>
+          <center>Currently Active Clients</center>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <div class="block grey">
+      <div class="bottom">
+
+      <div class="bottomBlock">
+        <div class="name">ClientComm Stats</div>
+        <div class="link">
+          <a href="https://clientcomm.org/stats">clientcomm.org/stats</a>
+        </div>
+      </div>
+
+      <div class="bottomBlock">
+        <div class="name">Research Process</div>
+        <div class="link">
+          <a href="http://slco-2016.github.io/q1_report/">c4a.me/slco-alpha</a>
+        </div>
+      </div>
+
+      <div class="bottomBlock">
+        <div class="name">Development Processs</div>
+        <div class="link">
+          <a href="http://slco-2016.github.io/beta_report">c4a.me/slco-beta</a>
+        </div>
+      </div>
+
+      <div class="bottomBlock">
+        <div class="name">Weekly Blog</div>
+        <div class="link">
+          <a href="http://c4a-slc.tumblr.com">c4a-slc.tumblr.com</a>
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+
+  </body>
+  <script src="/modules/jquery/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+
+  <script type="text/javascript">
+    
+    function addRowToSpreadsheet(email) {
+      var thisSS = SpreadsheetApp.getActiveSpreadsheet();
+      var theSheet = thisSS.getSheetByName("signups");
+      theSheet.appendRow([email]);
+      return true;
+    }
+
+  </script>
+</html>
+    
+    
+
+
