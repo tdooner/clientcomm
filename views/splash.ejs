@@ -37,7 +37,7 @@
   </head>
 
   
-  <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,900" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,900" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/modules/font-awesome/css/font-awesome.min.css">
 
   <style type="text/css">
@@ -84,7 +84,7 @@
     .icon {
       margin-left: auto;
       margin-right: auto;
-      margin-top: 120px;
+      margin-top: 80px;
       width: 200px;
     }
 
@@ -192,8 +192,8 @@
       </div>
     </div>
 
-    <div class="block" style="padding: 50px; background-image: url('/static/bg2.png');">
-      <div class="inside" >
+    <div class="block" style="background-image: url('/static/bg2.png'); overflow: hidden">
+      <div class="inside" style="padding: 50px; box-shadow: 0 0 250px 5px rgba(255, 255, 255, 0.55); background-color: rgba(255, 255, 255, 0.55); border-radius: 100%">
         <div class="icon">
           <% include ../public/icons/logo.svg %>
           <br>
@@ -208,22 +208,23 @@
         <div>
           This helps them navigate their requirements and graduate from probation successfully.
         </div>
-      </div>
 
-      <div class="outsideSU">
-        <div class="signup">
-          <input type="email"></input>
-          <div class="button">
-            Sign Up
+        <div class="outsideSU">
+          <div class="signup">
+            <input type="email">
+            <div class="button">
+              Sign Up
+            </div>
           </div>
         </div>
+
       </div>
     </div>
 
     <div class="block grey">
-      <div class="inside">
+      <div class="inside" style="margin-top: 30px; margin-bottom: 50px;">
 
-      <center style="font-size: 28px; padding: 20px; margin-bottom: 30px">
+      <center style="font-size: 28px; padding: 20px; margin-bottom: 30px; font-weight: 700">
         ClientComm Features
       </center>
 
@@ -295,9 +296,9 @@
     </div>
 
     <div class="block">
-      <div class="inside">
+      <div class="inside" style="margin-top: 30px; margin-bottom: 50px;">
 
-      <center style="font-size: 28px; padding: 20px; padding-bottom: 5px">
+      <center style="font-size: 28px; padding: 20px; padding-bottom: 5px; font-weight: 700">
         ClientComm pilot usage data
       </center>
       <center style="font-size: 14px; padding: 0px; margin-bottom: 25px;">
@@ -306,21 +307,21 @@
 
       <div style="display: block; clear: both; position: relative; height: 150px; color: #898989">
         <div style="width: 33%; float: left; text-align: center;">
-          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+          <span style="font-family: Arial, Sans-Serif; font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
             <%= overall.msgs %>
           </span>
           <center>Sent Messages</center>
         </div>
 
         <div style="width: 33%; float: left; text-align: center;">
-          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+          <span style="font-family: Arial, Sans-Serif; font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
             <%= overall.convos %>
           </span>
           <center>Live Conversations</center>
         </div>
 
         <div style="width: 33%; float: left; text-align: center;">
-          <span style="font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
+          <span style="font-family: Arial, Sans-Serif; font-size: 100px; font-weight: 700; color: #344289; line-height: 95px;">
             <%= overall.clients %>
           </span>
           <center>Currently Active Clients</center>
