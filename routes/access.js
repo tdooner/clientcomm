@@ -23,7 +23,8 @@ module.exports = function (app, passport) {
   // MAIN PAGE CURRENTLY ROUTES STRAIGHT TO LOGIN
   // TO DO: Make a splash page (GH Issue: https://github.com/slco-2016/clientcomm/issues/72)
   app.get("/", function (req, res) {
-    res.redirect("/login");
+    if (req.hasOwnProperty("user")) { res.redirect("/cms"); } 
+    else { res.render("splash"); }
   });
 
 
