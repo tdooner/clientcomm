@@ -38,13 +38,32 @@ module.exports = function (app, passport) {
         responseData.weeks = weeks.rows;
 
         // Get msg counts, grouped by hour and out/inbound
-        var rawQuery1 = " SELECT count(msgid), inbound, trunc(EXTRACT(HOUR FROM created)) AS date_hr " + 
-                        " FROM msgs " +
-                        " GROUP BY date_hr, inbound " +
-                        " ORDER BY date_hr ASC; ";
+        var rawQuery1 = " SELECT COUNT(*), cm, date(msgs.created) FROM msgs INNER JOIN convos ON (convos.convid=msgs.convo) " + 
+                        " GROUP BY cm, date(msgs.created) ORDER BY DATE DESC; ";
         return db.raw(rawQuery1)
       }).then(function (msgs) {
-        responseData.msgs = msgs.rows;
+
+        var m = {};
+        var m2 = {};
+
+        // Make var m a object with counts by dates
+        msgs.rows.forEach(function (ea) {
+          if (!m[ea.cm]) { m[ea.cm] = {} }
+          var d = new Date(ea.date);
+          ea.date = [d.getFullYear(), d.getMonth()+1, d.getDate()].join("-");
+          m[ea.cm][ea.date] = Number(ea.count);
+        });
+
+        // Restructure into a new object with counts converted into an array
+        for (var ea in m) {
+          var keys = Object.keys(m[ea]).sort(function (a,b) { return new Date(a) - new Date(b); });
+          m2[ea] = {
+            dates: keys,
+            vals: keys.map(function (k) { return m[ea][k]; })
+          }
+        };
+
+        responseData.msgs = m2;
 
         // Get msg counts by day of week
         var rawQuery2 = "SELECT COUNT(to_char(created, 'dy')), extract(dow FROM created) AS dow FROM msgs GROUP BY dow ORDER BY dow ASC;";
