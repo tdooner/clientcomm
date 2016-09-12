@@ -94,122 +94,67 @@ router.use((req, res, next) => {
 });
 
 router.get("/org", (req, res) => {
-    let departments;
-    let departmentFilter = req.user.department || req.query.departmentFilter || null;
+  let clients;
+  let departments;
+  let departmentFilter = req.user.department || Number(req.query.departmentFilter) || null;
+  let userFilter = req.query.departmentFilter || null;
+  let users;
+  let countsByDay, countsByWeek;
 
-    Departments.findByOrg(req.user.org, true)
-    .then((depts) => {
-      departments = depts;
+  Departments.findByOrg(req.user.org, true)
+  .then((depts) => {
+    departments = depts;
 
-      if (departmentFilter) {
-        return Messages.countsByDepartment(req.user.org, departmentFilter, "day")
-      } else {
-        return Messages.countsByOrg(req.user.org, "day")
-      }
-    }).then((counts) => {
-      countsByDay = counts;
+    if (departmentFilter) {
+      departments = departments.filter((d) => { return d.department_id === departmentFilter});
+      return Users.findByDepartment(departmentFilter, true)
+    } else {
+      return Users.findByOrg(req.user.org, true)
+    }
+  }).then((u) => {
+    users = u;
 
-      if (departmentFilter) {
-        return Messages.countsByDepartment(req.user.org, departmentFilter, "week")
-      } else {
-        return Messages.countsByOrg(req.user.org, "week")
-      }
-    }).then((counts) => {
-      countsByWeek = counts;
-      res.render("dashboard", {
-        hub: {
-          tab: "dashboard",
-          sel: null
-        },
-        departments: departments,
-        departmentFilter: departmentFilter,
-        countsByWeek: countsByWeek,
-        countsByDay: countsByDay
-      });
-    }).catch(error500(res));
+    if (departmentFilter) {
+      users = users.filter((u) => { return u.department == departmentFilter});
+      return Clients.findByDepartment(departmentFilter, true);
+    } else {
+      return Clients.findByOrg(departmentFilter, true);
+    }
+  }).then((c) => {
+    clients = c;
 
-  if (false && req.user.class === "supervisor") {
-    let clients, countsByDay, countsByWeek, department, users;
-    let orgID = Number(req.user.org);
-    let departmentID = Number(req.user.department);
-    let userFilterID = Number(req.query.targetUserID);
-    if (isNaN(userFilterID)) userFilterID = null;
+    if (departmentFilter) {
+      let userIds = users.map((u) => { return u.cmid });
+      clients = clients.filter((c) => { return userIds.indexOf(c.cm) > -1 });
+      return Messages.countsByDepartment(req.user.org, departmentFilter, "day")
+    } else {
+      return Messages.countsByOrg(req.user.org, "day")
+    }
+  }).then((counts) => {
+    countsByDay = counts;
 
-    Departments.findByID(orgID, true)
-    .then((dept) => {
-      department = dept;
-      return Users.findByDepartment(departmentID, true)
-    }).then((usrs) => {
-      users = usrs;
-      return Clients.findByDepartment(departmentID, true);
-    }).then((cls) => {
-      clients = cls;
-      if (userFilterID) {
-        clients.filter(function(client) {
-          return client.cm == userFilterID;
-        });
-      }
+    if (departmentFilter) {
+      return Messages.countsByDepartment(req.user.org, departmentFilter, "week")
+    } else {
+      return Messages.countsByOrg(req.user.org, "week")
+    }
+  }).then((counts) => {
+    countsByWeek = counts;
 
-      if (userFilterID) return Messages.countsByUser(orgID, userFilterID, "day");
-      else              return Messages.countsByDepartment(orgID, departmentID, "day");
-    }).then((counts) => {
-      countsByDay = counts;
-      if (userFilterID) return Messages.countsByUser(orgID, userFilterID, "week");
-      else              return Messages.countsByDepartment(orgID, departmentID, "week");
-    }).then((counts) => {
-      countsByWeek = counts;
-      res.render("dashboard", {
-        hub: {
-          tab: "dashboard",
-          sel: null
-        },
-        departments: [department],
-        users: users,
-        userFilterID, userFilterID,
-        clients: clients,
-        countsByWeek: countsByWeek,
-        
-        countsByDay: countsByDay
-      });
-    }).catch(error500(res));    
-  } else if (false && req.user.class === "owner") {
-    let departments, countsByWeek, countsByDay;
-    let departmentFilter = Number(req.query.departmentID);
-    if (isNaN(departmentFilter)) departmentFilter = null;
-
-    Departments.findByOrg(req.user.org, true)
-    .then((depts) => {
-      departments = depts;
-
-      if (departmentFilter) {
-        return Messages.countsByDepartment(req.user.org, departmentFilter, "day")
-      } else {
-        return Messages.countsByOrg(req.user.org, "day")
-      }
-    }).then((counts) => {
-      countsByDay = counts;
-
-      if (departmentFilter) {
-        return Messages.countsByDepartment(req.user.org, departmentFilter, "week")
-      } else {
-        return Messages.countsByOrg(req.user.org, "week")
-      }
-    }).then((counts) => {
-      countsByWeek = counts;
-      res.render("dashboard", {
-        hub: {
-          tab: "dashboard",
-          sel: null
-        },
-        departments: departments,
-        departmentFilter: departmentFilter,
-        countsByWeek: countsByWeek,
-        countsByDay: countsByDay
-      });
-    }).catch(error500(res));
-  } else {
-    notFound(res)
-  }
+    res.render("dashboard", {
+      hub: {
+        tab: "dashboard/index",
+        sel: null
+      },
+      users:            users,
+      userFilter:       userFilter,
+      departments:      departments,
+      departmentFilter: departmentFilter,
+      clients:          clients,
+      countsByDay:      countsByDay,
+      countsByWeek:     countsByWeek
+    });
+  }).catch(error500(res));
 });
 
 router.get("/org/departments", (req, res) => {
