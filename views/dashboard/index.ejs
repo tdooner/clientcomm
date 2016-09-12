@@ -182,6 +182,8 @@
       ea.name = [ea["user.last"], ea["user.first"]].join(", ");
       return ea;
     });
+    
+    // Set height based off of remaining users post filter operation
     var height = Math.max(users.length * 20, 100);
     c3.generate({
       data: {
