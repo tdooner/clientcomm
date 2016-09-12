@@ -1,11 +1,6 @@
 <% include ../partials/hubFrameTop %>
 
-<!-- Load in addition CSS -->
-<% if (user.class == "owner") { -%>
-  <link rel="stylesheet" type="text/css" href="/static/css/v4_ownerDashboard.css">
-<% } else { -%>
-  <link rel="stylesheet" type="text/css" href="/static/css/v4_supervisorDashboard.css">
-<% } -%>
+<link rel="stylesheet" type="text/css" href="/static/css/v4_dashboard.css">
 
 <div class="leftBar">
   <div class="departments">
@@ -19,7 +14,7 @@
     <% } -%>
     
     <% departments.forEach(function (department) { %>
-      <a href="/org?departmentID=<%= department.department_id %>">
+      <a href="/org?department=<%= department.department_id %>">
         <div class="department <% if (departmentFilter == Number(department.department_id)) { %>selected<% } %>">
           <div class="subject">
             <%= department.name %>
@@ -31,26 +26,23 @@
       </a>
     <% }) %>
 
-    <% if (user.class == "supervisor") { -%>
-      <div class="department">
-        <div class="subHeader">
-          Observe activity by manager
-        </div>
+    <div class="department">
+      <div class="subHeader">
+        Observe activity by manager
       </div>
-      <% users.forEach(function(targetUser) { %>
-        <a href="<%= `/org?targetUserID=${targetUser.cmid}` %>">
-          <div class="department <% if (userFilterID == targetUser.cmid) { %>selected<% } %>">
-            <div class="subject">
-              <%= targetUser.last + ', ' + targetUser.first  %>
-            </div>
-            <div class="date">
-              <div class="day">Updated on <%= moment.tz(targetUser.updated, local_tz).format("MM/DD/YY") %></div>
-            </div>
+    </div>
+    <% users.forEach(function(targetUser) { %>
+      <a href="<%= `/org?user=${targetUser.cmid}` %>">
+        <div class="department <% if (userFilter == targetUser.cmid) { %>selected<% } %>">
+          <div class="subject">
+            <%= targetUser.last + ', ' + targetUser.first  %>
           </div>
-        </a>
-      <% }) %>
-      
-    <% } -%>
+          <div class="date">
+            <div class="day">Updated on <%= moment.tz(targetUser.updated, local_tz).format("MM/DD/YY") %></div>
+          </div>
+        </div>
+      </a>
+    <% }) %>
     
 
   </div>
@@ -177,9 +169,9 @@
   function buildUserActivityChart(users) {
     users = users.filter(function (ea) {
       <% if (user.class == "supervisor") { %>
-        <% if (userFilterID) { %>
+        <% if (userFilter) { %>
           return  Number(<%=departments[0].department_id%>) == Number(ea["user.department"]) && 
-                  Number(<%=userFilterID%>) == Number(ea["user.cmid"]);
+                  Number(<%=userFilter%>) == Number(ea["user.cmid"]);
         <% } else { %>
           return Number(<%=departments[0].department_id%>) == Number(ea["user.department"]);
         <% } %>

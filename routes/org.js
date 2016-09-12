@@ -96,8 +96,8 @@ router.use((req, res, next) => {
 router.get("/org", (req, res) => {
   let clients;
   let departments;
-  let departmentFilter = req.user.department || Number(req.query.departmentFilter) || null;
-  let userFilter = req.query.departmentFilter || null;
+  let departmentFilter = req.user.department || Number(req.query.department) || null;
+  let userFilter = req.query.user || null;
   let users;
   let countsByDay, countsByWeek;
 
@@ -106,7 +106,7 @@ router.get("/org", (req, res) => {
     departments = depts;
 
     if (departmentFilter) {
-      departments = departments.filter((d) => { return d.department_id === departmentFilter});
+      if (req.user.department) departments = departments.filter((d) => { return d.department_id === departmentFilter});
       return Users.findByDepartment(departmentFilter, true)
     } else {
       return Users.findByOrg(req.user.org, true)
