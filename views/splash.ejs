@@ -69,6 +69,7 @@
 
     .right {
       float: right;
+      border-radius: 4px;
       padding: 5px;
       background-color: red;
       padding: 0px 20px 0px 20px;
@@ -90,6 +91,22 @@
 
     .icon path {
       fill: #34438A;
+    }
+
+    .icon .logo {
+      border-radius: 100%;
+      padding: 10px;
+      margin-bottom: -30px;
+      padding-bottom: 0px;
+    }
+
+    .circle {
+      width: 500px;
+      height: 500px;
+      border-radius: 100%;
+    }
+    .circle.opened {
+      transform: scale(1);
     }
 
     .inside {
@@ -145,15 +162,35 @@
       min-height: 75px;
       margin-left: auto;
       margin-right: auto;
+      padding-bottom: 50px;
     }
 
     .bottomBlock {
       float: left;
       width: 250px;
+      line-height: 18px;
     }
 
     .bottomBlock .name {
       font-weight: 600;
+      margin-top: 20px;
+    }
+
+    .bottomBlock .link {
+      margin-left: 30px;
+      margin-right: 30px;
+      margin-top: 5px;
+      display: block;
+      padding: 8px;
+      border-radius: 4px;
+      background-color: #32A2DB;
+      color: #FFF;
+      
+    }
+
+    .link a:hover, .link a:visited, .link a:link, .link a:active {
+      text-decoration: none;
+      color: #FFF;
     }
 
     .circleImg {
@@ -171,6 +208,23 @@
       margin-right: auto;
       margin-left: auto;
       padding-bottom: 7%;
+    }
+
+    .statsLinkBtnTop a:hover, .statsLinkBtnTop a:visited, .statsLinkBtnTop a:link, .statsLinkBtnTop a:active {
+      text-decoration: none;
+      color: #FFF;
+    }
+
+    .statsLinkBtn {
+      padding: 10px 20px 10px 20px;
+      background-color: #00cf0e;
+      color: #fff;
+      display: inline;
+      border-radius: 4px;
+    }
+
+    .statsLinkBtn:hover {
+      background-color: #00a10b;
     }
 
   </style>
@@ -192,21 +246,21 @@
       </div>
     </div>
 
-    <div class="block" style="background-image: url('/static/bg2.png'); overflow: hidden">
+    <div class="block" style="overflow: hidden">
       <div class="inside" style="padding: 50px; box-shadow: 0 0 250px 5px rgba(255, 255, 255, 0.55); background-color: rgba(255, 255, 255, 0.55); border-radius: 100%">
         <div class="icon">
-          <% include ../public/icons/logo.svg %>
+          <div class="logo"><% include ../public/icons/logo.svg %></div>
           <br>
           <% include ../public/icons/logotext.svg %>
         </div>
 
         <br>
         
-        <div>
-          ClientComm makes it quick and easy to communicate with supervision clients. 
+        <div style="font-size: 20px">
+          <b>ClientComm</b> makes it quick and easy to communicate with and document client supervision. 
         </div>
-        <div>
-          This helps them navigate their requirements and graduate from probation successfully.
+        <div style="font-size: 16px">
+          Use ClientComm to help clients navigate their requirements and graduate from pretrial or probation <b>successfully</b>.
         </div>
 
         <div class="outsideSU">
@@ -338,6 +392,15 @@
 
       <div class="chart1"><div id="chart-overall"></div></div>
 
+      <center class="statsLinkBtnTop">
+        <br>
+        <a href="http://clientcomm.org/stats">
+          <div class="statsLinkBtn">
+            more live stats
+          </div>
+        </a>
+      </center>
+
       </div>
     </div>
 
@@ -373,6 +436,10 @@
       </div>
 
       </div>
+
+      <center style="color: #888; font-size: 12px;">
+        A 2016 Fellowship project by <a href="http://archive.codeforamerica.org/governments/2016-announcement/">Code for America Fellows</a> Kuan Butts, Ben Peterson. <a href="http://codeforamerica.org">Code for America</a> Labs, Inc. is a non-partisan, non-political 501(c)(3) charitable organization.
+      </center>
     </div>
 
 
