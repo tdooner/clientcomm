@@ -211,10 +211,18 @@
 
         <div class="outsideSU">
           <div class="signup">
-            <input type="email">
-            <div class="button">
-              Sign Up
+
+            <div id="emailSignUpBlock">
+              <input type="email" value="" placeholder="your_email@company.org" id="newEmailAddress">
+              <div class="button" onclick="emailSubmit()">
+                Sign Up
+              </div>
             </div>
+
+            <center id="emailSignUpBlockSuccess" style="line-height: 36px; font-weight: 700; color: #FFF; display: none">
+              Thanks for your interest!
+            </center>
+            
           </div>
         </div>
 
@@ -450,7 +458,6 @@
 
   // Top big chart that combines all msg histories
   function makeTopOrgWideChart (dates) {
-    console.log("happen", dates)
     var keys = Object.keys(dates).sort(function (a,b) { return new Date(a) - new Date(b); });
     var vals = keys.map(function (k) { return dates[k]; })
 
@@ -570,6 +577,56 @@
 
   // If parse fails, we don't execute any of the chart drawing
   } catch (e) { console.log(e) }
+
+  // SIGN UP
+  // Keen.io
+  !function(a,b){a("Keen","https://d26b395fwzu5fz.cloudfront.net/3.4.1/keen.min.js",b)}(function(a,b,c){var d,e,f;c["_"+a]={},c[a]=function(b){c["_"+a].clients=c["_"+a].clients||{},c["_"+a].clients[b.projectId]=this,this._config=b},c[a].ready=function(b){c["_"+a].ready=c["_"+a].ready||[],c["_"+a].ready.push(b)},d=["addEvent","setGlobalProperties","trackExternalLink","on"];for(var g=0;g<d.length;g++){var h=d[g],i=function(a){return function(){return this["_"+a]=this["_"+a]||[],this["_"+a].push(arguments),this}};c[a].prototype[h]=i(h)}e=document.createElement("script"),e.async=!0,e.src=b,f=document.getElementsByTagName("script")[0],f.parentNode.insertBefore(e,f)},this);
+
+  // Keen.io tracking operations
+  function createKeenClient () {
+    var client = new Keen({
+      projectId: "5750a91433e4063ccd5b6c7e",
+      writeKey: "57bd2513349615cb4f61859fbecf3252d67cf5820f085ce7788892b314cc9399e2bfdc084c3b5f5c60712c4c48143e7f31a9eb9e78c0955228e3cf08304bb64fa4e725862dfee3ceb3bb3298600faa954e487950dbe49b2c353167d4ceaa785f"
+    });
+    return client;
+  };
+
+
+  function emailSubmit () {
+    var em = $("#newEmailAddress").val();
+    if (em) {
+      var keenRef = {
+        referrer: document.referrer,
+        URL:      document.URL,
+        interestEmail: em,
+        keen: { timestamp: new Date().toISOString() }
+      }
+      createKeenClient().addEvent("emailinterest", keenRef, function (err, res) { 
+        if (err) { 
+          console.log(err); 
+        } else {
+          emailSubmitAnimation(); // Once submit is done run this animation
+        }
+      });
+      
+    } else {
+      console.log("No email provided...");
+    }
+  }
+
+
+
+  function emailSubmitAnimation () {
+    $("#emailSignUpBlock").fadeOut(function () {
+      $("#emailSignUpBlockSuccess").fadeIn(function () {
+        setTimeout(function () { $("#emailSignUpBlockSuccess").fadeOut(function () {
+          $("#newEmailAddress").val("");
+          $("#emailSignUpBlock").fadeIn();
+        }) }, 2000)
+      });
+    });
+  }
+
 
   </script>
 </html>
