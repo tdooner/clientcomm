@@ -167,24 +167,16 @@
   };
 
   function buildUserActivityChart(users) {
+    var departmentFilter = Number(<%= departmentFilter %>) || null;
+    var userFilter       = Number(<%= userFilter %>) || null;
     users = users.filter(function (ea) {
-      <% if (user.class == "supervisor") { %>
-        <% if (userFilter) { %>
-          return  Number(<%=departments[0].department_id%>) == Number(ea["user.department"]) && 
-                  Number(<%=userFilter%>) == Number(ea["user.cmid"]);
-        <% } else { %>
-          return Number(<%=departments[0].department_id%>) == Number(ea["user.department"]);
-        <% } %>
-      <% } else if (user.class == "supervisor") { %>
-        var f = ea["user.first"] !== "" && ea["user.first"] !== "Test Account" && ea["user.first"] !== "Kuan";
-        var l = ea["user.last"] !== "";
-        if (departmentFilter) {
-          return ((departmentFilter == ea["user.department"]) && (f && l))
-        } else {
-          return (f && l);
-        }
-      <% } %>
-
+      if (departmentFilter) {
+        return departmentFilter == Number(ea["user.department"]);
+      } else if (userFilter) {
+        return userFilter === Number(ea["user.cmid"]);
+      } else {
+        return true;
+      }
     }).map(function (ea) {
       ea["User Activity"] = Math.ceil((ea.result/(1000*60*60))*100)/100; 
       ea.name = [ea["user.last"], ea["user.first"]].join(", ");

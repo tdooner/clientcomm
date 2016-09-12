@@ -94,7 +94,6 @@ router.use((req, res, next) => {
 });
 
 router.get("/org", (req, res) => {
-  let clients;
   let departments;
   let departmentFilter = req.user.department || Number(req.query.department) || null;
   let userFilter = req.query.user || null;
@@ -116,16 +115,6 @@ router.get("/org", (req, res) => {
 
     if (departmentFilter) {
       users = users.filter((u) => { return u.department == departmentFilter});
-      return Clients.findByDepartment(departmentFilter, true);
-    } else {
-      return Clients.findByOrg(departmentFilter, true);
-    }
-  }).then((c) => {
-    clients = c;
-
-    if (departmentFilter) {
-      let userIds = users.map((u) => { return u.cmid });
-      clients = clients.filter((c) => { return userIds.indexOf(c.cm) > -1 });
       return Messages.countsByDepartment(req.user.org, departmentFilter, "day")
     } else {
       return Messages.countsByOrg(req.user.org, "day")
@@ -147,10 +136,9 @@ router.get("/org", (req, res) => {
         sel: null
       },
       users:            users,
-      userFilter:       userFilter,
+      userFilter:       userFilter || null,
       departments:      departments,
-      departmentFilter: departmentFilter,
-      clients:          clients,
+      departmentFilter: departmentFilter || null,
       countsByDay:      countsByDay,
       countsByWeek:     countsByWeek
     });
