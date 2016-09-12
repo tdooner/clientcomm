@@ -13,14 +13,10 @@
       </div>
 
       <% if (user.class == "owner") { %>
-        <%- leftTab('departments', hub, level, true) %>
+        <%- leftTab('departments', hub, level, ['active', 'inactive']) %>
       <% } %>
 
-      <div class="leftTab <%= hub.tab == 'users' ? 'open' : 'closed' %>">
-        <div class="title"><a href="/org/users">Users</a></div>
-        <div class="option <%= hub.sel == 'active' ? 'selected' : '' %>"><a href="/org/users?status=active">Active</a></div>
-        <div class="option <%= hub.sel == 'inactive' ? 'selected' : '' %>"><a href="/org/users?status=inactive">Inactive</a></div>
-      </div> 
+      <%- leftTab('users', hub, level, ['active', 'inactive']) %>
     <% } %>     
 
     <!-- Clients decision "switch", tab available for all levels -->
