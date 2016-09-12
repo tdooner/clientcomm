@@ -127,24 +127,24 @@ app.get("/", (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.locals.leftTab = (name, hub, level, showOptions) => {
-    let capitalized = name.charAt(0).toUpperCase() + name.slice(1)
+  res.locals.leftTab = (name, hub, level, optionsList) => {
+    let capitalized = name.charAt(0).toUpperCase() + name.slice(1);
 
-    let url = `/${name}`
+    let url = `/${name}`;
     if (level == "org") {
-      url = `/org${url}`
+      url = `/org${url}`;
     }
 
-    let options = ``
-    if (showOptions) {
-     options = `
-        <div class="option ${hub.sel == 'active' ? 'selected' : ''}">
-          <a href="${url}?status=active">Active</a>
-        </div>
-        <div class="option ${hub.sel == 'inactive' ? 'selected' : ''}">
-          <a href="${url}?status=inactive">Inactive</a>
-        </div>    
-      `  
+    let options = ``;
+    if (optionsList) {
+      optionsList.forEach((opt) => {
+        let capitalizedOption = opt.charAt(0).toUpperCase() + opt.slice(1);
+        options += `
+          <a href="${url}?status=${opt}">
+            <div class="option ${hub.sel === opt ? 'selected' : ''}">${capitalizedOption}</div>
+          </a>
+        `;
+      });
     }
 
     return `
