@@ -86,7 +86,7 @@
       margin-left: auto;
       margin-right: auto;
       margin-top: 80px;
-      width: 200px;
+      width: 170px;
     }
 
     .icon path {
@@ -124,15 +124,7 @@
       margin-left: auto;
       margin-right: auto;
       text-align: left;
-    }
-
-    .outsideSU {
-      border: 1px dashed #34438A;
-      padding: 3px;
-      width: 424px;
       margin-top: 50px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     .signup input {
@@ -156,7 +148,7 @@
     }
 
     .bottom {
-      width: 1000px;
+      width: 750px;
       padding-top: 25px;
       font-size: 12px;
       min-height: 75px;
@@ -183,12 +175,12 @@
       display: block;
       padding: 8px;
       border-radius: 4px;
-      background-color: #32A2DB;
+      background-color: #898989;
       color: #FFF;
       
     }
 
-    .link a:hover, .link a:visited, .link a:link, .link a:active {
+    .bottomBlock a:hover, .bottomBlock a:visited, .bottomBlock a:link, .bottomBlock a:active {
       text-decoration: none;
       color: #FFF;
     }
@@ -247,7 +239,7 @@
     </div>
 
     <div class="block" style="overflow: hidden">
-      <div class="inside" style="padding: 50px; box-shadow: 0 0 250px 5px rgba(255, 255, 255, 0.55); background-color: rgba(255, 255, 255, 0.55); border-radius: 100%">
+      <div class="inside" style="padding-top: 20px; padding-bottom: 90px; box-shadow: 0 0 250px 5px rgba(255, 255, 255, 0.55); background-color: rgba(255, 255, 255, 0.55); border-radius: 100%">
         <div class="icon">
           <div class="logo"><% include ../public/icons/logo.svg %></div>
           <br>
@@ -263,21 +255,19 @@
           Use ClientComm to help clients navigate their requirements and graduate from pretrial or probation <b>successfully</b>.
         </div>
 
-        <div class="outsideSU">
-          <div class="signup">
+        <div class="signup">
 
-            <div id="emailSignUpBlock">
-              <input type="email" value="" placeholder="your_email@company.org" id="newEmailAddress">
-              <div class="button" onclick="emailSubmit()">
-                Sign Up
-              </div>
+          <div id="emailSignUpBlock">
+            <input type="email" value="" placeholder="Enter your email address for project updates" id="newEmailAddress">
+            <div class="button" onclick="emailSubmit()">
+              Sign Up
             </div>
-
-            <center id="emailSignUpBlockSuccess" style="line-height: 36px; font-weight: 700; color: #FFF; display: none">
-              Thanks for your interest!
-            </center>
-            
           </div>
+
+          <center id="emailSignUpBlockSuccess" style="line-height: 36px; font-weight: 700; color: #FFF; display: none">
+            Thanks for your interest!
+          </center>
+          
         </div>
 
       </div>
@@ -299,7 +289,7 @@
             </div>
           </span>
           <center><b>End Phone Tag</b></center>
-          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+          <center style="line-height: 18px; font-size: 14px; color: #32A2DB; padding: 2px 15px 2px 15px">
             Communicate at your convenience and produce detailed conversation logs automatically.
           </center>
         </div>
@@ -311,8 +301,8 @@
             </div>
           </span>
           <center><b>Security</b></center>
-          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
-            ClientComm’s data is held to Salt Lake County’s email security standard.
+          <center style="line-height: 18px; font-size: 14px; color: #32A2DB; padding: 2px 15px 2px 15px">
+            ClientComm’s data is designed to comply with Salt Lake County's digital communications policies.
           </center>
         </div>
 
@@ -323,7 +313,7 @@
             </div>
           </span>
           <center><b>Notifications</b></center>
-          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+          <center style="line-height: 18px; font-size: 14px; color: #32A2DB; padding: 2px 15px 2px 15px">
             Schedule messages for appointments, court dates, and personal goals in advance.
           </center>
         </div>
@@ -335,7 +325,7 @@
             </div>
           </span>
           <center><b>Smart Send</b></center>
-          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+          <center style="line-height: 18px; font-size: 14px; color: #32A2DB; padding: 2px 15px 2px 15px">
             Communication methods are monitored to infer the best contact method for each client.
           </center>
         </div>
@@ -347,7 +337,7 @@
             </div>
           </span>
           <center><b>Templates</b></center>
-          <center style="line-height: 14px; font-size: 14px; color: #32A2DB; padding: 2px 10px 2px 10px">
+          <center style="line-height: 18px; font-size: 14px; color: #32A2DB; padding: 2px 15px 2px 15px">
             Common messages and phrases are stored for quick acess and communication.
           </center>
         </div>
@@ -391,6 +381,7 @@
       </div>
 
       <div class="chart1"><div id="chart-overall"></div></div>
+      <center style="margin-top: -25px; color: #898989; font-size: 18px">Overall Daily Usage Growth</center>
 
       <center class="statsLinkBtnTop">
         <br>
@@ -407,33 +398,32 @@
     <div class="block grey">
       <div class="bottom">
 
-      <div class="bottomBlock">
-        <div class="name">ClientComm Stats</div>
-        <div class="link">
-          <a href="https://clientcomm.org/stats">clientcomm.org/stats</a>
+        <div class="bottomBlock">
+          <div class="name">Weekly Blog</div>
+          <a href="http://c4a-slc.tumblr.com">
+            <div class="link">
+              c4a-slc.tumblr.com
+            </div>
+          </a>
         </div>
-      </div>
 
-      <div class="bottomBlock">
-        <div class="name">Research Process</div>
-        <div class="link">
-          <a href="http://slco-2016.github.io/q1_report/">c4a.me/slco-alpha</a>
+        <div class="bottomBlock">
+          <div class="name">Research Process</div>
+          <a href="http://slco-2016.github.io/q1_report/">
+            <div class="link">
+              c4a.me/slco-alpha
+            </div>
+          </a>
         </div>
-      </div>
 
-      <div class="bottomBlock">
-        <div class="name">Development Processs</div>
-        <div class="link">
-          <a href="http://slco-2016.github.io/beta_report">c4a.me/slco-beta</a>
+        <div class="bottomBlock">
+          <div class="name">Development Processs</div>
+          <a href="http://slco-2016.github.io/beta_report">
+            <div class="link">
+              c4a.me/slco-beta
+            </div>
+          </a>
         </div>
-      </div>
-
-      <div class="bottomBlock">
-        <div class="name">Weekly Blog</div>
-        <div class="link">
-          <a href="http://c4a-slc.tumblr.com">c4a-slc.tumblr.com</a>
-        </div>
-      </div>
 
       </div>
 
