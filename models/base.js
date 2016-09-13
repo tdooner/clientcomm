@@ -3,7 +3,7 @@ const db = require("../server/db");
 
 class BaseModel {
   constructor(info) {
-    
+
     this._info = info
 
     info.columns.map(name => {
@@ -19,18 +19,18 @@ class BaseModel {
   static _checkForTableName() {
       if(!this.tableName) {
         throw new Error("This model needs a tableName!")
-      }    
+      }
   }
 
   static _checkForPrimaryId() {
       if(!this.primaryId) {
         throw new Error("This model needs a primaryId!")
-      }    
+      }
   }
 
   static _getSingleResponse(objects, fulfill, reject) {
     if (!objects || objects.length === 0) {
-      reject(new Error("nothing returned from db"))
+      fulfill(null)
     } else {
       // return class instance
       let instance = new this(objects[0])

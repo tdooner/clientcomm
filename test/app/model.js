@@ -47,12 +47,12 @@ describe('BaseModel checks', function() {
   })
 
   it("BaseModel getSingle response should handle edge cases", function(done) {
-    let reject = (err) => {
-      err.message.should.be.exactly("nothing returned from db")
+    let fulfill = (isNull) => {
+      should.not.exist(isNull)
     }
 
-    TestModel._getSingleResponse(undefined, null, reject)
-    TestModel._getSingleResponse([], null, reject)
+    TestModel._getSingleResponse(undefined, fulfill, null)
+    TestModel._getSingleResponse([], fulfill, null)
     done()
   })
 

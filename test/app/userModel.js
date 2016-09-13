@@ -36,15 +36,17 @@ describe('User checks', function() {
     Users.findByEmail("owner@test.com").then((user) => {
       user.cmid.should.be.exactly(1)
       done();
+    }).catch((err) => {
+      done(err);
     })
   })
 
-  it('Should error for user that doesn\'t exist', function(done) {
+  it('Should return null for user that doesn\'t exist', function(done) {
     Users.findByID(80085).then((user) => {
-      // nothin' here
-    }).catch((err) => {
-      err.message.should.be.exactly("nothing returned from db")
+      should.not.exist(user)
       done();
+    }).catch((err) => {
+      done(err);
     })
   })
 
