@@ -6,7 +6,7 @@
 
   <div class="navSub">
 
-  <!-- Organization and department-level tabs -->
+    <!-- Organization and department-level tabs -->
     <% if (level == "org") { %>
       <div class="leftTab <%= hub.tab == 'dashboard' ? 'open' : 'closed' %>">
         <div class="title"><a href="/org">Metrics Dashboard</a></div>
@@ -19,114 +19,31 @@
       <%- leftTab('users', hub, level, ['active', 'inactive']) %>
     <% } %>     
 
-    <!-- Clients decision "switch", tab available for all levels -->
-    <% let clientsLinkBase = "/clients" %>
-    <% if (level == "org") { clientsLinkBase = "/org/clients" } %>
-    <div class="leftTab <%= hub.tab == 'clients' ? 'open' : 'closed' %>">
-      <div class="title"><a href="<%=`${clientsLinkBase}`%>">Clients</a></div>
-      <div class="option <%= hub.sel == 'open' ? 'selected' : '' %>"><a href="<%=`${clientsLinkBase}?status=open`%>">Open</a></div>
-      <div class="option <%= hub.sel == 'closed' ? 'selected' : '' %>"><a href="<%=`${clientsLinkBase}?status=closed`%>">Closed</a></div>
-    </div>
+    <%- leftTab('clients', hub, level, ['open', 'closed']) %>
 
     <!-- Primary user level tabs -->
     <% if (level == "user") { %>
-      <div class="leftTab <%= hub.tab == 'notifications' ? 'open' : 'closed' %>">
-        <div class="title"><a href="/notifications">Notifications</a></div>
-        <div class="option <%= hub.sel == 'pending' ? 'selected' : '' %>"><a href="/notifications?status=pending">Pending</a></div>
-        <div class="option <%= hub.sel == 'sent' ? 'selected' : '' %>"><a href="/notifications?status=sent">Sent</a></div>
-      </div>      
-      
-      <div class="leftTab <%= hub.tab == 'templates' ? 'open' : 'closed' %>">
-        <div class="title"><a href="/templates">Templates</a></div>
-      </div>      
-      
-      <div class="leftTab <%= hub.tab == 'groups' ? 'open' : 'closed' %>">
-        <div class="title"><a href="/groups">Groups</a></div>
-        <div class="option <%= hub.sel == 'current' ? 'selected' : '' %>"><a href="/groups?status=current">Current</a></div>
-        <div class="option <%= hub.sel == 'deleted' ? 'selected' : '' %>"><a href="/groups?status=deleted">Deleted</a></div>
-      </div>                  
+      <%- leftTab('notifications', hub, level, ['pending', 'sent']) %>
+      <%- leftTab('templates', hub, level, null) %>
+      <%- leftTab('groups', hub, level, ['current', 'deleted']) %>
     <% } %>
 
 
     <!-- Right "action" buttons -->
     <% if (level =="org") { %>
-      <div class="rightActions">
-        <a href="">
-          <span class="fa-stack fa-lg">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-phone fa-stack-1x fa-inverse"></i>
-          </span>
-          <span class="text">New Phone Number</span>
-        </a>
-      </div>
-
-      <div class="rightActions">
-        <a href="/org/departments/create">
-          <span class="fa-stack fa-lg">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-building fa-stack-1x fa-inverse"></i>
-          </span>
-          <span class="text">New Department</span>
-        </a>
-      </div>
-
-      <div class="rightActions">
-        <a href="/org/users/create">
-          <span class="fa-stack fa-lg">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-user-plus fa-stack-1x fa-inverse"></i>
-          </span>
-          <span class="text">New User</span>
-        </a>
-      </div>      
+      <%- rightTab('numbers', 'phone', level) %>
+      <%- rightTab('departments', 'building', level) %>
+      <%- rightTab('users', 'user-plus', level) %>
     <% } %>
 
     <!-- primary -->
     <% if (level == "primary") { %>
-      <div class="rightActions">
-        <a href="/groups/create">
-          <span class="fa-stack fa-lg">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-users fa-stack-1x fa-inverse"></i>
-          </span>
-          <span class="text">New Group</span>
-        </a>
-      </div>      
-
-      <div class="rightActions">
-        <a href="/templates/create">
-          <span class="fa-stack fa-lg">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-clipboard fa-stack-1x fa-inverse"></i>
-          </span>
-          <span class="text">New Template</span>
-        </a>
-      </div>      
-      <div class="rightActions">
-        <a href="/notifications/create">
-          <span class="fa-stack fa-lg">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
-          </span>
-          <span class="text">New Notification</span>
-        </a>
-      </div>      
+      <%- rightTab('groups', 'users', level) %>
+      <%- rightTab('templates', 'clipboard', level) %> 
+      <%- rightTab('notifications', 'bell', level) %>
     <% } %>
 
-    <!-- primary, dep -->
-    <!-- TODO: Figure out how to know when to add to another user or yourself -->
-    <!--       Idea: Org level folks are just always offered the option, else assume to primary -->
-    <% if (true) { %>
-      <div class="rightActions">
-        <a href="/clients/create">
-          <span class="fa-stack fa-lg">
-            <i class="fa fa-circle fa-stack-2x"></i>
-            <i class="fa fa-user fa-stack-1x fa-inverse"></i>
-          </span>
-          <span class="text">New Client</span>
-        </a>
-      </div>
-    <% } %>
+    <%- rightTab('clients', 'user', level) %>
       
   </div>
 

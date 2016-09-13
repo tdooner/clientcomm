@@ -207,10 +207,8 @@ router.get("/clients", (req, res) => {
   }).catch(error500(res));  
 });
 
-// TODO: If owner, show a list of all users to attribute client to
-//       Same for supervisor, but limit only within department
 router.get("/clients/create", (req, res) => {
-  res.render("clients/create");
+  res.render("clients/create", { users: null });
 });
 
 router.post("/clients/create", (req, res) => {

@@ -1,13 +1,10 @@
 <% include ../partials/cardFrameTop %>
 
 <div class="cardHead">
-  <!-- exit button -->
-  <a href="<%=`/clients`%>">
+  <a href="/clients">
     <% include ../partials/cardExit %>
   </a>
-  <div class="cardTitle">
-    Transfer Client
-  </div>
+  <div class="cardTitle">Transfer Client</div>
   <div class="cardSubtitle">
     Transfer a client to a another case manager.
     <% if (allDepartments) { %>
@@ -40,9 +37,6 @@
       </div>
       <div class="formInput">
         <input class="typeahead" type="text" placeholder="Case manager name">
-      </div>
-      <div class="formInput">
-
       </div>
     </div>
 

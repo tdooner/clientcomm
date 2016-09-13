@@ -433,4 +433,39 @@ router.get("/org/clients", (req, res) => {
   }).catch(error500(res));
 });
 
+router.get("/org/clients/create", (req, res) => {
+  Users.findByOrg(req.user.org)
+  .then((users) => {
+    if (req.user.department) {
+      users = users.filter((u) => { return u.department == req.user.department });
+    }
+    res.render("clients/create", {
+      users: users
+    });
+  }).catch(error500(res));
+});
+
+router.post("/org/clients/create", (req, res) => {
+  let userId = req.body.targetUser;
+  let first  = req.body.first;
+  let middle = req.body.middle ? req.body.middle : "";
+  let last   = req.body.last;
+  let dob    = req.body.DOB;
+  let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;
+  let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
+  Client.create(
+          userId, 
+          first, 
+          middle, 
+          last, 
+          dob, 
+          otn, 
+          so
+  ).then(() => {
+    res.redirect(`/org/clients`);
+  }).catch(error500(res));
+});
+
 module.exports = router;
+
+
