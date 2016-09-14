@@ -1,5 +1,4 @@
 const assert = require('assert');
-const session = require('supertest-session');
 
 const BaseModel = require('../../models/base').BaseModel
 
