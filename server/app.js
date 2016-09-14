@@ -63,23 +63,25 @@ app.use(passport.session());
 
 // Logging
 app.use((req, res, next) => {
-  let start = new Date()
-  res.on('finish', () => {
-    let milliseconds = new Date().getTime() - start.getTime()
-    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    let timestamp = start.toUTCString();
-    let method = req.method;
-    let path = req.originalUrl;
-    let statusCode = res.statusCode;
-    let contentLength = res.header()._headers['content-length'] || 0;
-    let userAgent = req.headers['user-agent'];
-    console.log(
-      `${ip} -- [${timestamp}] ` +
-      `${method} ${path} ${statusCode} `.magenta +
-      `${contentLength} ${milliseconds}ms `.cyan +
-      `"${userAgent}"\n`
-    );
-  });
+  if (process.env.CCENV !== 'testing') {
+    let start = new Date()
+    res.on('finish', () => {
+      let milliseconds = new Date().getTime() - start.getTime()
+      let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      let timestamp = start.toUTCString();
+      let method = req.method;
+      let path = req.originalUrl;
+      let statusCode = res.statusCode;
+      let contentLength = res.header()._headers['content-length'] || 0;
+      let userAgent = req.headers['user-agent'];
+      console.log(
+        `${ip} -- [${timestamp}] ` +
+        `${method} ${path} ${statusCode} `.magenta +
+        `${contentLength} ${milliseconds}ms `.cyan +
+        `"${userAgent}"`
+      );
+    });
+  }
   return next();
 });
 

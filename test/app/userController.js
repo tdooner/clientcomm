@@ -7,11 +7,6 @@ request = session(APP)
 
 // http://mherman.org/blog/2016/04/28/test-driven-development-with-node/
 
-before(function(done) {
-  console.log("Running test/app/user.js".green)
-  done();
-})
-
 describe('Basic http req tests', function() {
 
   it('should redirect from root', function(done) {
@@ -64,24 +59,3 @@ describe('Basic http req tests', function() {
   })
 
 })
-
-
-// describe('Basic http req tests', function() {
-
-//   it('root', function(done) {
-
-//     var res = buildResponse()
-//     var req  = http_mocks.createRequest({
-//       method: 'GET',
-//       url: '/',
-//     })
-
-//     res.on('end', function() {
-//       res.statusCode.should.equal(302);
-//       done()
-//     })
-
-//     APP.handle(req, res)
-//   })
-
-// })
