@@ -207,29 +207,26 @@ router.get("/clients", (req, res) => {
   }).catch(error500(res));  
 });
 
-// TODO: If owner, show a list of all users to attribute client to
-//       Same for supervisor, but limit only within department
 router.get("/clients/create", (req, res) => {
-  res.render("clients/create");
+  res.render("clients/create", { users: null });
 });
 
 router.post("/clients/create", (req, res) => {
-  let userID = req.user.cmid;
-  let first  = req.body.first;
-  let middle = req.body.middle ? req.body.middle : "";
-  let last   = req.body.last;
-  let dob    = req.body.DOB;
-  let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;
+  let userId = req.user.cmid;    
+  let first  = req.body.first;    
+  let middle = req.body.middle ? req.body.middle : "";    
+  let last   = req.body.last;   
+  let dob    = req.body.dob;    
+  let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;    
   let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
-
   Client.create(
-          userID, 
+          userId, 
           first, 
           middle, 
           last, 
           dob, 
-          otn, 
-          so
+          so, 
+          otn
   ).then(() => {
     res.redirect(`/clients`);
   }).catch(error500(res));
@@ -320,24 +317,24 @@ router.get("/clients/:clientID/edit", (req, res) => {
   }).catch(error500(res));
 });
 
-router.post("/clients/:clientID/edit", (req, res) => {
-  const clientID  = req.params.clientID;
-  const first     = req.body.first;
-  const middle    = req.body.middle;
-  const last      = req.body.last;
-  const dob       = req.body.dob;
-  const uniqueID1 = req.body.uniqueID1;
-  const uniqueID2 = req.body.uniqueID2;
+router.post("/clients/:clientId/edit", (req, res) => {
+  let clientId  = req.params.clientId;
+  let first     = req.body.first;
+  let middle    = req.body.middle;
+  let last      = req.body.last;
+  let dob       = req.body.dob;
+  let so        = req.body.uniqueID1;
+  let otn       = req.body.uniqueID2;
   Client.editOne(
-          clientID, 
+          clientId, 
           first, 
           middle, 
           last, 
           dob, 
-          uniqueID1, 
-          uniqueID2
+          so, 
+          otn
   ).then(() => {
-    logClientActivity(req.params.clientID);
+    logClientActivity(req.params.clientId);
     req.flash("success", "Edited client.");
     res.redirect(`/clients`);
   }).catch(error500(res));

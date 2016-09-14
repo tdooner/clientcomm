@@ -94,7 +94,6 @@ router.use((req, res, next) => {
 });
 
 router.get("/org", (req, res) => {
-  let clients;
   let departments;
   let departmentFilter = req.user.department || Number(req.query.department) || null;
   let userFilter = req.query.user || null;
@@ -116,16 +115,6 @@ router.get("/org", (req, res) => {
 
     if (departmentFilter) {
       users = users.filter((u) => { return u.department == departmentFilter});
-      return Clients.findByDepartment(departmentFilter, true);
-    } else {
-      return Clients.findByOrg(departmentFilter, true);
-    }
-  }).then((c) => {
-    clients = c;
-
-    if (departmentFilter) {
-      let userIds = users.map((u) => { return u.cmid });
-      clients = clients.filter((c) => { return userIds.indexOf(c.cm) > -1 });
       return Messages.countsByDepartment(req.user.org, departmentFilter, "day")
     } else {
       return Messages.countsByOrg(req.user.org, "day")
@@ -147,10 +136,9 @@ router.get("/org", (req, res) => {
         sel: null
       },
       users:            users,
-      userFilter:       userFilter,
+      userFilter:       userFilter || null,
       departments:      departments,
-      departmentFilter: departmentFilter,
-      clients:          clients,
+      departmentFilter: departmentFilter || null,
       countsByDay:      countsByDay,
       countsByWeek:     countsByWeek
     });
@@ -445,4 +433,39 @@ router.get("/org/clients", (req, res) => {
   }).catch(error500(res));
 });
 
+router.get("/org/clients/create", (req, res) => {
+  Users.findByOrg(req.user.org)
+  .then((users) => {
+    if (req.user.department) {
+      users = users.filter((u) => { return u.department == req.user.department });
+    }
+    res.render("clients/create", {
+      users: users
+    });
+  }).catch(error500(res));
+});
+
+router.post("/org/clients/create", (req, res) => {
+  let userId = req.body.targetUser;    
+  let first  = req.body.first;    
+  let middle = req.body.middle ? req.body.middle : "";    
+  let last   = req.body.last;   
+  let dob    = req.body.DOB;    
+  let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;    
+  let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
+  Client.create(
+          userId, 
+          first, 
+          middle, 
+          last, 
+          dob, 
+          so, 
+          otn
+  ).then(() => {
+    res.redirect(`/org/clients`);
+  }).catch(error500(res));
+});
+
 module.exports = router;
+
+

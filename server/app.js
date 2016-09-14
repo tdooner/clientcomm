@@ -128,25 +128,27 @@ app.get("/", (req, res, next) => {
   }
 });
 
+// Create functions for producing hub frame top components
 app.use((req, res, next) => {
-  res.locals.leftTab = (name, hub, level, showOptions) => {
-    let capitalized = name.charAt(0).toUpperCase() + name.slice(1)
 
-    let url = `/${name}`
+  res.locals.leftTab = (name, hub, level, optionsList) => {
+    let capitalized = name.charAt(0).toUpperCase() + name.slice(1);
+
+    let url = `/${name}`;
     if (level == "org") {
-      url = `/org${url}`
+      url = `/org${url}`;
     }
 
-    let options = ``
-    if (showOptions) {
-     options = `
-        <div class="option ${hub.sel == 'active' ? 'selected' : ''}">
-          <a href="${url}?status=active">Active</a>
-        </div>
-        <div class="option ${hub.sel == 'inactive' ? 'selected' : ''}">
-          <a href="${url}?status=inactive">Inactive</a>
-        </div>    
-      `  
+    let options = ``;
+    if (optionsList) {
+      optionsList.forEach((opt) => {
+        let capitalizedOption = opt.charAt(0).toUpperCase() + opt.slice(1);
+        options += `
+          <a href="${url}?status=${opt}">
+            <div class="option ${hub.sel === opt ? 'selected' : ''}">${capitalizedOption}</div>
+          </a>
+        `;
+      });
     }
 
     return `
@@ -155,7 +157,29 @@ app.use((req, res, next) => {
         ${options}
       </div>
     `
-  }   
+  };
+
+  res.locals.rightTab = (name, fa, level) => {
+    let capitalizedSingular = (name.charAt(0).toUpperCase() + name.slice(1)).slice(0, -1);
+    
+    let url = `/${name}`;
+    if (level == "org") {
+      url = `/org${url}`;
+    }
+
+    return `
+      <div class="rightActions">
+        <a href="${url}/create">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-${fa} fa-stack-1x fa-inverse"></i>
+          </span>
+          <span class="text">New ${capitalizedSingular}</span>
+        </a>
+      </div>
+    `;
+  };
+
   next();
 })
 
