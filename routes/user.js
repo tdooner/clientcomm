@@ -212,22 +212,14 @@ router.get("/clients/create", (req, res) => {
 });
 
 router.post("/clients/create", (req, res) => {
-  let userID = req.user.cmid;
-  let first  = req.body.first;
-  let middle = req.body.middle ? req.body.middle : "";
-  let last   = req.body.last;
-  let dob    = req.body.DOB;
-  let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;
-  let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
-
   Client.create(
-          userID, 
-          first, 
-          middle, 
-          last, 
-          dob, 
-          otn, 
-          so
+          req.user.cmid, 
+          req.body.first, 
+          req.body.middle ? req.body.middle : "", 
+          req.body.last, 
+          req.body.dob, 
+          req.body.uniqueID2 ? req.body.uniqueID2 : null, 
+          req.body.uniqueID1 ? req.body.uniqueID1 : null
   ).then(() => {
     res.redirect(`/clients`);
   }).catch(error500(res));

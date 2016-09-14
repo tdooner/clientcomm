@@ -446,21 +446,14 @@ router.get("/org/clients/create", (req, res) => {
 });
 
 router.post("/org/clients/create", (req, res) => {
-  let userId = req.body.targetUser;
-  let first  = req.body.first;
-  let middle = req.body.middle ? req.body.middle : "";
-  let last   = req.body.last;
-  let dob    = req.body.DOB;
-  let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;
-  let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
   Client.create(
-          userId, 
-          first, 
-          middle, 
-          last, 
-          dob, 
-          otn, 
-          so
+          req.body.targetUser, 
+          req.body.first, 
+          req.body.middle ? req.body.middle : "", 
+          req.body.last, 
+          req.body.dob, 
+          req.body.uniqueID2 ? req.body.uniqueID2 : null, 
+          req.body.uniqueID1 ? req.body.uniqueID1 : null
   ).then(() => {
     res.redirect(`/org/clients`);
   }).catch(error500(res));
