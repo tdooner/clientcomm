@@ -5,22 +5,27 @@ require("colors");
 exports.seed = function(knex, Promise) {
   console.log("Running seeds.js".yellow)
   console.log("Deleting all tables".yellow)
-  return knex.raw(
-    `DROP SCHEMA public CASCADE;
-    CREATE SCHEMA public;`
-  ).then(() => {
-    console.log("Running latest migrations".yellow)
-    return knex.migrate.latest()
-  }).then(() => {
-    console.log("Inserting seed data".yellow)
-    return knex('orgs').insert(org)
-  }).then(() => {
-    return knex('cms').insert(owner)
-  }).then(() => {
-    return knex('departments').insert(dep)
-  }).then(() => {
-    return knex('cms').insert(primary)
-  });    
+
+  if (process.env.CCENV === "testing") {
+    return knex.raw(
+      `DROP SCHEMA public CASCADE;
+      CREATE SCHEMA public;`
+    ).then(() => {
+      console.log("Running latest migrations".yellow)
+      return knex.migrate.latest()
+    }).then(() => {
+      console.log("Inserting seed data".yellow)
+      return knex('orgs').insert(org)
+    }).then(() => {
+      return knex('cms').insert(owner)
+    }).then(() => {
+      return knex('departments').insert(dep)
+    }).then(() => {
+      return knex('cms').insert(primary)
+    });        
+  } else {
+    throw new Error("Not the testing db!!".red)
+  }
 }
 
 let org = {
