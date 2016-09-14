@@ -22,6 +22,8 @@ exports.seed = function(knex, Promise) {
       return knex('departments').insert(dep)
     }).then(() => {
       return knex('cms').insert(primary)
+    }).catch((err) => {
+      throw err
     });        
   } else {
     throw new Error("Not the testing db!!".red)
