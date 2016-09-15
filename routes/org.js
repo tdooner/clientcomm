@@ -479,32 +479,31 @@ router.use("/org/clients/:clientId", (req, res, next) => {
   }).catch(error500(res));
 });
 
-router.get("/org/clients/:clietnId/address", (req, res) => {
+router.get("/org/clients/:clientId/address", (req, res) => {
   res.render("clients/address", {
     template: req.query,
   });
 });
 
-router.post("/org/clients/:clientID/address", (req, res) => {
-  res.send("Foobar")
-  // let userID   = req.user.cmid;
-  // let clientID = Number(req.params.clientID);
-  // let subject  = req.body.subject;
-  // let content  = req.body.content;
-  // let commID   = req.body.commID == "null" ? null : req.body.commID;
-  // let method;
+router.post("/org/clients/:clientId/address", (req, res) => {
+  let userID   = req.user.cmid;
+  let clientId = req.params.clientId;
+  let subject  = req.body.subject;
+  let content  = req.body.content;
+  let commID   = req.body.commID == "null" ? null : req.body.commID;
+  let method;
 
-  // if (commID) {
-  //   method = Messages.startNewConversation(userID, clientID, subject, content, commID);
-  // } else {
-  //   method = Messages.smartSend(userID, clientID, subject, content);
-  // }
+  if (commID) {
+    method = Messages.startNewConversation(userID, clientId, subject, content, commID);
+  } else {
+    method = Messages.smartSend(userID, clientId, subject, content);
+  }
 
-  // method.then(() => {
-  //   logClientActivity(clientID);
-  //   req.flash("success", "Message to client sent.");
-  //   res.redirect(`/clients/${clientID}/messages`);
-  // }).catch(error500(res));
+  method.then(() => {
+    logClientActivity(clientId);
+    req.flash("success", "Message to client sent.");
+    res.redirect(`/org/clients`);
+  }).catch(error500(res));
 });
 
 
