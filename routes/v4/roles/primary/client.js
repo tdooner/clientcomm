@@ -27,21 +27,7 @@ router.get("/communications/create", (req, res) => {
 
 
 router.post("/communications/create", (req, res) => {
-  const clientID = req.params.clientID;
-  const name = req.body.description;
-  const type = req.body.type;
-  var   value = req.body.value;
 
-  // clean up numbers
-  if (type == "cell" || type == "landline") {
-    value = value.replace(/[^0-9.]/g, "");
-    if (value.length == 10) { value = "1" + value; }
-  }
-  CommConns.createOne(clientID, type, name, value)
-  .then(() => {
-    req.flash("success", "Created new communication method.");
-    res.redirect(`${res.redirectUrlBase}/clients/client/${req.params.clientID}/communications`);
-  }).catch(error500(res));
 });
 
 

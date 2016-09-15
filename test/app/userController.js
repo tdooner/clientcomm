@@ -118,8 +118,15 @@ describe('Basic http req tests', function() {
     primary.get('/clients/1/address')
       .expect(200)
       .end(function(err, res) {
-        console.log("\n\n\n\n\n\n", res.url, "\n\n\n\n\n\n");
         res.text.should.match(/Load a template/)
+        done(err);
+      });
+  });
+
+  it('primary user should reroute to create if no comm methods for client', function(done) {
+    primary.get('/clients/1/communications')
+      .expect(302)
+      .end(function(err, res) {
         done(err);
       });
   });
@@ -138,6 +145,7 @@ describe('Basic http req tests', function() {
     .expect(302)
       .end(function(err, res) {
         // TODO: can we check the state of the client here
+        // Use the Users model from line 100
         console.log(res.text);
         done(err);
       });

@@ -98,19 +98,19 @@ router.use((req, res, next) => {
 class NotificationsView {
   
   static show (req, res) {
-    let clientID = req.params.clientID;
+    let clientId = req.params.clientId || req.params.clientID || null;
     let status = req.query.status || "pending";
     let isSent = status === "sent";
     let strategy;
 
-    if (clientID) {
-      strategy = Notifications.findByClientID(clientID, isSent)
+    if (clientId) {
+      strategy = Notifications.findByClientID(clientId, isSent)
     } else {
       strategy = Notifications.findByUser(req.user.cmid, isSent);
     }
     
     strategy.then((n) => {
-      res.render("notifications", {
+      res.render("notifications/index", {
         hub: {
           tab: "notifications",
           sel: status
@@ -429,16 +429,44 @@ router.post("/clients/:clientID/messages", (req, res) => {
   }).catch(error500(res));
 });
 
-router.get("/clients/:clientID/communications", (req, res) => {
-  CommConns.getClientCommunications(req.params.clientID)
+router.get("/clients/:clientId/communications", (req, res) => {
+  CommConns.getClientCommunications(req.params.clientId)
   .then((c) => {
-    res.render("clients/communications", {
-      hub: {
-        tab: "contactMethods",
-        sel: null
-      },
-      communications: c
-    });
+    if (c.length == 0) {
+      res.redirect(`/clients/${req.params.clientId}/communications/create`);
+    } else {
+      res.render("clients/communications", {
+        hub: {
+          tab: "contactMethods",
+          sel: null
+        },
+        communications: c
+      });
+    }
+  }).catch(error500(res));
+});
+
+router.get("/clients/:clientId/communications/create", (req, res) => {
+  res.render("clients/commConn")
+});
+
+router.post("/clients/:clientId/communications/create", (req, res) => {
+  let clientId = req.params.clientId;
+  let name     = req.body.description;
+  let type     = req.body.type;
+  let value    = req.body.value;
+
+  // clean up numbers
+  if (type == "cell" || type == "landline") {
+    value = value.replace(/[^0-9.]/g, "");
+    if (value.length == 10) { value = "1" + value; }
+  }
+
+  CommConns.createOne(clientId, type, name, value)
+  .then(() => {
+    logClientActivity(clientId);
+    req.flash("success", "Created new communication method.");
+    res.redirect(`/clients/${clientId}/communications`);
   }).catch(error500(res));
 });
 

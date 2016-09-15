@@ -48,7 +48,7 @@ class Notifications {
       db("notifications")
         .leftJoin(
           db("clients")
-            .select(db.raw("first as client_first, middle as client_middle, last as client_last, clid"))
+            .select(db.raw("first as first, middle as middle, last as last, clid"))
             .as("clients"),
           "clients.clid", "notifications.client")
         .leftJoin(
