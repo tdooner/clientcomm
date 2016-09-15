@@ -1,9 +1,7 @@
 <% include ../partials/cardFrameTop %>
 
 <div class="cardHead">
-  <a href="/clients">
-    <% include ../partials/cardExit %>
-  </a>
+  <a href="<%=`${level === "org" ? "/org/clients" : "/clients"}`%>"><% include ../partials/cardExit %></a>
   <div class="cardTitle">Transfer Client</div>
   <div class="cardSubtitle">
     Transfer a client to a another case manager.
@@ -16,20 +14,21 @@
 <div class="cardBody">
 
   <div class="formRow">
-    <% if (allDepartments) { %>
-      <a href="<%=`/clients/${client.clid}/transfer?allDepartments=false`%>">
-        <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer within your department">
-      </a>
-    <% } else { %>
-      <a href="<%=`/clients/${client.clid}/transfer?allDepartments=true`%>">
-        <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer outside of this department">
-      </a>
+    <% if (user.class !== "owner") { %>
+      <% if (allDepartments) { %>
+        <a href="<%=`/clients/${client.clid}/transfer?allDepartments=false`%>">
+          <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer within your department">
+        </a>
+      <% } else { %>
+        <a href="<%=`/clients/${client.clid}/transfer?allDepartments=true`%>">
+          <input type="submit" id="useTemplate" class="formSubmit inverse" value="Transfer outside of this department">
+        </a>
+      <% } %>
     <% } %>
   </div>
 
   <form method = "post"
-        id="userSearch"
-        action = "<%=`/clients/${client.clid}/transfer`%>">
+        id="userSearch">
 
     <div class="formRow">
       <div class="formLabel">

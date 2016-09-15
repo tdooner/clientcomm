@@ -118,6 +118,7 @@ describe('Basic http req tests', function() {
     primary.get('/clients/1/address')
       .expect(200)
       .end(function(err, res) {
+        console.log("\n\n\n\n\n\n", res.url, "\n\n\n\n\n\n");
         res.text.should.match(/Load a template/)
         done(err);
       });
@@ -128,6 +129,16 @@ describe('Basic http req tests', function() {
       .expect(200)
       .end(function(err, res) {
         res.text.should.not.match(/Load a template/)
+        done(err);
+      });
+  });
+
+  it('owner should be able to close any client', function(done) {
+    owner.get('/org/clients/1/alter/close')
+    .expect(302)
+      .end(function(err, res) {
+        // TODO: can we check the state of the client here
+        console.log(res.text);
         done(err);
       });
   });

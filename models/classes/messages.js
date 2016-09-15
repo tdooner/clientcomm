@@ -231,7 +231,6 @@ class Messages {
   static sendOne (commID, content, conversationID) {
     return new Promise((fulfill, reject) => {
       var contentArray = content.match(/.{1,1599}/g);
-
       Communications.findById(commID)
       .then((communication) => {
         contentArray.forEach(function (contentPortion, contentIndex) {

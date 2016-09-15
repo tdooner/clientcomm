@@ -453,15 +453,15 @@ router.post("/org/clients/create", (req, res) => {
   let dob    = req.body.DOB;    
   let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;    
   let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
-  Client.create({
+  Client.create(
           userId, 
           first, 
           middle, 
           last, 
           dob, 
           so,  // note these should be renamed
-          otn, // this one as well
-  }).then(() => {
+          otn // this one as well
+  ).then(() => {
     res.redirect(`/org/clients`);
   }).catch(error500(res));
 });
@@ -479,6 +479,10 @@ router.use("/org/clients/:clientId", (req, res, next) => {
   }).catch(error500(res));
 });
 
+router.get("/org/clients/:clientId", (req, res) => {
+  res.send("special org view of client");
+});
+
 router.get("/org/clients/:clientId/address", (req, res) => {
   res.render("clients/address", {
     template: req.query,
@@ -486,7 +490,7 @@ router.get("/org/clients/:clientId/address", (req, res) => {
 });
 
 router.post("/org/clients/:clientId/address", (req, res) => {
-  let userID   = req.user.cmid;
+  let userId   = res.locals.client.cm;
   let clientId = req.params.clientId;
   let subject  = req.body.subject;
   let content  = req.body.content;
@@ -494,15 +498,91 @@ router.post("/org/clients/:clientId/address", (req, res) => {
   let method;
 
   if (commID) {
-    method = Messages.startNewConversation(userID, clientId, subject, content, commID);
+    method = Messages.startNewConversation(userId, clientId, subject, content, commID);
   } else {
-    method = Messages.smartSend(userID, clientId, subject, content);
+    method = Messages.smartSend(userId, clientId, subject, content);
   }
 
   method.then(() => {
     logClientActivity(clientId);
     req.flash("success", "Message to client sent.");
     res.redirect(`/org/clients`);
+  }).catch(error500(res));
+});
+
+router.get("/org/clients/:clientId/alter/:status", (req, res) => {
+  let clientId = req.params.clientId;
+  let status = req.params.status == "open";
+  Client.alterCase(clientId, status)
+  .then(() => {
+    logClientActivity(clientId);
+    req.flash("success", "Client case status changed.")
+    res.redirect(`/org/clients`);
+  }).catch(error500(res));
+});
+
+router.get("/org/clients/:clientId/edit", (req, res) => {
+  res.render("clients/edit");
+});
+
+router.post("/org/clients/:clientId/edit", (req, res) => {
+  let clientId  = req.params.clientId;
+  let first     = req.body.first;
+  let middle    = req.body.middle;
+  let last      = req.body.last;
+  let dob       = req.body.dob;
+  let so        = req.body.uniqueID1;
+  let otn       = req.body.uniqueID2;
+  Client.editOne(
+          clientId, 
+          first, 
+          middle, 
+          last, 
+          dob, 
+          so, 
+          otn
+  ).then(() => {
+    logClientActivity(req.params.clientId);
+    req.flash("success", "Edited client.");
+    res.redirect(`/org/clients`);
+  }).catch(error500(res));
+});
+
+router.get("/org/clients/:clientId/transfer", (req, res) => {
+  let allDep = req.query.allDepartments == "true" ? true : false;
+  if (req.user.class === "owner") {
+    allDep = true;
+  }
+  Users.findByOrg(req.user.org)
+  .then((users) => {
+    // Limit only to same department transfers
+    if (!allDep) users = users.filter((u) => { return u.department == req.user.department });
+
+    res.render("clients/transfer", {
+      users: users,
+      allDepartments: allDep
+    });
+  }).catch(error500(res));
+});
+
+router.post("/org/clients/:clientId/transfer", (req, res) => {
+  const fromUserID = res.locals.client.cm;
+  const toUserID   = req.body.userID;
+  const clientId   = req.params.clientId;
+  const bundleConv = req.params.bundleConversations ? true : false;
+
+  Users.findByID(toUserID)
+  .then((user) => {
+    if (user && user.active) {
+      Client.transfer(clientId, fromUserID, toUserID, bundleConv)
+      .then(() => {
+        logClientActivity(clientId);
+        res.redirect(`/org/clients`);
+      }).catch(error500(res));
+
+    } else {
+      notFound(res);
+    }
   }).catch(error500(res));
 });
 
