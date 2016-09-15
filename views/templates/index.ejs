@@ -1,4 +1,4 @@
-<% include ./partials/hubFrameTop %>
+<% include ../partials/hubFrameTop %>
 
 <!-- Load in addition CSS -->
 <link rel="stylesheet" type="text/css" href="/static/css/v4_templates.css">
@@ -12,7 +12,7 @@
 </div>
 
 <% if (templates.length == 0) { %>
-  <% include ./partials/emptyResultsGreeting %>
+  <% include ../partials/emptyResultsGreeting %>
 <% } %>
 
 <% templates.forEach(function (template) { %>
@@ -40,4 +40,4 @@
 <% }) %>
 
 
-<% include ./partials/hubFrameBottom %>
+<% include ../partials/hubFrameBottom %>

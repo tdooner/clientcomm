@@ -20,12 +20,11 @@ var TWILIO_NUM = credentials.twilioNum;
 var twilio = require("twilio");
 var twClient = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 // Only send to junk number when in test mode
-var TESTENV = process.env.TESTENV;
-if (TESTENV && TESTENV == "true") {
-  TESTENV = true;
-} else { 
+var TESTENV = true;
+if (process.env.CCENV && process.env.CCENV == "production") {
   TESTENV = false;
 }
+
 
 
 // Models
@@ -232,7 +231,6 @@ class Messages {
   static sendOne (commID, content, conversationID) {
     return new Promise((fulfill, reject) => {
       var contentArray = content.match(/.{1,1599}/g);
-
       Communications.findById(commID)
       .then((communication) => {
         contentArray.forEach(function (contentPortion, contentIndex) {

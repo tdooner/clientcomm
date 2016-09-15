@@ -1,4 +1,8 @@
-<% include ./partials/hubFrameTop %>
+<% if (typeof client !== "undefined") { %>
+  <% include ../partials/clientFrameTop %>
+<% } else { %>
+  <% include ../partials/hubFrameTop %>
+<% } %>
 
 <!-- Load in addition CSS -->
 <link rel="stylesheet" type="text/css" href="/static/css/v4_notifications.css">
@@ -13,7 +17,7 @@
 
 
 <% if (notifications.length == 0) { %>
-  <% include ./partials/emptyResultsGreeting %>
+  <% include ../partials/emptyResultsGreeting %>
 <% } %>
 
 
@@ -53,4 +57,4 @@
 <% }) %>
 
 
-<% include ./partials/hubFrameBottom %>
+<% include ../partials/hubFrameBottom %>
