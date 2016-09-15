@@ -109,9 +109,26 @@ describe('Basic http req tests', function() {
         .then((user) => {
           should.exist(user);
           user.first.should.be.exactly('kuan');
-          console.log(user)
           done();
         }).catch(done);
+      });
+  });
+
+  it('primary user should have option to load templates on quick message', function(done) {
+    primary.get('/clients/1/address')
+      .expect(200)
+      .end(function(err, res) {
+        res.text.should.match(/Load a template/)
+        done(err);
+      });
+  });
+
+  it('owner user should not have option to load templates on quick message', function(done) {
+    owner.get('/org/clients/1/address')
+      .expect(200)
+      .end(function(err, res) {
+        res.text.should.not.match(/Load a template/)
+        done(err);
       });
   });
 

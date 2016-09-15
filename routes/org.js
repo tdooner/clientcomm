@@ -453,18 +453,60 @@ router.post("/org/clients/create", (req, res) => {
   let dob    = req.body.DOB;    
   let so     = req.body.uniqueID1 ? req.body.uniqueID1 : null;    
   let otn    = req.body.uniqueID2 ? req.body.uniqueID2 : null;
-  Client.create(
+  Client.create({
           userId, 
           first, 
           middle, 
           last, 
           dob, 
-          so, 
-          otn
-  ).then(() => {
+          so,  // note these should be renamed
+          otn, // this one as well
+  }).then(() => {
     res.redirect(`/org/clients`);
   }).catch(error500(res));
 });
+
+// For all /org/clients/:clientId, include local obj. client
+router.use("/org/clients/:clientId", (req, res, next) => {
+  Client.findByID(req.params.clientId)
+  .then((c) => {
+    if (c) {
+      res.locals.client = c;
+      next();
+    } else {
+      notFound(res);
+    }
+  }).catch(error500(res));
+});
+
+router.get("/org/clients/:clietnId/address", (req, res) => {
+  res.render("clients/address", {
+    template: req.query,
+  });
+});
+
+router.post("/org/clients/:clientID/address", (req, res) => {
+  res.send("Foobar")
+  // let userID   = req.user.cmid;
+  // let clientID = Number(req.params.clientID);
+  // let subject  = req.body.subject;
+  // let content  = req.body.content;
+  // let commID   = req.body.commID == "null" ? null : req.body.commID;
+  // let method;
+
+  // if (commID) {
+  //   method = Messages.startNewConversation(userID, clientID, subject, content, commID);
+  // } else {
+  //   method = Messages.smartSend(userID, clientID, subject, content);
+  // }
+
+  // method.then(() => {
+  //   logClientActivity(clientID);
+  //   req.flash("success", "Message to client sent.");
+  //   res.redirect(`/clients/${clientID}/messages`);
+  // }).catch(error500(res));
+});
+
 
 module.exports = router;
 

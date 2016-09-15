@@ -17,19 +17,30 @@
 </div>
 
 <% if (clients.length == 0) { %><% include ../partials/emptyResultsGreeting %><% } %>
-
+<%=`${level === "org" ? "/org/clients" : "/clients"}`%>
 
 <% clients.forEach( function (client) { %>
-  <div class="clientRow" clientHighlightColor="<%= client.color_tag %>">
+  <div class="clientRow" data-client-color="<%= client.color_tag %>">
+
+    <!-- color tag can only be edited if user level -->
     <div class="column" value="<%= client.color_name %>">
-      <a href="<%=`/clients/${client.clid}/edit/color`%>">
-        <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
-      </a>
+      <% if (level === "user") { %>
+        <a href="<%=`/clients/${client.clid}/edit/color`%>">
+      <% } %>
+      <div class="colorTag" style="background-color: <%= client.color_tag %>"></div>
+      <% if (level === "user") { %>
+        </a>
+      <% } %>
     </div>
+
     <div class="column">
       <% if (client.active) { %>
-        <a href="<%=`/clients/${client.clid}/address`%>">
-          <i class="fa highlight fa-send" aria-hidden="true"></i>
+        <% if (level === "user") { %>
+          <a href="<%=`/clients/${client.clid}/address`%>">
+        <% } else { %>
+          <a href="<%=`/org/clients/${client.clid}/address`%>">
+        <% } %>
+        <i class="fa highlight fa-send" aria-hidden="true"></i>
         </a>
       <% } else { %>-<% } %>
       </div>
@@ -92,7 +103,7 @@
   $(".clientRow")
     .hover(
       function () {
-        var color = $(this).attr("clientHighlightColor");
+        var color = $(this).attr("data-client-color");
         originalBackgroundColor = $(this).css("background-color");
         $(this).css("background-color", color);
       }, function () {

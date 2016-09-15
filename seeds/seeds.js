@@ -15,9 +15,9 @@ exports.seed = function(knex, Promise) {
       return knex.migrate.latest()
     }).then(() => {
       console.log("Inserting seed data".yellow)
-      return knex('phone_numbers').insert(phoneNumber)
-    }).then(() => {
       return knex('orgs').insert(org)
+    }).then(() => {
+      return knex('phone_numbers').insert(phoneNumber)
     }).then(() => {
       return knex('cms').insert(owner)
     }).then(() => {
@@ -41,6 +41,7 @@ let phoneNumber = {
 let org = {
   // orgid: 1, 
   name: 'Example CJS',
+  phone: 1,
   email: "test@test.com",
   expiration: "2018-01-01 00:00:00+00",
   allotment: 10,

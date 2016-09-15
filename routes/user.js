@@ -250,18 +250,9 @@ router.get("/clients/:clientId", (req, res) => {
 });
 
 router.get("/clients/:clientId/address", (req, res) => {
-  Client.findByID(req.params.clientId)
-  .then((client) => {
-    if (client) {
-      res.render("clients/address", {
-        client: client,
-        template: req.query
-      });
-
-    } else {
-      notFound(res);
-    }
-  }).catch(error500(res));
+  res.render("clients/address", {
+    template: req.query
+  });
 });
 
 router.get("/clients/:clientId/address/templates", (req, res) => {
@@ -493,24 +484,6 @@ router.get("/clients/:clientID/transfer", (req, res) => {
   }).catch(error500(res));
 });
 
-router.get("/clients/:clientId/transcript", (req, res) => {
-  let withUser = req.query.with || null;
-  Messages.findByClientID(withUser, req.params.clientId)
-  .then((messages) => {
-    
-    // Format into a text string
-    messages = messages.map(function (m) {
-      let s = "";
-      Object.keys(m).forEach(function (k) { s += `\n${k}: ${m[k]}`; });
-      return s;
-    }).join("\n\n");
-
-    // Note: this does not render a new page, just initiates a download
-    res.set({"Content-Disposition":"attachment; filename=transcript.txt"});
-    res.send(messages);
-  }).catch(error500(res));
-});
-
 router.post("/clients/:clientId/transfer", (req, res) => {
   const fromUserID = req.user.cmid;
   const toUserID   = req.body.userID;
@@ -529,6 +502,24 @@ router.post("/clients/:clientId/transfer", (req, res) => {
     } else {
       notFound(res);
     }
+  }).catch(error500(res));
+});
+
+router.get("/clients/:clientId/transcript", (req, res) => {
+  let withUser = req.query.with || null;
+  Messages.findByClientID(withUser, req.params.clientId)
+  .then((messages) => {
+    
+    // Format into a text string
+    messages = messages.map(function (m) {
+      let s = "";
+      Object.keys(m).forEach(function (k) { s += `\n${k}: ${m[k]}`; });
+      return s;
+    }).join("\n\n");
+
+    // Note: this does not render a new page, just initiates a download
+    res.set({"Content-Disposition":"attachment; filename=transcript.txt"});
+    res.send(messages);
   }).catch(error500(res));
 });
 
