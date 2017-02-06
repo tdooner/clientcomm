@@ -1,4 +1,5 @@
 const Promise = require('bluebird');
+const { db, CCENV } = require('../credentials');
 
 require('colors');
 
@@ -6,7 +7,7 @@ exports.seed = function(knex, Promise) {
   console.log('Running seeds.js'.yellow);
   console.log('Deleting all tables'.yellow);
 
-  if (process.env.CCENV === 'testing') {
+  if (CCENV === 'testing' || db.host === 'localhost') {
     return knex.raw(
       `DROP SCHEMA public CASCADE;
       CREATE SCHEMA public;`
