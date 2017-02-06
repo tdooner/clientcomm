@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const Promise = require('bluebird');
 const { db, CCENV } = require('../credentials');
 
@@ -99,6 +101,7 @@ const org = {
 };
 
 const owner = {
+  cmid: 1,
   org: 1,
   first: 'Test Account',
   last: 'To Remove',
@@ -120,6 +123,7 @@ const dep = {
 };
 
 const primary = {
+  cmid: 2,
   org: 1,
   first: 'Test Account',
   last: 'To Remove',
@@ -134,6 +138,7 @@ const primary = {
 };
 
 const secondPrimary = {
+  cmid: 3,
   org: 1,
   first: 'Other',
   last: 'Fellah',
@@ -148,6 +153,7 @@ const secondPrimary = {
 };
 
 const client = {
+  clid: 1,
   cm: 2,
   first: 'Sandra',
   middle: 'M',
@@ -159,6 +165,7 @@ const client = {
 };
 
 const secondClient = {
+  clid: 2,
   cm: 2,
   first: 'Harry',
   middle: 'K',
@@ -281,6 +288,7 @@ const secondPhoneNumber = {
 };
 
 const secondOwner = {
+  cmid: 4,
   org: 2,
   first: 'Second Test Account',
   last: 'To Remove',
@@ -303,6 +311,7 @@ const secondDep = {
 };
 
 const secondSupervisor = {
+  cmid: 5,
   org: 2,
   first: 'Supervisor Test Account',
   last: 'To Remove',
@@ -323,6 +332,7 @@ const secondDepartmentSupervisorLink = {
 };
 
 const secondOrgClient = {
+  clid: 3,
   cm: 4,
   first: 'Delilah',
   middle: 'X',
